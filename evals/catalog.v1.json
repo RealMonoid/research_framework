@@ -1,7 +1,7 @@
 {
   "schema_version": "eval-catalog.v1",
   "catalog_id": "research-agent-core",
-  "catalog_version": "1.3.0",
+  "catalog_version": "1.4.0",
   "created_at": "2026-08-30T00:00:00+02:00",
   "description": "Deterministic core evals for evidence handling, hypothesis intake, and thesis governance.",
   "cases": [
@@ -833,6 +833,92 @@
             "expected": "EVENT_FEED_COVERAGE_AND_EXCLUSION_WINDOWS",
             "critical": true,
             "weight": 1
+          }
+        ]
+      }
+    },
+    {
+      "case_id": "identified_effect_not_automatic_net_edge",
+      "capability": "hypothesis_intake",
+      "description": "Keep an identified interventional effect separate from forward prediction, mechanism evidence, and executable after-cost edge.",
+      "input": {
+        "task": "Classify the claim level and the independent validation/trading statuses. Do not turn identification into a trading release.",
+        "as_of": "2026-08-31T12:00:00Z",
+        "sources": [
+          {
+            "source_id": "synthetic_identified_effect_below_costs",
+            "title": "Synthetic Pre-registered Identification and Cost Report",
+            "published_at": "2026-08-31T09:00:00Z",
+            "accessed_at": "2026-08-31T11:58:00Z",
+            "authoritative": true,
+            "content": "This synthetic evaluation input states that a pre-registered natural-experiment design passed its identification gate and identified an average intervention effect of +0.6 ticks. It did not test a frozen forward prediction and did not identify the proposed inventory-risk mechanism. The executable-price evaluation, including spread, fees, slippage, and latency, measured a net effect of -0.4 ticks."
+          }
+        ]
+      },
+      "expected": {
+        "assertions": [
+          {
+            "assertion_id": "identified_effect_is_interventional",
+            "metric": "hypothesis_intake_accuracy",
+            "path": "hypothesis_intake.claim_level",
+            "operator": "equals",
+            "expected": "INTERVENTIONAL",
+            "critical": true,
+            "weight": 2
+          },
+          {
+            "assertion_id": "preserve_identification_pass",
+            "metric": "hypothesis_intake_accuracy",
+            "path": "hypothesis_intake.identification_status",
+            "operator": "equals",
+            "expected": "PASS",
+            "critical": true,
+            "weight": 1
+          },
+          {
+            "assertion_id": "identified_effect_claim_is_supported_source_fact",
+            "metric": "hypothesis_intake_accuracy",
+            "path": "claims.identified_effect.evidence_status",
+            "operator": "equals",
+            "expected": "SUPPORTED",
+            "critical": true,
+            "weight": 1
+          },
+          {
+            "assertion_id": "do_not_infer_mechanism_support",
+            "metric": "hypothesis_intake_accuracy",
+            "path": "hypothesis_intake.epistemic_stage_status.mechanism_supported.status",
+            "operator": "equals",
+            "expected": "UNKNOWN",
+            "critical": true,
+            "weight": 2
+          },
+          {
+            "assertion_id": "do_not_infer_forward_prediction",
+            "metric": "hypothesis_intake_accuracy",
+            "path": "hypothesis_intake.epistemic_stage_status.forward_predictive_oos.status",
+            "operator": "equals",
+            "expected": "UNKNOWN",
+            "critical": true,
+            "weight": 2
+          },
+          {
+            "assertion_id": "reject_negative_after_cost_edge",
+            "metric": "hypothesis_intake_accuracy",
+            "path": "hypothesis_intake.epistemic_stage_status.executable_net_edge.status",
+            "operator": "equals",
+            "expected": "NOT_SUPPORTED",
+            "critical": true,
+            "weight": 3
+          },
+          {
+            "assertion_id": "classify_as_economically_untradeable",
+            "metric": "hypothesis_intake_accuracy",
+            "path": "hypothesis_intake.release_decision",
+            "operator": "equals",
+            "expected": "ECONOMICALLY_UNTRADEABLE",
+            "critical": true,
+            "weight": 2
           }
         ]
       }

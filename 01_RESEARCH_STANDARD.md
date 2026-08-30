@@ -1,6 +1,6 @@
 # 01_RESEARCH_STANDARD.md
 
-**Version:** 1.6
+**Version:** 1.7
 **Stand:** 2026-08-30
 **Status:** ENTWURF ZUR ÜBERNAHME  
 **Zweck:** Normativer Standard für die Entwicklung, Falsifikation, Validierung und Überwachung von Trading-Phänomenen, Edge-Hypothesen und Strategien.
@@ -251,6 +251,7 @@ Erst `PROMOTED` protokolliert zusätzlich mindestens:
   Funding oder Leg-Risk, soweit anwendbar,
 - die detaillierte Einordnung bereits betrachteter Daten und ihres
   Informationsbudgets,
+- den Modus und die Provenienz der Variablen- und Konstruktauswahl,
 - die Promotion-Entscheidung und nächste Research-ID.
 
 `PROMOTED` bedeutet ausschließlich, dass eine Idee präzise und grundsätzlich
@@ -258,6 +259,26 @@ testbar genug für Phase 0 ist. Es bestätigt weder den Mechanismus noch eine
 Prognose oder Trading-Edge. Ablehnung und Merge bleiben mit Begründung erhalten;
 eine verworfene Idee wird nicht gelöscht und später als neue unabhängige Idee
 wiedereingeführt.
+
+## 4.1a Variablenauswahl-Provenienz
+
+Jeder `PROMOTED`-Datensatz deklariert den Auswahlmodus als `PREDEFINED`,
+`DATA_DRIVEN` oder `HYBRID`.
+
+- `PREDEFINED` benötigt eine knappe fachliche Begründung und die Referenzen der
+  beibehaltenen Variablen oder Konstrukte. Es wird kein künstlicher Suchraum
+  erfunden.
+- `DATA_DRIVEN` und `HYBRID` benötigen zusätzlich das eingefrorene
+  Kandidatenuniversum, alle Selektionsdaten und deren Datenrolle, die
+  Sichtbarkeit des Outcomes während der Auswahl, Methodenreferenzen, die
+  effektive Kandidatenzahl, einen versionierten Suchraum und konkrete Kontrollen
+  gegen Auswahlbias.
+
+Alle Selektionsdaten erscheinen auch in `consumed_data_refs`. Ein Dataset, das
+Variablenwahl oder Suchraum beeinflusst hat, ist keine unabhängige Validation und
+kein Holdout mehr. Feature Importance, SHAP-/Shapley-, Impurity- oder vergleichbare
+Verfahren sind optionale Modell- oder Assoziationsdiagnosen. Sie sind weder
+Pflicht noch Beleg für kausale Relevanz.
 
 ## 4.2 Verbindlicher Research Scope
 
@@ -318,9 +339,22 @@ Mechanismus setzt die beiden späteren Stufen nicht auf `SUPPORTED`; eine
 kontemporäre Beziehung ist keine Forward-Prognose; und ein Midprice-Effekt ist
 keine ausführbare Netto-Edge.
 
+## 4.4 Zwei unabhängige Achsen
+
+| Achse | Zulässige Werte | Beantwortete Frage |
+|---|---|---|
+| Research-Claim-Level | `ASSOCIATIONAL_PREDICTIVE / INTERVENTIONAL / COUNTERFACTUAL` | Welche Art von Verteilung, Intervention oder Kontrafaktum wird behauptet? |
+| Validierungs-/Handelsstatus | `mechanism_supported / forward_predictive_oos / executable_net_edge`, jeweils mit eigenem Status | Welche Mechanismus-, Prognose- und ökonomische Evidenz liegt vor? |
+
+Zwischen den Achsen gibt es keine automatische Inferenz. Ein interventionaler
+Effekt mit bestandenem Identifikationsgate kann nach Kosten
+`executable_net_edge = NOT_SUPPORTED` sein. Eine assoziative, zeitlich saubere
+Prognose kann dagegen eine ausführbare Netto-Edge besitzen, ohne einen kausalen
+Mechanismus zu identifizieren.
+
 ---
 
-# 5. Claim-Level, temporaler DAG, Identifikation und Beobachtbarkeit
+# 5. Claim-Level, Identifikationsmodell und Beobachtbarkeit
 
 ## 5.1 Claim-Level
 
@@ -331,6 +365,10 @@ Jede Research-Version deklariert die stärkste beabsichtigte Aussage:
 - `COUNTERFACTUAL`: Aussage darüber, was im selben konkreten Fall unter einer anderen Intervention geschehen wäre.
 
 Ohne explizite Deklaration gilt `ASSOCIATIONAL_PREDICTIVE`. Eine prädiktive Edge wird nicht abgewertet, nur weil sie keinen identifizierten Mechanismus besitzt; ihre Beschreibung muss dann aber prädiktiv bleiben.
+
+Der Claim-Level klassifiziert die Frage, nicht die verwendete Notation. Weder ein
+DAG noch Potential-Outcome-Symbole noch ein bestimmter Schätzer erhöhen den
+Claim-Level ohne bestandenes Identifikationsgate.
 
 ## 5.2 Kausales Estimand
 
@@ -345,9 +383,17 @@ Für `INTERVENTIONAL` oder `COUNTERFACTUAL` wird vor der Schätzung ein präzise
 
 Das Wort „Effekt“ allein ist kein Estimand. Der `do(·)`-Operator darf nicht für eine gewöhnliche bedingte Prognose verwendet werden.
 
+Das Identifikationsmodell wird als `SCM_DAG`, `POTENTIAL_OUTCOMES`,
+`STRUCTURAL_ECONOMETRIC` oder `OTHER_EXPLICIT` deklariert. Die Darstellungen sind
+für viele Fragen ineinander übersetzbar, müssen aber nicht gemeinsam verwendet
+werden. Ein Potential-Outcomes-Design macht insbesondere Konsistenz, Positivity,
+die designspezifische Assignment-/Exchangeability-Annahme und Interferenz oder
+ein Exposure Mapping explizit. Ein zusätzlicher DAG ist nicht Pflicht, wenn das
+gewählte Design Estimand und Identifikationsannahmen vollständig offenlegt.
+
 ## 5.3 Zweck und Grenzen des DAG
 
-Ein gerichteter azyklischer Graph kann verwendet werden, um vermutete zeitliche und strukturelle Beziehungen zwischen Variablen explizit zu machen.
+Ein gerichteter azyklischer Graph kann verwendet werden, um vermutete zeitliche und strukturelle Beziehungen zwischen Variablen explizit zu machen. Er ist ein zulässiger Formalismus, aber nicht für jedes identifizierte Design Pflicht.
 
 Beispiel:
 
@@ -369,7 +415,7 @@ Für `INTERVENTIONAL` oder `COUNTERFACTUAL` sind mindestens zu dokumentieren:
 
 - Identifikationsstrategie, beispielsweise Randomisierung, natürliche Variation, Backdoor-/Frontdoor-Kriterium, Instrumentvariable, Regression Discontinuity, Difference-in-Differences oder begründete High-Frequency-Identifikation,
 - nicht testbare und testbare Annahmen der Strategie,
-- Auswahl des Adjustmentsatzes aus dem Strukturmodell statt aus rein prädiktiver Feature-Selektion,
+- Auswahl des Adjustmentsatzes oder der vergleichbaren Designrestriktionen aus dem Identifikationsmodell statt aus rein prädiktiver Feature-Selektion,
 - Positivity/Overlap beziehungsweise Instrumentrelevanz, soweit einschlägig,
 - mögliche latente Confounder, Selektion, Messfehler und Interferenz,
 - Negativkontrollen, Placebos und Sensitivitätsanalysen, soweit designspezifisch möglich,
@@ -467,7 +513,7 @@ Die Aufgaben bleiben getrennt:
 - zeitserienspezifische Discovery: `Tigramite`,
 - einfaches binäres Treatment mit Matching/Propensity: `causalinference` nur als enger optionaler Fall.
 
-Eine Bibliothek darf mehrere Rollen übernehmen, aber kein API-Output ersetzt Domänenannahmen oder das Identifikationsgate. Ein Tool- oder Modellwechsel nach Freeze ist materiell. Vor Freeze werden Laufzeit, exakte Paketversionen, Lockfile/Environment, Hauptklassen oder -funktionen, Seed, Splitlogik, Graph-/Estimand-Version, Adjustmentsatz, Warnungen und Kompatibilität protokolliert. Nicht getestete Paketkombinationen und Major-Version-Wechsel benötigen einen Smoke-Test auf einem bekannten synthetischen Fall.
+Eine Bibliothek darf mehrere Rollen übernehmen, aber kein API-Output ersetzt Domänenannahmen oder das Identifikationsgate. Ein Tool- oder Modellwechsel nach Freeze ist materiell. Vor Freeze werden Laufzeit, exakte Paketversionen, Lockfile/Environment, Hauptklassen oder -funktionen, Seed, Splitlogik, Strukturmodell-/Design-/Estimand-Version, Adjustmentsatz oder vergleichbare Designrestriktion, Warnungen und Kompatibilität protokolliert. Nicht getestete Paketkombinationen und Major-Version-Wechsel benötigen einen Smoke-Test auf einem bekannten synthetischen Fall.
 
 ---
 
@@ -780,7 +826,7 @@ Sie muss enthalten:
 - Phänomen,
 - Claim-Level `ASSOCIATIONAL_PREDICTIVE / INTERVENTIONAL / COUNTERFACTUAL`,
 - bei kausalem Claim: Estimand, Identifikationsstrategie und Identifikationsstatus,
-- bei behaupteter Wirkungskette: Mechanism-Map-Version oder `N/A`,
+- bei behaupteter Wirkungskette: Strukturmodell-/Identifikationsdesign-Version,
 - bei Constraint-Sprache: definiertes Endziel, zulässiges Constraint-Label und Entscheidungskriterium,
 - erwartete Richtung,
 - primären Outcome,
@@ -888,8 +934,7 @@ Vor formaler Validation werden mindestens eingefroren:
 - Claim-Level,
 - kausales Estimand oder `N/A + Begründung: ASSOCIATIONAL_PREDICTIVE`,
 - Identifikationsstrategie, Annahmen und Gate-Status oder `NOT_REQUIRED_PREDICTIVE`,
-- Mechanism-Map-Version oder `N/A + Begründung`,
-- DAG-Version,
+- Strukturmodell-/Identifikationsdesign-Version oder `N/A + Begründung: ASSOCIATIONAL_PREDICTIVE`,
 - Tooling-Status, primäre Bibliothek je Aufgabe, exakte Laufzeit-/Paketversionen, Haupt-API und reproduzierbares Environment oder begründetes `TOOLING_NOT_REQUIRED`,
 - Beobachtbarkeitstabelle,
 - Markt/Instrument/Session/Timeframe,
@@ -1001,7 +1046,14 @@ Cross-Symbol-Tests werden nur dann als zusätzliche Evidenz gewertet, wenn die A
 
 Ein validiertes Phänomen ist noch keine Strategie.
 
-`VALIDATED_PHENOMENON` ist ein zulässiger eigenständiger Endzustand. Strategy Engineering beginnt nur nach einer ausdrücklichen Fortsetzungsentscheidung. Wird es nicht sofort fortgesetzt, bleiben die nachgelagerten Engineering-, Aktivierungs- und Monitoring-Schritte als `DEFERRED_AFTER_VALIDATION` geschlossen; das Phänomen verliert dadurch nicht seinen validierten Status.
+`VALIDATED_PHENOMENON` ist ein zulässiger eigenständiger Endzustand. Der Status
+bezeichnet ausschließlich ein gemäß eingefrorenem Design validiertes Phänomen.
+Er bestätigt weder einen kausalen Mechanismus oder Claim-Level noch eine
+ausführbare Netto-Edge. Strategy Engineering beginnt nur nach einer ausdrücklichen
+Fortsetzungsentscheidung. Wird es nicht sofort fortgesetzt, bleiben die
+nachgelagerten Engineering-, Aktivierungs- und Monitoring-Schritte als
+`DEFERRED_AFTER_VALIDATION` geschlossen; das Phänomen verliert dadurch nicht
+seinen validierten Status.
 
 Nach Phänomen-Validation wird geprüft, ob es tatsächlich handelbar ist.
 
@@ -1208,7 +1260,7 @@ Ein falsifiziertes Vorzeichen kann eine neue Hypothese erzeugen. Es wandelt den 
 1. Vorläufige Beobachtung / Outcome-Skala
 2. PHASE-0-VORPRÜFUNG
 3. Discovery / Fallkatalog + optionale Effect-Cause-Effect-Map
-4. Claim-Level + temporaler DAG + Identifikation + Beobachtbarkeit + Tooling-Router
+4. Claim-Level + explizites Identifikationsmodell + Beobachtbarkeit + Tooling-Router
 5. Operationalisierung
 6. Zielvariable + Nullmodell + gegebenenfalls Surprise-Faktoren/Shock-Response-Map
 7. Effektgröße + Unsicherheit

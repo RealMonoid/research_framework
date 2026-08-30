@@ -1,6 +1,6 @@
 # 02_RESEARCH_CASE_TEMPLATE.md
 
-**Template-Version:** 1.8
+**Template-Version:** 1.9
 **ANWEISUNG:** Diese Datei pro Research-Projekt kopieren. Kein Pflichtfeld löschen. Nicht anwendbare Felder mit `N/A + Begründung` ausfüllen. Unbekannte Pflichtfelder mit `BLOCKED + fehlende Information` markieren.
 
 **BEDINGTE AKTIVIERUNG:** Die Abschnitte `U–Y` werden erst geöffnet, wenn Abschnitt `T` mit `VALIDATED_PHENOMENON` abgeschlossen **und** Strategy Engineering ausdrücklich als nächster Schritt beschlossen wurde. Bei validiertem, aber nicht fortgesetztem Phänomen erhält der Block `DEFERRED_AFTER_VALIDATION`; ohne validiertes Phänomen erhält er `NOT_ACTIVATED_BY_T_GATE`. In beiden Fällen wird er nicht feldweise mit `N/A` befüllt. Abschnitt `Z` bleibt während des gesamten Projekts aktiv.
@@ -29,7 +29,7 @@
 | Claim-Level | `ASSOCIATIONAL_PREDICTIVE / INTERVENTIONAL / COUNTERFACTUAL` |
 | Estimand-Version | `N/A bei ASSOCIATIONAL_PREDICTIVE` |
 | Identifikationsstatus | `NOT_REQUIRED_PREDICTIVE / PASS / FAIL / BLOCKED` |
-| DAG-Version | |
+| Strukturmodell-/Identifikationsdesign-Version | |
 | Tooling-Status | `TOOLING_REQUIRED / TOOLING_NOT_REQUIRED / TOOLING_BLOCKED` |
 | Tooling-Manifest-Version | |
 | Kostenmodell-Version | |
@@ -149,6 +149,11 @@ positiver Evidenzbefund.
 | Clock-Sync-, Sequenz- und Beobachtbarkeitsanforderungen | |
 | frühe Kosten-, Latenz-, Queue-, Borrow-, Funding- oder Leg-Risk-Hürde | |
 | bereits betrachtete Dataset-IDs / aktuelle Datenrolle | |
+| Variablenauswahl-Modus | `PREDEFINED / DATA_DRIVEN / HYBRID` |
+| Auswahlbegründung / beibehaltene Variablen | |
+| bei DATA_DRIVEN/HYBRID: Kandidatenuniversum / effektive Kandidatenzahl | |
+| bei DATA_DRIVEN/HYBRID: Selektionsdaten + Rolle / Outcome-Sichtbarkeit | |
+| bei DATA_DRIVEN/HYBRID: Methoden / Suchraum / Auswahlbias-Kontrollen | |
 | Dublette / merged_into_id | |
 | Screening-Entscheidung und Grund | |
 | bei PROMOTED: nächste Research-ID und Phase-0-Frage | |
@@ -164,6 +169,17 @@ positiver Evidenzbefund.
 Die Stufen werden nicht kaskadenartig hochgestuft. Insbesondere belegt ein
 Mechanismuspaper keine Forward-Prognose, ein kontemporärer Zusammenhang keine
 zukünftige Rendite und ein Midquote-Effekt keine ausführbare Netto-Edge.
+
+### A5.2 Zwei unabhängige Achsen
+
+| Achse | Eintrag |
+|---|---|
+| Research-Claim-Level | `ASSOCIATIONAL_PREDICTIVE / INTERVENTIONAL / COUNTERFACTUAL` |
+| Validierungs-/Handelsstatus | die drei getrennten Status aus A5.1 |
+
+Keine Achse wird aus der anderen abgeleitet. Insbesondere kann ein identifizierter
+interventionaler Effekt nach Kosten unhandelbar und eine assoziative Prognose
+ohne kausalen Claim ausführbar sein.
 
 ---
 
@@ -330,13 +346,15 @@ Welche Begriffe wurden verworfen, geändert oder präzisiert? ...
 
 ---
 
-# E. Claim-Level, temporaler DAG, Identifikation und Beobachtbarkeit
+# E. Claim-Level, Identifikationsmodell und Beobachtbarkeit
 
 **PHASENSTATUS:** `COMPLETE / BLOCKED / FAILED`
 
 ## E1. Claim-Level und Zielgröße
 
 **Stärkster beabsichtigter Claim:** `ASSOCIATIONAL_PREDICTIVE / INTERVENTIONAL / COUNTERFACTUAL`
+
+**Kausaler Formalismus:** `SCM_DAG / POTENTIAL_OUTCOMES / STRUCTURAL_ECONOMETRIC / OTHER_EXPLICIT / NOT_REQUIRED_PREDICTIVE`
 
 **Prädiktive Zielgröße, falls anwendbar:** `P(...) / E[...] / Quantil / sonstige Größe`
 
@@ -350,24 +368,28 @@ Welche Begriffe wurden verworfen, geändert oder präzisiert? ...
 | Kontrast und Einheit | |
 | Total-/Direkt-/Mediationseffekt | |
 | Zeitliche Reihenfolge | |
+| Konsistenz / SUTVA oder Abweichung | |
+| Positivity / Overlap | |
+| Assignment-/Exchangeability-/Designannahme | |
+| Interferenz / Exposure Mapping | |
 
-## E2. DAG oder konkurrierende DAGs
+## E2. Strukturmodell oder Identifikationsdesign
 
-**DAG:** `ANWENDEN / N/A + Begründung`
+**Darstellung:** `SCM_DAG / POTENTIAL_OUTCOMES / STRUCTURAL_ECONOMETRIC / OTHER_EXPLICIT / NOT_REQUIRED_PREDICTIVE`
 
-**DAG-Version:** ... / `N/A`
+**Strukturmodell-/Design-Version:** ... / `N/A bei NOT_REQUIRED_PREDICTIVE`
 
-**Grafische/textuelle Struktur:**
+**Grafische, kontrafaktische oder strukturelle Definition:**
 
 ```text
 ...
 ```
 
-**Welche Kanten bleiben nur als Äquivalenzklasse oder wegen latenter Variablen unorientiert?** ...
+**Welche Kanten, Kontraste oder Assignment-Mechanismen bleiben nur partiell identifiziert?** ...
 
-## E3. Pfeilannahmen und Alternativerklärungen
+## E3. Strukturannahmen und Alternativerklärungen
 
-| Pfeil/Kante | Annahme | mögliche Confounder/Collider/Messfehler | Alternative Erklärung | Testbare Konsequenz/Negativkontrolle |
+| Strukturannahme/Pfeil/Kante | Annahme | mögliche Confounder/Collider/Messfehler | Alternative Erklärung | Testbare Konsequenz/Negativkontrolle |
 |---|---|---|---|---|
 | | | | | |
 
@@ -381,7 +403,7 @@ Welche Begriffe wurden verworfen, geändert oder präzisiert? ...
 |---|---|---|---|---|
 | | `JA/NEIN/TEILWEISE` | | | |
 
-**Adjustmentsatz und graphische Begründung:** ...
+**Adjustmentsatz oder vergleichbare Designrestriktion und Begründung:** ...
 
 **Positivity/Overlap oder Instrumentrelevanz, falls einschlägig:** ...
 
@@ -420,7 +442,7 @@ Welche Begriffe wurden verworfen, geändert oder präzisiert? ...
 
 | Aufgabe | primäre Bibliothek | exakte Version | Hauptklasse/-funktion | zulässige Aussage | unzulässige Aussage | unabhängige Prüfung |
 |---|---|---|---|---|---|---|
-| Graph/Adjustierung | `DoWhy / pgmpy / N/A` | | | | | |
+| Strukturmodell/Adjustierung | `DoWhy / pgmpy / designspezifisch / N/A` | | | | | |
 | Effektschätzung | `DoWhy / EconML / DoubleML / causalinference / sonstige / N/A` | | | | | |
 | Refutation/Sensitivität | `DoWhy / designspezifisch / N/A` | | | | | |
 | Zeitreihen-Discovery | `Tigramite / sonstige / N/A` | | | | | |
@@ -432,7 +454,7 @@ Welche Begriffe wurden verworfen, geändert oder präzisiert? ...
 | Paketquelle | `offizieller Release / begründete andere Quelle` |
 | Seed(s) | |
 | zeitliche/Cluster-Splitlogik | |
-| Graph-/Estimand-Version | |
+| Strukturmodell-/Design-/Estimand-Version | |
 | Adjustmentsatz | |
 | Import-/API-/Kompatibilitäts-Smoke-Test | `PASS / FAIL / BLOCKED / NOT_REQUIRED` |
 | relevante Warnungen/Deprecations | |
@@ -911,7 +933,7 @@ Jeder Punkt muss `YES` sein. `N/A + Begründung` ist nur dort zulässig, wo die 
 | kausales Estimand fest oder `N/A: ASSOCIATIONAL_PREDICTIVE` | |
 | Identifikationsstrategie/-annahmen fest oder `NOT_REQUIRED_PREDICTIVE` | |
 | E7-Identifikationsgate bestanden oder `NOT_REQUIRED_PREDICTIVE` | |
-| DAG-Version fest oder DAG `N/A + Begründung` | |
+| Strukturmodell-/Identifikationsdesign-Version fest oder `NOT_REQUIRED_PREDICTIVE` | |
 | E9-Tooling-Gate bestanden oder `NOT_REQUIRED` | |
 | primäre Bibliothek je kausaler Aufgabe und Haupt-API fest oder `TOOLING_NOT_REQUIRED + Begründung` | |
 | Python-/Paketversionen, Lockfile/Environment, Seeds und Splitlogik fest | |
@@ -1354,7 +1376,9 @@ Der Agent darf den jeweils aktivierten Teil des Research-Artefakts nicht als vol
 - [ ] Wurde bei ausführbarer kausaler Analyse eine passende Spezialbibliothek statt einer ungeprüften Eigenimplementierung verwendet?
 - [ ] Sind Runtime, exakte Paketversionen, Haupt-APIs, Seeds, Splits, Warnungen und Environment reproduzierbar protokolliert?
 - [ ] Wurde ein Bibliotheksoutput nicht als Ersatz für Identifikation oder als automatisches Upgrade des Claim-Levels behandelt?
-- [ ] Existiert ein temporaler DAG oder eine begründete N/A-Entscheidung?
+- [ ] Existiert ein versioniertes SCM/DAG, Potential-Outcomes-Design,
+      strukturell-ökonometrisches oder anderes explizites Identifikationsmodell
+      beziehungsweise `NOT_REQUIRED_PREDICTIVE`?
 - [ ] Ist für jede Prädiktorvariable der Beobachtbarkeitszeitpunkt dokumentiert?
 - [ ] Sind Confounder vor dem Schock/Treatment bekannt und post-treatment Mediatoren nicht versehentlich als Total-Effekt-Controls verwendet?
 - [ ] Sind bei Event-Research Erwartungsquelle, Vintage, Surprise-Formel, Zeitstempel, Eventfenster und Kontaminationsregel eingefroren?

@@ -78,6 +78,41 @@ def remove_applied_review_event(document: dict[str, Any]) -> None:
     ]
 
 
+def configure_data_driven_selection(document: dict[str, Any]) -> None:
+    """Replace the lightweight predefined record with full search provenance."""
+
+    document["variable_selection"] = {
+        "mode": "DATA_DRIVEN",
+        "rationale": (
+            "A discovery-only screen reduced a frozen candidate universe before "
+            "the validation sample was opened."
+        ),
+        "candidate_universe_ref": "artifact:variable-universe-v1",
+        "selection_data_refs": ["dataset:es-lob-discovery-v1"],
+        "selection_dataset_role": "DISCOVERY",
+        "outcome_visibility": "VISIBLE_DURING_SELECTION",
+        "selection_methods": ["method:mutual-information-screen"],
+        "retained_variable_refs": [
+            "variable:top3-order-flow-imbalance",
+            "variable:spread-state",
+        ],
+        "effective_candidate_count": 48,
+        "search_space_ref": "search-space:ofi-variable-screen-v1",
+        "selection_bias_controls": [
+            "All 48 candidates remain in the search log.",
+            "Selection uses discovery data only; validation remains sealed.",
+        ],
+    }
+
+
+def invalidate_data_driven_selection(field: str, value: Any) -> Mutation:
+    def mutate(document: dict[str, Any]) -> None:
+        configure_data_driven_selection(document)
+        document["variable_selection"][field] = value
+
+    return mutate
+
+
 POSITIVES = [
     ("examples/run_manifest.minimal.json", "schemas/run_manifest.schema.json"),
     ("examples/evidence.minimal.json", "schemas/evidence.schema.json"),
@@ -119,6 +154,7 @@ NEGATIVES: list[tuple[str, str, str, Mutation]] = [
     ("INBOX candidate always records consumed information references", "examples/hypothesis_candidate.inbox.json", "schemas/hypothesis_candidate.schema.json", delete_value(("consumed_data_refs",))),
     ("INBOX candidate cannot pretend that screening already occurred", "examples/hypothesis_candidate.inbox.json", "schemas/hypothesis_candidate.schema.json", set_value(("transition", "screened_at"), None)),
     ("PROMOTED candidate requires full research scope", "examples/hypothesis_candidate.minimal.json", "schemas/hypothesis_candidate.schema.json", delete_value(("research_scope",))),
+    ("PROMOTED candidate requires variable-selection provenance", "examples/hypothesis_candidate.minimal.json", "schemas/hypothesis_candidate.schema.json", delete_value(("variable_selection",))),
     ("hypothesis candidate scope requires an instrument", "examples/hypothesis_candidate.minimal.json", "schemas/hypothesis_candidate.schema.json", set_value(("research_scope", "instruments"), [])),
     ("intraday scope requires explicit timezone", "examples/hypothesis_candidate.minimal.json", "schemas/hypothesis_candidate.schema.json", delete_value(("research_scope", "timezone"))),
     ("FILTER_KNOWN_EVENTS requires named feed coverage", "examples/hypothesis_candidate.minimal.json", "schemas/hypothesis_candidate.schema.json", set_value(("research_scope", "news_event_coverage", "feeds"), [])),
@@ -135,6 +171,10 @@ NEGATIVES: list[tuple[str, str, str, Mutation]] = [
     ("epistemic stage status uses controlled independent states", "examples/hypothesis_candidate.minimal.json", "schemas/hypothesis_candidate.schema.json", set_value(("epistemic_stage_status", "forward_predictive_oos", "status"), "PROBABLY")),
     ("supported epistemic stage requires evidence reference", "examples/hypothesis_candidate.minimal.json", "schemas/hypothesis_candidate.schema.json", set_value(("epistemic_stage_status", "mechanism_supported", "status"), "SUPPORTED")),
     ("supported executable net edge requires supported forward OOS evidence", "examples/hypothesis_candidate.minimal.json", "schemas/hypothesis_candidate.schema.json", set_value(("epistemic_stage_status", "executable_net_edge", "status"), "SUPPORTED")),
+    ("data-driven selection requires candidate-universe provenance", "examples/hypothesis_candidate.minimal.json", "schemas/hypothesis_candidate.schema.json", invalidate_data_driven_selection("candidate_universe_ref", None)),
+    ("data-driven selection requires a frozen search-space reference", "examples/hypothesis_candidate.minimal.json", "schemas/hypothesis_candidate.schema.json", invalidate_data_driven_selection("search_space_ref", None)),
+    ("data-driven selection requires selection-bias controls", "examples/hypothesis_candidate.minimal.json", "schemas/hypothesis_candidate.schema.json", invalidate_data_driven_selection("selection_bias_controls", [])),
+    ("data-driven selection cannot use NOT_APPLICABLE data role", "examples/hypothesis_candidate.minimal.json", "schemas/hypothesis_candidate.schema.json", invalidate_data_driven_selection("selection_dataset_role", "NOT_APPLICABLE")),
     ("probability forecast requires calibration", "examples/forecast.minimal.json", "schemas/forecast.schema.json", set_value(("forecasts", 0, "prediction", "kind"), "PROBABILITY")),
     ("OPEN forecast cannot contain resolution", "examples/forecast.minimal.json", "schemas/forecast.schema.json", set_value(("forecasts", 0, "resolution"), {"resolved_at": "2026-09-01T08:00:00Z", "resolved_by": {"actor_type": "HUMAN", "actor_id": "reviewer-001"}, "actual_value": "UP", "source_refs": ["official-close-dataset"], "source_vintage": "2026-08-31", "applied_rule": "Demonstrationsregel", "score": 1, "rationale": "Aufgeloest."})),
     ("APPLIED review requires APPLIED audit event", "examples/review.minimal.json", "schemas/review.schema.json", remove_applied_review_event),
@@ -194,6 +234,21 @@ def main() -> int:
             return 1
         positive_count += 1
         print(f"PASS positive: {example_path}")
+
+    data_driven = load("examples/hypothesis_candidate.minimal.json")
+    configure_data_driven_selection(data_driven)
+    candidate_validator = validators.setdefault(
+        "schemas/hypothesis_candidate.schema.json",
+        validator("schemas/hypothesis_candidate.schema.json"),
+    )
+    errors = list(candidate_validator.iter_errors(data_driven))
+    if errors:
+        print("Expected valid data-driven candidate was rejected", file=sys.stderr)
+        for error in errors:
+            print(f"- {error.json_path}: {error.message}", file=sys.stderr)
+        return 1
+    positive_count += 1
+    print("PASS positive: data-driven variable-selection provenance")
 
     for name, fixture_path, schema_path, mutation in NEGATIVES:
         document = load(fixture_path)

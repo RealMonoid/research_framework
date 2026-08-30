@@ -30,6 +30,25 @@ function Test-ValidFixture {
     Write-Output "PASS positive: $Example"
 }
 
+function Test-ValidValue {
+    param(
+        [Parameter(Mandatory)][string]$Name,
+        [Parameter(Mandatory)][object]$Value,
+        [Parameter(Mandatory)][string]$Schema
+    )
+
+    $json = $Value | ConvertTo-Json -Depth 100
+    $schemaPath = Join-Path $repoRoot $Schema
+    $validationErrors = @()
+    $valid = $json | Test-Json -SchemaFile $schemaPath -ErrorAction SilentlyContinue -ErrorVariable +validationErrors
+    if (-not $valid) {
+        $details = $validationErrors -join [Environment]::NewLine
+        throw "Expected valid value was rejected: $Name`n$details"
+    }
+    $script:PositiveCount++
+    Write-Output "PASS positive: $Name"
+}
+
 function Test-RejectedFixture {
     param(
         [Parameter(Mandatory)][string]$Name,
@@ -47,6 +66,30 @@ function Test-RejectedFixture {
     Write-Output "PASS negative: $Name"
 }
 
+function Set-DataDrivenVariableSelection {
+    param([Parameter(Mandatory)][object]$Candidate)
+
+    $Candidate.variable_selection = [PSCustomObject]@{
+        mode = 'DATA_DRIVEN'
+        rationale = 'A discovery-only screen reduced a frozen candidate universe before the validation sample was opened.'
+        candidate_universe_ref = 'artifact:variable-universe-v1'
+        selection_data_refs = @('dataset:es-lob-discovery-v1')
+        selection_dataset_role = 'DISCOVERY'
+        outcome_visibility = 'VISIBLE_DURING_SELECTION'
+        selection_methods = @('method:mutual-information-screen')
+        retained_variable_refs = @(
+            'variable:top3-order-flow-imbalance',
+            'variable:spread-state'
+        )
+        effective_candidate_count = 48
+        search_space_ref = 'search-space:ofi-variable-screen-v1'
+        selection_bias_controls = @(
+            'All 48 candidates remain in the search log.',
+            'Selection uses discovery data only; validation remains sealed.'
+        )
+    }
+}
+
 $positivePairs = @(
     @('examples\run_manifest.minimal.json', 'schemas\run_manifest.schema.json'),
     @('examples\evidence.minimal.json', 'schemas\evidence.schema.json'),
@@ -62,6 +105,10 @@ $positivePairs = @(
 foreach ($pair in $positivePairs) {
     Test-ValidFixture -Example $pair[0] -Schema $pair[1]
 }
+
+$candidateDataDriven = Read-JsonText -RelativePath 'examples\hypothesis_candidate.minimal.json' | ConvertFrom-Json -Depth 100
+Set-DataDrivenVariableSelection -Candidate $candidateDataDriven
+Test-ValidValue -Name 'data-driven variable-selection provenance' -Value $candidateDataDriven -Schema 'schemas\hypothesis_candidate.schema.json'
 
 $runUnexpected = Read-JsonText -RelativePath 'examples\run_manifest.minimal.json' | ConvertFrom-Json -Depth 100
 $runUnexpected | Add-Member -NotePropertyName 'unexpected_field' -NotePropertyValue $true
@@ -186,6 +233,10 @@ $candidatePromotedWithoutScope = Read-JsonText -RelativePath 'examples\hypothesi
 $candidatePromotedWithoutScope.PSObject.Properties.Remove('research_scope')
 Test-RejectedFixture -Name 'PROMOTED candidate requires full research scope' -Value $candidatePromotedWithoutScope -Schema 'schemas\hypothesis_candidate.schema.json'
 
+$candidatePromotedWithoutVariableSelection = Read-JsonText -RelativePath 'examples\hypothesis_candidate.minimal.json' | ConvertFrom-Json -Depth 100
+$candidatePromotedWithoutVariableSelection.PSObject.Properties.Remove('variable_selection')
+Test-RejectedFixture -Name 'PROMOTED candidate requires variable-selection provenance' -Value $candidatePromotedWithoutVariableSelection -Schema 'schemas\hypothesis_candidate.schema.json'
+
 $candidateWithoutInstrument = Read-JsonText -RelativePath 'examples\hypothesis_candidate.minimal.json' | ConvertFrom-Json -Depth 100
 $candidateWithoutInstrument.research_scope.instruments = @()
 Test-RejectedFixture -Name 'hypothesis candidate scope requires an instrument' -Value $candidateWithoutInstrument -Schema 'schemas\hypothesis_candidate.schema.json'
@@ -261,6 +312,26 @@ $candidateNetEdgeWithoutForwardSupport.epistemic_stage_status.forward_predictive
 $candidateNetEdgeWithoutForwardSupport.epistemic_stage_status.executable_net_edge.status = 'SUPPORTED'
 $candidateNetEdgeWithoutForwardSupport.epistemic_stage_status.executable_net_edge.evidence_refs = @('validation:net-edge-positive')
 Test-RejectedFixture -Name 'supported executable net edge requires supported forward OOS evidence' -Value $candidateNetEdgeWithoutForwardSupport -Schema 'schemas\hypothesis_candidate.schema.json'
+
+$candidateDataDrivenWithoutUniverse = Read-JsonText -RelativePath 'examples\hypothesis_candidate.minimal.json' | ConvertFrom-Json -Depth 100
+Set-DataDrivenVariableSelection -Candidate $candidateDataDrivenWithoutUniverse
+$candidateDataDrivenWithoutUniverse.variable_selection.candidate_universe_ref = $null
+Test-RejectedFixture -Name 'data-driven selection requires candidate-universe provenance' -Value $candidateDataDrivenWithoutUniverse -Schema 'schemas\hypothesis_candidate.schema.json'
+
+$candidateDataDrivenWithoutSearchSpace = Read-JsonText -RelativePath 'examples\hypothesis_candidate.minimal.json' | ConvertFrom-Json -Depth 100
+Set-DataDrivenVariableSelection -Candidate $candidateDataDrivenWithoutSearchSpace
+$candidateDataDrivenWithoutSearchSpace.variable_selection.search_space_ref = $null
+Test-RejectedFixture -Name 'data-driven selection requires a frozen search-space reference' -Value $candidateDataDrivenWithoutSearchSpace -Schema 'schemas\hypothesis_candidate.schema.json'
+
+$candidateDataDrivenWithoutBiasControls = Read-JsonText -RelativePath 'examples\hypothesis_candidate.minimal.json' | ConvertFrom-Json -Depth 100
+Set-DataDrivenVariableSelection -Candidate $candidateDataDrivenWithoutBiasControls
+$candidateDataDrivenWithoutBiasControls.variable_selection.selection_bias_controls = @()
+Test-RejectedFixture -Name 'data-driven selection requires selection-bias controls' -Value $candidateDataDrivenWithoutBiasControls -Schema 'schemas\hypothesis_candidate.schema.json'
+
+$candidateDataDrivenWithoutDataRole = Read-JsonText -RelativePath 'examples\hypothesis_candidate.minimal.json' | ConvertFrom-Json -Depth 100
+Set-DataDrivenVariableSelection -Candidate $candidateDataDrivenWithoutDataRole
+$candidateDataDrivenWithoutDataRole.variable_selection.selection_dataset_role = 'NOT_APPLICABLE'
+Test-RejectedFixture -Name 'data-driven selection cannot use NOT_APPLICABLE data role' -Value $candidateDataDrivenWithoutDataRole -Schema 'schemas\hypothesis_candidate.schema.json'
 
 $forecastUncalibrated = Read-JsonText -RelativePath 'examples\forecast.minimal.json' | ConvertFrom-Json -Depth 100
 $forecastUncalibrated.forecasts[0].prediction.kind = 'PROBABILITY'

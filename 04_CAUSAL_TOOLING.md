@@ -1,9 +1,9 @@
 # 04_CAUSAL_TOOLING.md
 
-**Version:** 1.0  
-**Stand:** 2026-08-27  
+**Version:** 1.1
+**Stand:** 2026-08-31
 **Status:** ENTWURF ZUR ÜBERNAHME  
-**Zweck:** Verbindlicher Router für spezialisierte Python-Bibliotheken bei DAG-Prüfung, Identifikation, kausaler Schätzung, Refutation und zeitserienspezifischer Causal Discovery.
+**Zweck:** Verbindlicher Router für spezialisierte Python-Bibliotheken bei expliziter Identifikation, optionaler DAG-Prüfung, kausaler Schätzung, Refutation und zeitserienspezifischer Causal Discovery.
 
 ---
 
@@ -43,6 +43,12 @@ Eine Bibliothek kann die logischen und numerischen Operationen korrekt ausführe
 
 Ein erfolgreiches API-Ergebnis erhöht den Claim-Level nicht. `ASSOCIATIONAL_PREDICTIVE`, `INTERVENTIONAL` und `COUNTERFACTUAL` werden ausschließlich nach `01_RESEARCH_STANDARD.md` vergeben.
 
+Auch die Bibliothekswahl entscheidet nicht über den Formalismus. Je nach Frage
+kann das Identifikationsmodell als SCM/DAG, Potential-Outcomes-Design,
+strukturell-ökonometrisches oder anderes explizites Modell formuliert werden.
+Graphbibliotheken sind nur dann Pflicht, wenn eine graphische Kernoperation
+tatsächlich Teil des Designs ist.
+
 Für diese Arbeit muss kein eigenes LLM trainiert werden. `EconML`, `DoubleML` und ähnliche Verfahren können im Research Nuisance- oder Effektmodelle fitten; das ist normale statistische Modellschätzung und kein Training eines Sprachmodells.
 
 ---
@@ -74,8 +80,10 @@ Kausalbibliothek: `TOOLING_NOT_REQUIRED`, sofern kein kausaler Effekt oder DAG-C
 
 ## 4.2 Identifizierter durchschnittlicher Effekt
 
-1. Estimand und DAG festlegen.
-2. Adjustmentsatz/Identifikationsstrategie mit `DoWhy` oder `pgmpy` prüfen.
+1. Estimand und explizites Identifikationsmodell festlegen.
+2. Bei SCM/DAG-Designs Adjustmentsatz und Identifikationsstrategie mit `DoWhy`
+   oder `pgmpy` prüfen; bei Potential Outcomes oder anderen Designs die
+   designspezifischen Identifikationsbedingungen und Diagnosen protokollieren.
 3. Den einfachsten designspezifisch geeigneten Schätzer wählen.
 4. Schätzung und Refutation mit `DoWhy` beziehungsweise designspezifischer Bibliothek ausführen.
 5. Mindestens eine unabhängige Diagnose vorsehen, etwa alternative zulässige Adjustierung, Negativkontrolle, Placebo oder Sensitivitätsanalyse.
@@ -125,7 +133,7 @@ Vor der ersten Analyse sind zu protokollieren:
 - Lockfile beziehungsweise vollständiger Environment-Export,
 - Hauptklasse/-funktion und relevante Parameter,
 - Zufallsseeds,
-- Graph-, Estimand- und Datenversions-ID,
+- Strukturmodell-/Design-, Estimand- und Datenversions-ID,
 - Split-/Cross-Fitting-Logik,
 - relevante Runtime-Warnungen und Deprecations,
 - sowie Pfad oder Hash der erzeugten Konfiguration und Ergebnisse.
@@ -141,7 +149,9 @@ Vor Freeze muss bei `TOOLING_REQUIRED` Folgendes `PASS` sein:
 1. Import aller benötigten Pakete.
 2. Ausgabe der tatsächlichen Versionen.
 3. Ausführung der konkret verwendeten Haupt-API ohne unerklärte Warnung.
-4. Synthetischer DAG mit bekanntem zulässigem Adjustmentsatz.
+4. Synthetisches, zum Formalismus passendes Identifikationsdesign mit bekanntem
+   Zielwert; bei graphischer Adjustierung zusätzlich ein bekannter zulässiger
+   Adjustmentsatz.
 5. Synthetischer positiver Effekt mit bekanntem Vorzeichen.
 6. Synthetischer Nullfall, in dem die Pipeline keinen stabilen Effekt erfinden darf.
 7. Mindestens ein Collider-/post-treatment-Sentinel, wenn Adjustierung Teil der Analyse ist.

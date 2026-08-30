@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "urn:research-framework:schema:hypothesis-candidate:1.1.0",
+  "$id": "urn:research-framework:schema:hypothesis-candidate:1.2.0",
   "title": "Hypothesis Candidate Inbox Entry",
   "description": "Versionierter Intake-Datensatz fuer rohe Research-Ideen. Promotion bedeutet nur, dass das Screening vollstaendig genug fuer formales Research ist; sie bestaetigt weder Mechanismus noch OOS-Prognosewert noch ausfuehrbare Netto-Edge.",
   "type": "object",
@@ -21,7 +21,7 @@
   ],
   "properties": {
     "schema_version": {
-      "const": "1.1.0"
+      "const": "1.2.0"
     },
     "candidate_id": {
       "$ref": "#/$defs/stableId",
@@ -56,6 +56,9 @@
       "type": "string",
       "minLength": 1,
       "maxLength": 8000
+    },
+    "variable_selection": {
+      "$ref": "#/$defs/variableSelection"
     },
     "idea_class": {
       "type": "string",
@@ -294,6 +297,7 @@
       "then": {
         "required": [
           "research_scope",
+          "variable_selection",
           "idea_class",
           "mechanism_family",
           "observable_footprints",
@@ -827,6 +831,150 @@
           }
         }
       ]
+    },
+    "variableSelection": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "mode",
+        "rationale",
+        "candidate_universe_ref",
+        "selection_data_refs",
+        "selection_dataset_role",
+        "outcome_visibility",
+        "selection_methods",
+        "retained_variable_refs",
+        "effective_candidate_count",
+        "search_space_ref",
+        "selection_bias_controls"
+      ],
+      "properties": {
+        "mode": {
+          "type": "string",
+          "enum": [
+            "PREDEFINED",
+            "DATA_DRIVEN",
+            "HYBRID"
+          ]
+        },
+        "rationale": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4000
+        },
+        "candidate_universe_ref": {
+          "$ref": "#/$defs/nullableStableId"
+        },
+        "selection_data_refs": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/$defs/stableId"
+          }
+        },
+        "selection_dataset_role": {
+          "type": "string",
+          "enum": [
+            "NOT_APPLICABLE",
+            "DISCOVERY",
+            "DEVELOPMENT"
+          ]
+        },
+        "outcome_visibility": {
+          "type": "string",
+          "enum": [
+            "NOT_USED",
+            "VISIBLE_DURING_SELECTION",
+            "NESTED_WITHIN_EVALUATION"
+          ]
+        },
+        "selection_methods": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/$defs/stableId"
+          },
+          "description": "Offene Methodenreferenzen. Feature Importance, Shapley- oder Impurity-Verfahren sind zulaessige Optionen, aber weder Pflicht noch Kausalitaetsnachweis."
+        },
+        "retained_variable_refs": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/$defs/stableId"
+          }
+        },
+        "effective_candidate_count": {
+          "oneOf": [
+            {
+              "type": "integer",
+              "minimum": 1
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "search_space_ref": {
+          "$ref": "#/$defs/nullableStableId"
+        },
+        "selection_bias_controls": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2000
+          }
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "required": [
+              "mode"
+            ],
+            "properties": {
+              "mode": {
+                "enum": [
+                  "DATA_DRIVEN",
+                  "HYBRID"
+                ]
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "candidate_universe_ref": {
+                "$ref": "#/$defs/stableId"
+              },
+              "selection_data_refs": {
+                "minItems": 1
+              },
+              "selection_dataset_role": {
+                "enum": [
+                  "DISCOVERY",
+                  "DEVELOPMENT"
+                ]
+              },
+              "selection_methods": {
+                "minItems": 1
+              },
+              "effective_candidate_count": {
+                "type": "integer",
+                "minimum": 1
+              },
+              "search_space_ref": {
+                "$ref": "#/$defs/stableId"
+              },
+              "selection_bias_controls": {
+                "minItems": 1
+              }
+            }
+          }
+        }
+      ],
+      "description": "Provenienz der Variablen- und Konstruktauswahl. PREDEFINED benoetigt nur einen knappen, nachvollziehbaren Record; DATA_DRIVEN und HYBRID muessen Kandidatenuniversum, Datenrolle, Suchraum und Auswahlbias-Kontrollen offenlegen."
     },
     "actorConstraint": {
       "type": "object",

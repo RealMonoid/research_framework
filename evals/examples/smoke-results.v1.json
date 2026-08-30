@@ -1,7 +1,7 @@
 {
   "schema_version": "eval-results.v2",
   "catalog_id": "research-agent-core",
-  "catalog_version": "1.3.0",
+  "catalog_version": "1.4.0",
   "run_id": "smoke-reference-v1",
   "created_at": "2026-08-30T00:00:00+02:00",
   "run_kind": "PROTOCOL_SMOKE",
@@ -268,6 +268,55 @@
         "known_events_filtered": false,
         "news_free_claim_allowed": false,
         "required_next_gate": "EVENT_FEED_COVERAGE_AND_EXCLUSION_WINDOWS"
+      }
+    },
+    "identified_effect_not_automatic_net_edge": {
+      "claims": {
+        "identified_effect": {
+          "statement_class": "SOURCE_FACT",
+          "evidence_status": "SUPPORTED",
+          "source_ids": [
+            "synthetic_identified_effect_below_costs"
+          ],
+          "value": 0.6,
+          "unit": "ticks"
+        },
+        "net_edge_after_costs": {
+          "statement_class": "SOURCE_FACT",
+          "evidence_status": "SUPPORTED",
+          "source_ids": [
+            "synthetic_identified_effect_below_costs"
+          ],
+          "value": -0.4,
+          "unit": "ticks"
+        }
+      },
+      "hypothesis_intake": {
+        "claim_level": "INTERVENTIONAL",
+        "identification_status": "PASS",
+        "epistemic_stage_status": {
+          "mechanism_supported": {
+            "status": "UNKNOWN",
+            "evidence_refs": [],
+            "rationale": "The design identifies an intervention effect but does not identify the proposed inventory-risk mechanism.",
+            "assessed_at": "2026-08-31T12:00:00Z"
+          },
+          "forward_predictive_oos": {
+            "status": "UNKNOWN",
+            "evidence_refs": [],
+            "rationale": "Identification of an average effect is not a frozen forward prediction.",
+            "assessed_at": "2026-08-31T12:00:00Z"
+          },
+          "executable_net_edge": {
+            "status": "NOT_SUPPORTED",
+            "evidence_refs": [
+              "synthetic_identified_effect_below_costs"
+            ],
+            "rationale": "The measured executable effect is negative after spread, fees, slippage, and latency.",
+            "assessed_at": "2026-08-31T12:00:00Z"
+          }
+        },
+        "release_decision": "ECONOMICALLY_UNTRADEABLE"
       }
     }
   }
