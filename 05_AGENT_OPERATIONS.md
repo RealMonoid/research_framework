@@ -1,6 +1,6 @@
 # 05_AGENT_OPERATIONS.md
 
-**Version:** 1.2
+**Version:** 1.3
 **Stand:** 2026-08-30  
 **Status:** ENTWURF ZUR ÜBERNAHME  
 **Zweck:** Normative operative Kontrollschicht für reproduzierbare, überprüfbare und revisionssichere Läufe eines AI-Research-Agenten.
@@ -17,7 +17,8 @@ Dieses Dokument ergänzt den methodischen Kern aus:
 - **03_RESEARCH_METHODS.md**,
 - **04_CAUSAL_TOOLING.md**.
 
-Bei aktivierter operativer Schicht wird dieses Dokument nach **04_CAUSAL_TOOLING.md** gelesen.
+Die zum erzeugten Artefakt oder Systemwechsel gehörenden Abschnitte werden über
+`QUICKSTART.md` geladen. Eine vollständige Vorablektüre ist nicht erforderlich.
 
 Die Aufgabenteilung ist verbindlich:
 
@@ -35,6 +36,18 @@ Dieses Dokument darf kein Forschungs-Gate aus 00–04 aufwerten, umgehen oder in
 - Das Forecast Ledger ersetzt weder die Vorhersage-Liste aus **01 §12.1 / 02 §J** noch unabhängige Validation.
 
 Die Wörter **MUSS**, **DARF NICHT**, **SOLL** und **DARF** sind normativ. Ist ein Pflichtfeld technisch nicht verfügbar, wird es nicht geraten oder leer gelassen, sondern mit **UNAVAILABLE**, Grund und Auswirkung protokolliert. Ein fehlender Pflichtwert kann je nach Auswirkung zu **PARTIAL**, **BLOCKED** oder **FAILED** führen.
+
+## 1.1 Technische Enforcement-Grenze
+
+Normative Prosa ist eine Verhaltensvorgabe, kein technischer Beweis. Ein Agent kann
+einen Status falsch deklarieren. Automatisch belastbar sind nur Eigenschaften,
+die ein benanntes Schema, ein deterministischer Test oder ein CI-/Eval-Gate
+prüft. Human Review und unabhängige Evidence-Prüfung bleiben für semantische
+Richtigkeit erforderlich.
+
+Ein `PROTOCOL_SMOKE` prüft ausschließlich Adaptervertrag, Scorer und
+Regressionserkennung. Nur ein blind produzierter `LIVE_AGENT`-Lauf darf eine
+Modell-, Prompt- oder Agentenfreigabe tragen.
 
 ---
 
@@ -60,6 +73,7 @@ IDs sind opake Schlüssel. Sie werden nicht nachträglich wiederverwendet oder a
 | Run Manifest | bei jedem Lauf | **schemas/run_manifest.schema.json** |
 | Evidence-Dokument | sobald ein materieller Claim erzeugt oder übernommen wird | **schemas/evidence.schema.json** |
 | Review-Dokument | bei menschlicher Prüfung, Korrektur, Freigabe, Ablehnung oder Override | **schemas/review.schema.json** |
+| Constraint-/Lever-Assessment | bei Verwendung eines der vier Constraint-/Lever-Labels | **schemas/constraint_assessment.schema.json** |
 | Trace | bei jedem Modell-, Tool-, Retrieval- und Validierungsschritt | Regeln in §6 |
 | Error Log | sobald Warnung oder Fehler auftritt | Regeln in §7 |
 | Delta Report | wenn ein Baseline-Lauf oder eine freigegebene Vorgängerversion existiert | Regeln in §9 |
@@ -67,10 +81,11 @@ IDs sind opake Schlüssel. Sie werden nicht nachträglich wiederverwendet oder a
 | Eval Result | bei Agenten-, Prompt-, Modell-, Tool-, Router- oder Schemaänderung | **evals/catalog.v1.json** und §11 |
 | Multi-Agent Report | sobald mehr als ein Agent fachlich beiträgt | Regeln in §12 |
 
-Die Beispiele unter **examples/** zeigen minimale syntaktisch gültige Instanzen für
-Hypothesen-Intake, Run Manifest, Evidence, Forecast Ledger und Review. Sie sind
-keine Freigabe eines realen Laufs und kein Ersatz für die semantischen Regeln
-dieses Dokuments.
+Die Beispiele unter **examples/** zeigen minimale syntaktisch gültige Instanzen.
+Sie sind keine Freigabe eines realen Laufs und kein Ersatz für die semantischen
+Regeln dieses Dokuments. Insbesondere enthält das Repository noch keinen
+vollständig durchgearbeiteten realen Research Case und beansprucht daher keine
+end-to-end Praxisvalidierung.
 
 ## 2.3 Schema- und Integritätsregel
 
@@ -84,7 +99,12 @@ Ein Artefakt ist nur gültig, wenn:
 
 JSON-Schema-Validität ist notwendig, aber nicht hinreichend. Ein formal gültiger, sachlich falscher oder nicht belegter Inhalt bleibt ungültig.
 
-Die versionierten positiven und negativen Schema-Vertragstests werden mit **scripts/test_schemas.ps1** ausgeführt. **scripts/validate_framework.ps1** verbindet diese Tests mit Eval-Runner und Eval-Unit-Tests zu einem lokalen Gesamtcheck. Ein grüner technischer Gesamtcheck ersetzt weiterhin weder die semantische Artefaktprüfung noch Human Review.
+Die positiven und negativen Schema-Vertragstests besitzen zwei CI-geprüfte
+Einstiege: **scripts/test_schemas.py** plattformneutral und
+**scripts/test_schemas.ps1** für PowerShell. **scripts/validate_framework.py**
+verbindet Schema-, Producer-, Scorer- und Unit-Tests; der PowerShell-Gesamtcheck
+bleibt als zweiter Pfad erhalten. Ein grüner Integritätscheck ersetzt weder einen
+`LIVE_AGENT`-Lauf noch semantische Artefaktprüfung oder Human Review.
 
 ## 2.4 Laufstatus
 
@@ -904,10 +924,11 @@ Die Agenten-Evals prüfen, ob Änderungen am LLM-System die operative Qualität 
 Verbindliche Artefakte sind:
 
 - **evals/catalog.v1.json** mit **schema_version = eval-catalog.v1**,
-- **evals/examples/smoke-results.v1.json** mit **schema_version = eval-results.v1**,
+- **evals/examples/smoke-results.v1.json** mit **schema_version = eval-results.v2** und **run_kind = PROTOCOL_SMOKE**,
 - **evals/baseline.v1.json** mit **schema_version = eval-baseline.v1**,
+- **evals/produce_results.py** als blinder Producer für Subprozess- oder JSON/HTTP-Agentenadapter,
 - **evals/run_evals.py**,
-- **evals/tests/test_run_evals.py**,
+- **evals/tests/test_run_evals.py** und **evals/tests/test_produce_results.py**,
 - **evals/README.md**.
 
 ## 11.2 Verbindlicher Ablauf
@@ -916,9 +937,9 @@ Jede Verbesserung folgt genau dieser Reihenfolge:
 
 1. **Fehler erfassen:** Error-, Claim-, Trace- und Run-Referenzen sichern.
 2. **Testfall vor Änderung:** minimalen reproduzierbaren Fall oder eine verallgemeinerte Erwartung in den Eval-Katalog aufnehmen.
-3. **Baseline messen:** unverändertes System auf demselben eingefrorenen Katalog ausführen.
+3. **Baseline produzieren und messen:** unverändertes System über den blinden Producer auf demselben eingefrorenen Katalog ausführen; Erwartungen werden dem Agenten nicht übergeben.
 4. **Eine versionierte Änderung:** Prompt, Modell, Tool, Router, Schema oder Code eindeutig benennen.
-5. **Kandidat messen:** gleiche Fälle und gleiche Randbedingungen; nur die beabsichtigte Änderung darf differieren.
+5. **Kandidat produzieren und messen:** gleiche Fälle und gleiche Randbedingungen; nur die beabsichtigte Änderung darf differieren.
 6. **Regression Gate:** Struktur, Mindestwerte und Baseline-Policy prüfen.
 7. **Human Review:** Ergebnis, Risiken, Scope und Rollback freigeben.
 8. **Release und Monitoring:** Baseline bewusst aktualisieren, Änderung ausrollen und Deltas beobachten.
@@ -948,7 +969,13 @@ Zusätzlich gilt:
 
 Eine Verbesserung des Gesamtscores kompensiert keinen Rückgang einer einzelnen Pflichtmetrik oder eines einzelnen Falls.
 
-## 11.4 Runner- und Freigaberegel
+## 11.4 Producer-, Runner- und Freigaberegel
+
+Der Producer ruft für jeden Katalogfall genau einen konfigurierten Agentenadapter
+auf und erzeugt `eval-results.v2`. Der Request enthält Fallinput und
+Outputvertrag, aber keine `expected.assertions`. Unterstützt werden ein lokaler
+Subprozess ohne Shell und ein HTTPS-JSON-Endpunkt. Adapter-ID, Laufart, Zeit und
+Konfigurationshash werden im Ergebnis gespeichert.
 
 Der Runner verwendet:
 
@@ -957,6 +984,17 @@ Der Runner verwendet:
 - Exit **2**: harter Struktur-/Konfigurationsfehler.
 
 Nur Exit 0 darf ein Eval-Gate **PASS** erzeugen. Exit 1 oder 2 blockiert die Freigabe der Änderung.
+
+Diese Regel ist zweistufig:
+
+- `PROTOCOL_SMOKE + Exit 0` bedeutet nur **FRAMEWORK_INTEGRITY_PASS**.
+- Für eine Modell-/Prompt-/Agentenfreigabe muss der Runner zusätzlich mit
+  `--require-run-kind LIVE_AGENT` ausgeführt werden. Ein Smoke-Fixture scheitert
+  an diesem Release-Gate auch bei Score 1,000.
+
+GitHub Actions führt die plattformneutralen und PowerShell-Integritätschecks bei
+Push und Pull Request aus. Der Live-Agent-Workflow ist manuell und benötigt einen
+konfigurierten Adapter-Endpunkt; ohne ihn existiert kein Live-Qualitätsclaim.
 
 Die Baseline wird nur nach dokumentierter menschlicher **APPROVAL** aktualisiert. Eval-Fälle, die durch das Training oder die Änderung direkt bekannt wurden, werden als Development-Evals gekennzeichnet; ein separater geschützter Holdout bleibt nötig, sobald systematische Optimierung beginnt.
 

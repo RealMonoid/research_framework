@@ -39,4 +39,4 @@ if ($LASTEXITCODE -ne 0) {
     throw "Eval-Unit-Tests fehlgeschlagen (Exit $LASTEXITCODE)."
 }
 
-Write-Output 'Framework validation passed.'
+Write-Output 'Framework integrity passed. LIVE_AGENT release gate was NOT run; use scripts/validate_framework.py --live-results <path> for a model or prompt release claim.'

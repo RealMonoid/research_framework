@@ -1,78 +1,82 @@
-# Eval- und Regressionsgrundgerüst
+# Eval-Producer, Scorer und Regression Gate
 
-Dieses Verzeichnis enthält einen kleinen, deterministischen Qualitätsgate für die
-operative Research-Agent-Schicht. Es benötigt ausschließlich die
-Python-Standardbibliothek. Bewertet wird ein strukturierter Ergebnisadapter, nicht
-der Wortlaut einer Antwort. Dadurch ist jede Bewertung reproduzierbar und bis zur
-einzelnen Erwartung erklärbar.
+Dieses Verzeichnis trennt drei Dinge, die nicht verwechselt werden dürfen:
 
-## Artefakte und Versionierung
+1. Ein handgeschriebenes Fixture prüft Vertrag und Scorer.
+2. Der Producer ruft einen realen Agentenadapter blind auf.
+3. Der Scorer bewertet das produzierte Ergebnis gegen Katalog und Baseline.
 
-- `catalog.v1.json` ist der versionierte Fallkatalog (`eval-catalog.v1`).
-- `examples/smoke-results.v1.json` zeigt den erwarteten Ergebnisadapter
-  (`eval-results.v1`).
-- `baseline.v1.json` hält Freigabeschwellen und die zuletzt akzeptierten Scores
-  (`eval-baseline.v1`).
-- `run_evals.py` validiert, bewertet und vergleicht mit der Baseline.
-- `tests/test_run_evals.py` prüft Smoke-Pfad, Regressionserkennung und strukturelle
-  Fehler.
+Producer und Scorer benötigen nur die Python-Standardbibliothek. Die
+plattformneutrale Schema-Suite verwendet die gepinnte Development-Abhängigkeit
+aus `requirements-dev.txt`.
 
-`catalog_version` folgt SemVer. Eine Änderung an Eingaben, Erwartungen, Gewichtung
-oder Fallbedeutung erhöht mindestens die Minor-Version; inkompatible Änderungen am
-Adapter oder an der Semantik erhöhen die Major-Version. Katalog, Ergebnisse und
-Baseline müssen dieselbe exakte Katalogversion nennen. Die `schema_version` wird
-nur bei einer Änderung des jeweiligen Dateivertrags erhöht.
+## Artefakte
 
-## Schnellstart
+- `catalog.v1.json`: versionierte Inputs und erwartete Assertions.
+- `examples/smoke-results.v1.json`: handgeschriebenes `PROTOCOL_SMOKE`-Fixture
+  mit `schema_version = eval-results.v2`; kein Agentenqualitätsbeleg.
+- `baseline.v1.json`: Mindestwerte und akzeptierte Vergleichsscores.
+- `produce_results.py`: blinder COMMAND-/HTTP_JSON-Producer.
+- `run_evals.py`: Strukturprüfung, Scoring und Regression Gate.
+- `tests/test_produce_results.py`: Producerblindheit und Run-Klassen.
+- `tests/test_run_evals.py`: Scoring, Fehlerpfade und Regressionserkennung.
 
-Vom Projektwurzelverzeichnis:
+Katalog, Ergebnis und Baseline müssen dieselbe `catalog_version` nennen. Änderungen
+an Input, Erwartung, Gewichtung oder Fallbedeutung erhöhen die Katalogversion.
+
+## Framework-Integrität
+
+```bash
+python -m pip install -r requirements-dev.txt
+python scripts/validate_framework.py
+```
+
+PowerShell bleibt als separat in CI geprüfter Einstieg erhalten:
 
 ```powershell
 .\scripts\validate_framework.ps1
 ```
 
-Dieser Gesamtcheck prüft zuerst alle operativen JSON-Schemas einschließlich
-negativer Fixtures und führt danach Eval-Gate und Unit Tests aus. Die Eval-Schicht
-kann auch einzeln ausgeführt werden:
+Ohne `--live-results` prüfen beide Pfade Framework- und Protokollintegrität, nicht
+die Qualität eines Modells oder Prompts.
 
-```powershell
-python evals/run_evals.py
-python -m unittest discover -s evals/tests -v
+## Blinder Producer
+
+Der Request enthält `case_id`, Capability, Beschreibung, Fallinput, Quellen und
+Outputvertrag. `expected.assertions` wird niemals an den Adapter gesendet. Jeder
+Katalogfall erhält einen eigenen Aufruf.
+
+Lokaler Adapter – das JSON-Array wird ohne Shell ausgeführt:
+
+```bash
+python evals/produce_results.py \
+  --output artifacts/live-results.json \
+  --run-id candidate-agent-001 \
+  --run-kind LIVE_AGENT \
+  --adapter-id local-agent \
+  --command-json '["python","my_agent_adapter.py"]'
 ```
 
-Wenn unter Windows nur der Launcher verfügbar ist, kann `py -3` anstelle von
-`python` verwendet werden. Falls im lokalen Codex-Desktop kein System-Python
-installiert ist, steht in der aktuellen Workspace-Runtime außerdem diese gebündelte
-Alternative bereit:
+Providerneutraler HTTPS-Adapter:
 
-```powershell
-$codexPython = Join-Path $env:USERPROFILE `
-  '.cache\codex-runtimes\codex-primary-runtime\dependencies\python\python.exe'
-& $codexPython evals/run_evals.py
+```bash
+python evals/produce_results.py \
+  --output artifacts/live-results.json \
+  --run-id candidate-agent-002 \
+  --run-kind LIVE_AGENT \
+  --adapter-id http-agent \
+  --http-endpoint https://agent.example/eval \
+  --token-env EVAL_AGENT_TOKEN
 ```
 
-Der Pfad ist installationsabhängig; die vom Workspace gemeldete Python-Runtime ist
-maßgeblich. Ein eigener Lauf wird so geprüft:
-
-```powershell
-python evals/run_evals.py `
-  --results path/to/results.json `
-  --report path/to/eval-report.json `
-  --verbose
-```
-
-Exitcodes sind absichtlich CI-tauglich:
-
-- `0`: Struktur, Schwellen und Regressionstest bestanden.
-- `1`: mindestens ein Qualitätsgate oder Regressionstest fehlgeschlagen.
-- `2`: Katalog, Resultat oder Baseline ist strukturell ungültig bzw. ein Bericht
-  konnte nicht geschrieben werden.
+Der Adapter liest genau ein JSON-Request von stdin beziehungsweise aus dem
+HTTP-Body und liefert genau ein JSON-Fallergebnis. Der Producer assembliert alle
+Fälle, prüft Struktur und Quellenreferenzen und schreibt das Ergebnis atomar.
+Tokenwerte werden weder gespeichert noch gehasht.
 
 ## Ergebnisadapter
 
-Eine Ergebnisdatei enthält Metadaten und ein Objekt `cases`, das jeden Katalogfall
-genau einmal abbildet. Jeder Fall besitzt ein `claims`-Objekt, dessen Claims
-mindestens diese Felder tragen:
+Jeder Fall besitzt ein `claims`-Objekt. Ein Claim enthält mindestens:
 
 ```json
 {
@@ -82,118 +86,58 @@ mindestens diese Felder tragen:
 }
 ```
 
-Zulässige epistemische Klassen sind `SOURCE_FACT`, `CALCULATED_VALUE`, `ESTIMATE`,
-`INFERENCE`, `FORECAST` und `HUMAN_JUDGMENT`. Die Evidenzzustände sind
-`SUPPORTED`, `PARTIAL`, `UNKNOWN`, `CONFLICTING`, `STALE` und `NOT_APPLICABLE`.
-Eine `source_id` darf nur auf eine Quelle im jeweiligen Katalogfall zeigen.
+Zulässige Klassen sind `SOURCE_FACT`, `CALCULATED_VALUE`, `ESTIMATE`,
+`INFERENCE`, `FORECAST` und `HUMAN_JUDGMENT`. Evidenzzustände sind `SUPPORTED`,
+`PARTIAL`, `UNKNOWN`, `CONFLICTING`, `STALE` und `NOT_APPLICABLE`. Quellen-IDs
+dürfen nur auf Quellen des jeweiligen Katalogfalls zeigen.
 
-Die Fähigkeit `academic_source_status` verlangt zusätzlich eine explizite
-`academic_source_assessment`. Beim q-fin-Referenzfall muss sie den Status
-`PREPRINT`, die Kategorie `q-fin.ST`, die exakte Version `v2`, die Verwendung
-`PROVISIONAL_ONLY` und den Peer-Review-Status `NOT_PEER_REVIEWED` erhalten.
+## Run-Klassen
 
-Die Fähigkeit `hypothesis_intake` trennt einen plausiblen Mechanismus und
-kontemporäre Evidenz strikt von einer Forward-Out-of-sample-Prognose und einem
-ausführbaren Netto-Edge. Wiederkehrende öffentliche Prints dürfen ohne
-Teilnehmer- oder Parent-Order-Labels nur probabilistisch als möglicher
-Execution-Algorithmus eingeordnet werden; sie belegen weder TWAP/VWAP noch einen
-Preisboden oder eine profitable Handelsrichtung. `NOT_USED_AS_SIGNAL` darf ohne
-Eventfeed, Abdeckungsprüfung und Ausschlussfenster außerdem nicht als „newsfrei“
-ausgegeben werden.
+- `PROTOCOL_SMOKE`: Vertragstest; kein Qualitätsclaim.
+- `LIVE_AGENT`: über COMMAND oder HTTP_JSON produzierter Agentenlauf.
+Ein `LIVE_AGENT`-Ergebnis darf keinen `REFERENCE_FIXTURE`-Producer deklarieren.
+Eine Modell-/Promptfreigabe muss die Laufart ausdrücklich verlangen:
 
-Erwartungen stehen maschinenlesbar unter `expected.assertions`. Unterstützt werden:
-
-- `equals`: typstrikter exakter Vergleich;
-- `set_equals`: reihenfolgeunabhängiger Vergleich von Arrays;
-- `approx_equals`: numerischer Vergleich mit expliziter `tolerance`;
-- `is_empty`: Prüfung auf eine leere Collection oder Zeichenkette;
-- `exists`: Prüfung, ob ein Pfad vorhanden ist.
-
-Jede Assertion trägt Metrik, Gewicht und `critical`. Fehlende Pfade zählen als
-nicht bestanden, nicht als stilles `null`.
-
-## Testpyramide
-
-```text
-              End-to-End: echte Agentenläufe (wenige, separat)
-           Integration: Ergebnisadapter gegen alle Katalogfälle
-        Unit: Parser, Strukturregeln, Operatoren und Regressionen
+```bash
+python evals/run_evals.py \
+  --results artifacts/live-results.json \
+  --require-run-kind LIVE_AGENT \
+  --report artifacts/live-eval-report.json \
+  --verbose
 ```
 
-### Unit-Ebene
+Das mitgelieferte Score-1,000-Fixture scheitert an diesem Release-Gate, weil es
+`PROTOCOL_SMOKE` ist.
 
-Viele schnelle Tests prüfen JSON-Verträge, eindeutige IDs, Quellenreferenzen,
-Assertion-Operatoren, Scoreberechnung und Exitcodes. Ziel: alle deterministischen
-Codepfade des Harness; jeder behobene Harness-Fehler erhält einen Test.
+## Assertions und Exitcodes
 
-### Integrationsebene
+Unterstützte Operatoren sind `equals`, `set_equals`, `approx_equals`, `is_empty`
+und `exists`. Jede Assertion trägt Metrik, Gewicht und `critical`; fehlende Pfade
+scheitern explizit.
 
-Der Smoke-Adapter durchläuft alle zwölf Katalogfälle für zehn Kernfähigkeiten
-gemeinsam: Quellenzuordnung,
-Fakt-vs-Inferenz, fehlende Evidenz/`UNKNOWN`, widersprüchliche Quellen, veraltete
-Quelle, Berechnung, Thesis-Update, Thesis-Invalidierung und Status akademischer
-Quellen sowie drei Intraday-Hypothesen-Intake-Fälle. Ziel: 100 Prozent der
-kritischen Assertions, korrekte Governance akademischer Quellen und keine
-unzulässige Hochstufung von Mechanismus- oder Musterbelegen zu Netto-Edges.
+- Exit `0`: angeforderte Struktur-, Qualitäts- und Regressionsgates bestanden.
+- Exit `1`: mindestens ein Qualitäts-, Laufart- oder Regressionsgate scheiterte.
+- Exit `2`: Struktur, Konfiguration, Producer oder Bericht ist fehlerhaft.
 
-### End-to-End-Ebene
+`baseline.v1.json` verlangt insgesamt mindestens 0,95, für kritische Assertions
+1,00 und für alle Safety-/Governance-Metriken die dort dokumentierten Werte.
+`max_metric_drop` und `max_case_drop` sind 0,0.
 
-Ein realer Agent oder eine Pipeline erzeugt den Ergebnisadapter aus denselben
-Kataloginputs. Solche Läufe können wegen Modellvarianz teurer sein; sie werden vor
-Freigaben und bei Änderungen an Modell, Prompt, Retrieval oder Tools ausgeführt.
-Die deterministischen Assertions bleiben das abschließende Gate. Zusätzliche
-stochastische oder menschlich bewertete Evals gehören in einen späteren,
-gesonderten Katalog und dürfen diese Safety-Gates nicht ersetzen.
+## CI und Freigabe
 
-## Metriken und Gates
+`framework-integrity.yml` führt bei Push und Pull Request den Linux/Python- und
+Windows/PowerShell-Pfad aus. Dieser Check kann als Branch-Protection-Status
+verlangt werden, bleibt aber ein Integritätscheck.
 
-| Metrik | Mindestwert | Zweck |
-|---|---:|---|
-| `overall_score` | 0,95 | gewichtete Summe aller Assertions |
-| `critical_assertion_pass_rate` | 1,00 | kein kritisches Safety-/Governance-Versagen |
-| `citation_accuracy` | 0,95 | korrekte Quelle und Fundstelle |
-| `epistemic_classification_accuracy` | 0,95 | Fakt, Rechnung und Inferenz sauber getrennt |
-| `unknown_safety_rate` | 1,00 | keine erfundene Antwort bei Evidenzlücke |
-| `contradiction_handling_rate` | 1,00 | Konflikte sichtbar und nicht voreilig aufgelöst |
-| `source_freshness_rate` | 1,00 | keine veraltete Quelle für zeitkritische Werte |
-| `calculation_accuracy` | 1,00 | reproduzierbare korrekte Berechnung |
-| `thesis_governance_accuracy` | 1,00 | korrektes Update bzw. Invalidierung |
-| `academic_source_governance_accuracy` | 1,00 | Preprint-, Versions- und Peer-Review-Status korrekt behandeln |
-| `hypothesis_intake_accuracy` | 1,00 | Mechanismus, Forward-OOS und ausführbaren Netto-Edge getrennt halten |
+`live-agent-eval.yml` ist ein manueller Release-Workflow. Er benötigt die
+Repository-Variable `EVAL_AGENT_ENDPOINT` und optional das Secret
+`EVAL_AGENT_TOKEN`, produziert ein `LIVE_AGENT`-Artefakt und erzwingt danach das
+Live-Gate. Ohne konfigurierten Adapter gibt es keinen Live-Qualitätsclaim.
 
-Zusätzlich ist in `baseline.v1.json` sowohl `max_metric_drop` als auch
-`max_case_drop` auf `0.0` gesetzt. Eine Änderung kann somit trotz Erreichen eines
-absoluten Mindestwerts als Regression scheitern. Die Strukturvalidierung ist ein
-vorgelagertes hartes Gate und wird nicht in einen Prozentwert verwässert.
+## Verbesserungsregel
 
-## Kontrollierter Verbesserungs-Workflow
-
-1. Einen beobachteten Fehler mit Input, Agentenausgabe und erwarteter Eigenschaft
-   sichern; sensible Inhalte vor Aufnahme bereinigen.
-2. Den kleinsten repräsentativen Katalogfall oder eine neue Assertion hinzufügen.
-   Der Test muss mit der fehlerhaften Ausgabe reproduzierbar scheitern.
-3. Prompt, Retrieval, Tooling oder Code ändern; keine Erwartung an die fehlerhafte
-   Ausgabe anpassen.
-4. Unit-Tests und den vollständigen Katalog ausführen. Struktur-, Schwellen- und
-   Regressionsgate müssen bestehen.
-5. Änderung und Eval-Bericht reviewen. Kritische Fehler blockieren die Freigabe.
-6. Erst nach dokumentierter Freigabe eine neue Baseline erzeugen. Score-Rückgänge
-   benötigen eine ausdrückliche, begründete Ausnahme und dürfen nicht durch bloßes
-   Überschreiben der Baseline verborgen werden.
-
-Die Beispiel-Baseline ist eine Referenz für den Adapter, kein Beleg für die Qualität
-eines noch nicht angeschlossenen LLM-Agenten. Für eine echte Freigabe wird sie durch
-Scores eines nachvollziehbaren, reviewten Agentenlaufs ersetzt.
-
-## Erweiterungsregeln
-
-- Jeder Fall soll eine Fehlerklasse isolieren und mindestens eine kritische
-  Assertion besitzen.
-- Deterministische Eigenschaften werden direkt geprüft; stilistische Bewertungen
-  gehören nicht in diesen Katalog.
-- Neue Quellen erhalten stabile IDs, Publikations- und Zugriffszeit sowie eine
-  Kennzeichnung ihrer Autorität.
-- Neue Metriken müssen im Runner registriert, im README beschrieben und mit einem
-  Test abgesichert werden.
-- Secrets, personenbezogene Daten und lizenzrechtlich unzulässige Volltexte dürfen
-  nicht in Fixtures aufgenommen werden.
+Ein beobachteter Agentenfehler wird zuerst als reproduzierbarer Katalogfall oder
+Assertion fixiert. Danach werden Baseline und Kandidat über denselben blinden
+Producer ausgeführt. Erwartungen werden nicht an die fehlerhafte Ausgabe
+angepasst; Baselineänderungen benötigen Review. Smoke-Fixture und Beispielbaseline
+belegen ausschließlich den Harness, nicht den Agenten.

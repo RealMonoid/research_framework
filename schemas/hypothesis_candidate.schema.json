@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "urn:research-framework:schema:hypothesis-candidate:1.0.0",
+  "$id": "urn:research-framework:schema:hypothesis-candidate:1.1.0",
   "title": "Hypothesis Candidate Inbox Entry",
   "description": "Versionierter Intake-Datensatz fuer rohe Research-Ideen. Promotion bedeutet nur, dass das Screening vollstaendig genug fuer formales Research ist; sie bestaetigt weder Mechanismus noch OOS-Prognosewert noch ausfuehrbare Netto-Edge.",
   "type": "object",
@@ -13,23 +13,15 @@
     "idea_id",
     "created_at",
     "updated_at",
-    "research_scope",
     "provenance",
     "idea_statement",
-    "idea_class",
-    "mechanism_family",
-    "observable_footprints",
-    "alternative_explanations",
-    "data_requirements",
-    "early_feasibility",
     "consumed_data_refs",
-    "epistemic_stage_status",
     "intake_status",
     "transition"
   ],
   "properties": {
     "schema_version": {
-      "const": "1.0.0"
+      "const": "1.1.0"
     },
     "candidate_id": {
       "$ref": "#/$defs/stableId",
@@ -147,23 +139,7 @@
       "then": {
         "properties": {
           "transition": {
-            "properties": {
-              "screened_at": {
-                "type": "null"
-              },
-              "screening_rationale": {
-                "type": "null"
-              },
-              "merged_into_idea_id": {
-                "type": "null"
-              },
-              "rejection_reasons": {
-                "maxItems": 0
-              },
-              "promoted_research_id": {
-                "type": "null"
-              }
-            }
+            "maxProperties": 0
           }
         }
       }
@@ -180,8 +156,17 @@
         }
       },
       "then": {
+        "required": [
+          "idea_class",
+          "mechanism_family",
+          "alternative_explanations"
+        ],
         "properties": {
           "transition": {
+            "required": [
+              "screened_at",
+              "screening_rationale"
+            ],
             "properties": {
               "screened_at": {
                 "$ref": "#/$defs/timestamp"
@@ -219,6 +204,11 @@
       "then": {
         "properties": {
           "transition": {
+            "required": [
+              "screened_at",
+              "screening_rationale",
+              "merged_into_idea_id"
+            ],
             "properties": {
               "screened_at": {
                 "$ref": "#/$defs/timestamp"
@@ -259,6 +249,11 @@
       "then": {
         "properties": {
           "transition": {
+            "required": [
+              "screened_at",
+              "screening_rationale",
+              "rejection_reasons"
+            ],
             "properties": {
               "screened_at": {
                 "$ref": "#/$defs/timestamp"
@@ -297,6 +292,16 @@
         }
       },
       "then": {
+        "required": [
+          "research_scope",
+          "idea_class",
+          "mechanism_family",
+          "observable_footprints",
+          "alternative_explanations",
+          "data_requirements",
+          "early_feasibility",
+          "epistemic_stage_status"
+        ],
         "properties": {
           "observable_footprints": {
             "minItems": 1
@@ -397,6 +402,12 @@
             }
           },
           "transition": {
+            "required": [
+              "screened_at",
+              "screening_rationale",
+              "promotion_conditions",
+              "promoted_research_id"
+            ],
             "properties": {
               "screened_at": {
                 "$ref": "#/$defs/timestamp"
@@ -1922,14 +1933,6 @@
     "transition": {
       "type": "object",
       "additionalProperties": false,
-      "required": [
-        "screened_at",
-        "screening_rationale",
-        "merged_into_idea_id",
-        "rejection_reasons",
-        "promotion_conditions",
-        "promoted_research_id"
-      ],
       "properties": {
         "screened_at": {
           "oneOf": [

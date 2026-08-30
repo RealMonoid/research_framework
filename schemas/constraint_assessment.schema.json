@@ -1,0 +1,301 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:research-framework:schema:constraint-assessment:1.0.0",
+  "title": "Constraint and Lever Assessment",
+  "description": "Targeted machine contract for the four operational labels. It does not attempt to encode the surrounding research prose.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "assessment_id",
+    "research_id",
+    "created_at",
+    "label",
+    "statement",
+    "stage_gates",
+    "evidence_refs",
+    "estimand_ref",
+    "system_objective",
+    "bottleneck_metric",
+    "decision"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "1.0.0"
+    },
+    "assessment_id": {
+      "$ref": "#/$defs/stableId"
+    },
+    "research_id": {
+      "$ref": "#/$defs/stableId"
+    },
+    "created_at": {
+      "$ref": "#/$defs/timestamp"
+    },
+    "label": {
+      "type": "string",
+      "enum": [
+        "TRANSMISSION_DIAGNOSTIC",
+        "INFORMATION_BOTTLENECK_CANDIDATE",
+        "IDENTIFIED_CAUSAL_LEVER",
+        "IMPLEMENTATION_CONSTRAINT"
+      ]
+    },
+    "statement": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 4000
+    },
+    "stage_gates": {
+      "$ref": "#/$defs/stageGates"
+    },
+    "evidence_refs": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "$ref": "#/$defs/stableId"
+      }
+    },
+    "estimand_ref": {
+      "$ref": "#/$defs/nullableStableId"
+    },
+    "system_objective": {
+      "$ref": "#/$defs/nullableString"
+    },
+    "bottleneck_metric": {
+      "$ref": "#/$defs/nullableString"
+    },
+    "decision": {
+      "$ref": "#/$defs/decision"
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "required": [
+          "decision"
+        ],
+        "properties": {
+          "decision": {
+            "required": [
+              "status"
+            ],
+            "properties": {
+              "status": {
+                "const": "SUPPORTED"
+              }
+            }
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "evidence_refs": {
+            "minItems": 1
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "required": [
+          "label"
+        ],
+        "properties": {
+          "label": {
+            "const": "IDENTIFIED_CAUSAL_LEVER"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "stage_gates": {
+            "properties": {
+              "identification": {
+                "const": "PASS"
+              }
+            }
+          },
+          "estimand_ref": {
+            "$ref": "#/$defs/stableId"
+          },
+          "decision": {
+            "properties": {
+              "status": {
+                "const": "SUPPORTED"
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "required": [
+          "label"
+        ],
+        "properties": {
+          "label": {
+            "const": "IMPLEMENTATION_CONSTRAINT"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "stage_gates": {
+            "properties": {
+              "phenomenon_validation": {
+                "const": "PASS"
+              },
+              "implementation_feasibility": {
+                "const": "PASS"
+              }
+            }
+          },
+          "system_objective": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 4000
+          },
+          "bottleneck_metric": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 4000
+          },
+          "decision": {
+            "properties": {
+              "status": {
+                "const": "SUPPORTED"
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "required": [
+          "label",
+          "decision"
+        ],
+        "properties": {
+          "label": {
+            "const": "INFORMATION_BOTTLENECK_CANDIDATE"
+          },
+          "decision": {
+            "required": [
+              "status"
+            ],
+            "properties": {
+              "status": {
+                "const": "SUPPORTED"
+              }
+            }
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "stage_gates": {
+            "properties": {
+              "forward_predictive_oos": {
+                "const": "PASS"
+              }
+            }
+          }
+        }
+      }
+    }
+  ],
+  "$defs": {
+    "stableId": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"
+    },
+    "nullableStableId": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/stableId"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "timestamp": {
+      "type": "string",
+      "format": "date-time",
+      "pattern": "^[0-9]{4}-(0[1-9]|1[0-2])-([0-2][0-9]|3[01])T([01][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9](\\.[0-9]+)?(Z|[+-]([01][0-9]|2[0-3]):[0-5][0-9])$"
+    },
+    "nullableString": {
+      "oneOf": [
+        {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4000
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "gateStatus": {
+      "type": "string",
+      "enum": [
+        "NOT_RUN",
+        "NOT_REQUIRED",
+        "PASS",
+        "FAIL",
+        "BLOCKED"
+      ]
+    },
+    "stageGates": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "phenomenon_validation",
+        "forward_predictive_oos",
+        "identification",
+        "implementation_feasibility"
+      ],
+      "properties": {
+        "phenomenon_validation": {
+          "$ref": "#/$defs/gateStatus"
+        },
+        "forward_predictive_oos": {
+          "$ref": "#/$defs/gateStatus"
+        },
+        "identification": {
+          "$ref": "#/$defs/gateStatus"
+        },
+        "implementation_feasibility": {
+          "$ref": "#/$defs/gateStatus"
+        }
+      }
+    },
+    "decision": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "status",
+        "rationale"
+      ],
+      "properties": {
+        "status": {
+          "type": "string",
+          "enum": [
+            "CANDIDATE",
+            "SUPPORTED",
+            "NOT_SUPPORTED",
+            "BLOCKED"
+          ]
+        },
+        "rationale": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4000
+        }
+      }
+    }
+  }
+}

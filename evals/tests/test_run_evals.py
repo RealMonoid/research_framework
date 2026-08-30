@@ -68,7 +68,6 @@ class EvalHarnessTests(unittest.TestCase):
                     ]
                 )
                 self.assertTrue(report["regression_failures"])
-                self.assertTrue(report["regression_failures"])
 
         for claim_id in ("execution_algo_identity", "price_floor", "directional_net_edge"):
             with self.subTest(claim_id=claim_id):
@@ -86,6 +85,7 @@ class EvalHarnessTests(unittest.TestCase):
                         "passed"
                     ]
                 )
+                self.assertTrue(report["regression_failures"])
 
     def test_not_using_news_as_signal_cannot_be_called_news_free(self) -> None:
         regressed = copy.deepcopy(self.results)

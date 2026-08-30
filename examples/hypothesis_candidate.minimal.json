@@ -1,5 +1,5 @@
 {
-  "schema_version": "1.0.0",
+  "schema_version": "1.1.0",
   "candidate_id": "candidate:ofi-continuation:1.0.0",
   "candidate_version": "1.0.0",
   "inbox_id": "inbox:intraday-market-structure",

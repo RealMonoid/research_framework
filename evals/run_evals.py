@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Validate and score deterministic research-agent evaluation fixtures.
+"""Validate and score deterministic research-agent evaluation results.
 
 The harness deliberately uses only the Python standard library.  It evaluates an
 adapter format rather than raw prose so that every score has a reproducible,
@@ -20,8 +20,12 @@ from typing import Any, Mapping, Sequence
 
 
 CATALOG_SCHEMA_VERSION = "eval-catalog.v1"
-RESULTS_SCHEMA_VERSION = "eval-results.v1"
+RESULTS_SCHEMA_VERSION = "eval-results.v2"
 BASELINE_SCHEMA_VERSION = "eval-baseline.v1"
+
+RUN_KINDS = {"PROTOCOL_SMOKE", "LIVE_AGENT"}
+PRODUCER_TYPES = {"REFERENCE_FIXTURE", "COMMAND", "HTTP_JSON"}
+PRODUCER_PROTOCOL = "eval-agent-request.v1"
 
 CAPABILITIES = {
     "source_attribution",
@@ -86,10 +90,10 @@ def _is_iso_datetime(value: Any) -> bool:
     if not isinstance(value, str) or not value:
         return False
     try:
-        datetime.fromisoformat(value.replace("Z", "+00:00"))
+        parsed = datetime.fromisoformat(value.replace("Z", "+00:00"))
     except ValueError:
         return False
-    return True
+    return parsed.tzinfo is not None and parsed.utcoffset() is not None
 
 
 def load_json(path: Path) -> dict[str, Any]:
@@ -231,6 +235,18 @@ def validate_catalog(catalog: Mapping[str, Any]) -> None:
 
 def validate_results(results: Mapping[str, Any], catalog: Mapping[str, Any]) -> None:
     errors: list[str] = []
+    expected_top_level = {
+        "schema_version",
+        "catalog_id",
+        "catalog_version",
+        "run_id",
+        "created_at",
+        "run_kind",
+        "producer",
+        "cases",
+    }
+    _require(set(results) == expected_top_level,
+             f"result top-level fields must be exactly {sorted(expected_top_level)}", errors)
     _require(results.get("schema_version") == RESULTS_SCHEMA_VERSION,
              f"schema_version must be {RESULTS_SCHEMA_VERSION!r}", errors)
     _require(results.get("catalog_id") == catalog.get("catalog_id"),
@@ -240,6 +256,46 @@ def validate_results(results: Mapping[str, Any], catalog: Mapping[str, Any]) -> 
     _require(isinstance(results.get("run_id"), str) and bool(ID_RE.fullmatch(results.get("run_id", ""))),
              "run_id must be a lowercase stable identifier", errors)
     _require(_is_iso_datetime(results.get("created_at")), "created_at must be an ISO-8601 datetime", errors)
+    run_kind = results.get("run_kind")
+    _require(run_kind in RUN_KINDS, f"run_kind must be one of {sorted(RUN_KINDS)}", errors)
+    producer = results.get("producer")
+    _require(isinstance(producer, dict), "producer must be an object", errors)
+    if isinstance(producer, dict):
+        expected_producer_fields = {
+            "producer_type",
+            "adapter_id",
+            "request_protocol",
+            "started_at",
+            "completed_at",
+            "configuration_sha256",
+        }
+        _require(set(producer) == expected_producer_fields,
+                 f"producer fields must be exactly {sorted(expected_producer_fields)}", errors)
+        _require(producer.get("producer_type") in PRODUCER_TYPES,
+                 f"producer.producer_type must be one of {sorted(PRODUCER_TYPES)}", errors)
+        _require(isinstance(producer.get("adapter_id"), str)
+                 and bool(ID_RE.fullmatch(producer.get("adapter_id", ""))),
+                 "producer.adapter_id must be a lowercase stable identifier", errors)
+        _require(producer.get("request_protocol") == PRODUCER_PROTOCOL,
+                 f"producer.request_protocol must be {PRODUCER_PROTOCOL!r}", errors)
+        _require(_is_iso_datetime(producer.get("started_at")),
+                 "producer.started_at must be ISO-8601", errors)
+        _require(_is_iso_datetime(producer.get("completed_at")),
+                 "producer.completed_at must be ISO-8601", errors)
+        _require(isinstance(producer.get("configuration_sha256"), str)
+                 and bool(re.fullmatch(r"[0-9a-f]{64}", producer.get("configuration_sha256", ""))),
+                 "producer.configuration_sha256 must be a lowercase SHA-256 digest", errors)
+        if run_kind == "LIVE_AGENT":
+            _require(producer.get("producer_type") != "REFERENCE_FIXTURE",
+                     "LIVE_AGENT cannot use a REFERENCE_FIXTURE producer", errors)
+        if (_is_iso_datetime(producer.get("started_at"))
+                and _is_iso_datetime(producer.get("completed_at"))):
+            started_at = datetime.fromisoformat(producer["started_at"].replace("Z", "+00:00"))
+            completed_at = datetime.fromisoformat(producer["completed_at"].replace("Z", "+00:00"))
+            _require(started_at <= completed_at,
+                     "producer.started_at must not be after producer.completed_at", errors)
+            _require(results.get("created_at") == producer.get("completed_at"),
+                     "created_at must equal producer.completed_at", errors)
     result_cases = results.get("cases")
     _require(isinstance(result_cases, dict), "cases must be an object keyed by case_id", errors)
     if not isinstance(result_cases, dict):
@@ -377,6 +433,7 @@ def score_results(
     catalog: Mapping[str, Any],
     results: Mapping[str, Any],
     baseline: Mapping[str, Any],
+    required_run_kind: str | None = None,
 ) -> dict[str, Any]:
     validate_catalog(catalog)
     validate_results(results, catalog)
@@ -439,6 +496,10 @@ def score_results(
     )
 
     gate_failures: list[str] = []
+    if required_run_kind is not None and results["run_kind"] != required_run_kind:
+        gate_failures.append(
+            f"run_kind={results['run_kind']} does not satisfy required_run_kind={required_run_kind}"
+        )
     for metric, minimum in baseline["minimums"].items():
         actual = metrics.get(metric)
         if actual is None:
@@ -471,6 +532,7 @@ def score_results(
         "catalog_id": catalog["catalog_id"],
         "catalog_version": catalog["catalog_version"],
         "run_id": results["run_id"],
+        "run_kind": results["run_kind"],
         "passed": not gate_failures and not regression_failures,
         "metrics": metrics,
         "cases": case_reports,
@@ -498,6 +560,11 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--baseline", type=Path, default=baseline)
     parser.add_argument("--report", type=Path, help="Optional path for the full JSON report")
     parser.add_argument("--verbose", action="store_true", help="Print failed assertion details")
+    parser.add_argument(
+        "--require-run-kind",
+        choices=sorted(RUN_KINDS),
+        help="Fail the gate unless the result was produced with this declared run kind.",
+    )
     return parser
 
 
@@ -514,7 +581,12 @@ def main(argv: Sequence[str] | None = None) -> int:
         catalog = load_json(args.catalog)
         results = load_json(args.results)
         baseline = load_json(args.baseline)
-        report = score_results(catalog, results, baseline)
+        report = score_results(
+            catalog,
+            results,
+            baseline,
+            required_run_kind=args.require_run_kind,
+        )
     except FixtureError as exc:
         print(f"STRUCTURAL ERROR\n{exc}", file=sys.stderr)
         return 2
@@ -529,9 +601,16 @@ def main(argv: Sequence[str] | None = None) -> int:
     status = "PASS" if report["passed"] else "FAIL"
     print(
         f"{status}: {report['catalog_id']}@{report['catalog_version']} "
-        f"run={report['run_id']} overall={report['metrics']['overall_score']:.4f} "
+        f"run={report['run_id']} kind={report['run_kind']} "
+        f"overall={report['metrics']['overall_score']:.4f} "
         f"critical={report['metrics']['critical_assertion_pass_rate']:.4f}"
     )
+    if report["run_kind"] == "PROTOCOL_SMOKE":
+        print(
+            "NOTICE: PROTOCOL_SMOKE validates contracts and scoring only; "
+            "it is not a release-quality measurement of a live agent.",
+            file=sys.stderr,
+        )
     for failure in report["gate_failures"]:
         print(f"GATE: {failure}", file=sys.stderr)
     for failure in report["regression_failures"]:

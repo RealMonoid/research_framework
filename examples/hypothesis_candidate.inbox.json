@@ -1,0 +1,20 @@
+{
+  "schema_version": "1.1.0",
+  "candidate_id": "candidate:ofi-follow-through:1.0.0",
+  "candidate_version": "1.0.0",
+  "inbox_id": "inbox:intraday-ideas",
+  "idea_id": "idea:ofi-follow-through",
+  "created_at": "2026-08-30T09:00:00Z",
+  "updated_at": "2026-08-30T09:00:00Z",
+  "provenance": {
+    "source_kind": "LLM_IDEA",
+    "source_refs": [],
+    "origin_summary": "Unscreened suggestion that order-flow imbalance may precede a short-horizon price move."
+  },
+  "idea_statement": "Test whether observable order-flow imbalance contains forward information after latency and costs.",
+  "consumed_data_refs": [
+    "conversation:intraday-idea-001"
+  ],
+  "intake_status": "INBOX",
+  "transition": {}
+}

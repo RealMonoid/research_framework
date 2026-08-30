@@ -2,7 +2,7 @@
   "schema_version": "eval-baseline.v1",
   "catalog_id": "research-agent-core",
   "catalog_version": "1.3.0",
-  "baseline_id": "reference-adapter-1-3-0",
+  "baseline_id": "protocol-reference-1-3-0",
   "recorded_at": "2026-08-30T00:00:00+02:00",
   "minimums": {
     "overall_score": 0.95,

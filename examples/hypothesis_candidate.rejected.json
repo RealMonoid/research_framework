@@ -1,0 +1,26 @@
+{
+  "schema_version": "1.1.0",
+  "candidate_id": "candidate:anonymous-twap-certainty:1.0.0",
+  "candidate_version": "1.0.0",
+  "inbox_id": "inbox:intraday-ideas",
+  "idea_id": "idea:anonymous-twap-certainty",
+  "created_at": "2026-08-30T09:00:00Z",
+  "updated_at": "2026-08-30T09:20:00Z",
+  "provenance": {
+    "source_kind": "LLM_IDEA",
+    "source_refs": [],
+    "origin_summary": "Claim that recurring anonymous prints prove a TWAP buyer and price floor."
+  },
+  "idea_statement": "Infer a known TWAP buyer and reliable price floor from recurring anonymous public prints.",
+  "consumed_data_refs": [
+    "observation:anonymous-public-tape-001"
+  ],
+  "intake_status": "REJECTED",
+  "transition": {
+    "screened_at": "2026-08-30T09:20:00Z",
+    "screening_rationale": "The observable pattern does not identify a participant, parent order, TWAP schedule, or counterfactual price support.",
+    "rejection_reasons": [
+      "The proposed inference is not identifiable from anonymous public prints."
+    ]
+  }
+}

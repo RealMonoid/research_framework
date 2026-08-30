@@ -53,6 +53,9 @@ $positivePairs = @(
     @('examples\evidence.academic.json', 'schemas\evidence.schema.json'),
     @('examples\forecast.minimal.json', 'schemas\forecast.schema.json'),
     @('examples\review.minimal.json', 'schemas\review.schema.json'),
+    @('examples\constraint_assessment.causal_lever.json', 'schemas\constraint_assessment.schema.json'),
+    @('examples\hypothesis_candidate.inbox.json', 'schemas\hypothesis_candidate.schema.json'),
+    @('examples\hypothesis_candidate.rejected.json', 'schemas\hypothesis_candidate.schema.json'),
     @('examples\hypothesis_candidate.minimal.json', 'schemas\hypothesis_candidate.schema.json')
 )
 
@@ -149,9 +152,39 @@ $academicTemplate = Read-JsonText -RelativePath 'examples\evidence.academic.json
 $nonAcademicWithMetadata.sources[0] | Add-Member -NotePropertyName 'academic_metadata' -NotePropertyValue $academicTemplate.sources[0].academic_metadata
 Test-RejectedFixture -Name 'non-academic source rejects academic metadata' -Value $nonAcademicWithMetadata -Schema 'schemas\evidence.schema.json'
 
+$causalLeverWithoutIdentification = Read-JsonText -RelativePath 'examples\constraint_assessment.causal_lever.json' | ConvertFrom-Json -Depth 100
+$causalLeverWithoutIdentification.stage_gates.identification = 'FAIL'
+Test-RejectedFixture -Name 'identified causal lever requires identification gate PASS' -Value $causalLeverWithoutIdentification -Schema 'schemas\constraint_assessment.schema.json'
+
+$causalLeverWithoutEstimand = Read-JsonText -RelativePath 'examples\constraint_assessment.causal_lever.json' | ConvertFrom-Json -Depth 100
+$causalLeverWithoutEstimand.estimand_ref = $null
+Test-RejectedFixture -Name 'identified causal lever requires estimand reference' -Value $causalLeverWithoutEstimand -Schema 'schemas\constraint_assessment.schema.json'
+
+$implementationConstraintBeforeValidation = Read-JsonText -RelativePath 'examples\constraint_assessment.causal_lever.json' | ConvertFrom-Json -Depth 100
+$implementationConstraintBeforeValidation.label = 'IMPLEMENTATION_CONSTRAINT'
+$implementationConstraintBeforeValidation.stage_gates.identification = 'NOT_REQUIRED'
+$implementationConstraintBeforeValidation.stage_gates.phenomenon_validation = 'NOT_RUN'
+$implementationConstraintBeforeValidation.stage_gates.implementation_feasibility = 'PASS'
+$implementationConstraintBeforeValidation.estimand_ref = $null
+$implementationConstraintBeforeValidation.system_objective = 'Executable risk-adjusted net performance'
+$implementationConstraintBeforeValidation.bottleneck_metric = 'Median round-trip latency in milliseconds'
+Test-RejectedFixture -Name 'implementation constraint requires validated phenomenon' -Value $implementationConstraintBeforeValidation -Schema 'schemas\constraint_assessment.schema.json'
+
 $candidateUnexpected = Read-JsonText -RelativePath 'examples\hypothesis_candidate.minimal.json' | ConvertFrom-Json -Depth 100
 $candidateUnexpected | Add-Member -NotePropertyName 'confidence_score' -NotePropertyValue 0.95
 Test-RejectedFixture -Name 'hypothesis candidate rejects additional property' -Value $candidateUnexpected -Schema 'schemas\hypothesis_candidate.schema.json'
+
+$candidateInboxWithoutInformationBudget = Read-JsonText -RelativePath 'examples\hypothesis_candidate.inbox.json' | ConvertFrom-Json -Depth 100
+$candidateInboxWithoutInformationBudget.PSObject.Properties.Remove('consumed_data_refs')
+Test-RejectedFixture -Name 'INBOX candidate always records consumed information references' -Value $candidateInboxWithoutInformationBudget -Schema 'schemas\hypothesis_candidate.schema.json'
+
+$candidateInboxWithTransitionPayload = Read-JsonText -RelativePath 'examples\hypothesis_candidate.inbox.json' | ConvertFrom-Json -Depth 100
+$candidateInboxWithTransitionPayload.transition | Add-Member -NotePropertyName 'screened_at' -NotePropertyValue $null
+Test-RejectedFixture -Name 'INBOX candidate cannot pretend that screening already occurred' -Value $candidateInboxWithTransitionPayload -Schema 'schemas\hypothesis_candidate.schema.json'
+
+$candidatePromotedWithoutScope = Read-JsonText -RelativePath 'examples\hypothesis_candidate.minimal.json' | ConvertFrom-Json -Depth 100
+$candidatePromotedWithoutScope.PSObject.Properties.Remove('research_scope')
+Test-RejectedFixture -Name 'PROMOTED candidate requires full research scope' -Value $candidatePromotedWithoutScope -Schema 'schemas\hypothesis_candidate.schema.json'
 
 $candidateWithoutInstrument = Read-JsonText -RelativePath 'examples\hypothesis_candidate.minimal.json' | ConvertFrom-Json -Depth 100
 $candidateWithoutInstrument.research_scope.instruments = @()

@@ -1,0 +1,24 @@
+{
+  "schema_version": "1.0.0",
+  "assessment_id": "constraint-assessment:causal-lever-001",
+  "research_id": "research:example-identified-effect",
+  "created_at": "2026-08-30T10:00:00Z",
+  "label": "IDENTIFIED_CAUSAL_LEVER",
+  "statement": "The scoped intervention has an identified effect on the frozen outcome under the documented assumptions.",
+  "stage_gates": {
+    "phenomenon_validation": "PASS",
+    "forward_predictive_oos": "NOT_REQUIRED",
+    "identification": "PASS",
+    "implementation_feasibility": "NOT_RUN"
+  },
+  "evidence_refs": [
+    "evidence:identification-review-001"
+  ],
+  "estimand_ref": "estimand:ate-001",
+  "system_objective": null,
+  "bottleneck_metric": null,
+  "decision": {
+    "status": "SUPPORTED",
+    "rationale": "The estimand, identifying assumptions, adjustment set, and independent gate review are recorded in the referenced evidence."
+  }
+}

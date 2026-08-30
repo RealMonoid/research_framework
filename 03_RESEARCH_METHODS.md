@@ -1,6 +1,6 @@
 # 03_RESEARCH_METHODS.md
 
-**Version:** 1.5
+**Version:** 1.6
 **Stand:** 2026-08-30
 **Status:** ENTWURF ZUR ÜBERNAHME  
 **Zweck:** Methodenauswahl für AI-Agenten. Dieses Dokument sagt nicht, dass jede Methode immer angewendet werden muss. Es verhindert, dass notwendige Methoden vergessen oder dekorativ genannt werden.
@@ -850,84 +850,27 @@ Live werden Surprise-Verteilung, Modellkalibrierung, `u`/`z`, Eventkontamination
 - p-Werte, Backtests oder DML als Ersatz für Identifikation ausgeben,
 - eine ungewöhnliche Reaktion automatisch zum handelbaren Regime- oder Kausalbruch erklären.
 
-## 25.10 Goldratt–Pearl–Quant-Brücke ohne Theorieüberbau
+## 25.10 Constraint- und Lever-Labels
 
-In der für dieses Paket geprüften Quant-Literatur ist Goldratts Theory of Constraints kein etablierter Standard zur Schätzung von Markttransmission oder Trading-Signalen. Quants verwenden für die konkrete Messung typischerweise Surprise-Faktoren, Event-Response-Regressionen, Cross-Asset-Reaktionen, State-Interaktionen und bei längeren Horizonten Impulsantworten. Goldratt bleibt deshalb optional und auf zwei Aufgaben begrenzt.
+Für Markttransmission sind DAG, Alternativerklärungen, Surprise-Faktoren und
+Response-Gleichungen der direkte Standardpfad. Es gibt keine vorgelagerte
+Goldratt-/ECE-Pflicht.
 
-### Aufgabe A – frühe Hypothesenstruktur
+Die vier zulässigen Labels werden in
+`schemas/constraint_assessment.schema.json` gespeichert:
 
-Eine knappe Effect-Cause-Effect-Map ist sinnvoll, wenn mehrere Zwischenglieder behauptet werden. Pflichtbestandteile:
+- `TRANSMISSION_DIAGNOSTIC`: deskriptiver Pass-through oder Residualbefund.
+- `INFORMATION_BOTTLENECK_CANDIDATE`: rechtzeitig beobachtbare Innovation mit vorab eingefrorenem inkrementellem OOS-Wert.
+- `IDENTIFIED_CAUSAL_LEVER`: Interventions-/Mediationsestimand und Identifikationsgate bestanden.
+- `IMPLEMENTATION_CONSTRAINT`: belegter Daten-, Timing-, Liquiditäts-, Kosten- oder Prozessengpass nach Phänomen-Validation und Umsetzbarkeitsprüfung.
 
-- genau ein definiertes End-Outcome,
-- vermutete Haupt- und Alternativpfade,
-- Status jedes Knotens als `MESSBAR / PROXY / LATENT / UNBRAUCHBAR`,
-- tatsächlicher Beobachtungszeitpunkt,
-- Übergabe jedes verwendeten Glieds an DAG oder quantitative Response-Gleichung.
+Ein großer Koeffizient, ein ungewöhnliches Residuum oder OOS-Prognosewert genügt
+nicht für einen Kausal- oder Constraint-Status. Wenn ein einfacher M0/M1-Vergleich
+die Zusatzinformation nicht bestätigt, wird das Glied verworfen.
 
-Die Map ist kein DAG. Notwendigkeitspfeile aus Goldratt werden bei der Übergabe zu prüfbaren Pfeilannahmen und dürfen verworfen werden.
-
-### Aufgabe B – reale Implementation Constraints
-
-Nach Phänomen-Validation kann Goldratt strukturieren, was die ausführbare Netto-Performance begrenzt, beispielsweise:
-
-- fehlende Echtzeitdaten,
-- zu hohe Latenz,
-- Liquidität und Capacity,
-- Spread/Slippage,
-- nicht reproduzierbare Erkennung,
-- Prozess- oder Ausführungsfehler.
-
-Hier wird das Systemziel explizit als ausführbare risikoadjustierte Netto-Performance definiert. Der vermutete Engpass benötigt beobachtbare Evidenz und ein Widerlegungskriterium.
-
-### Quantitativer Minimalworkflow für Marktketten
-
-```text
-optionale ECE-Map
-→ messbare Knoten und alternative Pfade
-→ Pearl-DAG + Claim-/Identifikationsstatus
-→ Tooling-Router: passende Spezialbibliothek oder begründetes `TOOLING_NOT_REQUIRED`
-→ ein oder wenige Surprise-Faktoren
-→ einfache Response-Gleichung je Asset/Horizont
-→ zeitlich OOS berechnete Innovationen
-→ inkrementeller M0/M1-Test nur für einen vorab gewählten Kandidaten
-→ erst danach Strategy Engineering und Implementation-Constraint-Analyse
-```
-
-Der Default ist eine gemeinsame Response auf den Event-Schock, nicht eine erzwungene sequenzielle Mediation zwischen nahezu gleichzeitig gehandelten Märkten.
-
-### Labels statt unscharfem „Constraint“
-
-#### `TRANSMISSION_DIAGNOSTIC`
-
-Ein Response-Koeffizient, Pass-through oder Residualmuster. Rein deskriptiv/prädiktiv, solange keine Identifikation vorliegt.
-
-#### `INFORMATION_BOTTLENECK_CANDIDATE`
-
-Die rechtzeitig beobachtbare Innovation eines vorab gewählten Kettenglieds verbessert die Prognose des definierten End-Outcomes gegenüber:
-
-```text
-M0: End-Outcome ~ Surprise-Faktoren + pre-event States
-```
-
-im eingefrorenen Modell:
-
-```text
-M1: M0 + Innovation des Kettenglieds
-```
-
-Erforderlich sind eine vorab definierte OOS-Loss-/Kalibrierungs-/Netto-Utility-Größe, Unsicherheit der Differenz, reale Verfügbarkeit vor der Entscheidung und Multiple-Testing-Behandlung. Das Label bleibt prädiktiv.
-
-#### `IDENTIFIED_CAUSAL_LEVER`
-
-Nur zulässig, wenn ein Interventions- oder Mediationsestimand definiert, identifiziert und durch das E-Gate freigegeben ist. OOS-Prognosewert allein genügt nicht.
-
-#### `IMPLEMENTATION_CONSTRAINT`
-
-Ein belegter Daten-, Timing-, Liquiditäts-, Kosten- oder Prozessengpass, der die ausführbare Strategie begrenzt. Hier ist Goldratts Fokuslogik am direktesten anwendbar.
-
-### Anti-Popanz-Regel
-
-Keine automatische Constraint-Suche, kein zusammengesetzter Goldratt-Score und kein komplexes dynamisches Modell ohne konkrete Zusatzfrage. Wenn `M1` das einfache `M0` OOS nicht verbessert, wird das Kettenglied nicht durch eine neue Erzählung gerettet. Wenn eine direkte Eventregression die Frage beantwortet, werden weder SVAR noch Causal Discovery noch ML hinzugefügt.
+Goldratts Fokuslogik darf ausschließlich nach Phänomen-Validation optional zur
+Priorisierung mehrerer bereits belegter `IMPLEMENTATION_CONSTRAINT`-Kandidaten
+dienen. Sie erzeugt kein Label, kein Estimand und keinen Gate-Status.
 
 ## 25.11 Wissenschaftliche Grundlage
 
@@ -1099,7 +1042,7 @@ weder Source Verification noch Version-/Integrity-Prüfung.
 | tatsächliche Reaktion weicht ab | OOS-Kalibrierung + News-/Liquiditätskontrollen | standardisierte `REACTION_INNOVATION` |
 | mehrere Kettenglieder auffällig | Kovarianz + vorab definierte Gewichte + Multiplicity | gemeinsamer `Q`-Score und leg-spezifische Diagnostik |
 | direkter/vermittelter Effekt behauptet | post-treatment Rollen + Mediator-Outcome-Confounding | explizites Mediationsestimand |
-| mehrgliedrige verbale Wirkungskette | End-Outcome + messbare/latente Knoten + Alternativpfade | optionale ECE-Map, danach DAG und Response-Gleichungen |
+| mehrgliedrige verbale Wirkungskette | End-Outcome + messbare/latente Knoten + Alternativpfade | konkurrierende DAGs und Response-Gleichungen |
 | behaupteter Informationsengpass | reale Verfügbarkeit + eingefrorener M0/M1-OOS-Vergleich | `INFORMATION_BOTTLENECK_CANDIDATE` oder verwerfen |
 | Strategie scheitert an Ausführbarkeit | Systemziel + belegter Daten-/Timing-/Kostenengpass | `IMPLEMENTATION_CONSTRAINT` + Prerequisite/Transition Tree |
 

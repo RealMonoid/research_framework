@@ -1,0 +1,57 @@
+name: Live agent eval
+
+on:
+  workflow_dispatch:
+    inputs:
+      run_id:
+        description: Stable lowercase run identifier
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+jobs:
+  live-agent-release-gate:
+    runs-on: ubuntu-latest
+    env:
+      EVAL_AGENT_ENDPOINT: ${{ vars.EVAL_AGENT_ENDPOINT }}
+      EVAL_AGENT_TOKEN: ${{ secrets.EVAL_AGENT_TOKEN }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: python -m pip install --requirement requirements-dev.txt
+      - name: Require configured live adapter
+        shell: bash
+        run: |
+          test -n "$EVAL_AGENT_ENDPOINT" || {
+            echo "Repository variable EVAL_AGENT_ENDPOINT is not configured" >&2
+            exit 2
+          }
+      - name: Produce blind live-agent results
+        shell: bash
+        run: |
+          args=(
+            --output artifacts/live-results.json
+            --run-id "${{ inputs.run_id }}"
+            --run-kind LIVE_AGENT
+            --adapter-id github-http-agent
+            --http-endpoint "$EVAL_AGENT_ENDPOINT"
+          )
+          if [[ -n "$EVAL_AGENT_TOKEN" ]]; then
+            args+=(--token-env EVAL_AGENT_TOKEN)
+          fi
+          python evals/produce_results.py "${args[@]}"
+      - name: Enforce live-agent gate
+        run: >-
+          python scripts/validate_framework.py
+          --live-results artifacts/live-results.json
+          --report artifacts/live-eval-report.json
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: live-agent-eval-${{ inputs.run_id }}
+          path: artifacts/
+          if-no-files-found: warn

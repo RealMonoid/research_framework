@@ -1,6 +1,6 @@
 # 01_RESEARCH_STANDARD.md
 
-**Version:** 1.5
+**Version:** 1.6
 **Stand:** 2026-08-30
 **Status:** ENTWURF ZUR ÜBERNAHME  
 **Zweck:** Normativer Standard für die Entwicklung, Falsifikation, Validierung und Überwachung von Trading-Phänomenen, Edge-Hypothesen und Strategien.
@@ -38,6 +38,22 @@ Der empirische Research-Prozess darf bottom-up beginnen:
 Entdeckung und Bestätigung sind strikt zu trennen.
 
 Zusätzlich sind **Vorhersage und Kausalität** strikt zu trennen. Eine robuste prädiktive Edge kann wirtschaftlich nützlich sein, ohne dass ihr Mechanismus kausal identifiziert ist. Umgekehrt garantiert ein identifizierter kausaler Effekt keine handelbare Vorhersage nach Kosten.
+
+## 1.1 Geltung, Statusrouter und Prüfbarkeit
+
+Vor `PROMOTED` gilt nur der gestaffelte Intake aus `QUICKSTART.md` und
+`schemas/hypothesis_candidate.schema.json`. Ein `INBOX`- oder `REJECTED`-Eintrag
+ist kein Research Case und muss den Vollstandard nicht laden oder ausfüllen.
+
+Ab `PROMOTED` gelten die Kernregeln dieses Standards vollständig. Methoden- und
+Toolingdetails werden jedoch nur für den aktivierten Claim und die ausgewählte
+Methode geladen. Nicht ausgewählte optionale Verfahren benötigen keine
+N/A-Serien.
+
+Ein vom ausführenden Agenten gesetzter Phasen- oder Gate-Status ist eine
+Selbstdeklaration. Maschinenprüfbar wird er nur durch das benannte Schema, den
+zugehörigen Run-/Evidence-Verweis und gegebenenfalls ein unabhängiges Review.
+Normative Sprache ersetzt diese Nachweise nicht.
 
 ---
 
@@ -213,10 +229,14 @@ Eine Rohidee ist weder Evidenz noch eine `Candidate Hypothesis`. Sie wird vor de
 Phase-0-Vorprüfung als versionierter Intake-Datensatz erfasst und darf erst nach
 einem dokumentierten Screening in ein Research Case übergehen.
 
-Der Intake protokolliert mindestens:
+Für `INBOX` werden nur stabile Identität, Zeit, Ursprung, Rohidee, bereits
+verbrauchte Informationsreferenzen und der Status gespeichert. `LLM_IDEA` und
+Sekundärquellen sind Ideengeber, keine Evidenz. `MERGED` und `REJECTED` ergänzen
+nur die jeweilige Transition und Begründung.
 
-- Ursprung und konkrete Quelle der Idee; `LLM_IDEA` und Sekundärquellen werden
-  als Ideengeber, nicht als Beleg behandelt,
+`SCREENED` ergänzt Ideenklasse, Mechanismenfamilie und Alternativerklärungen.
+Erst `PROMOTED` protokolliert zusätzlich mindestens:
+
 - Ideenklasse
   (`ASSOCIATIONAL_PATTERN / PREDICTIVE_PRECEDENCE / MECHANISM_CANDIDATE /
   STRUCTURAL_FLOW_CANDIDATE / RELATIVE_VALUE_CANDIDATE /
@@ -229,9 +249,9 @@ Der Intake protokolliert mindestens:
 - benötigte Daten, Auflösung, Timestamp-/Clock-Sync-, Venue- und Feed-Coverage,
 - frühe Hürden durch Spread, Gebühren, Slippage, Latenz, Queue-Position, Borrow,
   Funding oder Leg-Risk, soweit anwendbar,
-- bereits betrachtete Daten und dadurch verbrauchtes Informationsbudget,
-- Dubletten-/Merge-Bezug und die Entscheidung
-  `INBOX / SCREENED / MERGED / REJECTED / PROMOTED`.
+- die detaillierte Einordnung bereits betrachteter Daten und ihres
+  Informationsbudgets,
+- die Promotion-Entscheidung und nächste Research-ID.
 
 `PROMOTED` bedeutet ausschließlich, dass eine Idee präzise und grundsätzlich
 testbar genug für Phase 0 ist. Es bestätigt weder den Mechanismus noch eine
@@ -241,9 +261,10 @@ wiedereingeführt.
 
 ## 4.2 Verbindlicher Research Scope
 
-Vor dem Intake-Screening wird der Scope so eng angegeben, dass unterschiedliche
-Designs nicht unter demselben Etikett vermischt werden. Mindestens festzulegen
-sind Markt/Instrument, Venue und Datenfeed, Handelsphase
+Vor `PROMOTED` wird der Scope so eng angegeben, dass unterschiedliche Designs
+nicht unter demselben Etikett vermischt werden. Für `INBOX` genügt die Rohidee;
+der vollständige Scope ist Promotionsvoraussetzung. Mindestens festzulegen sind
+Markt/Instrument, Venue und Datenfeed, Handelsphase
 (`PRE_MARKET / OPENING_AUCTION / CONTINUOUS / CLOSING_AUCTION / POST_MARKET /
 OVERNIGHT / CROSS_SESSION / OTHER`),
 Kalender/Zeitzone/DST-Regel, Clock- oder Event-Time-Horizont und eine der folgenden
@@ -410,18 +431,23 @@ Sobald ein DAG, Claim-Level, Estimand oder eine Identifikationsannahme eine Desi
 
 Materielle Änderungen nach Freeze erzeugen eine neue Research-Version.
 
-## 5.9 Optionale Goldratt-Mechanism-Map
+## 5.9 Maschinenprüfbare Constraint- und Lever-Labels
 
-Wenn die Research-Idee ausdrücklich eine mehrgliedrige Wirkungskette behauptet, darf in Discovery eine knappe Effect-Cause-Effect-Map verwendet werden. Sie beantwortet nur:
+Für Markttransmission werden direkt DAGs, Alternativerklärungen und quantitative
+Response-Gleichungen verwendet; eine vorgelagerte ECE-Map ist kein Standardteil
+des Pfads.
 
-- Welches beobachtbare End-Outcome oder Systemziel soll erklärt werden?
-- Welche notwendigen oder vermuteten Zwischenschritte werden behauptet?
-- Welche alternativen Pfade könnten dasselbe Outcome erzeugen?
-- Welche Glieder sind direkt messbar, nur Proxy, latent oder nicht operationalisierbar?
+Wer eines der Labels `TRANSMISSION_DIAGNOSTIC`,
+`INFORMATION_BOTTLENECK_CANDIDATE`, `IDENTIFIED_CAUSAL_LEVER` oder
+`IMPLEMENTATION_CONSTRAINT` verwendet, erzeugt ein Artefakt nach
+`schemas/constraint_assessment.schema.json`. Insbesondere gilt:
 
-Die Map ist ein Hypothesenartefakt, kein DAG und kein Kausalitätsnachweis. Sie ist `N/A`, wenn eine direkte prädiktive Beziehung ohne behauptete Wirkungskette untersucht wird. Nur die operationalisierbaren Bestandteile werden anschließend in konkurrierende DAGs, Surprise-Faktoren und messbare Response-Gleichungen übersetzt.
+- `IDENTIFIED_CAUSAL_LEVER` benötigt `identification = PASS`, ein Estimand und tragende Evidenz.
+- `IMPLEMENTATION_CONSTRAINT` benötigt ein validiertes Phänomen, bestandene Umsetzbarkeitsprüfung, ein definiertes Systemziel und eine messbare Engpassgröße.
 
-Das Wort „Constraint“ ist in dieser frühen Phase grundsätzlich nur als `CANDIDATE` zulässig. Ein großes Residuum, ein kleiner Pass-through oder ein erzählerisch zentraler Knoten genügt nicht. Ohne definiertes Endziel existiert kein sinnvoll bestimmbarer Constraint.
+Goldratts Fokuslogik darf nach Phänomen-Validation optional helfen, einen bereits
+belegten Implementation-Engpass zu priorisieren. Sie ist keine Markt-, Schätz-
+oder Identifikationsmethode.
 
 ## 5.10 Tooling-Router für kausale Analysen
 
@@ -1158,7 +1184,7 @@ Ein falsifiziertes Vorzeichen kann eine neue Hypothese erzeugen. Es wandelt den 
 31. Event-Schocks benötigen vorab verfügbare Erwartungen, Daten-Vintages, Zeitstempel und Kontaminationsregeln.
 32. Backtest- oder OOS-Erfolg validiert nicht rückwirkend den behaupteten Kausalmechanismus.
 33. Post-treatment Mediatoren werden nicht als gewöhnliche Controls eines Total-Effekts verwendet.
-34. Goldratt strukturiert optional Hypothesen und Umsetzungsengpässe, ist aber keine Schätz- oder Identifikationsmethode.
+34. Constraint-/Lever-Labels folgen dem Maschinenvertrag; Goldratt ist höchstens ein optionales Priorisierungswerkzeug für belegte Implementation Constraints.
 35. Quantitativer Default ist die einfachste messbare Shock-Response-Map, nicht ein automatischer Constraint-Score.
 36. Ein Informationsengpass benötigt ein definiertes End-Outcome und inkrementellen zeitlich OOS-Prognosewert.
 37. Ein identifizierter kausaler Hebel, ein prädiktiver Informationsengpass und ein operativer Implementierungsengpass sind verschiedene Aussagen.

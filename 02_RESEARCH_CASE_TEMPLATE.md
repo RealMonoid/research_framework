@@ -1,6 +1,6 @@
 # 02_RESEARCH_CASE_TEMPLATE.md
 
-**Template-Version:** 1.7
+**Template-Version:** 1.8
 **ANWEISUNG:** Diese Datei pro Research-Projekt kopieren. Kein Pflichtfeld löschen. Nicht anwendbare Felder mit `N/A + Begründung` ausfüllen. Unbekannte Pflichtfelder mit `BLOCKED + fehlende Information` markieren.
 
 **BEDINGTE AKTIVIERUNG:** Die Abschnitte `U–Y` werden erst geöffnet, wenn Abschnitt `T` mit `VALIDATED_PHENOMENON` abgeschlossen **und** Strategy Engineering ausdrücklich als nächster Schritt beschlossen wurde. Bei validiertem, aber nicht fortgesetztem Phänomen erhält der Block `DEFERRED_AFTER_VALIDATION`; ohne validiertes Phänomen erhält er `NOT_ACTIVATED_BY_T_GATE`. In beiden Fällen wird er nicht feldweise mit `N/A` befüllt. Abschnitt `Z` bleibt während des gesamten Projekts aktiv.
@@ -26,7 +26,6 @@
 | Freeze-Datum | |
 | Verantwortlicher Researcher/Agent | |
 | Hypothesen-Version | |
-| Mechanism-/ECE-Map-Version | `N/A falls nicht verwendet` |
 | Claim-Level | `ASSOCIATIONAL_PREDICTIVE / INTERVENTIONAL / COUNTERFACTUAL` |
 | Estimand-Version | `N/A bei ASSOCIATIONAL_PREDICTIVE` |
 | Identifikationsstatus | `NOT_REQUIRED_PREDICTIVE / PASS / FAIL / BLOCKED` |
@@ -69,7 +68,7 @@ Das Register referenziert die maschinenlesbaren Artefakte nach `05_AGENT_OPERATI
 | Review Ledger | | | | | `NO_REVIEW / OPEN / ACCEPTED / REJECTED / SUPERSEDED` |
 | Forecast Ledger | | | | | `N/A / OPEN / PARTIALLY_RESOLVED / RESOLVED` |
 | Eval-Ergebnis | | | | | `PASS / FAIL / BLOCKED / NOT_RUN` |
-| Hypothesen-Intake | | `1.0.0` | | | `INBOX / SCREENED / MERGED / REJECTED / PROMOTED` |
+| Hypothesen-Intake | | `1.1.0` | | | `INBOX / SCREENED / MERGED / REJECTED / PROMOTED` |
 
 ## A3. Academic-Source-Protokoll
 
@@ -329,23 +328,6 @@ zukünftige Rendite und ein Midquote-Effekt keine ausführbare Netto-Edge.
 
 Welche Begriffe wurden verworfen, geändert oder präzisiert? ...
 
-## D5. Optionale Effect-Cause-Effect-Map
-
-**Anwendbarkeit:** `ANWENDEN bei behaupteter mehrgliedriger Wirkungskette / N/A + Begründung`
-
-**Definiertes End-Outcome/Systemziel:** ...
-
-```text
-Vermuteter Auslöser → Zwischenglied → Zwischenglied → End-Outcome
-Alternative: ...
-```
-
-| Knoten/Glied | vermutete notwendige Wirkung | direkt messbar/Proxy/latent/unbrauchbar | Zeitstempel | Alternativpfad | Übergabe an E/G |
-|---|---|---|---|---|---|
-| | | | | | |
-
-**Wichtig:** Diese Map erzeugt Hypothesen. Sie ist weder DAG noch Evidenz und vergibt kein Constraint-Label.
-
 ---
 
 # E. Claim-Level, temporaler DAG, Identifikation und Beobachtbarkeit
@@ -382,8 +364,6 @@ Alternative: ...
 ```
 
 **Welche Kanten bleiben nur als Äquivalenzklasse oder wegen latenter Variablen unorientiert?** ...
-
-**Falls D5 verwendet: Welche ECE-Glieder wurden übernommen, als Proxy modelliert, latent belassen oder verworfen?** ...
 
 ## E3. Pfeilannahmen und Alternativerklärungen
 
@@ -656,9 +636,9 @@ Falls NEIN: `FAILED`.
 
 **Falls kausal: Estimand-Version und E7-Gate:** ...
 
-**Falls Wirkungskette: Mechanism-/ECE-Map-Version:** ... / `N/A`
-
 **Falls Constraint-Sprache verwendet wird:**
+
+**Constraint-Assessment-ID nach `schemas/constraint_assessment.schema.json`:** ...
 
 | Feld | Festlegung |
 |---|---|
@@ -928,7 +908,6 @@ Jeder Punkt muss `YES` sein. `N/A + Begründung` ist nur dort zulässig, wo die 
 | Candidate Hypothesis fest | |
 | Gegenhypothese fest | |
 | Claim-Level fest | |
-| Mechanism-/ECE-Map fest oder `N/A + Begründung` | |
 | kausales Estimand fest oder `N/A: ASSOCIATIONAL_PREDICTIVE` | |
 | Identifikationsstrategie/-annahmen fest oder `NOT_REQUIRED_PREDICTIVE` | |
 | E7-Identifikationsgate bestanden oder `NOT_REQUIRED_PREDICTIVE` | |
@@ -1368,7 +1347,6 @@ Der Agent darf den jeweils aktivierten Teil des Research-Artefakts nicht als vol
 - [ ] Stammt Mindest-N aus Power/Präzision statt aus vorhandenem N?
 - [ ] Wurde eine konservative Planungsstreuung samt Stressszenario statt nur eines Discovery-Punktschätzers verwendet?
 - [ ] Sind alle Dataset-Rollen korrekt und Kontaminationen geloggt?
-- [ ] Wurde eine Goldratt-/ECE-Map nur bei echter mehrgliedriger Hypothese verwendet und sonst begründet auf `N/A` gesetzt?
 - [ ] Ist der Claim-Level ausdrücklich als prädiktiv, interventional oder kontrafaktisch deklariert?
 - [ ] Existieren bei kausalem Claim ein präzises Estimand, eine Identifikationsstrategie, dokumentierte Annahmen und `E7 PASS`?
 - [ ] Wurden Granger-/Causal-Discovery-Ergebnisse nur innerhalb ihrer Annahmen und nicht als automatischer Kausalbeweis interpretiert?

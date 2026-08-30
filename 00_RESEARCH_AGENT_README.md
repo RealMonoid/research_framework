@@ -1,48 +1,61 @@
 # 00_RESEARCH_AGENT_README.md
 
-**Version:** 1.7
+**Version:** 1.8
 **Stand:** 2026-08-30  
 **Status:** ENTWURF ZUR ÜBERNAHME  
 **Zweck:** Verbindliche Lese- und Ausführungsanweisung für AI-Agenten, die Trading-Research-Projekte bearbeiten.
 
 ---
 
-## 1. Dokumentpaket und Lesereihenfolge
+## 1. Gestaffelter Einstieg und Dokumentrouter
 
-Ein AI-Agent MUSS die Dateien in dieser Reihenfolge lesen:
+Jede neue Idee beginnt ausschließlich mit `QUICKSTART.md` und einem Intake nach
+`schemas/hypothesis_candidate.schema.json`. Für `INBOX`, `MERGED` oder
+`REJECTED` müssen die sechs Detaildokumente nicht vorab geladen werden. Der
+kurze Intake hält dennoch Herkunft, Rohidee und bereits verbrauchte
+Informationsreferenzen fest.
 
-1. `00_RESEARCH_AGENT_README.md`
-2. `01_RESEARCH_STANDARD.md`
-3. `02_RESEARCH_CASE_TEMPLATE.md`
-4. `03_RESEARCH_METHODS.md`
-5. `04_CAUSAL_TOOLING.md`
-6. `05_AGENT_OPERATIONS.md`
+Erst ein `PROMOTED`-Intake öffnet Phase 0; Promotion ist keine
+Evidenzbestätigung. Dann werden `00_RESEARCH_AGENT_README.md` und
+`01_RESEARCH_STANDARD.md` geladen. `02_RESEARCH_CASE_TEMPLATE.md` wird beim
+Anlegen des konkreten Research Case verwendet. Aus `03_RESEARCH_METHODS.md`,
+`04_CAUSAL_TOOLING.md` und `05_AGENT_OPERATIONS.md` werden nur die durch Methode,
+Claim-Level und erzeugten Artefakte aktivierten Abschnitte geladen.
 
-Vor einem neuen Research Case wird jede Rohidee als Hypothesen-Intake nach
-`schemas/hypothesis_candidate.schema.json` erfasst und gescreent. Erst ein
-`PROMOTED`-Intake darf in die Phase-0-Vorprüfung übergehen; Promotion ist keine
-Evidenzbestätigung. Für ein konkretes Research-Projekt wird anschließend **eine
-eigene Kopie** von `02_RESEARCH_CASE_TEMPLATE.md` angelegt und vollständig befüllt.
-Jeder tatsächliche Agentenlauf erhält zusätzlich ein valides Run-Manifest nach
+Jeder tatsächliche Agentenlauf erhält ein valides Run-Manifest nach
 `schemas/run_manifest.schema.json`. Entscheidungsrelevante Aussagen, menschliche
-Reviews und Eval-Ergebnisse werden nach `05_AGENT_OPERATIONS.md` als getrennte
-operative Artefakte geführt und im Research Case referenziert.
+Reviews und echte Eval-Ergebnisse werden nach `05_AGENT_OPERATIONS.md` als
+getrennte operative Artefakte geführt und im Research Case referenziert.
 
 Die Abschnitte `U–Y` dieser Kopie bleiben bis zu einer bestandenen Phänomen-Entscheidung in Abschnitt `T` **inaktiv**. Nach `VALIDATED_PHENOMENON` werden sie nur durch eine ausdrückliche Fortsetzungsentscheidung aktiviert; andernfalls bleibt `VALIDATED_PHENOMENON` ein zulässiger eigenständiger Endzustand und der Block erhält `DEFERRED_AFTER_VALIDATION`. Wird `T` nicht als `VALIDATED_PHENOMENON` abgeschlossen, erhält der Block `NOT_ACTIVATED_BY_T_GATE`. Die einzelnen Felder werden in beiden Fällen nicht mit Serien von `N/A` befüllt. Abschnitt `Z` bleibt von Beginn an aktiv, weil Entscheidungs-, Versions- und Ablehnungsgründe während des gesamten Research-Prozesses protokolliert werden müssen.
 
 Die Dateien erfüllen verschiedene Funktionen:
 
-| Datei | Funktion | Darf übersprungen werden? |
+| Datei | Funktion | Wann laden? |
 |---|---|---|
-| `00_RESEARCH_AGENT_README.md` | Routing, Pflichtlogik, Nicht-Überspringen-Regeln | Nein |
-| `01_RESEARCH_STANDARD.md` | Normativer Forschungsstandard | Nein |
-| `02_RESEARCH_CASE_TEMPLATE.md` | Operatives Arbeitsartefakt je Research-ID | Nein |
-| `03_RESEARCH_METHODS.md` | Methodenauswahl und Einsatzregeln | Nur einzelne nicht relevante Methodenabschnitte; Auswahl muss begründet werden |
-| `04_CAUSAL_TOOLING.md` | Verbindlicher Router für Kausalbibliotheken, Umgebungen und Reproduzierbarkeit | Bei rein prädiktivem Research nach dokumentiertem `TOOLING_NOT_REQUIRED`; sonst nein |
-| `05_AGENT_OPERATIONS.md` | Run-Provenance, Evidence Chain, Source Verification, Reviews, Evals und operative Freigaben | Bei jedem LLM-/Agentenlauf nein |
-| `schemas/` | Maschinenlesbare Verträge für Hypothesen-Intake, Runs, Evidenz, Forecasts und Reviews | Nein, sobald der zugehörige Artefakttyp entsteht |
-| `evals/` | Versionierter Eval-Satz und Regression Gate für Agentenänderungen | Vor produktiver Änderung an Prompt, Modell, Retrieval, Tools oder Output-Schema nein |
-| `decisions/` | Architekturentscheidungen und ihre Konsequenzen | Nur für nicht betroffene Entscheidungen |
+| `QUICKSTART.md` | Kurzpfad, Enforcement-Grenze und Statusrouter | Immer |
+| `00_RESEARCH_AGENT_README.md` | Routing, Gate- und Nicht-Überspringen-Regeln | Ab `PROMOTED` |
+| `01_RESEARCH_STANDARD.md` | Normativer Forschungsstandard | Ab `PROMOTED` |
+| `02_RESEARCH_CASE_TEMPLATE.md` | Operatives Arbeitsartefakt je Research-ID | Beim Eröffnen eines Research Case |
+| `03_RESEARCH_METHODS.md` | Methodenauswahl und Einsatzregeln | Nur ausgewählte Methodenabschnitte |
+| `04_CAUSAL_TOOLING.md` | Router für ausführbare kausale Kernoperationen | Bei `TOOLING_REQUIRED` |
+| `05_AGENT_OPERATIONS.md` | Provenance, Evidence, Reviews, Evals und Freigabe | Passende Abschnitte bei den jeweiligen Artefakten/Systemänderungen |
+| `schemas/` | Maschinenlesbare Artefaktverträge | Sobald der Artefakttyp entsteht |
+| `evals/` | Producer, Scorer und Regression Gate | Bei Agenten-/Prompt-/Modell-/Tooländerungen |
+| `decisions/` | Architekturentscheidungen und Konsequenzen | Bei betroffener Entscheidung |
+
+## 1.1 Enforcement-Grenze
+
+Ein Agent, der `COMPLETE`, `PASS` oder `SUPPORTED` schreibt, beweist damit nichts.
+Diese Werte sind Selbstdeklarationen, solange nicht das zugehörige Artefakt gegen
+ein Schema geprüft, die Evidence-Referenz aufgelöst oder ein unabhängiges Review
+dokumentiert wurde. Normative Prosa steuert Verhalten, ist aber keine technische
+Enforcement.
+
+Automatisch durchgesetzt werden ausschließlich explizit benannte Schemas, Tests,
+Eval-Gates und CI-Checks. Ein grüner `PROTOCOL_SMOKE` bestätigt nur Verträge und
+Scorer. Eine Aussage über Modell- oder Promptqualität benötigt einen blind
+produzierten `LIVE_AGENT`-Lauf.
 
 Dieses Paket ersetzt **nicht automatisch** aktive Projektregeln. Eine formale Aktivierung im Trading-Projekt erfolgt erst nach der dafür vorgesehenen Versions- und Freigabelogik.
 
@@ -68,7 +81,9 @@ Bei Konflikten mit aktiven Projektregeln gilt die bestehende Projekthierarchie. 
 
 ## 3. Nicht-Überspringen-Protokoll
 
-Der Agent darf **keine Phase stillschweigend auslassen**.
+Der Agent darf innerhalb des durch Status und Router aktivierten Pfads **keine
+Phase stillschweigend auslassen**. Nicht aktivierte Methoden oder Artefakttypen
+erzeugen keine künstlichen Serien von `N/A`-Einträgen.
 
 Für jede Phase muss im Research-Artefakt genau einer der folgenden Zustände stehen:
 
@@ -172,12 +187,14 @@ Bei weniger als 30 plausibel unabhängigen Clustern wird zusätzlich `SMALL_CLUS
 ## 6a. Keine Rohidee ohne Intake und Scope
 
 Eine durch Beobachtung, Paper, LLM, Sekundärquelle oder Marktgeschichte erzeugte
-Idee ist zunächst `INBOX`. Der Agent MUSS Herkunft, Scope, vermuteten beobachtbaren
-Footprint, Alternativerklärungen, Datenanforderungen, frühe Ausführbarkeitshürde und
-bereits verbrauchte Daten protokollieren. Dubletten werden zusammengeführt, nicht
-als unabhängige Ideen gezählt.
+Idee ist zunächst `INBOX`. In diesem Status protokolliert der Agent nur Identität,
+Herkunft, Rohidee und bereits verbrauchte Informationsreferenzen. Dubletten werden
+zusammengeführt, nicht als unabhängige Ideen gezählt. Scope, beobachtbarer
+Footprint, Alternativerklärungen, Datenanforderungen und frühe
+Ausführbarkeitshürden werden schrittweise ergänzt und sind erst für `PROMOTED`
+vollständig Pflicht.
 
-Für Intraday-Ideen sind Markt/Instrument, Venue/Feed, Handelsphase,
+Für promovierte Intraday-Ideen sind Markt/Instrument, Venue/Feed, Handelsphase,
 Kalender/Zeitzone/DST, Clock- oder Event-Time-Horizont und Ereignisklasse Pflicht.
 Die News-/Makro-Policy wird als `INCLUDED_AS_SIGNAL`, `NOT_USED_AS_SIGNAL`,
 `FILTER_KNOWN_EVENTS` oder `SCHEDULED_EVENT_STUDY` deklariert. Nur
@@ -279,9 +296,7 @@ Bei Event-Research werden Veröffentlichungswert und Schock getrennt. Der Schock
 
 Eine Abweichung zwischen erwarteter und tatsächlicher Marktreaktion heißt zunächst `REACTION_INNOVATION` oder `REACTION_ANOMALY`. Sie darf nur dann `CAUSAL_CHAIN_BREAK` heißen, wenn die relevante Kette einschließlich Mediatoren kausal identifiziert und gegen vorab definierte Alternativerklärungen getestet wurde.
 
-Goldratts Effect-Cause-Effect-Logik darf **optional** in Discovery verwendet werden, wenn eine mehrgliedrige Wirkungskette behauptet wird. Sie strukturiert die Vermutung, liefert aber weder einen DAG noch Evidenz für einen Pfeil. Jeder relevante Knoten wird anschließend als direkt messbar, Proxy, latent oder unbrauchbar klassifiziert und in die Pearl-/Identifikationsprüfung überführt.
-
-Für quantitative Event-Analyse ist kein „Goldratt-Constraint-Score“ vorgesehen. Der Default sind:
+Für quantitative Event- und Transmissionsanalyse sind die Defaults:
 
 - wenige ökonomisch begründete Surprise-Faktoren,
 - einfache Event-Response-Regressionen,
@@ -289,14 +304,20 @@ Für quantitative Event-Analyse ist kein „Goldratt-Constraint-Score“ vorgese
 - zeitlich OOS berechnete Reaktionsinnovationen,
 - und ein inkrementeller OOS-Vergleich gegen ein einfacheres Nullmodell.
 
-Ein Kettenglied darf nicht wegen hoher Korrelation, großem `|z|` oder einer plausiblen Geschichte zum „Constraint“ erklärt werden. Das Wort wird nur mit definiertem Systemziel und einem der folgenden Labels verwendet:
+Ein Kettenglied darf nicht wegen hoher Korrelation, großem `|z|` oder einer
+plausiblen Geschichte zum „Constraint“ erklärt werden. Das Wort wird nur mit
+definiertem Systemziel und einem der folgenden Labels verwendet:
 
 - `TRANSMISSION_DIAGNOSTIC` – beschreibender Pass-through oder Residualbefund,
 - `INFORMATION_BOTTLENECK_CANDIDATE` – liefert eingefroren und OOS zusätzliche Prognoseinformation für das End-Outcome,
 - `IDENTIFIED_CAUSAL_LEVER` – kausales Estimand und Identifikationsgate bestanden,
 - `IMPLEMENTATION_CONSTRAINT` – Daten-, Timing-, Liquiditäts-, Kosten- oder Prozessengpass.
 
-Goldratt ist vor allem für `IMPLEMENTATION_CONSTRAINT` und die Ableitung nächster Prozessschritte geeignet. Für Markttransmission bleiben Pearl und die quantitativen Tests zuständig.
+`IDENTIFIED_CAUSAL_LEVER` und `IMPLEMENTATION_CONSTRAINT` werden zusätzlich gegen
+`schemas/constraint_assessment.schema.json` geprüft. Goldratts Fokuslogik ist nur
+noch ein optionales Denkwerkzeug nach Phänomen-Validation für bereits belegte
+`IMPLEMENTATION_CONSTRAINT`-Engpässe. Sie gehört nicht zur frühen
+Markttransmissions- oder Identifikationsanalyse.
 
 ## 8b. Spezialisierte Kausalbibliotheken sind bei passender Aufgabe Pflicht
 
@@ -480,7 +501,7 @@ Materiell sind insbesondere Änderungen an:
 - Identifikationsstrategie oder deren Kernannahmen,
 - primäre Kausalbibliothek, Haupt-API, Versionskombination oder Split-/Seed-Logik,
 - Surprise-Konstruktion, Eventfenster oder Reaktionsmodell,
-- Surprise-Faktoren, optionale ECE-/Mechanism-Map oder Constraint-Definition,
+- Surprise-Faktoren, Response-Modell oder Constraint-Assessment,
 - Richtung des erwarteten Effekts,
 - Nullmodell,
 - Outcome,
