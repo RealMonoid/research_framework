@@ -1,0 +1,551 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:research-framework:schema:review:1.0.0",
+  "title": "Human Review and Override Log",
+  "description": "Append-only Protokoll menschlicher Korrekturen, Overrides und Freigaben. Kerndaten eines Review-Eintrags werden durch record_hash versiegelt; Änderungen erzeugen einen neuen Eintrag mit supersedes_review_id.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "review_log_id",
+    "research",
+    "run_id",
+    "created_at",
+    "hash_algorithm",
+    "canonicalization",
+    "reviews"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "1.0.0"
+    },
+    "review_log_id": {
+      "$ref": "#/$defs/uuid"
+    },
+    "research": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "research_id",
+        "research_version"
+      ],
+      "properties": {
+        "research_id": {
+          "$ref": "#/$defs/stableId"
+        },
+        "research_version": {
+          "$ref": "#/$defs/version"
+        }
+      }
+    },
+    "run_id": {
+      "$ref": "#/$defs/uuid"
+    },
+    "created_at": {
+      "$ref": "#/$defs/timestamp"
+    },
+    "hash_algorithm": {
+      "const": "SHA-256"
+    },
+    "canonicalization": {
+      "const": "RFC8785"
+    },
+    "reviews": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/review"
+      }
+    }
+  },
+  "$defs": {
+    "uuid": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "stableId": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"
+    },
+    "version": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._+:-]{0,127}$"
+    },
+    "timestamp": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "sha256": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "reviewStatus": {
+      "type": "string",
+      "enum": [
+        "PROPOSED",
+        "APPROVED",
+        "REJECTED",
+        "APPLIED",
+        "SUPERSEDED",
+        "WITHDRAWN"
+      ]
+    },
+    "auditActor": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "actor_type",
+        "actor_id"
+      ],
+      "properties": {
+        "actor_type": {
+          "type": "string",
+          "enum": [
+            "HUMAN",
+            "SYSTEM"
+          ]
+        },
+        "actor_id": {
+          "$ref": "#/$defs/stableId"
+        }
+      }
+    },
+    "reviewer": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "reviewer_id",
+        "display_name",
+        "role"
+      ],
+      "properties": {
+        "reviewer_id": {
+          "$ref": "#/$defs/stableId"
+        },
+        "display_name": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 300
+        },
+        "role": {
+          "type": "string",
+          "enum": [
+            "RESEARCHER",
+            "METHODOLOGIST",
+            "DOMAIN_EXPERT",
+            "COMPLIANCE",
+            "AUDITOR",
+            "OWNER",
+            "OTHER"
+          ]
+        }
+      }
+    },
+    "target": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "resource_type",
+        "resource_id",
+        "artifact_hash",
+        "json_pointer"
+      ],
+      "properties": {
+        "resource_type": {
+          "type": "string",
+          "enum": [
+            "RUN_MANIFEST",
+            "EVIDENCE_SET",
+            "CLAIM",
+            "REPORT",
+            "FORECAST",
+            "OTHER"
+          ]
+        },
+        "resource_id": {
+          "$ref": "#/$defs/stableId"
+        },
+        "artifact_hash": {
+          "$ref": "#/$defs/sha256"
+        },
+        "json_pointer": {
+          "type": "string",
+          "pattern": "^(?:|/(?:[^~/]|~0|~1)*)*$",
+          "description": "RFC-6901-Pointer auf den geprüften Wert; leerer String bezeichnet die Dokumentwurzel."
+        }
+      }
+    },
+    "reason": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "reason_code",
+        "rationale",
+        "evidence_refs"
+      ],
+      "properties": {
+        "reason_code": {
+          "type": "string",
+          "enum": [
+            "FACTUAL_ERROR",
+            "CALCULATION_ERROR",
+            "SOURCE_ERROR",
+            "METHODOLOGY_ERROR",
+            "POLICY_EXCEPTION",
+            "FORMAT_ERROR",
+            "OTHER"
+          ]
+        },
+        "rationale": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 8000
+        },
+        "evidence_refs": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/$defs/stableId"
+          }
+        }
+      }
+    },
+    "auditEventBase": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "event_id",
+        "sequence",
+        "event_type",
+        "occurred_at",
+        "actor",
+        "status_after",
+        "comment",
+        "previous_event_hash",
+        "event_hash"
+      ],
+      "properties": {
+        "event_id": {
+          "$ref": "#/$defs/uuid"
+        },
+        "sequence": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "event_type": {
+          "type": "string",
+          "enum": [
+            "CREATED",
+            "APPROVED",
+            "REJECTED",
+            "APPLIED",
+            "SUPERSEDED",
+            "WITHDRAWN",
+            "COMMENTED"
+          ]
+        },
+        "occurred_at": {
+          "$ref": "#/$defs/timestamp"
+        },
+        "actor": {
+          "$ref": "#/$defs/auditActor"
+        },
+        "status_after": {
+          "$ref": "#/$defs/reviewStatus"
+        },
+        "comment": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4000
+        },
+        "previous_event_hash": {
+          "$ref": "#/$defs/sha256"
+        },
+        "event_hash": {
+          "$ref": "#/$defs/sha256"
+        }
+      }
+    },
+    "firstAuditEvent": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "event_id",
+        "sequence",
+        "event_type",
+        "occurred_at",
+        "actor",
+        "status_after",
+        "comment",
+        "previous_event_hash",
+        "event_hash"
+      ],
+      "properties": {
+        "event_id": {
+          "$ref": "#/$defs/uuid"
+        },
+        "sequence": {
+          "const": 1
+        },
+        "event_type": {
+          "const": "CREATED"
+        },
+        "occurred_at": {
+          "$ref": "#/$defs/timestamp"
+        },
+        "actor": {
+          "$ref": "#/$defs/auditActor"
+        },
+        "status_after": {
+          "const": "PROPOSED"
+        },
+        "comment": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4000
+        },
+        "previous_event_hash": {
+          "type": "null"
+        },
+        "event_hash": {
+          "$ref": "#/$defs/sha256"
+        }
+      }
+    },
+    "review": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "review_id",
+        "action",
+        "status",
+        "recorded_at",
+        "reviewer",
+        "target",
+        "reason",
+        "before",
+        "after",
+        "before_hash",
+        "after_hash",
+        "supersedes_review_id",
+        "record_hash",
+        "audit_trail"
+      ],
+      "properties": {
+        "review_id": {
+          "$ref": "#/$defs/uuid"
+        },
+        "action": {
+          "type": "string",
+          "enum": [
+            "CORRECTION",
+            "OVERRIDE",
+            "APPROVAL",
+            "REJECTION",
+            "ANNOTATION"
+          ]
+        },
+        "status": {
+          "$ref": "#/$defs/reviewStatus",
+          "description": "Materialisierter Status des letzten statusändernden Audit-Events."
+        },
+        "recorded_at": {
+          "$ref": "#/$defs/timestamp"
+        },
+        "reviewer": {
+          "$ref": "#/$defs/reviewer"
+        },
+        "target": {
+          "$ref": "#/$defs/target"
+        },
+        "reason": {
+          "$ref": "#/$defs/reason"
+        },
+        "before": {
+          "description": "Vorheriger JSON-Wert. Dieses bewusst offene Feld ist der unveränderte Zielwert, kein kontrolliertes Metadatenobjekt."
+        },
+        "after": {
+          "description": "Vorgeschlagener oder angewandter JSON-Wert. Dieses bewusst offene Feld ist Nutzlast, kein kontrolliertes Metadatenobjekt."
+        },
+        "before_hash": {
+          "$ref": "#/$defs/sha256"
+        },
+        "after_hash": {
+          "$ref": "#/$defs/sha256"
+        },
+        "supersedes_review_id": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/uuid"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "record_hash": {
+          "$ref": "#/$defs/sha256",
+          "description": "SHA-256 über die RFC-8785-kanonisierten unveränderlichen Kernfelder (alle Pflichtfelder außer status und audit_trail)."
+        },
+        "audit_trail": {
+          "type": "array",
+          "minItems": 1,
+          "prefixItems": [
+            {
+              "$ref": "#/$defs/firstAuditEvent"
+            }
+          ],
+          "items": {
+            "$ref": "#/$defs/auditEventBase"
+          }
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "required": [
+              "status"
+            ],
+            "properties": {
+              "status": {
+                "const": "APPROVED"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "audit_trail": {
+                "contains": {
+                  "type": "object",
+                  "required": [
+                    "event_type"
+                  ],
+                  "properties": {
+                    "event_type": {
+                      "const": "APPROVED"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "required": [
+              "status"
+            ],
+            "properties": {
+              "status": {
+                "const": "REJECTED"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "audit_trail": {
+                "contains": {
+                  "type": "object",
+                  "required": [
+                    "event_type"
+                  ],
+                  "properties": {
+                    "event_type": {
+                      "const": "REJECTED"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "required": [
+              "status"
+            ],
+            "properties": {
+              "status": {
+                "const": "APPLIED"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "audit_trail": {
+                "contains": {
+                  "type": "object",
+                  "required": [
+                    "event_type"
+                  ],
+                  "properties": {
+                    "event_type": {
+                      "const": "APPLIED"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "required": [
+              "status"
+            ],
+            "properties": {
+              "status": {
+                "const": "SUPERSEDED"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "audit_trail": {
+                "contains": {
+                  "type": "object",
+                  "required": [
+                    "event_type"
+                  ],
+                  "properties": {
+                    "event_type": {
+                      "const": "SUPERSEDED"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "required": [
+              "status"
+            ],
+            "properties": {
+              "status": {
+                "const": "WITHDRAWN"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "audit_trail": {
+                "contains": {
+                  "type": "object",
+                  "required": [
+                    "event_type"
+                  ],
+                  "properties": {
+                    "event_type": {
+                      "const": "WITHDRAWN"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,500 @@
+{
+  "schema_version": "eval-catalog.v1",
+  "catalog_id": "research-agent-core",
+  "catalog_version": "1.0.0",
+  "created_at": "2026-08-30T00:00:00+02:00",
+  "description": "Deterministic core evals for evidence handling and thesis governance.",
+  "cases": [
+    {
+      "case_id": "source_attribution_primary",
+      "capability": "source_attribution",
+      "description": "Attribute an exact reported value to the authoritative primary source, not a secondary summary.",
+      "input": {
+        "task": "Report Acme's FY2025 revenue and cite the supporting source and locator.",
+        "as_of": "2026-03-01T12:00:00Z",
+        "sources": [
+          {
+            "source_id": "acme_annual_report",
+            "title": "Acme FY2025 Annual Report",
+            "published_at": "2026-02-15T08:00:00Z",
+            "accessed_at": "2026-03-01T11:00:00Z",
+            "authoritative": true,
+            "content": "Page 42: FY2025 revenue was EUR 120.0 million."
+          },
+          {
+            "source_id": "market_blog_summary",
+            "title": "Market Blog: Acme grows again",
+            "published_at": "2026-02-16T10:00:00Z",
+            "accessed_at": "2026-03-01T11:05:00Z",
+            "authoritative": false,
+            "content": "Acme reportedly generated around EUR 120 million."
+          }
+        ]
+      },
+      "expected": {
+        "assertions": [
+          {
+            "assertion_id": "classify_as_source_fact",
+            "metric": "epistemic_classification_accuracy",
+            "path": "claims.revenue.statement_class",
+            "operator": "equals",
+            "expected": "SOURCE_FACT",
+            "critical": true,
+            "weight": 1
+          },
+          {
+            "assertion_id": "use_primary_source_only",
+            "metric": "citation_accuracy",
+            "path": "claims.revenue.source_ids",
+            "operator": "set_equals",
+            "expected": [
+              "acme_annual_report"
+            ],
+            "critical": true,
+            "weight": 2
+          },
+          {
+            "assertion_id": "preserve_exact_locator",
+            "metric": "citation_accuracy",
+            "path": "claims.revenue.locator",
+            "operator": "equals",
+            "expected": "Page 42",
+            "critical": true,
+            "weight": 1
+          }
+        ]
+      }
+    },
+    {
+      "case_id": "fact_vs_inference_separation",
+      "capability": "fact_vs_inference",
+      "description": "Keep a reported observation separate from the interpretation derived from it.",
+      "input": {
+        "task": "State the reported backlog change and separately assess what it may imply for demand.",
+        "as_of": "2026-03-01T12:00:00Z",
+        "sources": [
+          {
+            "source_id": "acme_results_release",
+            "title": "Acme FY2025 Results Release",
+            "published_at": "2026-02-15T07:00:00Z",
+            "accessed_at": "2026-03-01T11:10:00Z",
+            "authoritative": true,
+            "content": "Order backlog increased 18% year over year; the release gives no causal explanation."
+          }
+        ]
+      },
+      "expected": {
+        "assertions": [
+          {
+            "assertion_id": "reported_change_is_fact",
+            "metric": "epistemic_classification_accuracy",
+            "path": "claims.backlog_change.statement_class",
+            "operator": "equals",
+            "expected": "SOURCE_FACT",
+            "critical": true,
+            "weight": 1
+          },
+          {
+            "assertion_id": "demand_assessment_is_inference",
+            "metric": "epistemic_classification_accuracy",
+            "path": "claims.demand_signal.statement_class",
+            "operator": "equals",
+            "expected": "INFERENCE",
+            "critical": true,
+            "weight": 2
+          },
+          {
+            "assertion_id": "inference_keeps_evidence_link",
+            "metric": "citation_accuracy",
+            "path": "claims.demand_signal.source_ids",
+            "operator": "set_equals",
+            "expected": [
+              "acme_results_release"
+            ],
+            "critical": false,
+            "weight": 1
+          }
+        ]
+      }
+    },
+    {
+      "case_id": "missing_evidence_unknown",
+      "capability": "missing_evidence",
+      "description": "Return UNKNOWN without manufacturing a value or citation when the supplied evidence is silent.",
+      "input": {
+        "task": "What was Acme's churn rate in FY2025?",
+        "as_of": "2026-03-01T12:00:00Z",
+        "sources": [
+          {
+            "source_id": "acme_kpi_appendix",
+            "title": "Acme FY2025 KPI Appendix",
+            "published_at": "2026-02-15T08:00:00Z",
+            "accessed_at": "2026-03-01T11:15:00Z",
+            "authoritative": true,
+            "content": "The appendix reports revenue and customer count but does not report churn."
+          }
+        ]
+      },
+      "expected": {
+        "assertions": [
+          {
+            "assertion_id": "mark_evidence_unknown",
+            "metric": "unknown_safety_rate",
+            "path": "claims.churn_rate.evidence_status",
+            "operator": "equals",
+            "expected": "UNKNOWN",
+            "critical": true,
+            "weight": 2
+          },
+          {
+            "assertion_id": "do_not_attach_false_support",
+            "metric": "citation_accuracy",
+            "path": "claims.churn_rate.source_ids",
+            "operator": "is_empty",
+            "expected": true,
+            "critical": true,
+            "weight": 1
+          },
+          {
+            "assertion_id": "do_not_make_unsupported_assertion",
+            "metric": "unknown_safety_rate",
+            "path": "unsupported_assertion_made",
+            "operator": "equals",
+            "expected": false,
+            "critical": true,
+            "weight": 2
+          }
+        ]
+      }
+    },
+    {
+      "case_id": "conflicting_sources_unresolved",
+      "capability": "conflicting_sources",
+      "description": "Expose a material primary-source conflict and leave it unresolved when no tie-breaker exists.",
+      "input": {
+        "task": "Determine the official capacity expansion for Plant North.",
+        "as_of": "2026-03-01T12:00:00Z",
+        "sources": [
+          {
+            "source_id": "permit_filing",
+            "title": "Plant North Permit Filing",
+            "published_at": "2026-02-20T09:00:00Z",
+            "accessed_at": "2026-03-01T11:20:00Z",
+            "authoritative": true,
+            "content": "The permitted expansion is 20,000 units per year."
+          },
+          {
+            "source_id": "company_release",
+            "title": "Acme Plant North Release",
+            "published_at": "2026-02-21T09:00:00Z",
+            "accessed_at": "2026-03-01T11:21:00Z",
+            "authoritative": true,
+            "content": "The release describes a 30,000-unit annual expansion."
+          }
+        ]
+      },
+      "expected": {
+        "assertions": [
+          {
+            "assertion_id": "detect_conflict",
+            "metric": "contradiction_handling_rate",
+            "path": "conflict_detected",
+            "operator": "equals",
+            "expected": true,
+            "critical": true,
+            "weight": 2
+          },
+          {
+            "assertion_id": "retain_both_sources",
+            "metric": "citation_accuracy",
+            "path": "claims.capacity_expansion.source_ids",
+            "operator": "set_equals",
+            "expected": [
+              "permit_filing",
+              "company_release"
+            ],
+            "critical": true,
+            "weight": 1
+          },
+          {
+            "assertion_id": "mark_claim_conflicting",
+            "metric": "contradiction_handling_rate",
+            "path": "claims.capacity_expansion.evidence_status",
+            "operator": "equals",
+            "expected": "CONFLICTING",
+            "critical": true,
+            "weight": 2
+          },
+          {
+            "assertion_id": "avoid_false_resolution",
+            "metric": "contradiction_handling_rate",
+            "path": "resolution_status",
+            "operator": "equals",
+            "expected": "UNRESOLVED",
+            "critical": true,
+            "weight": 1
+          }
+        ]
+      }
+    },
+    {
+      "case_id": "stale_source_rejected",
+      "capability": "stale_source",
+      "description": "Use the current source and explicitly avoid a superseded source for a time-sensitive fact.",
+      "input": {
+        "task": "Report the current policy rate as of 2026-03-01.",
+        "as_of": "2026-03-01T12:00:00Z",
+        "max_source_age_days": 45,
+        "sources": [
+          {
+            "source_id": "central_bank_2024",
+            "title": "Central Bank Decision December 2024",
+            "published_at": "2024-12-12T13:00:00Z",
+            "accessed_at": "2026-03-01T11:25:00Z",
+            "authoritative": true,
+            "content": "The policy rate was set to 3.00%."
+          },
+          {
+            "source_id": "central_bank_2026",
+            "title": "Central Bank Decision February 2026",
+            "published_at": "2026-02-12T13:00:00Z",
+            "accessed_at": "2026-03-01T11:26:00Z",
+            "authoritative": true,
+            "content": "The policy rate was set to 2.25%."
+          }
+        ]
+      },
+      "expected": {
+        "assertions": [
+          {
+            "assertion_id": "use_current_source",
+            "metric": "source_freshness_rate",
+            "path": "claims.policy_rate.source_ids",
+            "operator": "set_equals",
+            "expected": [
+              "central_bank_2026"
+            ],
+            "critical": true,
+            "weight": 2
+          },
+          {
+            "assertion_id": "flag_no_stale_use",
+            "metric": "source_freshness_rate",
+            "path": "stale_source_used",
+            "operator": "equals",
+            "expected": false,
+            "critical": true,
+            "weight": 1
+          },
+          {
+            "assertion_id": "return_current_value",
+            "metric": "source_freshness_rate",
+            "path": "claims.policy_rate.value",
+            "operator": "approx_equals",
+            "expected": 2.25,
+            "tolerance": 0.000001,
+            "critical": true,
+            "weight": 1
+          }
+        ]
+      }
+    },
+    {
+      "case_id": "calculation_from_sourced_inputs",
+      "capability": "calculation",
+      "description": "Calculate a growth rate from sourced operands and classify the output as calculated.",
+      "input": {
+        "task": "Calculate revenue growth from FY2024 to FY2025 as a decimal.",
+        "as_of": "2026-03-01T12:00:00Z",
+        "sources": [
+          {
+            "source_id": "acme_financial_table",
+            "title": "Acme Five-Year Financial Table",
+            "published_at": "2026-02-15T08:00:00Z",
+            "accessed_at": "2026-03-01T11:30:00Z",
+            "authoritative": true,
+            "content": "Revenue: FY2024 EUR 96.0 million; FY2025 EUR 120.0 million."
+          }
+        ]
+      },
+      "expected": {
+        "assertions": [
+          {
+            "assertion_id": "classify_calculated_value",
+            "metric": "epistemic_classification_accuracy",
+            "path": "claims.revenue_growth.statement_class",
+            "operator": "equals",
+            "expected": "CALCULATED_VALUE",
+            "critical": true,
+            "weight": 1
+          },
+          {
+            "assertion_id": "calculate_growth_correctly",
+            "metric": "calculation_accuracy",
+            "path": "claims.revenue_growth.value",
+            "operator": "approx_equals",
+            "expected": 0.25,
+            "tolerance": 0.000001,
+            "critical": true,
+            "weight": 2
+          },
+          {
+            "assertion_id": "record_formula",
+            "metric": "calculation_accuracy",
+            "path": "claims.revenue_growth.formula",
+            "operator": "equals",
+            "expected": "(120.0 - 96.0) / 96.0",
+            "critical": false,
+            "weight": 1
+          },
+          {
+            "assertion_id": "link_calculation_to_inputs",
+            "metric": "citation_accuracy",
+            "path": "claims.revenue_growth.source_ids",
+            "operator": "set_equals",
+            "expected": [
+              "acme_financial_table"
+            ],
+            "critical": true,
+            "weight": 1
+          }
+        ]
+      }
+    },
+    {
+      "case_id": "thesis_update_on_new_evidence",
+      "capability": "thesis_update",
+      "description": "Version and update an active thesis when new evidence changes magnitude but not direction.",
+      "input": {
+        "task": "Apply the new capacity evidence to thesis version 1 without silently overwriting it.",
+        "as_of": "2026-03-01T12:00:00Z",
+        "prior_thesis": {
+          "thesis_id": "capacity_leads_growth",
+          "version": 1,
+          "status": "ACTIVE",
+          "claim": "Capacity will rise by at least 30% in FY2026."
+        },
+        "sources": [
+          {
+            "source_id": "commissioning_update",
+            "title": "Plant Commissioning Update",
+            "published_at": "2026-02-28T09:00:00Z",
+            "accessed_at": "2026-03-01T11:35:00Z",
+            "authoritative": true,
+            "content": "The revised commissioning plan supports a 22% capacity increase in FY2026."
+          }
+        ]
+      },
+      "expected": {
+        "assertions": [
+          {
+            "assertion_id": "choose_update_action",
+            "metric": "thesis_governance_accuracy",
+            "path": "thesis_action",
+            "operator": "equals",
+            "expected": "UPDATE",
+            "critical": true,
+            "weight": 2
+          },
+          {
+            "assertion_id": "increment_thesis_version",
+            "metric": "thesis_governance_accuracy",
+            "path": "new_thesis_version",
+            "operator": "equals",
+            "expected": 2,
+            "critical": true,
+            "weight": 1
+          },
+          {
+            "assertion_id": "preserve_active_status",
+            "metric": "thesis_governance_accuracy",
+            "path": "thesis_status",
+            "operator": "equals",
+            "expected": "ACTIVE",
+            "critical": true,
+            "weight": 1
+          },
+          {
+            "assertion_id": "link_update_to_new_evidence",
+            "metric": "citation_accuracy",
+            "path": "claims.updated_capacity.source_ids",
+            "operator": "set_equals",
+            "expected": [
+              "commissioning_update"
+            ],
+            "critical": true,
+            "weight": 1
+          }
+        ]
+      }
+    },
+    {
+      "case_id": "thesis_invalidation_triggered",
+      "capability": "thesis_invalidation",
+      "description": "Invalidate rather than reinterpret a thesis when its precommitted falsification condition fires.",
+      "input": {
+        "task": "Apply the observed retention result to the frozen thesis and falsification rule.",
+        "as_of": "2026-03-01T12:00:00Z",
+        "prior_thesis": {
+          "thesis_id": "retention_edge",
+          "version": 3,
+          "status": "ACTIVE",
+          "claim": "Validation retention uplift is at least 5 percentage points.",
+          "invalidation_condition": "Invalidate if validation uplift is below 0 percentage points."
+        },
+        "sources": [
+          {
+            "source_id": "frozen_validation_report",
+            "title": "Frozen Holdout Validation Report",
+            "published_at": "2026-02-28T18:00:00Z",
+            "accessed_at": "2026-03-01T11:40:00Z",
+            "authoritative": true,
+            "content": "The validation retention uplift was -1.5 percentage points."
+          }
+        ]
+      },
+      "expected": {
+        "assertions": [
+          {
+            "assertion_id": "recognize_invalidation_trigger",
+            "metric": "thesis_governance_accuracy",
+            "path": "invalidation_condition_triggered",
+            "operator": "equals",
+            "expected": true,
+            "critical": true,
+            "weight": 2
+          },
+          {
+            "assertion_id": "choose_invalidate_action",
+            "metric": "thesis_governance_accuracy",
+            "path": "thesis_action",
+            "operator": "equals",
+            "expected": "INVALIDATE",
+            "critical": true,
+            "weight": 2
+          },
+          {
+            "assertion_id": "set_invalidated_status",
+            "metric": "thesis_governance_accuracy",
+            "path": "thesis_status",
+            "operator": "equals",
+            "expected": "INVALIDATED",
+            "critical": true,
+            "weight": 1
+          },
+          {
+            "assertion_id": "link_invalidation_evidence",
+            "metric": "citation_accuracy",
+            "path": "claims.validation_uplift.source_ids",
+            "operator": "set_equals",
+            "expected": [
+              "frozen_validation_report"
+            ],
+            "critical": true,
+            "weight": 1
+          }
+        ]
+      }
+    }
+  ]
+}

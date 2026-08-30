@@ -1,0 +1,589 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:research-framework:schema:forecast-ledger:1.0.0",
+  "title": "Research Forecast Ledger",
+  "description": "Append-only ledger für vor dem Outcome eingefrorene und später reproduzierbar aufgelöste Forecasts.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "ledger_id",
+    "research",
+    "created_at",
+    "forecasts"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "1.0.0"
+    },
+    "ledger_id": {
+      "$ref": "#/$defs/stableId"
+    },
+    "research": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "research_id",
+        "research_version"
+      ],
+      "properties": {
+        "research_id": {
+          "$ref": "#/$defs/stableId"
+        },
+        "research_version": {
+          "$ref": "#/$defs/version"
+        }
+      }
+    },
+    "created_at": {
+      "$ref": "#/$defs/timestamp"
+    },
+    "forecasts": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/forecast"
+      }
+    }
+  },
+  "$defs": {
+    "stableId": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"
+    },
+    "uuid": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "version": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._+:-]{0,127}$"
+    },
+    "timestamp": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "sha256": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "actor": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "actor_type",
+        "actor_id"
+      ],
+      "properties": {
+        "actor_type": {
+          "type": "string",
+          "enum": [
+            "HUMAN",
+            "AGENT",
+            "TOOL",
+            "SYSTEM"
+          ]
+        },
+        "actor_id": {
+          "$ref": "#/$defs/stableId"
+        }
+      }
+    },
+    "target": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "target_object",
+        "target_variable",
+        "unit",
+        "population"
+      ],
+      "properties": {
+        "target_object": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 500
+        },
+        "target_variable": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 500
+        },
+        "unit": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 200
+        },
+        "population": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 1000
+        }
+      }
+    },
+    "window": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "horizon_description",
+        "starts_at",
+        "ends_at",
+        "resolution_deadline"
+      ],
+      "properties": {
+        "horizon_description": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 1000
+        },
+        "starts_at": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/timestamp"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "ends_at": {
+          "$ref": "#/$defs/timestamp"
+        },
+        "resolution_deadline": {
+          "$ref": "#/$defs/timestamp"
+        }
+      }
+    },
+    "prediction": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "kind",
+        "point_value",
+        "lower_bound",
+        "upper_bound",
+        "direction",
+        "category",
+        "probability",
+        "calibration_ref"
+      ],
+      "properties": {
+        "kind": {
+          "type": "string",
+          "enum": [
+            "POINT",
+            "INTERVAL",
+            "DIRECTION",
+            "CATEGORY",
+            "PROBABILITY"
+          ]
+        },
+        "point_value": {
+          "type": [
+            "number",
+            "string",
+            "null"
+          ]
+        },
+        "lower_bound": {
+          "type": [
+            "number",
+            "null"
+          ]
+        },
+        "upper_bound": {
+          "type": [
+            "number",
+            "null"
+          ]
+        },
+        "direction": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "enum": [
+            "UP",
+            "DOWN",
+            "FLAT",
+            "ABOVE",
+            "BELOW",
+            "INSIDE",
+            "OUTSIDE",
+            null
+          ]
+        },
+        "category": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "maxLength": 500
+        },
+        "probability": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0,
+          "maximum": 1
+        },
+        "calibration_ref": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/stableId"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "kind": {
+                "const": "POINT"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "point_value": {
+                "type": [
+                  "number",
+                  "string"
+                ]
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "kind": {
+                "const": "INTERVAL"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "lower_bound": {
+                "type": "number"
+              },
+              "upper_bound": {
+                "type": "number"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "kind": {
+                "const": "DIRECTION"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "direction": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "kind": {
+                "const": "CATEGORY"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "category": {
+                "type": "string",
+                "minLength": 1
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "kind": {
+                "const": "PROBABILITY"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "probability": {
+                "type": "number",
+                "minimum": 0,
+                "maximum": 1
+              },
+              "calibration_ref": {
+                "$ref": "#/$defs/stableId"
+              }
+            }
+          }
+        }
+      ]
+    },
+    "evidenceAtIssue": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "evidence_set_id",
+        "evidence_grade",
+        "ruleset_version"
+      ],
+      "properties": {
+        "evidence_set_id": {
+          "$ref": "#/$defs/stableId"
+        },
+        "evidence_grade": {
+          "type": "string",
+          "enum": [
+            "SUFFICIENT",
+            "LIMITED",
+            "INSUFFICIENT"
+          ]
+        },
+        "ruleset_version": {
+          "$ref": "#/$defs/version"
+        }
+      }
+    },
+    "resolutionPlan": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "expected_source_refs",
+        "resolution_rule",
+        "scheduled_at",
+        "scoring_rule",
+        "custom_scoring_rule"
+      ],
+      "properties": {
+        "expected_source_refs": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/$defs/stableId"
+          }
+        },
+        "resolution_rule": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4000
+        },
+        "scheduled_at": {
+          "$ref": "#/$defs/timestamp"
+        },
+        "scoring_rule": {
+          "type": "string",
+          "enum": [
+            "BRIER",
+            "ABSOLUTE_ERROR",
+            "SQUARED_ERROR",
+            "INTERVAL_COVERAGE",
+            "DIRECTION_ACCURACY",
+            "CATEGORY_ACCURACY",
+            "CUSTOM",
+            "NONE"
+          ]
+        },
+        "custom_scoring_rule": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "maxLength": 4000
+        }
+      }
+    },
+    "resolution": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "resolved_at",
+        "resolved_by",
+        "actual_value",
+        "source_refs",
+        "source_vintage",
+        "applied_rule",
+        "score",
+        "rationale"
+      ],
+      "properties": {
+        "resolved_at": {
+          "$ref": "#/$defs/timestamp"
+        },
+        "resolved_by": {
+          "$ref": "#/$defs/actor"
+        },
+        "actual_value": {
+          "type": [
+            "number",
+            "string",
+            "null"
+          ]
+        },
+        "source_refs": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/$defs/stableId"
+          }
+        },
+        "source_vintage": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "maxLength": 500
+        },
+        "applied_rule": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4000
+        },
+        "score": {
+          "type": [
+            "number",
+            "null"
+          ]
+        },
+        "rationale": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4000
+        }
+      }
+    },
+    "forecast": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "forecast_id",
+        "forecast_revision",
+        "claim_id",
+        "run_id",
+        "hypothesis_ref",
+        "supersedes_forecast_id",
+        "issued_at",
+        "as_of",
+        "target",
+        "window",
+        "prediction",
+        "evidence_at_issue",
+        "resolution_plan",
+        "status",
+        "resolution",
+        "record_hash"
+      ],
+      "properties": {
+        "forecast_id": {
+          "$ref": "#/$defs/stableId"
+        },
+        "forecast_revision": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "claim_id": {
+          "$ref": "#/$defs/stableId"
+        },
+        "run_id": {
+          "$ref": "#/$defs/uuid"
+        },
+        "hypothesis_ref": {
+          "$ref": "#/$defs/stableId"
+        },
+        "supersedes_forecast_id": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/stableId"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "issued_at": {
+          "$ref": "#/$defs/timestamp"
+        },
+        "as_of": {
+          "$ref": "#/$defs/timestamp"
+        },
+        "target": {
+          "$ref": "#/$defs/target"
+        },
+        "window": {
+          "$ref": "#/$defs/window"
+        },
+        "prediction": {
+          "$ref": "#/$defs/prediction"
+        },
+        "evidence_at_issue": {
+          "$ref": "#/$defs/evidenceAtIssue"
+        },
+        "resolution_plan": {
+          "$ref": "#/$defs/resolutionPlan"
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "OPEN",
+            "RESOLVED",
+            "UNRESOLVED",
+            "EXPIRED",
+            "VOID"
+          ]
+        },
+        "resolution": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/resolution"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "record_hash": {
+          "$ref": "#/$defs/sha256"
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "status": {
+                "const": "OPEN"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "resolution": {
+                "type": "null"
+              }
+            }
+          },
+          "else": {
+            "properties": {
+              "resolution": {
+                "$ref": "#/$defs/resolution"
+              }
+            }
+          }
+        }
+      ]
+    }
+  }
+}

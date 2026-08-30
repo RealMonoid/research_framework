@@ -1,0 +1,103 @@
+{
+  "schema_version": "1.0.0",
+  "evidence_set_id": "22222222-2222-4222-8222-222222222222",
+  "research": {
+    "research_id": "research-demo-001",
+    "research_version": "1.0.0"
+  },
+  "run_id": "11111111-1111-4111-8111-111111111111",
+  "created_at": "2026-08-30T08:00:10Z",
+  "overall_evidence_assessment": {
+    "grade": "LIMITED",
+    "ruleset_version": "1.0.0",
+    "evaluated_at": "2026-08-30T08:00:10Z",
+    "checks": [
+      {
+        "criterion_id": "primary-source-present",
+        "outcome": "PASS",
+        "evidence_refs": [
+          "source-001"
+        ]
+      }
+    ]
+  },
+  "sources": [
+    {
+      "source_id": "source-001",
+      "source_type": "PRIMARY_DOCUMENT",
+      "title": "Demonstrationsbericht 2026",
+      "publisher": "Example Institute",
+      "uri": "https://example.org/report-2026",
+      "published_at": "2026-08-29T09:00:00Z",
+      "retrieved_at": "2026-08-30T08:00:02Z",
+      "version_or_vintage": "2026-08-29",
+      "snapshot_hash": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"
+    }
+  ],
+  "claims": [
+    {
+      "claim_id": "claim-001",
+      "claim_revision": 1,
+      "claim_class": "SOURCE_FACT",
+      "research_claim_level": null,
+      "statement": "Der veröffentlichte Messwert beträgt 8,2 Prozent.",
+      "origin": "MODEL",
+      "as_of": "2026-08-29T09:00:00Z",
+      "valid_until": null,
+      "status": "ACTIVE",
+      "supersedes_claim_id": null,
+      "recorded_at": "2026-08-30T08:00:08Z",
+      "recorded_by": {
+        "actor_type": "AGENT",
+        "actor_id": "research-agent"
+      },
+      "evidence_assessment": {
+        "grade": "LIMITED",
+        "ruleset_version": "1.0.0",
+        "evaluated_at": "2026-08-30T08:00:10Z",
+        "checks": [
+          {
+            "criterion_id": "source-locator-present",
+            "outcome": "PASS",
+            "evidence_refs": [
+              "evidence-link-001"
+            ]
+          }
+        ]
+      },
+      "evidence_links": [
+        {
+          "evidence_link_id": "evidence-link-001",
+          "source_id": "source-001",
+          "locator": {
+            "locator_type": "PAGE",
+            "value": "12"
+          },
+          "extracted_fact": "Messwert: 8,2 %",
+          "extracted_fact_hash": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+          "relation": "SUPPORTS",
+          "extraction_method": "LLM",
+          "human_verified": true
+        }
+      ],
+      "dependencies": [],
+      "derivation": null,
+      "forecast_details": null,
+      "estimate_details": null,
+      "human_judgment_details": null,
+      "thesis_impacts": [
+        {
+          "hypothesis_id": "H1",
+          "effect": "STRENGTHENS",
+          "materiality": "MATERIAL",
+          "rationale": "Der Messwert liegt oberhalb der vorab definierten Schwelle."
+        }
+      ],
+      "decision_refs": [
+        "phase-0-decision"
+      ],
+      "conflict_refs": []
+    }
+  ],
+  "conflicts": []
+}

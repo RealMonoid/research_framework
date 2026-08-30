@@ -1,0 +1,130 @@
+{
+  "schema_version": "eval-results.v1",
+  "catalog_id": "research-agent-core",
+  "catalog_version": "1.0.0",
+  "run_id": "smoke-reference-v1",
+  "created_at": "2026-08-30T00:00:00+02:00",
+  "cases": {
+    "source_attribution_primary": {
+      "claims": {
+        "revenue": {
+          "statement_class": "SOURCE_FACT",
+          "evidence_status": "SUPPORTED",
+          "source_ids": [
+            "acme_annual_report"
+          ],
+          "locator": "Page 42",
+          "value": 120.0,
+          "unit": "EUR million"
+        }
+      }
+    },
+    "fact_vs_inference_separation": {
+      "claims": {
+        "backlog_change": {
+          "statement_class": "SOURCE_FACT",
+          "evidence_status": "SUPPORTED",
+          "source_ids": [
+            "acme_results_release"
+          ],
+          "value": 18,
+          "unit": "percent"
+        },
+        "demand_signal": {
+          "statement_class": "INFERENCE",
+          "evidence_status": "PARTIAL",
+          "source_ids": [
+            "acme_results_release"
+          ],
+          "value": "Backlog growth may indicate stronger demand, but causality is not established."
+        }
+      }
+    },
+    "missing_evidence_unknown": {
+      "claims": {
+        "churn_rate": {
+          "statement_class": "ESTIMATE",
+          "evidence_status": "UNKNOWN",
+          "source_ids": [],
+          "value": null
+        }
+      },
+      "unsupported_assertion_made": false
+    },
+    "conflicting_sources_unresolved": {
+      "claims": {
+        "capacity_expansion": {
+          "statement_class": "SOURCE_FACT",
+          "evidence_status": "CONFLICTING",
+          "source_ids": [
+            "permit_filing",
+            "company_release"
+          ],
+          "value": null
+        }
+      },
+      "conflict_detected": true,
+      "resolution_status": "UNRESOLVED"
+    },
+    "stale_source_rejected": {
+      "claims": {
+        "policy_rate": {
+          "statement_class": "SOURCE_FACT",
+          "evidence_status": "SUPPORTED",
+          "source_ids": [
+            "central_bank_2026"
+          ],
+          "value": 2.25,
+          "unit": "percent"
+        }
+      },
+      "stale_source_used": false
+    },
+    "calculation_from_sourced_inputs": {
+      "claims": {
+        "revenue_growth": {
+          "statement_class": "CALCULATED_VALUE",
+          "evidence_status": "SUPPORTED",
+          "source_ids": [
+            "acme_financial_table"
+          ],
+          "formula": "(120.0 - 96.0) / 96.0",
+          "value": 0.25,
+          "unit": "decimal"
+        }
+      }
+    },
+    "thesis_update_on_new_evidence": {
+      "claims": {
+        "updated_capacity": {
+          "statement_class": "SOURCE_FACT",
+          "evidence_status": "SUPPORTED",
+          "source_ids": [
+            "commissioning_update"
+          ],
+          "value": 22,
+          "unit": "percent"
+        }
+      },
+      "thesis_action": "UPDATE",
+      "new_thesis_version": 2,
+      "thesis_status": "ACTIVE"
+    },
+    "thesis_invalidation_triggered": {
+      "claims": {
+        "validation_uplift": {
+          "statement_class": "SOURCE_FACT",
+          "evidence_status": "SUPPORTED",
+          "source_ids": [
+            "frozen_validation_report"
+          ],
+          "value": -1.5,
+          "unit": "percentage points"
+        }
+      },
+      "invalidation_condition_triggered": true,
+      "thesis_action": "INVALIDATE",
+      "thesis_status": "INVALIDATED"
+    }
+  }
+}

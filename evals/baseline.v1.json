@@ -1,0 +1,43 @@
+{
+  "schema_version": "eval-baseline.v1",
+  "catalog_id": "research-agent-core",
+  "catalog_version": "1.0.0",
+  "baseline_id": "reference-adapter-v1",
+  "recorded_at": "2026-08-30T00:00:00+02:00",
+  "minimums": {
+    "overall_score": 0.95,
+    "critical_assertion_pass_rate": 1.0,
+    "citation_accuracy": 0.95,
+    "epistemic_classification_accuracy": 0.95,
+    "unknown_safety_rate": 1.0,
+    "contradiction_handling_rate": 1.0,
+    "source_freshness_rate": 1.0,
+    "calculation_accuracy": 1.0,
+    "thesis_governance_accuracy": 1.0
+  },
+  "metrics": {
+    "overall_score": 1.0,
+    "critical_assertion_pass_rate": 1.0,
+    "citation_accuracy": 1.0,
+    "epistemic_classification_accuracy": 1.0,
+    "unknown_safety_rate": 1.0,
+    "contradiction_handling_rate": 1.0,
+    "source_freshness_rate": 1.0,
+    "calculation_accuracy": 1.0,
+    "thesis_governance_accuracy": 1.0
+  },
+  "case_scores": {
+    "source_attribution_primary": 1.0,
+    "fact_vs_inference_separation": 1.0,
+    "missing_evidence_unknown": 1.0,
+    "conflicting_sources_unresolved": 1.0,
+    "stale_source_rejected": 1.0,
+    "calculation_from_sourced_inputs": 1.0,
+    "thesis_update_on_new_evidence": 1.0,
+    "thesis_invalidation_triggered": 1.0
+  },
+  "regression_policy": {
+    "max_metric_drop": 0.0,
+    "max_case_drop": 0.0
+  }
+}
