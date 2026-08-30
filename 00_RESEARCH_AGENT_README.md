@@ -1,6 +1,6 @@
 # 00_RESEARCH_AGENT_README.md
 
-**Version:** 1.5  
+**Version:** 1.6
 **Stand:** 2026-08-30  
 **Status:** ENTWURF ZUR ÜBERNAHME  
 **Zweck:** Verbindliche Lese- und Ausführungsanweisung für AI-Agenten, die Trading-Research-Projekte bearbeiten.
@@ -283,6 +283,27 @@ Ein LLM muss dafür nicht trainiert werden. Manche Schätzer fitten projektspezi
 
 ---
 
+## 8c. Wissenschaftliche Quellen benötigen Werk-, Versions- und Integritätsprovenienz
+
+Für jede akademische Quelle gilt zusätzlich **05_AGENT_OPERATIONS.md §5.4** und das Academic-Metadata-Objekt aus **schemas/evidence.schema.json**.
+
+Pflichtlogik:
+
+1. Eine **work_id** verbindet Preprint, Working Paper, Accepted Manuscript, Version of Record, Korrektur und weitere Fassungen derselben intellektuellen Arbeit.
+2. Jede tatsächlich verwendete Fassung besitzt eine eigene **source_id**, exakte Version, URI, Abrufzeit und Snapshot-Hash.
+3. Mehrere Fassungen oder Indizes derselben work_id zählen nie als unabhängige Bestätigungen.
+4. Publikationsstatus, DOI und Venue werden verifiziert; ein DOI oder Journalname ist kein Qualitätsbeweis.
+5. Bei einschlägigen Finance-Fragen werden **The Journal of Finance** und das **Journal of Financial Economics** gezielt durchsucht. Das ist eine Coverage-Regel, kein Prestige-Gate und kein Ausschluss anderer Primärquellen.
+6. Bei arXiv werden q-fin-Unterkategorie und konkrete Versionsnummer gespeichert. Zulässig sind **q-fin.CP / q-fin.EC / q-fin.GN / q-fin.MF / q-fin.PM / q-fin.PR / q-fin.RM / q-fin.ST / q-fin.TR**. Die Kategorie ist Themenklassifikation, kein Peer Review.
+7. Vor Freeze, externer Freigabe und Revalidierung werden Correction, Expression of Concern, Retraction und Withdrawal über Publisher/Journal, Crossmark/DOI-Metadaten, Crossref-Retraction-Watch und Repository-Historie geprüft.
+8. Code-, Daten- und Replikationsstatus werden getrennt erfasst. Verfügbarkeit ist kein Qualitätsbeweis; technische Reproduktion beweist weder Identifikation noch externe Validität.
+
+Eine zurückgezogene oder retraktierte Arbeit darf den betroffenen Sachclaim nicht weiter positiv tragen. Der Claim wird nach Evidence-Ruleset **1.1.0** **INSUFFICIENT**, und die Änderung ist mindestens ein operatives **BREAKING**-Delta. Eine materielle Korrektur, neue arXiv-Version, geänderte Deduplizierung oder konfligierende Replikation erzwingt eine erneute Claim-, Grade- und Delta-Prüfung.
+
+Ändert die Quellenrevision Hypothese, Design, Gate oder Entscheidung, gelten zusätzlich die Research-Versions- und Datenverbrauchsregeln aus Abschnitt 16. Reine bibliografische Formatkorrekturen ohne semantische Auswirkung bleiben operative **NON_MATERIAL**-Deltas.
+
+---
+
 ## 9. Keine heimliche Hypothesenrevision
 
 Ein unerwartetes Ergebnis darf nicht durch semantische Umdeutung zum Erfolg erklärt werden.
@@ -443,6 +464,8 @@ Materiell sind insbesondere Änderungen an:
 - Datensplit,
 - primärer Auswertungsmethode.
 
+Bei akademischen Quellen sind eine neue Fassung, ein geänderter Publikations-/Integritätsstatus, eine materielle Correction, eine Retraction/Withdrawal, ein Replikationskonflikt oder eine Deduplizierung mit veränderter unabhängiger Evidenz zunächst operative Deltas nach **05 §5.4.8 und §9**. Sobald dadurch Hypothese, Methode, Gate, Evidenzschluss oder Endentscheidung verändert wird, ist die Research-Änderung materiell und erzeugt eine neue Version.
+
 ---
 
 ## 16a. Operative Agentenartefakte und Regression Gate
@@ -457,10 +480,11 @@ Für jeden LLM-/Agentenlauf gelten zusätzlich die Verträge aus `05_AGENT_OPERA
 1. Vor der Ausführung wird eine eindeutige Run-ID erzeugt; das Run-Manifest wird spätestens bei Laufabschluss vollständig persistiert.
 2. Entscheidungsrelevante Aussagen erhalten eine epistemische Klasse und eine Claim-ID.
 3. Fakten benötigen eine konkrete Quelle und Fundstelle; berechnete Werte und Inferenzclaims referenzieren ihre Inputs.
-4. Fehlende Evidenz wird als `UNKNOWN` beziehungsweise blockierender Evidenzstatus ausgewiesen und nicht durch plausible Prosa ersetzt.
-5. Menschliche Korrekturen und Overrides werden append-only gespeichert und dürfen nicht still überschrieben werden.
-6. Änderungen an System-/Task-Prompt, Modell oder Snapshot, Retrieval, Toolbeschreibung, Orchestrierung oder Output-Schema benötigen vor produktiver Freigabe einen bestandenen Eval- und Regressionslauf.
-7. Ein syntaktisch oder semantisch ungültiges Pflichtartefakt, eine ungeklärte kritische Quellenkollision oder eine nicht akzeptierte Regression blockiert die operative Freigabe, auch wenn das Research-Ergebnis inhaltlich plausibel klingt.
+4. Akademische Quellen erhalten work_id, konkrete Fassung, Publikations-/Integritätsstatus sowie Code-, Daten- und Replikationsstatus; Fassungen derselben Arbeit werden dedupliziert.
+5. Fehlende Evidenz wird als `UNKNOWN` beziehungsweise blockierender Evidenzstatus ausgewiesen und nicht durch plausible Prosa ersetzt.
+6. Menschliche Korrekturen und Overrides werden append-only gespeichert und dürfen nicht still überschrieben werden.
+7. Änderungen an System-/Task-Prompt, Modell oder Snapshot, Retrieval, Toolbeschreibung, Orchestrierung oder Output-Schema benötigen vor produktiver Freigabe einen bestandenen Eval- und Regressionslauf.
+8. Ein syntaktisch oder semantisch ungültiges Pflichtartefakt, eine ungeklärte kritische Quellenkollision oder eine nicht akzeptierte Regression blockiert die operative Freigabe, auch wenn das Research-Ergebnis inhaltlich plausibel klingt.
 
 Ein einzelnes Run-Manifest ersetzt weder das Research Case noch dessen Gates. Umgekehrt macht ein methodisch vollständiges Research Case einen nicht reproduzierbaren Agentenlauf nicht operativ freigabefähig.
 
@@ -470,4 +494,4 @@ Ein einzelnes Run-Manifest ersetzt weder das Research Case noch dessen Gates. Um
 
 Ein AI-Agent darf eine Research-Idee nur dann als `VALIDATED_PHENOMENON` oder `ACTIVE_STRATEGY_CANDIDATE` bezeichnen, wenn das zugehörige Research-Artefakt die vorgeschriebenen Gates bestanden hat.
 
-Fehlende Daten, nicht geprüfte Abhängigkeiten oder ein verbrauchtes Validation-Set sind keine redaktionellen Kleinigkeiten, sondern Zustandsfehler des Research-Prozesses.
+Fehlende Daten, nicht geprüfte Abhängigkeiten, ein verbrauchtes Validation-Set oder eine ungeprüfte entscheidungstragende akademische Quellenfassung sind keine redaktionellen Kleinigkeiten, sondern Zustandsfehler des Research-Prozesses.

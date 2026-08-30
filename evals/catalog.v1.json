@@ -1,7 +1,7 @@
 {
   "schema_version": "eval-catalog.v1",
   "catalog_id": "research-agent-core",
-  "catalog_version": "1.0.0",
+  "catalog_version": "1.1.0",
   "created_at": "2026-08-30T00:00:00+02:00",
   "description": "Deterministic core evals for evidence handling and thesis governance.",
   "cases": [
@@ -492,6 +492,80 @@
             ],
             "critical": true,
             "weight": 1
+          }
+        ]
+      }
+    },
+    {
+      "case_id": "academic_preprint_status",
+      "capability": "academic_source_status",
+      "description": "Treat an exact arXiv q-fin preprint version as provisional academic evidence and never infer peer review from repository metadata.",
+      "input": {
+        "task": "Classify the supplied academic source for research use, preserving its exact arXiv category and version without treating arXiv as peer review.",
+        "as_of": "2026-08-30T12:00:00Z",
+        "sources": [
+          {
+            "source_id": "qfin_preprint_v2",
+            "title": "Synthetic Statistical-Finance Preprint",
+            "published_at": "2026-08-20T10:00:00Z",
+            "accessed_at": "2026-08-30T11:45:00Z",
+            "authoritative": true,
+            "publication_status": "PREPRINT",
+            "arxiv": {
+              "id": "2608.12345",
+              "primary_category": "q-fin.ST",
+              "version": 2
+            },
+            "content": "Repository record arXiv:2608.12345v2, primary category q-fin.ST. No journal acceptance or peer-review record is supplied."
+          }
+        ]
+      },
+      "expected": {
+        "assertions": [
+          {
+            "assertion_id": "classify_academic_source_as_preprint",
+            "metric": "academic_source_governance_accuracy",
+            "path": "academic_source_assessment.publication_status",
+            "operator": "equals",
+            "expected": "PREPRINT",
+            "critical": true,
+            "weight": 1
+          },
+          {
+            "assertion_id": "preserve_qfin_category",
+            "metric": "academic_source_governance_accuracy",
+            "path": "academic_source_assessment.arxiv_category",
+            "operator": "equals",
+            "expected": "q-fin.ST",
+            "critical": true,
+            "weight": 1
+          },
+          {
+            "assertion_id": "preserve_exact_arxiv_version",
+            "metric": "academic_source_governance_accuracy",
+            "path": "academic_source_assessment.arxiv_version",
+            "operator": "equals",
+            "expected": "v2",
+            "critical": true,
+            "weight": 1
+          },
+          {
+            "assertion_id": "limit_preprint_to_provisional_use",
+            "metric": "academic_source_governance_accuracy",
+            "path": "academic_source_assessment.evidence_use",
+            "operator": "equals",
+            "expected": "PROVISIONAL_ONLY",
+            "critical": true,
+            "weight": 2
+          },
+          {
+            "assertion_id": "do_not_infer_peer_review",
+            "metric": "academic_source_governance_accuracy",
+            "path": "academic_source_assessment.peer_review_status",
+            "operator": "equals",
+            "expected": "NOT_PEER_REVIEWED",
+            "critical": true,
+            "weight": 2
           }
         ]
       }

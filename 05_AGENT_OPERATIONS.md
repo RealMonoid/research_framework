@@ -1,6 +1,6 @@
 # 05_AGENT_OPERATIONS.md
 
-**Version:** 1.0  
+**Version:** 1.1
 **Stand:** 2026-08-30  
 **Status:** ENTWURF ZUR ÜBERNAHME  
 **Zweck:** Normative operative Kontrollschicht für reproduzierbare, überprüfbare und revisionssichere Läufe eines AI-Research-Agenten.
@@ -276,7 +276,221 @@ Im Evidence-Dokument werden die anwendbaren Prüfschritte unter **evidence_asses
 
 Bei zeitlich veränderlichen Tatsachen MUSS die Quelle für den behaupteten as-of-Zeitpunkt aktuell genug sein. Eine heute korrekte Seite beweist nicht automatisch den historischen Informationsstand. Bei revidierbaren Daten gilt die Vintage-Regel aus **00 §8 / 01 §5.7 und §7.3 / 02 §E6 und §G5**.
 
-## 5.4 Reproduzierbare Transformationen
+## 5.4 Academic-Source-Governance
+
+### 5.4.1 Anwendbarkeit und Grundsatz
+
+Für jede Quelle mit **source_type = ACADEMIC** ist **academic_metadata** nach **schemas/evidence.schema.json** Pflicht. Die akademische Quelle bleibt zusätzlich den allgemeinen Regeln aus §5.1–§5.3 unterworfen.
+
+Akademischer Publikationsstatus, Journalname, Zitationszahl, arXiv-Kategorie oder Journalprestige sind keine Methodengates und keine Qualitätsgarantie. Sie ersetzen insbesondere nicht:
+
+- Identifikation und Claim-Level aus **01 §5**,
+- die designspezifischen Methoden aus **03**,
+- Reproduzierbarkeit und Tooling aus **04**,
+- Entailment, Versionstreue und Evidence Chain aus diesem Dokument.
+
+### 5.4.2 work_id, Fassungen und Deduplizierung
+
+**work_id** bezeichnet die intellektuelle Werkfamilie über Preprint, Working Paper, Accepted Manuscript, Version of Record, Erratum und weitere Fassungen hinweg. Jede konkret verwendete Fassung bleibt ein eigener **source_id**-Datensatz mit eigenem URI, Veröffentlichungs-/Abrufzeitpunkt, **version_or_vintage** und **snapshot_hash**.
+
+Vor der Aufnahme einer akademischen Quelle wird dedupliziert:
+
+1. exakter DOI-Abgleich,
+2. exakter arXiv-ID-Abgleich ohne Versionssuffix,
+3. normalisierter Titel-, Autoren- und Jahresabgleich,
+4. Prüfung von Journal Reference, DOI- und Repository-Metadaten,
+5. bei verbleibender Unsicherheit inhaltlicher Vergleich von Abstract, Daten, Tabellen und zentralen Ergebnissen.
+
+Entscheidungen **SAME_WORK / DISTINCT_WORK / UNCERTAIN** werden mit Grund und Prüfer protokolliert.
+
+- **SAME_WORK:** dieselbe work_id; Fassungen zählen nie als voneinander unabhängige Bestätigung.
+- **DISTINCT_WORK:** getrennte work_id; Unabhängigkeit wird zusätzlich geprüft und nicht aus der ID allein abgeleitet.
+- **UNCERTAIN:** Quellen dürfen bis zur Klärung nicht als unabhängige Bestätigung aggregiert werden; ein entscheidungstragender Claim ist höchstens LIMITED.
+
+Ein arXiv-Preprint und sein späterer Journalartikel werden somit als eine Werkfamilie geführt. Zwei Datenbanken, die denselben Artikel indexieren, sind ebenfalls keine zwei Quellen.
+
+Die für einen Claim maßgebliche Fassung wird explizit ausgewählt:
+
+- Für einen historischen Informationsstand gilt die damals verfügbare, exakt versionierte Fassung.
+- Für eine aktuelle Sachbehauptung gilt die neueste geprüfte, nicht zurückgezogene Fassung; bei einer Korrektur die korrigierte Fassung.
+- Eine ältere Fassung bleibt zitierbar, wenn gerade ihre historische Aussage untersucht wird. Sie darf nicht still die aktuelle Fassung vertreten.
+
+Titel- oder Autorenänderungen erzwingen nicht automatisch eine neue work_id. Ein nachweislich anderes Forschungsobjekt, andere Kernhypothese oder getrennte Studie erhält dagegen eine neue work_id, auch wenn Autoren es in derselben Repository-Familie ablegen.
+
+### 5.4.3 Gezielte Finance-Quellensuche ohne Prestige-Gate
+
+Bei einschlägigen finanzökonomischen Fragen werden **The Journal of Finance** und das **Journal of Financial Economics** gezielt nach Originalarbeiten, Korrekturen, Replikationen und zugehörigen Code-/Datenhinweisen durchsucht. Der Suchstatus je Venue lautet:
+
+- **SEARCHED_HIT**
+- **SEARCHED_NO_HIT**
+- **NOT_RELEVANT + Begründung**
+- **BLOCKED + Grund**
+
+Diese gezielte Suche ist eine Coverage-Regel, kein Ausschlussfilter. Relevante Originalarbeiten aus anderen Journals, Working-Paper-Reihen, Repositories oder Fachgebieten werden nicht wegen des Venues abgewertet oder ausgelassen. Umgekehrt erhält ein Claim keinen höheren Evidence Grade allein deshalb, weil er in Journal of Finance oder Journal of Financial Economics erschienen ist.
+
+### 5.4.4 Publikationsstatus, DOI, Venue und arXiv
+
+Das Feld **publication_status** verwendet ausschließlich:
+
+- **PEER_REVIEWED_VERSION_OF_RECORD**
+- **ACCEPTED_MANUSCRIPT**
+- **WORKING_PAPER**
+- **PREPRINT**
+- **OTHER**
+
+**PEER_REVIEWED_VERSION_OF_RECORD** ist nur zulässig, wenn die konkrete Fassung auf einer Publisher-/Journal-Seite oder über konsistente DOI-Metadaten als Version of Record verifiziert wurde. **ACCEPTED_MANUSCRIPT** benötigt einen belegten Annahmestatus und ein Venue. Autorenangaben wie „submitted“ oder „under review“ werden nicht zu **ACCEPTED_MANUSCRIPT** aufgewertet.
+
+Für DOI und Venue gilt:
+
+- DOI ohne Präfixdarstellung speichern und zusätzlich über **https://doi.org/** auflösen.
+- DOI, Titel, Autoren, Venue und Version zwischen Publisher, DOI-Metadaten und Repository abgleichen.
+- DOI-Vergleiche sind case-insensitiv; die gelieferte Originalschreibweise darf erhalten bleiben.
+- Ein auflösbarer DOI beweist weder Peer Review noch methodische Qualität.
+- Ein Journal Reference- oder DOI-Feld bei arXiv wird gegen Publisher-/DOI-Metadaten geprüft, bevor der Publikationsstatus geändert wird.
+- Fehlender DOI ist kein automatischer Qualitätsmangel; die konkrete Fassung benötigt dennoch eine stabile source_id, URI und einen Snapshot-Hash.
+
+Für arXiv werden mindestens gespeichert:
+
+- arXiv-ID ohne Versionssuffix,
+- exakte Versionsnummer,
+- submitted_at und updated_at,
+- primäre Kategorie,
+- URI oder Snapshot genau dieser Version,
+- aktuelle Withdrawal- und Versionshistorie.
+
+Die zulässigen q-fin-Kategorien entsprechen der offiziellen arXiv-Taxonomie:
+
+| Kategorie | Bereich |
+|---|---|
+| q-fin.CP | Computational Finance |
+| q-fin.EC | Economics; Alias von econ.GN |
+| q-fin.GN | General Finance |
+| q-fin.MF | Mathematical Finance |
+| q-fin.PM | Portfolio Management |
+| q-fin.PR | Pricing of Securities |
+| q-fin.RM | Risk Management |
+| q-fin.ST | Statistical Finance |
+| q-fin.TR | Trading and Market Microstructure |
+
+Die Kategorie ist eine Themenklassifikation, kein Peer-Review- oder Qualitätsstatus. Cross-Listings sind zusätzliche Discovery-Metadaten und erhöhen den Evidence Grade nicht.
+
+Bei einem entscheidungstragenden arXiv-Claim MUSS die Zitation die konkrete Version, etwa **arXiv:YYMM.NNNNNv2**, referenzieren. Die versionslose Abstract-URL zeigt regelmäßig die neueste Fassung und genügt daher nicht als unveränderlicher Beleg. Jede arXiv-Ersetzung oder Withdrawal erzeugt einen neuen Versionsdatensatz und eine Delta-Prüfung.
+
+### 5.4.5 Integritäts-, Correction- und Retraction-Prüfung
+
+Vor der ersten entscheidungstragenden Nutzung, unmittelbar vor Freeze, vor externer Freigabe und bei Revalidierung wird der Integritätsstatus erneut geprüft. Priorisierte Prüfwege sind:
+
+1. Publisher-/Journal-Seite einschließlich Corrigenda, Errata und Retraction Notices,
+2. Crossmark beziehungsweise DOI-Metadaten und Update-Relationen,
+3. Crossref-Retraction-Watch-Daten,
+4. Repository-Versionen, Kommentare und Withdrawal-Historie,
+5. dokumentierte manuelle Prüfung.
+
+**check_method** verwendet **PUBLISHER / CROSSMARK / DOI_METADATA / REPOSITORY / MANUAL**. **integrity.status** verwendet:
+
+- **NO_NOTICE_FOUND**
+- **CORRECTED**
+- **EXPRESSION_OF_CONCERN**
+- **RETRACTED**
+- **WITHDRAWN**
+- **UNKNOWN**
+
+Bei **CORRECTED**, **EXPRESSION_OF_CONCERN**, **RETRACTED** oder **WITHDRAWN** ist **notice_uri** Pflicht. **NO_NOTICE_FOUND** bedeutet nur, dass über die dokumentierten Wege kein Hinweis gefunden wurde; es ist keine Garantie wissenschaftlicher Fehlerfreiheit.
+
+Korrekturen werden als materiell oder nicht materiell für den konkreten Claim klassifiziert:
+
+- Rein typografisch und ohne Einfluss auf den Claim → NON_MATERIAL, aber protokollieren.
+- Änderung an Daten, Code, Formel, Tabelle, Richtung, Größe, Signifikanz, Interpretation oder Identifikation → mindestens MATERIAL.
+- Widerruf oder Korrektur, die einen entscheidungstragenden Claim unbrauchbar macht → BREAKING.
+
+Ein zurückgezogener Artikel darf als historische Quelle über den Rückzug selbst dienen. Er darf nicht weiter als positive alleinige Stütze des zurückgezogenen Sachclaims verwendet werden.
+
+### 5.4.6 Code, Daten und Replikation
+
+**code_availability** und **data_availability** verwenden:
+
+- **OPEN**
+- **PARTIAL**
+- **RESTRICTED**
+- **NOT_AVAILABLE**
+- **NOT_STATED**
+- **NOT_CHECKED**
+
+Bei **OPEN**, **PARTIAL** oder **RESTRICTED** werden die konkreten URIs gespeichert. Zusätzlich werden, soweit verfügbar, Repository-Commit/Release, Lizenz, Environment, Daten-Vintage und Inhalts-Hashes protokolliert.
+
+Die unabhängige Replikationsprüfung verwendet:
+
+- **REPLICATED**
+- **PARTIALLY_REPLICATED**
+- **FAILED_TO_REPLICATE**
+- **CONFLICTING**
+- **NO_INDEPENDENT_REPLICATION_FOUND**
+- **NOT_ASSESSED**
+
+Ein positiver Replikationsstatus benötigt mindestens eine source_id einer tatsächlich getrennten Replikationsarbeit. Eine Neuauflage, ein Supplement oder eine Reanalyse derselben Werkfamilie zählt nicht als unabhängige Replikation. Autor-, Daten-, Code- und Designüberschneidungen werden offengelegt.
+
+Code- oder Datenverfügbarkeit ist kein Qualitätsbeweis. Eine erfolgreiche technische Reproduktion bestätigt zunächst nur, dass ein spezifiziertes Ergebnis unter der protokollierten Umgebung wiedererzeugt werden konnte. Sie beweist weder Identifikation noch externe Validität noch Trading-Nutzen.
+
+Umgekehrt ist fehlende Offenheit nicht automatisch Falsifikation. Bei einem entscheidungstragenden empirischen oder rechenintensiven Estimate, das weder anhand von Code/Daten noch durch eine unabhängige Replikation prüfbar ist, ist der Evidence Grade jedoch höchstens LIMITED. Ist ein zentraler Zahlenclaim überhaupt nicht nachvollziehbar und die einzige Stütze der Entscheidung, gilt INSUFFICIENT.
+
+### 5.4.7 Academic-Evidence-Folgen
+
+Die Regeln ergänzen das Evidence-Ruleset aus §5.6:
+
+| Befund | Zwingende Folge |
+|---|---|
+| Gleiches work_id in mehreren Fassungen oder Indizes | Genau eine Werkfamilie; nicht als unabhängige Mehrfachbestätigung zählen. |
+| PREPRINT, WORKING_PAPER oder OTHER als alleinige positive Stütze eines substantiellen Claims | Höchstens LIMITED; Quelle ausdrücklich als nicht peer-reviewed beziehungsweise vorläufig kennzeichnen. |
+| SOURCE_FACT behauptet nur korrekt, was die exakt zitierte vorläufige Fassung sagt | Kann bei vollständiger Version-/Fundstellenprüfung SUFFICIENT sein; der zugrunde liegende substantielle Claim wird dadurch nicht automatisch SUFFICIENT. |
+| PEER_REVIEWED_VERSION_OF_RECORD oder ACCEPTED_MANUSCRIPT | Kein automatisches Upgrade; alle allgemeinen und methodischen SUFFICIENT-Regeln bleiben erforderlich. |
+| EXPRESSION_OF_CONCERN oder UNKNOWN bei entscheidungstragender Quelle | Höchstens LIMITED; als alleinige tragende Evidenz INSUFFICIENT. |
+| RETRACTED oder WITHDRAWN | Positive inhaltliche Stütze INSUFFICIENT; Fehler und BREAKING-Delta erzeugen. |
+| Materiell CORRECTED | Betroffene Claims bis Prüfung der korrigierten Fassung höchstens LIMITED; bei unvereinbarem Ergebnis INSUFFICIENT. |
+| FAILED_TO_REPLICATE oder CONFLICTING mit materieller Relevanz | Konflikt-Record; entscheidungstragender Claim bis Auflösung INSUFFICIENT. |
+| NO_INDEPENDENT_REPLICATION_FOUND oder NOT_ASSESSED | Kein automatischer Abzug, sofern Replikation nicht als notwendige Stütze behauptet wird; Status sichtbar halten. |
+| REPLICATED | Darf Evidenz stärken, aber Claim-Level, Identifikation und Grade nicht allein bestimmen. |
+
+Journalname und q-fin-Kategorie erscheinen in keiner Grade-Regel als positiver Faktor.
+
+### 5.4.8 Academic-Source-Deltas
+
+Mindestens MATERIAL sind:
+
+- neue oder entfernte Fassung einer verwendeten work_id,
+- neue arXiv-Version,
+- Wechsel des publication_status,
+- neu verifizierter DOI oder anderes Venue,
+- neue Correction, Expression of Concern oder Replikation,
+- Änderung der Code-/Datenverfügbarkeit,
+- Deduplizierung, die die Zahl unabhängiger Quellen verändert.
+
+BREAKING sind:
+
+- Retraction oder Withdrawal einer entscheidungstragenden Quelle,
+- materielle Correction, die einen tragenden Claim aufhebt,
+- fehlgeschlagene oder konfligierende Replikation, die die einzige tragende Evidenz entkräftet,
+- Nachweis, dass vermeintlich unabhängige Bestätigungen nur Fassungen derselben work_id waren und dadurch ein SUFFICIENT-Kriterium entfällt.
+
+Jede Folge wird über §9 verarbeitet. Historische Claims und Entscheidungen werden nicht überschrieben; sie erhalten Delta-, Review- und gegebenenfalls neue Research-Versionen.
+
+### 5.4.9 Offizielle Prüfreferenzen
+
+Maßgebliche Registry- und Statusreferenzen sind:
+
+- [arXiv Category Taxonomy](https://arxiv.org/category_taxonomy)
+- [arXiv Version Availability](https://info.arxiv.org/help/versions.html)
+- [arXiv Withdraw / Retract a Submission](https://info.arxiv.org/help/withdraw.html)
+- [DOI Handbook](https://www.doi.org/doi-handbook/html/)
+- [Crossref Crossmark](https://www.crossref.org/documentation/crossmark/)
+- [Crossref Retraction Watch](https://www.crossref.org/documentation/retrieve-metadata/retraction-watch/)
+- [Journal of Finance – offizielle AFA-Seite](https://afajof.org/journal-of-finance/)
+- [Journal of Finance – Corrigenda und Errata](https://afajof.org/clarifications/)
+- [Journal of Finance – Replications and Comments](https://afajof.org/comments-and-rejoinders/)
+- [Journal of Financial Economics – Publisher-Seite](https://www.sciencedirect.com/journal/journal-of-financial-economics)
+
+Registry-Metadaten werden als Hinweise und Verknüpfungen verwendet. Bei Widerspruch ist die konkrete Notice beziehungsweise Publisher-/Repository-Fassung zu sichern und der Konflikt offenzulegen.
+
+## 5.5 Reproduzierbare Transformationen
 
 Eine Transformation protokolliert:
 
@@ -290,7 +504,7 @@ Eine Transformation protokolliert:
 
 Ein manuell kopierter Wert ohne überprüfbare Transformation ist kein **CALCULATED_VALUE**. Ist das Verfahren stochastisch oder modellbasiert, wird der Output grundsätzlich als **ESTIMATE** behandelt, sofern er nicht nur eine deterministische Nachbearbeitung eines bereits ausgewiesenen Estimates ist.
 
-## 5.5 Evidence Grade als einzige Confidence-Klasse
+## 5.6 Evidence Grade als einzige Confidence-Klasse
 
 Es werden ausschließlich die folgenden Evidence Grades verwendet:
 
@@ -300,7 +514,7 @@ Es werden ausschließlich die folgenden Evidence Grades verwendet:
 
 Das LLM darf keine subjektive Confidence-Prozentzahl erfinden. Der Evidence Grade ist die einzige operative Vertrauensklassifikation. Er bewertet die Nachvollziehbarkeit und Beleglage des Claims, nicht automatisch seine wissenschaftliche Wahrheit, Kausalität oder wirtschaftliche Relevanz.
 
-Für diese Dokumentversion lautet **evidence_assessment.ruleset_version = 1.0.0**. Jede Änderung der Grade-Regeln benötigt eine neue Ruleset-Version und ein MATERIAL-Delta.
+Für diese Dokumentversion lautet **evidence_assessment.ruleset_version = 1.1.0**. Jede Änderung der Grade-Regeln benötigt eine neue Ruleset-Version und ein MATERIAL-Delta.
 
 Die Vergabe erfolgt in dieser Reihenfolge:
 
@@ -320,15 +534,16 @@ Mindestens eine der folgenden Bedingungen erzwingt **INSUFFICIENT**:
 - verletztes anwendbares Gate aus 00–04,
 - offene kritische Fehler oder relevante offene Fehler ohne begrenzbaren Scope,
 - nachträglich als Forecast ausgegebene Aussage,
-- als **HUMAN_JUDGMENT** ausgegebene Aussage ohne authentifizierten menschlichen Review.
+- als **HUMAN_JUDGMENT** ausgegebene Aussage ohne authentifizierten menschlichen Review,
+- Verletzung einer zwingenden Academic-Evidence-Folge aus §5.4.7.
 
 ### Typabhängig SUFFICIENT
 
 | Typ | Alle Bedingungen für SUFFICIENT |
 |---|---|
-| SOURCE_FACT | Mindestens eine qualified primäre oder autoritative Evidenzreferenz oder zwei qualified, voneinander unabhängige Sekundärquellen; korrekter Zeitbezug; kein ungelöster materieller Gegenbeleg. |
+| SOURCE_FACT | Mindestens eine qualified primäre oder autoritative Evidenzreferenz oder zwei qualified, voneinander unabhängige Sekundärquellen; korrekter Zeitbezug; kein ungelöster materieller Gegenbeleg; bei akademischer Quelle zusätzlich §5.4. |
 | CALCULATED_VALUE | Alle materiellen Input-Claims sind SUFFICIENT; Transformation ist vollständig versioniert; Reproduktion stimmt innerhalb der vorab erklärten Toleranz überein. |
-| ESTIMATE | Input- und Datenherkunft sind SUFFICIENT; Methode, Annahmen, Schätzwert und Unsicherheit sind vollständig; alle anwendbaren methodischen und Tooling-Gates aus 00–04 sind bestanden oder ausdrücklich nicht erforderlich; Ergebnis ist reproduziert. |
+| ESTIMATE | Input- und Datenherkunft sind SUFFICIENT; Methode, Annahmen, Schätzwert und Unsicherheit sind vollständig; alle anwendbaren methodischen und Tooling-Gates aus 00–04 sind bestanden oder ausdrücklich nicht erforderlich; Ergebnis ist reproduziert; akademische Stützen erfüllen §5.4. |
 | INFERENCE | Alle entscheidenden Prämissen sind SUFFICIENT; Schlussregel und Geltungsgrenze sind explizit; mindestens eine konkrete Alternativerklärung oder Gegeninformation wurde behandelt; kein unbelegter logischer Sprung bleibt. |
 | FORECAST | Eintrag wurde vor Outcome unveränderlich ausgestellt; Ziel, Horizont, Einheit und Auflösungsregel sind vollständig; alle entscheidenden Input-Claims sind SUFFICIENT. Der Grade bewertet nur die Qualität bei Ausgabe, nicht den späteren Treffer. |
 | HUMAN_JUDGMENT | Identifizierter menschlicher Reviewer, Rolle, Zeitpunkt, Grund, Scope, Vorwert/Neuwert und Evidence-Referenzen sind vollständig; das Urteil wird nicht als Ersatz für fehlende Evidenz oder ein nicht bestandenes Research-Gate verwendet. |
@@ -339,7 +554,7 @@ Mindestens eine der folgenden Bedingungen erzwingt **INSUFFICIENT**:
 
 Ein **LIMITED**-Claim darf als offene Hypothese oder gekennzeichnete Einschränkung berichtet werden. Er darf kein **PASS**, keine Aktivierung, keinen Kausalclaim und keine externe Handlungsempfehlung allein tragen.
 
-## 5.6 Aggregation und Entscheidungsregel
+## 5.7 Aggregation und Entscheidungsregel
 
 Evidence Grades werden nicht gemittelt. Für eine Entscheidung gilt der schwächste entscheidungstragende Claim.
 
@@ -463,8 +678,8 @@ Folgende Codes bilden das verbindliche Kernvokabular; projektspezifische Erweite
 | PROMPTING | PROMPT_VERSION_MISSING, PROMPT_RENDER_FAILED, PROMPT_CONTEXT_OVERFLOW, PROMPT_CONTEXT_TRUNCATED |
 | MODEL | MODEL_UNAVAILABLE, MODEL_TIMEOUT, MODEL_REFUSAL, MODEL_OUTPUT_INVALID, MODEL_INSTRUCTION_VIOLATION |
 | TOOL | TOOL_UNAVAILABLE, TOOL_TIMEOUT, TOOL_API_ERROR, TOOL_OUTPUT_INVALID, TOOL_VERSION_DRIFT |
-| RETRIEVAL | SOURCE_UNREACHABLE, SOURCE_AUTH_FAILED, SOURCE_LOCATOR_MISMATCH, SOURCE_STALE, SOURCE_CONTRADICTION, CITATION_NOT_ENTAILED |
-| VALIDATION | SCHEMA_INVALID, REFERENCE_DANGLING, HASH_MISMATCH, CALCULATION_MISMATCH, EVIDENCE_INSUFFICIENT, METHOD_GATE_VIOLATION, EVAL_REGRESSION, MULTI_AGENT_CONFLICT, FORECAST_PROTOCOL_VIOLATION, POLICY_VIOLATION |
+| RETRIEVAL | SOURCE_UNREACHABLE, SOURCE_AUTH_FAILED, SOURCE_LOCATOR_MISMATCH, SOURCE_STALE, SOURCE_CONTRADICTION, CITATION_NOT_ENTAILED, ACADEMIC_VERSION_UNRESOLVED, INTEGRITY_NOTICE_FOUND |
+| VALIDATION | SCHEMA_INVALID, REFERENCE_DANGLING, HASH_MISMATCH, CALCULATION_MISMATCH, EVIDENCE_INSUFFICIENT, METHOD_GATE_VIOLATION, EVAL_REGRESSION, MULTI_AGENT_CONFLICT, FORECAST_PROTOCOL_VIOLATION, POLICY_VIOLATION, ACADEMIC_DUPLICATE_COUNTED, REPLICATION_CONFLICT |
 | PERSISTENCE | WRITE_FAILED, ARTIFACT_MISSING, IMMUTABILITY_VIOLATION |
 | FINALIZATION | MANIFEST_INCOMPLETE, OPEN_CRITICAL_ERROR, REVIEW_REQUIRED, DELTA_UNRESOLVED |
 
@@ -589,6 +804,7 @@ Der Delta Report umfasst mindestens:
 
 - Research-, Hypothesen-, DAG-, Estimand-, Tooling- und Kostenmodellversion,
 - Datenquellen, Vintages, Rollen und Input-Hashes,
+- akademische work_ids, konkrete Fassungen, DOI/Venue, Publikations- und Integritätsstatus, Code-/Datenverfügbarkeit und Replikationsstatus,
 - Modell, Snapshot, Prompt, Kontext, Tools und Runtime,
 - Claims, Claim-Typen, Evidence Grades und Evidence Chains,
 - Gate-, Review- und Endstatus,
@@ -601,8 +817,8 @@ Der Delta Report umfasst mindestens:
 |---|---|
 | NONE | Alle verglichenen semantischen und operativen Felder sowie relevanten Hashes sind identisch. |
 | NON_MATERIAL | Nur Darstellung, zusätzliche Telemetrie, Kosten/Latenz oder eine nachweislich nicht semantische Metadatenkorrektur ändert sich. |
-| MATERIAL | Inputs, Modell/Prompt/Tool/Runtime, ein materieller Claim, Evidence Grade, Forecast, Review oder Ergebnis ändert sich, ohne dass bereits eine Breaking-Bedingung vorliegt. |
-| BREAKING | Ein bisher entscheidungstragender Claim wird INSUFFICIENT oder materiell widerlegt; ein PASS wird zu FAIL/BLOCKED; eine Quelle wird zurückgezogen; Integrität bricht; oder ein eingefrorenes materielles Designfeld ändert sich ohne erforderliche neue Research-Version. |
+| MATERIAL | Inputs, Modell/Prompt/Tool/Runtime, ein materieller Claim, Evidence Grade, Forecast, Review, Academic-Source-Metadatum oder Ergebnis ändert sich, ohne dass bereits eine Breaking-Bedingung vorliegt. |
+| BREAKING | Ein bisher entscheidungstragender Claim wird INSUFFICIENT oder materiell widerlegt; ein PASS wird zu FAIL/BLOCKED; eine Quelle wird zurückgezogen oder materiell korrigiert; eine vermeintliche unabhängige Bestätigung kollabiert durch work_id-Deduplizierung; Integrität bricht; oder ein eingefrorenes materielles Designfeld ändert sich ohne erforderliche neue Research-Version. |
 | UNKNOWN | Vergleich ist wegen fehlender Baseline, Hashes, Lineage oder nicht interpretierbarer Schemadifferenz nicht belastbar. |
 
 Ein gleich gebliebenes Endfazit macht einen Modell-, Prompt-, Daten- oder Toolwechsel nicht automatisch **NON_MATERIAL**.
@@ -718,6 +934,7 @@ Ein Agent darf sich nicht direkt selbst modifizieren, Evals entfernen, Schwellen
 | source_freshness_rate | 1,00 |
 | calculation_accuracy | 1,00 |
 | thesis_governance_accuracy | 1,00 |
+| academic_source_governance_accuracy | 1,00 |
 
 Zusätzlich gilt:
 
@@ -854,15 +1071,16 @@ Nur Gesamtgate **PASS** erlaubt **status = SUCCEEDED** für einen entscheidungst
 3. Manifest gegen Schema validieren; Status **RUNNING**.
 4. Jeden Modell-, Tool- und Retrievalschritt im Trace erfassen.
 5. Materielle Claims typisieren und Evidence Chains aufbauen.
-6. Quellen verifizieren und Evidence Grades deterministisch berechnen.
-7. Fehler klassifizieren und abhängige Schritte gegebenenfalls stoppen.
-8. Forecasts vor Outcome im Ledger einfrieren.
-9. Delta gegen Baseline bestimmen.
-10. Bei Systemänderung Evals ausführen.
-11. Bei Delegation Multi-Agent-Gate ausführen.
-12. Erforderliches Human Review einholen.
-13. Operatives Release Gate berechnen.
-14. Manifest samt Output-Hashes terminal finalisieren.
+6. Akademische Quellen nach work_id deduplizieren, konkrete Fassungen fixieren und Integrität/Replikation prüfen.
+7. Quellen verifizieren und Evidence Grades deterministisch berechnen.
+8. Fehler klassifizieren und abhängige Schritte gegebenenfalls stoppen.
+9. Forecasts vor Outcome im Ledger einfrieren.
+10. Delta gegen Baseline bestimmen.
+11. Bei Systemänderung Evals ausführen.
+12. Bei Delegation Multi-Agent-Gate ausführen.
+13. Erforderliches Human Review einholen.
+14. Operatives Release Gate berechnen.
+15. Manifest samt Output-Hashes terminal finalisieren.
 
 ---
 
@@ -885,7 +1103,16 @@ Ein Validator MUSS mindestens folgende Verstöße erkennen:
 13. MATERIAL/BREAKING/UNKNOWN-Delta ohne vorgeschriebene Folge,
 14. Eval-Baseline-Änderung ohne Human Approval,
 15. Multi-Agent-Beitrag ohne Child-Run-Lineage,
-16. operatives Artefakt, das ein Research-Gate aus 00–04 eigenmächtig hochstuft.
+16. operatives Artefakt, das ein Research-Gate aus 00–04 eigenmächtig hochstuft,
+17. akademische Quelle ohne work_id oder konkrete source_id-Fassung,
+18. mehrere Fassungen derselben work_id, die als unabhängige Bestätigungen gezählt werden,
+19. entscheidungstragender arXiv-Claim ohne q-fin-Unterkategorie und exakte Versionsnummer,
+20. behauptete Version of Record ohne verifizierten Publikationsstatus und Venue,
+21. akademische Freigabe ohne aktuellen Correction-/Expression-of-Concern-/Retraction-/Withdrawal-Check,
+22. positive Nutzung eines zurückgezogenen Claims ohne zwingende INSUFFICIENT-Folge,
+23. Replikationsbehauptung ohne getrennte source_ids und dokumentierte Unabhängigkeitsprüfung,
+24. Code-/Datenverfügbarkeit, die ohne geprüfte URI oder Snapshot als vorhanden behauptet wird,
+25. Journalprestige oder arXiv-Kategorie, die Evidence Grade oder Methodengate unmittelbar erhöht.
 
 Ein Verstoß gegen eine dieser Invarianten führt mindestens zu **BLOCKED**, bei Integritäts-, Provenance-, Forecast- oder Gate-Manipulation zu **FAILED**.
 

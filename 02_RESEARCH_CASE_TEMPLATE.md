@@ -1,6 +1,6 @@
 # 02_RESEARCH_CASE_TEMPLATE.md
 
-**Template-Version:** 1.5  
+**Template-Version:** 1.6
 **ANWEISUNG:** Diese Datei pro Research-Projekt kopieren. Kein Pflichtfeld löschen. Nicht anwendbare Felder mit `N/A + Begründung` ausfüllen. Unbekannte Pflichtfelder mit `BLOCKED + fehlende Information` markieren.
 
 **BEDINGTE AKTIVIERUNG:** Die Abschnitte `U–Y` werden erst geöffnet, wenn Abschnitt `T` mit `VALIDATED_PHENOMENON` abgeschlossen **und** Strategy Engineering ausdrücklich als nächster Schritt beschlossen wurde. Bei validiertem, aber nicht fortgesetztem Phänomen erhält der Block `DEFERRED_AFTER_VALIDATION`; ohne validiertes Phänomen erhält er `NOT_ACTIVATED_BY_T_GATE`. In beiden Fällen wird er nicht feldweise mit `N/A` befüllt. Abschnitt `Z` bleibt während des gesamten Projekts aktiv.
@@ -64,6 +64,41 @@ Das Register referenziert die maschinenlesbaren Artefakte nach `05_AGENT_OPERATI
 | Review Ledger | | | | | `NO_REVIEW / OPEN / ACCEPTED / REJECTED / SUPERSEDED` |
 | Forecast Ledger | | | | | `N/A / OPEN / PARTIALLY_RESOLVED / RESOLVED` |
 | Eval-Ergebnis | | | | | `PASS / FAIL / BLOCKED / NOT_RUN` |
+
+## A3. Academic-Source-Protokoll
+
+**ACADEMIC_SOURCE_STATUS:** `REQUIRED / NOT_RELEVANT + Begründung / BLOCKED + fehlende Information`
+
+Bei `REQUIRED` gelten **05_AGENT_OPERATIONS.md §5.4** und
+`schemas/evidence.schema.json` Version 2.0.0. Gesucht und bewertet werden konkrete
+Fassungen wissenschaftlicher Arbeiten, nicht nur Suchtreffer oder Zitationsangaben.
+
+### A3.1 Recherche-Coverage
+
+| Kanal | Suchanfrage/Filter | Suchzeitpunkt | Ergebnis | Nachweis/URI |
+|---|---|---|---|---|
+| The Journal of Finance | | | `SEARCHED_HIT / SEARCHED_NO_HIT / NOT_RELEVANT + Grund / BLOCKED + Grund` | |
+| Journal of Financial Economics | | | `SEARCHED_HIT / SEARCHED_NO_HIT / NOT_RELEVANT + Grund / BLOCKED + Grund` | |
+| arXiv q-fin | | | `SEARCHED_HIT / SEARCHED_NO_HIT / NOT_RELEVANT + Grund / BLOCKED + Grund` | |
+| Weitere Journals/Working-Paper-Reihen/Repositories | | | | |
+
+### A3.2 Quellen-, Versions- und Integritätsregister
+
+| work_id | source_id | Studientyp | Publikationsstatus | konkrete Fassung | Autoren/Jahr | Venue | DOI | arXiv-ID / q-fin-Kategorie / Version | Integrity-Status / geprüft am / Notice | Code | Daten | unabhängige Replikation / source_ids | zulässige Evidenzverwendung |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| | | | | | | | | | | | | | |
+
+### A3.3 Versionsfamilien und Unabhängigkeit
+
+| geprüfte source_ids | Entscheidung | work_id(s) | Begründung | Prüfer/Zeitpunkt |
+|---|---|---|---|---|
+| | `SAME_WORK / DISTINCT_WORK / UNCERTAIN` | | | |
+
+Journalname, DOI, Zitationszahl und q-fin-Kategorie erhöhen den Evidence Grade
+nicht automatisch. `PREPRINT`, `WORKING_PAPER` und `OTHER` werden als vorläufig
+gekennzeichnet; eine konkrete arXiv-Fassung wird mit Versionssuffix eingefroren.
+Correction, Expression of Concern, Retraction, Withdrawal sowie Code-, Daten- und
+Replikationsstatus werden vor Freeze und Freigabe erneut geprüft.
 
 ---
 
@@ -1293,6 +1328,12 @@ Der Agent darf den jeweils aktivierten Teil des Research-Artefakts nicht als vol
 - [ ] Sind Modell/Snapshot, Prompts, Parameter, Tools, Datenstände, Quellenstände und Output-Hashes je Run reproduzierbar referenziert?
 - [ ] Besitzt jede entscheidungsrelevante Aussage eine Claim-ID und eine epistemische Klasse?
 - [ ] Sind `SOURCE_FACT`-Claims mit konkreter Quelle und Fundstelle belegt?
+- [ ] Wurde bei einschlägigem Finance-Research die Coverage von Journal of Finance, Journal of Financial Economics, arXiv `q-fin` und weiteren relevanten Primärquellen dokumentiert?
+- [ ] Besitzt jede akademische Quelle eine `work_id`, eine eigene `source_id` für die konkret verwendete Fassung sowie Publikationsstatus, Studientyp, Autoren, Venue/DOI oder arXiv-ID/-Kategorie/-Version?
+- [ ] Wurden Fassungen und Indizes derselben `work_id` dedupliziert und nicht als unabhängige Bestätigungen gezählt?
+- [ ] Sind Preprints und Working Papers als vorläufig gekennzeichnet, ohne aus arXiv-Kategorie oder Journalprestige ein Qualitätsupgrade abzuleiten?
+- [ ] Wurden Correction, Expression of Concern, Retraction und Withdrawal mit Prüfmethode, Zeitpunkt und gegebenenfalls Notice-URI geprüft?
+- [ ] Sind Code-, Daten- und unabhängiger Replikationsstatus samt Referenzen protokolliert?
 - [ ] Referenzieren `CALCULATED_VALUE`, `ESTIMATE`, `INFERENCE` und `FORECAST` ihre Eingangsclaims und Methoden?
 - [ ] Sind Quellenkonflikte, fehlende Evidenz und `UNKNOWN` sichtbar, ohne sie sprachlich zu glätten?
 - [ ] Sind menschliche Reviews und Overrides append-only protokolliert und gegen stilles Überschreiben geschützt?
