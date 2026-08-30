@@ -1,6 +1,6 @@
 # 00_RESEARCH_AGENT_README.md
 
-**Version:** 1.8
+**Version:** 1.9
 **Stand:** 2026-08-30  
 **Status:** ENTWURF ZUR ÜBERNAHME  
 **Zweck:** Verbindliche Lese- und Ausführungsanweisung für AI-Agenten, die Trading-Research-Projekte bearbeiten.
@@ -201,6 +201,14 @@ Die News-/Makro-Policy wird als `INCLUDED_AS_SIGNAL`, `NOT_USED_AS_SIGNAL`,
 `FILTER_KNOWN_EVENTS` mit benannten Feeds, Ausschlussfenstern und Coverage-Lücken
 erlaubt eine qualifizierte Aussage über ausgeschlossene bekannte Ereignisse.
 
+`PROMOTED` verlangt außerdem einen Record zur Variablen- und Konstruktauswahl.
+Bei `PREDEFINED` genügen eine knappe Begründung und die beibehaltenen Variablen.
+Bei `DATA_DRIVEN` oder `HYBRID` werden Kandidatenuniversum, Selektionsdaten und
+deren Datenrolle, Outcome-Sichtbarkeit, Auswahlmethoden, effektive
+Kandidatenzahl, Suchraum und Auswahlbias-Kontrollen protokolliert. Jede dabei
+verwendete Information wird zugleich in `consumed_data_refs` erfasst; unabhängige
+Validation oder Holdout-Daten dürfen die Auswahl nicht beeinflussen.
+
 Der Agent führt getrennt:
 
 - `mechanism_supported`,
@@ -210,6 +218,12 @@ Der Agent führt getrennt:
 Keine dieser Stufen wird aus einer früheren Stufe abgeleitet. Insbesondere ist ein
 plausibler oder publizierter Mechanismus keine automatische Forward-Prognose und
 keine handelbare Netto-Edge.
+
+Diese drei Status bilden eine andere Achse als der Research-Claim-Level
+`ASSOCIATIONAL_PREDICTIVE / INTERVENTIONAL / COUNTERFACTUAL`. Ein identifizierter
+interventionaler Effekt kann wirtschaftlich unhandelbar sein; eine rein
+assoziative Prognose kann dagegen eine ausführbare Netto-Edge besitzen. Weder
+Claim-Level noch Stufenstatus werden aus der jeweils anderen Achse abgeleitet.
 
 ---
 
@@ -272,11 +286,20 @@ Jede Research-Version deklariert vor dem Freeze ihre stärkste Behauptung als:
 `ASSOCIATIONAL_PREDICTIVE` ist der Default. Eine interventionale oder kontrafaktische Behauptung benötigt zusätzlich:
 
 - ein präzises kausales Estimand,
-- einen versionierten DAG oder ein anderes explizites Strukturmodell,
+- ein versioniertes SCM/DAG, Potential-Outcomes-Design,
+  strukturell-ökonometrisches oder anderes explizites Identifikationsmodell,
 - eine benannte Identifikationsstrategie,
 - deren nicht aus den Daten allein ableitbare Annahmen,
 - Negativkontrollen, Placebos oder Sensitivitätsanalysen soweit designspezifisch möglich,
 - und ein bestandenes Identifikationsgate.
+
+Die Wahl zwischen graphischer, kontrafaktischer oder anderer expliziter
+Formulierung ist eine Modellierungsentscheidung und erhöht den Claim-Level nicht.
+Bei Potential Outcomes werden insbesondere Konsistenz, Positivity, die für das
+Design benötigte Assignment-/Exchangeability-Annahme und Interferenz
+beziehungsweise ein Exposure Mapping ausdrücklich behandelt. Ein DAG ist dort
+nicht zusätzlich Pflicht, wenn das Identifikationsdesign dieselben relevanten
+Annahmen explizit macht.
 
 Ein LLM darf konkurrierende DAGs, Confounder-Kandidaten, Instrument-Kandidaten und testbare Konsequenzen vorschlagen. Es darf Pfeile nicht aufgrund plausibler Prosa als wahr deklarieren.
 
@@ -487,7 +510,7 @@ Jede Research-Datei benötigt mindestens:
 - Erstellungsdatum,
 - Freeze-Datum,
 - Datenrollen,
-- DAG-Version,
+- Strukturmodell-/Identifikationsdesign-Version,
 - Tooling-Manifest mit Laufzeit-, Paket- und API-Versionen oder `TOOLING_NOT_REQUIRED`,
 - Hypothesenversion,
 - Entscheidungsprotokoll.
@@ -548,5 +571,9 @@ Ein einzelnes Run-Manifest ersetzt weder das Research Case noch dessen Gates. Um
 ## 17. Abschlussregel
 
 Ein AI-Agent darf eine Research-Idee nur dann als `VALIDATED_PHENOMENON` oder `ACTIVE_STRATEGY_CANDIDATE` bezeichnen, wenn das zugehörige Research-Artefakt die vorgeschriebenen Gates bestanden hat.
+
+`VALIDATED_PHENOMENON` bestätigt nur das eingefrorene Phänomen gemäß seinem
+Design. Der Status erhöht weder den Claim-Level noch setzt er
+`mechanism_supported` oder `executable_net_edge` automatisch auf `SUPPORTED`.
 
 Fehlende Daten, nicht geprüfte Abhängigkeiten, ein verbrauchtes Validation-Set oder eine ungeprüfte entscheidungstragende akademische Quellenfassung sind keine redaktionellen Kleinigkeiten, sondern Zustandsfehler des Research-Prozesses.

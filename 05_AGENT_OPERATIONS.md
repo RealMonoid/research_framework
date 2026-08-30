@@ -1,7 +1,7 @@
 # 05_AGENT_OPERATIONS.md
 
-**Version:** 1.3
-**Stand:** 2026-08-30  
+**Version:** 1.4
+**Stand:** 2026-08-31
 **Status:** ENTWURF ZUR ÜBERNAHME  
 **Zweck:** Normative operative Kontrollschicht für reproduzierbare, überprüfbare und revisionssichere Läufe eines AI-Research-Agenten.
 
@@ -201,6 +201,11 @@ Jeder Versuch eines Modell-, Tool- oder Retrievalaufrufs erhält eine **attempt*
 Der Research-Claim-Level aus **01 §5 / 02 §E1** beschreibt die Stärke der fachlichen Aussage: **ASSOCIATIONAL_PREDICTIVE**, **INTERVENTIONAL** oder **COUNTERFACTUAL**.
 
 Der epistemische Claim-Typ dieses Dokuments beschreibt dagegen, wie eine einzelne Aussage zustande kam. Beide Felder sind unabhängig und dürfen nicht miteinander ersetzt werden.
+
+Davon unabhängig ist außerdem der Validierungs-/Handelsstatus aus **01 §4.3**:
+`mechanism_supported`, `forward_predictive_oos` und `executable_net_edge`.
+Epistemischer Typ, Research-Claim-Level und diese drei Status sind getrennte
+Dimensionen. Keine darf aus einer anderen automatisch abgeleitet werden.
 
 Jeder materielle Claim erhält genau einen primären Typ:
 

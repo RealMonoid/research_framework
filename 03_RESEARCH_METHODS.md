@@ -1,6 +1,6 @@
 # 03_RESEARCH_METHODS.md
 
-**Version:** 1.6
+**Version:** 1.7
 **Stand:** 2026-08-30
 **Status:** ENTWURF ZUR ÜBERNAHME  
 **Zweck:** Methodenauswahl für AI-Agenten. Dieses Dokument sagt nicht, dass jede Methode immer angewendet werden muss. Es verhindert, dass notwendige Methoden vergessen oder dekorativ genannt werden.
@@ -636,6 +636,11 @@ Ein Pre-Mortem ohne operative Konsequenz ist nur Pessimismus mit Tabellenformat.
 
 Vor jeder Methodenauswahl wird die Frage klassifiziert:
 
+Der Router klassifiziert die Zielabfrage, nicht den Formalismus. Graphische
+SCMs/DAGs, Potential Outcomes und strukturell-ökonometrische Designs sind
+zulässige explizite Darstellungen; keine davon ist für sich ein Beweis oder eine
+höhere Claim-Stufe.
+
 ### `ASSOCIATIONAL_PREDICTIVE`
 
 Ziel ist eine bedingte Verteilung, Prognose oder handelbare Entscheidung unter beobachteten Bedingungen. Ein kausales Estimand ist nicht erforderlich. Das Identifikationsgate lautet `NOT_REQUIRED_PREDICTIVE`; kausale Sprache und `do(·)` bleiben unzulässig.
@@ -650,18 +655,27 @@ Ziel ist eine Aussage über denselben konkreten Fall unter einer nicht eingetret
 
 Ein Research-Projekt darf zwei getrennte Zielgrößen führen, beispielsweise einen identifizierten durchschnittlichen Eventeffekt und daneben ein prädiktives Trading-Signal. Ihre Evidenz und Endentscheidungen werden getrennt berichtet.
 
-## 25.2 DAG und Identifikationsgate
+## 25.2 Explizites Identifikationsmodell und Gate
 
 ### Pflichtreihenfolge bei kausalem Claim
 
 1. Kausales Estimand definieren.
-2. Einen oder mehrere plausible DAGs/Strukturmodelle formulieren.
-3. Jede Kante, jedes ausgelassene gemeinsame Elternteil und jede Zeitrestriktion als Annahme dokumentieren.
-4. Identifikationsstrategie und zulässigen Adjustmentsatz aus dem Modell ableiten.
+2. Ein SCM/DAG, Potential-Outcomes-Design, strukturell-ökonometrisches oder
+   anderes explizites Identifikationsmodell formulieren.
+3. Jede Kante, jedes ausgelassene gemeinsame Elternteil oder – bei
+   Potential Outcomes – Konsistenz, Positivity, Assignment/Exchangeability und
+   Interferenz beziehungsweise Exposure Mapping als Annahme dokumentieren.
+4. Identifikationsstrategie und zulässigen Adjustmentsatz oder die vergleichbare
+   Designrestriktion aus dem Modell ableiten.
 5. Testbare Implikationen, Negativkontrollen, Placebos und Sensitivitäten festlegen.
 6. Erst danach einen geeigneten Schätzer wählen.
 
-Für die ausführbare Graph- und Adjustierungsprüfung werden primär `pgmpy` oder `DoWhy` verwendet. Das vom Tool akzeptierte Modell ist weiterhin eine Eingabeannahme; eine erfolgreiche API-Abfrage bestätigt nicht die Wahrheit des DAG.
+Für eine tatsächlich benötigte Graph- und Adjustierungsprüfung werden primär
+`pgmpy` oder `DoWhy` verwendet. Ein DAG ist nicht zusätzlich Pflicht, wenn ein
+Potential-Outcomes- oder anderes explizites Design das Estimand unter vollständig
+dokumentierten Annahmen identifiziert. Das vom Tool akzeptierte Modell ist
+weiterhin eine Eingabeannahme; eine erfolgreiche API-Abfrage bestätigt nicht die
+Wahrheit des Modells.
 
 Beobachtungsdaten und Conditional-Independence-Strukturen identifizieren ohne Zusatzannahmen häufig nur eine Äquivalenzklasse. Zusätzliche Orientierung kann etwa aus Interventionen, Zeitrestriktionen, nicht-gaussianischen/additiven Strukturannahmen oder Invarianz über Umgebungen kommen. Diese Annahmen werden nicht durch gute Prognosegüte ersetzt.
 
@@ -877,6 +891,8 @@ dienen. Sie erzeugt kein Label, kein Estimand und keinen Gate-Status.
 Primärquellen für die in diesem Abschnitt verwendeten Grenzen und Verfahren:
 
 - Judea Pearl et al., *Probabilistic and Causal Inference: The Works of Judea Pearl* – Kausalhierarchie, DAGs und Identifikation per do-calculus: <https://ftp.cs.ucla.edu/pub/stat_ser/ACMBook-published-2022.pdf>
+- Guido Imbens (2020), *Potential Outcome and Directed Acyclic Graph Approaches to Causality: Relevance for Empirical Practice in Economics* – Vergleich und Übersetzbarkeit der beiden Kausaltraditionen: <https://www.nber.org/papers/w26104>
+- Dominik Janzing, Lenon Minorics und Patrick Blöbaum (2020), *Feature Relevance Quantification in Explainable AI: A Causal Problem* – Grenzen rein beobachtungsbasierter Feature-Relevanz für kausale Aussagen: <https://proceedings.mlr.press/v108/janzing20a.html>
 - C. W. J. Granger (1969), *Investigating Causal Relations by Econometric Models and Cross-spectral Methods*: <https://doi.org/10.2307/1912791>
 - Jonas Peters et al. (2014), *Causal Discovery with Continuous Additive Noise Models* – Identifikation nur unter zusätzlicher Struktur: <https://jmlr.org/papers/v15/peters14a.html>
 - Jonas Peters, Peter Bühlmann und Nicolai Meinshausen, *Causal inference using invariant prediction*: <https://arxiv.org/abs/1501.01332>

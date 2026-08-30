@@ -1,5 +1,5 @@
 {
-  "schema_version": "1.1.0",
+  "schema_version": "1.2.0",
   "candidate_id": "candidate:ofi-continuation:1.0.0",
   "candidate_version": "1.0.0",
   "inbox_id": "inbox:intraday-market-structure",
@@ -81,6 +81,25 @@
     "origin_summary": "Aus einer Diskussion ueber Orderbuch-Ungleichgewicht als intraday Hypothesengenerator uebernommen; noch keine empirische Bestaetigung."
   },
   "idea_statement": "Wenn ein vorab definiertes Order-Flow-Imbalance-Mass bei normalem Spread und ausserhalb bekannter Events positiv extrem ist, verbessert es die Prognose des Midprice-Returns in den folgenden 30 Sekunden gegenueber einem zustandsangepassten Nullmodell.",
+  "variable_selection": {
+    "mode": "PREDEFINED",
+    "rationale": "Die Konstrukte folgen der vorab formulierten Orderbuchhypothese; es fand noch keine outcome-gesteuerte Suche ueber einen groesseren Variablenraum statt.",
+    "candidate_universe_ref": null,
+    "selection_data_refs": [],
+    "selection_dataset_role": "NOT_APPLICABLE",
+    "outcome_visibility": "NOT_USED",
+    "selection_methods": [
+      "method:domain-constrained-operationalization"
+    ],
+    "retained_variable_refs": [
+      "variable:top3-order-flow-imbalance",
+      "variable:spread-state",
+      "outcome:forward-midprice-return-30s"
+    ],
+    "effective_candidate_count": null,
+    "search_space_ref": null,
+    "selection_bias_controls": []
+  },
   "idea_class": "MECHANISM_CANDIDATE",
   "mechanism_family": "LIMIT_ORDER_BOOK_LIQUIDITY",
   "actor_constraint": {

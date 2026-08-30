@@ -21,6 +21,13 @@ small [inbox example](examples/hypothesis_candidate.inbox.json) and a full
 decisions are recorded in [`decisions/`](decisions/), and deterministic agent
 regression tests live in [`evals/`](evals/).
 
+Promoted candidates record how their variables were chosen. Predefined,
+theory-led variables need only a compact rationale; data-driven and hybrid
+searches must disclose the candidate universe, data role, outcome visibility,
+search space, retained variables, and selection-bias controls. The framework
+also keeps causal claim level separate from mechanism evidence, forward OOS
+prediction, and executable after-cost edge.
+
 ## Validation
 
 Cross-platform:

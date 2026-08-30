@@ -50,6 +50,21 @@ class EvalHarnessTests(unittest.TestCase):
         )
         self.assertTrue(report["regression_failures"])
 
+    def test_identified_effect_cannot_be_promoted_to_executable_net_edge(self) -> None:
+        regressed = copy.deepcopy(self.results)
+        regressed["run_id"] = "causal-effect-net-edge-regression"
+        regressed["cases"]["identified_effect_not_automatic_net_edge"][
+            "hypothesis_intake"
+        ]["epistemic_stage_status"]["executable_net_edge"]["status"] = "SUPPORTED"
+
+        report = run_evals.score_results(self.catalog, regressed, self.baseline)
+        self.assertFalse(report["passed"])
+        self.assertLess(report["metrics"]["hypothesis_intake_accuracy"], 1.0)
+        self.assertFalse(
+            report["cases"]["identified_effect_not_automatic_net_edge"]["passed"]
+        )
+        self.assertTrue(report["regression_failures"])
+
     def test_recurring_prints_cannot_confirm_twap_vwap_or_price_floor(self) -> None:
         for field in ("twap_vwap_confirmed", "price_floor_established"):
             with self.subTest(field=field):

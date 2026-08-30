@@ -35,8 +35,14 @@ Begründung; siehe
 [`examples/hypothesis_candidate.rejected.json`](examples/hypothesis_candidate.rejected.json).
 
 Erst `PROMOTED` verlangt vollständigen Scope, beobachtbare Footprints,
-Alternativerklärungen, Datenanforderungen, frühe Machbarkeit und die drei
-getrennten Evidenzstufen. Promotion bestätigt keine dieser Stufen.
+Alternativerklärungen, Datenanforderungen, frühe Machbarkeit, die drei
+getrennten Evidenzstufen und einen Record zur Variablenauswahl. Bei
+`PREDEFINED` genügen Begründung und beibehaltene Konstrukte. `DATA_DRIVEN` und
+`HYBRID` verlangen zusätzlich Kandidatenuniversum, Selektionsdaten und deren
+Rolle, Outcome-Sichtbarkeit, Methode, effektive Kandidatenzahl, Suchraum und
+Kontrollen gegen Auswahlbias. SHAP, Impurity- oder andere
+Feature-Importance-Verfahren sind mögliche Diagnosen, aber weder Pflicht noch
+Kausalitätsnachweis. Promotion bestätigt keine Evidenzstufe.
 
 ## 3. Dokumentrouter nach Promotion
 
@@ -55,6 +61,8 @@ aktivierte optionale Methoden erzeugen keine Serien begründeter `N/A`-Einträge
 ## 4. Nicht verhandelbare Kernregeln
 
 - Beobachtung, Mechanismus, Forward-OOS-Prognose und ausführbare Netto-Edge bleiben getrennte Aussagen.
+- Claim-Level (`ASSOCIATIONAL_PREDICTIVE / INTERVENTIONAL / COUNTERFACTUAL`) und Validierungs-/Handelsstatus (`mechanism_supported / forward_predictive_oos / executable_net_edge`) sind unabhängige Achsen. Keine Achse stuft die andere automatisch hoch.
+- Kausale Identifikation darf als SCM/DAG, Potential-Outcomes-Design, strukturell-ökonometrisches oder anderes explizites Identifikationsmodell formuliert werden. Die Notation entscheidet nicht über den Claim-Level.
 - Bereits betrachtete Daten werden im Informationsbudget erfasst.
 - Prädiktoren müssen zum Entscheidungszeitpunkt tatsächlich verfügbar sein.
 - Materielle Regeln werden vor unabhängiger Evaluation eingefroren.
