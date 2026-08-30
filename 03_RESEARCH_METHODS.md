@@ -1,7 +1,7 @@
 # 03_RESEARCH_METHODS.md
 
-**Version:** 1.4  
-**Stand:** 2026-08-27  
+**Version:** 1.5
+**Stand:** 2026-08-30
 **Status:** ENTWURF ZUR ÜBERNAHME  
 **Zweck:** Methodenauswahl für AI-Agenten. Dieses Dokument sagt nicht, dass jede Methode immer angewendet werden muss. Es verhindert, dass notwendige Methoden vergessen oder dekorativ genannt werden.
 
@@ -960,7 +960,117 @@ Diese Quellen rechtfertigen keine konkrete Trading-Edge. Sie begründen die meth
 
 ---
 
-# 26. Methoden-Matrix für AI-Agenten
+# 26. Intraday-Hypothesenrouter
+
+## 26.1 Benutzungsgrenze
+
+Der Router ordnet Rohideen einem geeigneten ersten Prüfdesign zu. Er ist keine
+abschließende Liste aller Intraday-Mechanismen und kein Beleg, dass die eingeordnete
+Geschichte wahr oder handelbar ist. Jede Idee beginnt grundsätzlich mit
+`ASSOCIATIONAL_PREDICTIVE`, sofern nicht ein eigenes Identifikationsdesign das
+höhere Claim-Level rechtfertigt.
+
+Vor jeder Detailanalyse werden drei Fragen getrennt:
+
+1. Ist der behauptete Mechanismus im konkreten Markt ausreichend belegt?
+2. Prognostiziert sein ex ante beobachtbarer Footprint ein zukünftiges Outcome OOS?
+3. Bleibt dieser Effekt zu ausführbaren Preisen nach Kosten positiv?
+
+Die Antworten werden unabhängig als `mechanism_supported`,
+`forward_predictive_oos` und `executable_net_edge` geführt. Ein positives Ergebnis
+auf einer früheren Stufe setzt keine spätere Stufe auf `SUPPORTED`.
+
+## 26.2 Router-Matrix
+
+| Ideenfamilie | Zulässiger Anfangsclaim | Mindestdaten und Integrität | Typische Artefakte / Alternativerklärungen | Mindestfalsifikation | Frühe Machbarkeitshürde |
+|---|---|---|---|---|---|
+| Limit-Orderbuch / OFI / Queue Imbalance | Ein vorab definierter Buchzustand verbessert die Prognose eines zukünftigen Quote-/Execution-Outcomes; keine automatische Kausal- oder Edge-Aussage | exaktes Instrument und Venue; Event-Feed mit Trades, Adds, Cancels und Sequenzprüfung; Book-Tiefe; Tick Size; Timestamp- und Clock-Sync; dokumentiertes Trade Signing; bekannte Hidden-Liquidity-Grenze | kontemporäre Preisreaktion statt Forward-Effekt; mechanischer Tick-Wechsel; Tageszeit, Volatilität, Tiefe; Feed-Gap; Cross-Venue-Liquidität | Event-Time und Clock-Time getrennt; inkrementell über Tiefe/Spread/Volatilität/Tageszeit; neue Daten; ausführbare Bid-/Ask-Outcomes statt nur Midquote | Feed-Auflösung und Latenz müssen kürzer als der Effekt sein; Queue-/Fill-Modell, Gebühren, Spread und Slippage dürfen `δ_econ` nicht aufzehren |
+| Spread-Ausweitung | Zunächst Volatilitäts- oder Liquiditätsrisiko-Prognose; Richtung nur mit zusätzlichem ex-ante Signal | tickgenaue Quotes, Book-Tiefe, Cancels, Trades, Venue-Regeln und Tageszeit | 1→2 Ticks erscheint als „Verdopplung“; Volatilität, geringe Aktivität, Queue-Depletion, Inventory oder Adverse Selection sind nicht aus Spread allein identifizierbar | absolute Ticks und relative Änderung getrennt; Matching/Controls; inkrementeller OOS-Wert; keine Richtung aus Spread allein | der breitere Spread ist selbst Teil der Kostenhürde |
+| Cross-Market / Lead-Lag | Markt A verbessert rollierend und OOS die Prognose des zukünftigen effizienten Preises von B | direkte, synchronisierte Quotes; Clock-Audit; Vertrags-/Instrument-Mapping; Futures-Basis, Dividenden, Zins und Laufzeit; Session-Overlap | stale/asynchrone Quotes, gemeinsamer Faktor, Bid-Ask-Bounce, Feed- oder Venue-Latenz; zeitvariable Führungsrichtung | A-vs.-B und B-vs.-A; rollierende Information-Share-/VECM- oder einfachere OOS-Benchmarks; Regime- und Placebotests | ausführbare Basisabweichung nach zwei Spreads, Gebühren, Latenz, Queue und Leg-Risk |
+| Execution-/Metaorder-Signatur | Öffentliche Daten erlauben höchstens eine kalibrierte Metaorder-Wahrscheinlichkeit; kein sicher erkannter TWAP/VWAP | Trades und Quotes über relevante Venues; Orderzeichen; Interarrival Times; Größen; Participation Rate; Tagesvolumenkurve; möglichst Order-/Teilnehmer-IDs | Round Lots, Batching, Icebergs, Fragmentierung, mehrere Akteure, adaptive/randomisierte Algorithmen | Klassifikation gegen ein Nullmodell, das Tageszeit, Volumenkurve und Größenhäufigkeit erhält; danach separater OOS-Returntest | ohne Identifikatoren bleibt Mechanismus latent; angeblicher „Boden“ muss durch ausführbare, kostenbereinigte Returns separat belegt werden |
+| Relative Value / Pairs / Kointegration | Ein vorab gebildeter Spread besitzt OOS eine stabile bedingte Mean-Reversion; Branchenähnlichkeit allein genügt nicht | point-in-time Universum; corporate-action-bereinigte synchrone Quotes; Integrationseigenschaften; geschätzter Hedge-Koeffizient; Borrow-/Short-Daten | bloße Korrelation; instabiles Beta; gemeinsamer Faktor; Earnings/Corporate Actions; Strukturbruch; Data Snooping über viele Paare | Formation und Trading strikt trennen; Unit-Root-/Cointegration-/Error-Correction-Diagnostik; Breaktests; Pair-Selection-Multiplicity; Factor-Exposure OOS | zweibeinige Fills, Leg-Risk, Spread/Slippage, Borrow, Capacity und Restfaktor-Risiko müssen in `δ_econ` eingehen |
+| Derivate-Hedging / Gamma | Konditional auf Vorzeichen und Größe einer dokumentierten oder robust geschätzten Intermediärsexponierung; keine universelle Momentum-Richtung | Optionskette, Greeks/Vol-Surface, Underlying/Futures, OI/Volumen, mehrere Dealer-Side-Annahmen, Eventfilter | Open Interest identifiziert die Dealer-Seite nicht; Long Gamma kann dämpfen, Short Gamma verstärken; Trend kann Ursache statt Hedge-Folge sein | Vorzeichen-symmetrische Predictions; Sensitivität über Dealer-Side-Annahmen; Long- vs. Short-Gamma-Tage; Earnings/Makro/Indexevents filtern | Ergebnis darf nicht nur unter einer unbeobachtbaren Positionsannahme bestehen; Hedgeinstrument und Kosten müssen umsetzbar sein |
+| Rebalancing / Benchmark- oder Fixed-Mix-Flow | Nur für belegte Mandate, Indexregeln oder Holdings; kein allgemeiner gesetzlicher Zwang | versionierte Benchmark-/Prospektregel; Announcement und Effective Date getrennt; Gewichtsdifferenz, Tracking-AUM/Holdings, Auction Imbalance | Antizipation, aktive Fonds, andere Corporate Events, Mittelzuflüsse, Derivate, abweichende Trackingmethoden | gematchte Kontrollen; erwarteter Flow-Querschnitt; Announcement-vs.-Effective-Fenster; Reversal/Bestandseffekt getrennt | Timing, verfügbare Auktionsliquidität, Impact, Borrow und Antizipation können Edge eliminieren |
+| Session / Opening-/Closing-Auction | Venue-spezifische Änderung von Liquidität, Imbalance oder Preisverteilung; kein universelles „Power-Hour“-Muster | versionierter Venue-Kalender, Auktionstyp, Imbalance-Publikationszeiten, Zeitzone/DST/Feiertage, Continuous und Auction getrennt | simultan hohes Volumen und breite Spreads; harte lokale Uhrzeiten; Regeländerungen; Closing-Print nicht garantiert ausführbar | venue- und regimespezifische Nullmodelle; Auction/Continuous getrennt; Momentum und Reversion als konkurrierende Richtungen | Ordertyp, Cutoffs, Imbalance-Zugriff, Fill/Impact und tatsächlicher Auktionspreis |
+| Crypto-Funding | Funding-, Basis-, OI- oder Volumenänderung rund um kontraktspezifischen Timestamp; keine automatische gerichtete Spotrendite | Venue, Kontrakt, Regelversion, exakter Funding-Timestamp, ex ante sichtbare Rate, Spot/Perpetual Quotes, OI/Liquidationen | Intervalle sind nicht universell acht Stunden; finalisierte Rate kann Leakage enthalten; Liquidationen oder News treiben beide Größen | Outcomes Basis/OI/Volumen primär, Spotreturn sekundär; Rate-Richtung und -Höhe; Placebo-Timestamps; Regelwechsel | Fees, Funding, Basis, Slippage, Margin, Liquidation und Venue-Risk |
+| Geplantes Informationsereignis | Surprise-/Response-Claim nach §25.5; gehört zu `INFORMATION_EVENT` | Release-Zeit, point-in-time Erwartung/Vintage, Eventfeed, Kontaminationsregel | Rohwert statt Überraschung; mehrere News-Dimensionen; Fremdnachrichten | Surprise-Modell und Fenster einfrieren; Placebos/Controls; zeitlich OOS | nicht als „newsfreier“ Intraday-Mechanismus klassifizieren |
+| Endogenes Preis-/Volumenereignis | Bedingte Prognose nach beobachtbarem Trigger; nicht automatisch exogener Event-Schock | Trigger-Bestätigungszeit, vollständige Pfadabhängigkeit, pre-trigger States, ausführbare Quotes | Selection on outcome, Look-ahead, Volatilitätsstate, Stop-Kaskaden nur erzählt | gematchte Nicht-Events, randomisierte/strukturtreue Trigger-Placebos, purged OOS-Test | Trigger muss live rechtzeitig feststehen; Kosten und Crowd-/Impact-Risiko |
+| Overnight vs. Intraday | Zunächst Renditezerlegung, nicht Mechanismus oder Edge | offizielle und ausführbare Open-/Close-Definition, Corporate Actions, Kalender, Finanzierung/Borrow | Earnings, Makro- und sonstige Overnight-News; nicht handelbarer offizieller Print; sampleabhängige Mittelwerte | Subperioden/Märkte, Kosten und Gap-Risiko; getrennte Mechanismushypothese erforderlich | passt nicht in reinen Continuous-Intraday-Scope und trägt keine newsfreie Regel allein |
+
+## 26.3 Datenintegrität bei sehr kurzen Horizonten
+
+Für Orderbuch- und Lead-Lag-Ideen ist ein positiver statistischer Test unzulässig,
+solange mindestens einer der folgenden Punkte materiell ungeklärt ist:
+
+- Venue-direct versus konsolidierte Sicht,
+- Sequenzlücken, Drop-/Recovery-Verhalten und Book-Rekonstruktion,
+- Exchange-, Feed-, Capture- und Strategy-Clock samt Synchronisationsfehler,
+- Trade-Signing-Regel und Behandlung von Cancels/Corrections,
+- Tick-Size-, Lot-Size-, Auction- oder Matching-Regelversion,
+- Hidden-/Iceberg-Liquidität und nicht beobachtete Venues,
+- Queue-Position, Ordertyp, Fill- und Cancel-Latenz,
+- sowie der Unterschied zwischen beobachtetem Midquote und ausführbarem Preis.
+
+Fehlt die für den behaupteten Horizont nötige Auflösung, wird die Idee im Intake
+`REJECTED` oder `BLOCKED`, nicht mit gröberen Daten scheinbar bestätigt.
+
+## 26.4 Interpretationsregeln für typische Übertreibungen
+
+- Eine OFI- oder Multi-Level-OFI-Regression auf die gleichzeitige Midprice-Änderung
+  ist `mechanism_supported`-Evidenz oder Messdiagnostik, keine 5–60-Sekunden-Prognose.
+- „Spread verdoppelt“ ist bei einem Wechsel von einem auf zwei Ticks kein
+  universeller Informationsschock und liefert ohne Zusatzsignal keine Richtung.
+- Futures führen ETFs nicht definitionsgemäß; Führungsrichtung und Stärke werden
+  geschätzt und können sich nach Periode, Liquidität und Volatilität umkehren.
+- Wiederkehrende Printgrößen/-abstände identifizieren weder einen bestimmten
+  Algorithmus noch einen Preisboden.
+- Gleiche Branche, hoher Gleichlauf oder ein 2–3-Sigma-Abstand beweisen keine
+  Kointegration und keine Marktneutralität.
+- Dealer-Hedging verstärkt bei negativer Netto-Gamma-Exponierung potenziell die
+  Bewegung und wirkt bei positiver Exponierung potenziell entgegen; die Position
+  ist meist nur proxybasiert bekannt.
+- Index- oder Fixed-Mix-Flows beruhen auf konkreten Regeln und Mandaten, nicht auf
+  einer universellen gesetzlichen Pflicht zum Schlusskurs.
+- Fundingintervalle, Auktionszeiten und Sessions werden aus versionierten
+  Venue-Regeln geladen und nicht als universelle Uhrzeiten hart codiert.
+
+## 26.5 Primärquellen als methodische Anker
+
+Die folgenden Arbeiten begründen einzelne Mechanismen oder Prüfgrenzen, aber keine
+fertige Trading-Edge:
+
+- Cont, Kukanov und Stoikov, *The Price Impact of Order Book Events*,
+  <https://doi.org/10.1093/jjfinec/nbt003> – OFI und kontemporäre
+  Kurzfrist-Preisänderungen.
+- Chen, Chung und Lien, *Price Discovery in the S&P 500 Index Derivatives
+  Markets*, <https://doi.org/10.1016/j.iref.2016.07.008> –
+  zeit-/stateabhängige Preisfindungsbeiträge statt universeller Führungsrichtung.
+- van Kervel und Menkveld, *High-Frequency Trading around Large Institutional
+  Orders*, <https://doi.org/10.1111/jofi.12759> – Reaktionen auf Parent Orders sind
+  dynamisch und nicht gleichbedeutend mit einem festen Preisboden.
+- Engle und Granger, *Co-Integration and Error Correction*,
+  <https://doi.org/10.2307/1913236> – Definition und Prüfung von Kointegration.
+- Do und Faff, *Are Pairs Trading Profits Robust to Trading Costs?*,
+  <https://doi.org/10.1111/j.1475-6803.2012.01317.x> – Kosten- und
+  Periodenabhängigkeit historischer Pairs-Befunde.
+- Baltussen et al., *Hedging Demand and Market Intraday Momentum*,
+  <https://doi.org/10.1016/j.jfineco.2021.04.029> – konditionale Rolle von
+  Short-Gamma-Hedging.
+- Parker, Schoar und Sun, *Retail Financial Innovation and Stock Market Dynamics:
+  The Case of Target Date Funds*,
+  <https://doi.org/10.1111/jofi.13258> – Rebalancing klar identifizierter
+  Target-Date-Fonds statt pauschaler Pensionskassenannahmen.
+- Wu und Jegadeesh, *Closing Auctions: Nasdaq versus NYSE*,
+  <https://doi.org/10.1016/j.jfineco.2021.12.003> – venue- und designspezifische
+  Schlussauktionsbefunde.
+
+Jede konkrete Research-Version erfasst die tatsächlich verwendete Fassung dieser
+oder anderer Arbeiten zusätzlich im Academic-Source-Protokoll; diese Liste ersetzt
+weder Source Verification noch Version-/Integrity-Prüfung.
+
+---
+
+# 27. Methoden-Matrix für AI-Agenten
 
 | Problem | Mindestprüfung | Typische Methode |
 |---|---|---|
@@ -995,7 +1105,7 @@ Diese Quellen rechtfertigen keine konkrete Trading-Edge. Sie begründen die meth
 
 ---
 
-# 27. Abschlussregel
+# 28. Abschlussregel
 
 Der Agent darf keine Methode als „erledigt“ betrachten, nur weil ihr Name im Bericht vorkommt.
 

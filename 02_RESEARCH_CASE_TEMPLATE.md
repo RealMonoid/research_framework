@@ -1,6 +1,6 @@
 # 02_RESEARCH_CASE_TEMPLATE.md
 
-**Template-Version:** 1.6
+**Template-Version:** 1.7
 **ANWEISUNG:** Diese Datei pro Research-Projekt kopieren. Kein Pflichtfeld löschen. Nicht anwendbare Felder mit `N/A + Begründung` ausfüllen. Unbekannte Pflichtfelder mit `BLOCKED + fehlende Information` markieren.
 
 **BEDINGTE AKTIVIERUNG:** Die Abschnitte `U–Y` werden erst geöffnet, wenn Abschnitt `T` mit `VALIDATED_PHENOMENON` abgeschlossen **und** Strategy Engineering ausdrücklich als nächster Schritt beschlossen wurde. Bei validiertem, aber nicht fortgesetztem Phänomen erhält der Block `DEFERRED_AFTER_VALIDATION`; ohne validiertes Phänomen erhält er `NOT_ACTIVATED_BY_T_GATE`. In beiden Fällen wird er nicht feldweise mit `N/A` befüllt. Abschnitt `Z` bleibt während des gesamten Projekts aktiv.
@@ -41,6 +41,11 @@
 | Review-Ledger-Version | |
 | Eval-Suite-Version | |
 | Letzter Regression-Gate-Status | `PASS / FAIL / BLOCKED / NOT_RUN_NO_AGENT_CHANGE` |
+| Intake-Idea-ID / Intake-Version | |
+| Ereignisklasse | `INFORMATION_EVENT / SCHEDULED_STRUCTURAL_EVENT / CONTINUOUS_ENDOGENOUS_MECHANISM / RETURN_DECOMPOSITION` |
+| Mechanismus-Evidenz | `UNKNOWN / SUPPORTED / NOT_SUPPORTED / BLOCKED` |
+| Forward-OOS-Prognose | `UNKNOWN / SUPPORTED / NOT_SUPPORTED / BLOCKED` |
+| Ausführbare Netto-Edge | `UNKNOWN / SUPPORTED / NOT_SUPPORTED / BLOCKED` |
 
 ## A1. Aktive Projektquellen zum Startzeitpunkt
 
@@ -64,6 +69,7 @@ Das Register referenziert die maschinenlesbaren Artefakte nach `05_AGENT_OPERATI
 | Review Ledger | | | | | `NO_REVIEW / OPEN / ACCEPTED / REJECTED / SUPERSEDED` |
 | Forecast Ledger | | | | | `N/A / OPEN / PARTIALLY_RESOLVED / RESOLVED` |
 | Eval-Ergebnis | | | | | `PASS / FAIL / BLOCKED / NOT_RUN` |
+| Hypothesen-Intake | | `1.0.0` | | | `INBOX / SCREENED / MERGED / REJECTED / PROMOTED` |
 
 ## A3. Academic-Source-Protokoll
 
@@ -99,6 +105,66 @@ nicht automatisch. `PREPRINT`, `WORKING_PAPER` und `OTHER` werden als vorläufig
 gekennzeichnet; eine konkrete arXiv-Fassung wird mit Versionssuffix eingefroren.
 Correction, Expression of Concern, Retraction, Withdrawal sowie Code-, Daten- und
 Replikationsstatus werden vor Freeze und Freigabe erneut geprüft.
+
+## A4. Research Scope
+
+| Feld | Eintrag |
+|---|---|
+| Markt und Instrument(e) | |
+| Venue(s) und konkrete Datenfeeds | |
+| Book-Sicht | `VENUE_DIRECT / CONSOLIDATED / TOP_OF_BOOK / L2 / L3 / N/A + Grund` |
+| Handelsphase | `PRE_MARKET / OPENING_AUCTION / CONTINUOUS / CLOSING_AUCTION / POST_MARKET / OVERNIGHT / CROSS_SESSION / OTHER` |
+| Venue-Kalender, Zeitzone und DST-Regel | |
+| Primäre Zeitbasis | `CLOCK_TIME / EVENT_TIME / TRADING_DAY / ANDERE + Definition` |
+| Prognose-/Outcome-Horizont | |
+| Ereignisklasse | `INFORMATION_EVENT / SCHEDULED_STRUCTURAL_EVENT / CONTINUOUS_ENDOGENOUS_MECHANISM / RETURN_DECOMPOSITION` |
+| News-/Makro-Policy | `INCLUDED_AS_SIGNAL / NOT_USED_AS_SIGNAL / FILTER_KNOWN_EVENTS / SCHEDULED_EVENT_STUDY` |
+| verwendete News-/Eventfeeds und Abdeckungszeitraum | `Pflicht bei FILTER_KNOWN_EVENTS; sonst N/A + Grund` |
+| Ausschlussfenster und Timestamp-Konvention | `Pflicht bei FILTER_KNOWN_EVENTS; sonst N/A + Grund` |
+| bekannte Coverage-Lücken | |
+| explizit ausgeschlossene Research-Fragen | |
+
+**Scope-Regel:** `NOT_USED_AS_SIGNAL` bedeutet nicht, dass Ereignisse aus der
+Stichprobe entfernt wurden. Der Ausdruck „newsfrei“ wird nur als Kurzform einer
+dokumentierten `FILTER_KNOWN_EVENTS`-Policy verwendet und immer zusammen mit
+Feed-Abdeckung und bekannten Lücken berichtet.
+
+## A5. Vorgelagerte Hypothesen-Inbox
+
+Die Rohidee wird vor `B` gegen `schemas/hypothesis_candidate.schema.json`
+persistiert. `PROMOTED` öffnet ausschließlich die Phase-0-Vorprüfung; es ist kein
+positiver Evidenzbefund.
+
+| Feld | Eintrag |
+|---|---|
+| Idea-ID / Version | |
+| Intake-Status | `INBOX / SCREENED / MERGED / REJECTED / PROMOTED` |
+| Herkunft / konkrete Quelle | |
+| Ideenklasse | `ASSOCIATIONAL_PATTERN / PREDICTIVE_PRECEDENCE / MECHANISM_CANDIDATE / STRUCTURAL_FLOW_CANDIDATE / RELATIVE_VALUE_CANDIDATE / EVENT_RESPONSE_CANDIDATE / RETURN_DECOMPOSITION_CANDIDATE / OTHER` |
+| Mechanismenfamilie | nicht abschließendes Routerlabel oder `UNCLASSIFIED` |
+| vermuteter Akteur / Zwang / Marktstruktur | |
+| beobachtbarer Footprint | |
+| erwartetes Outcome und Horizont | |
+| wichtigste Alternativerklärungen | |
+| benötigte Auflösung / Datenfelder / Venue-Coverage | |
+| Clock-Sync-, Sequenz- und Beobachtbarkeitsanforderungen | |
+| frühe Kosten-, Latenz-, Queue-, Borrow-, Funding- oder Leg-Risk-Hürde | |
+| bereits betrachtete Dataset-IDs / aktuelle Datenrolle | |
+| Dublette / merged_into_id | |
+| Screening-Entscheidung und Grund | |
+| bei PROMOTED: nächste Research-ID und Phase-0-Frage | |
+
+### A5.1 Getrennte Evidenzstufen
+
+| Stufe | Status | tragende Evidenz/Run-IDs | Begründung / nächster Test |
+|---|---|---|---|
+| `mechanism_supported` | `UNKNOWN / SUPPORTED / NOT_SUPPORTED / BLOCKED` | | |
+| `forward_predictive_oos` | `UNKNOWN / SUPPORTED / NOT_SUPPORTED / BLOCKED` | | |
+| `executable_net_edge` | `UNKNOWN / SUPPORTED / NOT_SUPPORTED / BLOCKED` | | |
+
+Die Stufen werden nicht kaskadenartig hochgestuft. Insbesondere belegt ein
+Mechanismuspaper keine Forward-Prognose, ein kontemporärer Zusammenhang keine
+zukünftige Rendite und ein Midquote-Effekt keine ausführbare Netto-Edge.
 
 ---
 
@@ -625,6 +691,17 @@ Wenn ein ausreichend präziser Effekt mit entgegengesetztem Vorzeichen beobachte
 - neue Hypothese = neue Version/Research-ID,
 - keine semantische Umetikettierung.
 
+## I7. Zielstufe dieses Tests
+
+**Primär getestete Stufe:**
+`mechanism_supported / forward_predictive_oos / executable_net_edge`
+
+**Welche stärkere Stufe darf aus diesem Design ausdrücklich NICHT abgeleitet
+werden?** ...
+
+**Falls ein kontemporärer Zusammenhang untersucht wird:** Warum ist das Outcome
+nicht als Forward-Prognose beschriftet? ...
+
 ---
 
 # J. Vorhersage-Liste
@@ -657,6 +734,10 @@ Wenn ein ausreichend präziser Effekt mit entgegengesetztem Vorzeichen beobachte
 | dominantes Symbol/Event | | | | |
 | Multiple Testing | | | | |
 | Kosten/Slippage | | | | |
+| Midquote-Effekt ohne ausführbaren Fill | | | | |
+| Feed-Latenz/Clock-Desynchronisation/stale Quote | | | | |
+| öffentliche Tape-Signatur identifiziert latenten Akteur nicht | | | | |
+| Strukturbruch/Kalender- oder Venue-Regeländerung | | | | |
 | Live-Variable zu spät verfügbar | | | | |
 | Sonstiges | | | | |
 
@@ -1278,6 +1359,11 @@ Der Agent darf den jeweils aktivierten Teil des Research-Artefakts nicht als vol
 
 ## Erreichter Research-Pfad `A–T` und immer aktives Protokoll `Z`
 
+- [ ] Wurde die Rohidee mit Herkunft, Scope, Alternativerklärungen, Datenbedarf und verbrauchtem Informationsbudget in der Hypothesen-Inbox erfasst?
+- [ ] War der Intake vor Phase 0 `PROMOTED`, ohne Promotion als Evidenzbestätigung auszugeben?
+- [ ] Sind Venue, Handelsphase, Kalender/DST, Zeitbasis, Horizont und Ereignisklasse eindeutig?
+- [ ] Ist die News-/Makro-Policy operationalisiert und sind bei `FILTER_KNOWN_EVENTS` Feeds, Ausschlussfenster und Coverage-Lücken dokumentiert?
+- [ ] Werden `mechanism_supported`, `forward_predictive_oos` und `executable_net_edge` getrennt geführt und nicht automatisch hochgestuft?
 - [ ] Wurde Phase 0 durchgeführt?
 - [ ] Stammt Mindest-N aus Power/Präzision statt aus vorhandenem N?
 - [ ] Wurde eine konservative Planungsstreuung samt Stressszenario statt nur eines Discovery-Punktschätzers verwendet?
@@ -1324,6 +1410,7 @@ Der Agent darf den jeweils aktivierten Teil des Research-Artefakts nicht als vol
 
 ## Operative Agentenartefakte
 
+- [ ] Besitzt jede persistierte Rohidee ein valides, versioniertes Hypothesen-Intake-Artefakt?
 - [ ] Besitzt jeder tatsächliche LLM-/Agentenlauf eine eindeutige Run-ID und ein valides Run-Manifest?
 - [ ] Sind Modell/Snapshot, Prompts, Parameter, Tools, Datenstände, Quellenstände und Output-Hashes je Run reproduzierbar referenziert?
 - [ ] Besitzt jede entscheidungsrelevante Aussage eine Claim-ID und eine epistemische Klasse?

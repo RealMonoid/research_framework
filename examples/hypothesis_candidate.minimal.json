@@ -1,0 +1,219 @@
+{
+  "schema_version": "1.0.0",
+  "candidate_id": "candidate:ofi-continuation:1.0.0",
+  "candidate_version": "1.0.0",
+  "inbox_id": "inbox:intraday-market-structure",
+  "idea_id": "idea:ofi-continuation",
+  "supersedes_candidate_id": null,
+  "created_at": "2026-08-30T09:00:00Z",
+  "updated_at": "2026-08-30T09:30:00Z",
+  "research_scope": {
+    "market": "E-mini S&P 500 futures",
+    "instruments": [
+      "ES front contract with point-in-time roll mapping"
+    ],
+    "venue": "CME Globex",
+    "data_feeds": [
+      "feed:cme-mbo",
+      "feed:cme-trades"
+    ],
+    "trading_phase": "CONTINUOUS",
+    "venue_calendar": "CME equity-index trading calendar and session rules, version effective 2026-08-30",
+    "timezone": "America/Chicago",
+    "dst_rule": "Use the IANA America/Chicago rules effective for each timestamp; never hard-code a fixed UTC offset.",
+    "time_basis": "EVENT_TIME",
+    "horizon": {
+      "value": 30,
+      "unit": "SECONDS"
+    },
+    "event_class": "CONTINUOUS_ENDOGENOUS_MECHANISM",
+    "event_news_policy": "FILTER_KNOWN_EVENTS",
+    "news_event_coverage": {
+      "feeds": [
+        {
+          "feed_id": "feed:scheduled-us-macro-calendar",
+          "provider": "Example point-in-time macro calendar provider",
+          "feed_version": "snapshot-2026-08-30",
+          "coverage_start": "2025-08-30T00:00:00Z",
+          "coverage_end": "2026-08-30T09:00:00Z",
+          "event_types": [
+            "SCHEDULED_US_MACRO_RELEASE",
+            "FOMC_DECISION"
+          ],
+          "event_timestamp_field": "scheduled_release_at_utc",
+          "retrieved_at": "2026-08-30T09:05:00Z"
+        },
+        {
+          "feed_id": "feed:cme-market-status",
+          "provider": "CME Group",
+          "feed_version": "snapshot-2026-08-30",
+          "coverage_start": "2025-08-30T00:00:00Z",
+          "coverage_end": "2026-08-30T09:00:00Z",
+          "event_types": [
+            "TRADING_HALT",
+            "MARKET_STATUS_CHANGE"
+          ],
+          "event_timestamp_field": "exchange_effective_at_utc",
+          "retrieved_at": "2026-08-30T09:05:00Z"
+        }
+      ],
+      "exclusion_windows": [
+        {
+          "event_types": [
+            "SCHEDULED_US_MACRO_RELEASE",
+            "FOMC_DECISION"
+          ],
+          "pre_seconds": 300,
+          "post_seconds": 600
+        }
+      ],
+      "timestamp_convention": "All event timestamps are normalized from the provider's documented release/effective field to UTC; receipt time is stored separately and never substituted for release time.",
+      "delayed_corrected_missing_policy": "Late or corrected events are versioned and trigger reclassification of affected observations; missing provider coverage remains a declared limitation and is never interpreted as no news.",
+      "audited_at": "2026-08-30T09:10:00Z"
+    },
+    "coverage_limitations": [
+      "FILTER_KNOWN_EVENTS entfernt nur Ereignisse in den benannten Feeds; ungeplante Nachrichten und nicht erfasste Statusmeldungen koennen die Stichprobe weiterhin kontaminieren."
+    ]
+  },
+  "provenance": {
+    "source_kind": "LLM_IDEA",
+    "source_refs": [],
+    "origin_summary": "Aus einer Diskussion ueber Orderbuch-Ungleichgewicht als intraday Hypothesengenerator uebernommen; noch keine empirische Bestaetigung."
+  },
+  "idea_statement": "Wenn ein vorab definiertes Order-Flow-Imbalance-Mass bei normalem Spread und ausserhalb bekannter Events positiv extrem ist, verbessert es die Prognose des Midprice-Returns in den folgenden 30 Sekunden gegenueber einem zustandsangepassten Nullmodell.",
+  "idea_class": "MECHANISM_CANDIDATE",
+  "mechanism_family": "LIMIT_ORDER_BOOK_LIQUIDITY",
+  "actor_constraint": {
+    "actor": "Passive liquidity providers",
+    "constraint": "Inventory and adverse-selection risk may reduce displayed liquidity after one-sided aggressive flow.",
+    "compelled_action": "Reprice, cancel, or reduce passive quotes; this action is hypothesized rather than observed directly.",
+    "observability": "PROXY"
+  },
+  "observable_footprints": [
+    {
+      "footprint_id": "footprint:ofi-extreme",
+      "observable": "Event-time order-flow imbalance over the top three displayed levels",
+      "expected_pattern": "The frozen imbalance statistic exceeds its development-sample state-conditional threshold.",
+      "timing_relative_to_trigger": "Known at trigger time after processing the causally prior book event.",
+      "decision_time_availability": "AVAILABLE"
+    },
+    {
+      "footprint_id": "footprint:quote-withdrawal",
+      "observable": "Displayed depth and cancellation intensity on the pressured side",
+      "expected_pattern": "Depth falls or cancellation intensity rises before the measured forward return.",
+      "timing_relative_to_trigger": "Contemporaneous with or immediately after the imbalance trigger, before the outcome horizon ends.",
+      "decision_time_availability": "AVAILABLE"
+    }
+  ],
+  "alternative_explanations": [
+    {
+      "alternative_id": "alternative:common-shock",
+      "explanation": "A common information shock drives both the imbalance and the price move without the proposed liquidity-provider mechanism.",
+      "discriminating_observation": "Known-event exclusions, cross-market controls, and unscheduled-news sensitivity materially reduce the apparent effect.",
+      "test_status": "TEST_PLANNED"
+    },
+    {
+      "alternative_id": "alternative:feed-artifact",
+      "explanation": "Packet loss, event reordering, or clock error creates a spurious lead-lag relation.",
+      "discriminating_observation": "The effect disappears after sequence-gap filtering and clock-synchronization diagnostics.",
+      "test_status": "TEST_PLANNED"
+    }
+  ],
+  "data_requirements": {
+    "required_data": [
+      "Order-by-order book events with sequence numbers",
+      "Trades and aggressor-side classification",
+      "Scheduled macro-event calendar with release timestamps",
+      "Exchange market-status messages"
+    ],
+    "minimum_resolution": {
+      "value": 1,
+      "unit": "MILLISECONDS",
+      "basis": "EVENT_TIME"
+    },
+    "clock_sync": {
+      "status": "REQUIRED",
+      "max_error_ms": 1,
+      "notes": "Book, trade, and cross-market timestamps must share a verified clock or a measured conversion."
+    },
+    "venue_coverage": {
+      "status": "FULL",
+      "required_venues": [
+        "CME_GLOBEX"
+      ],
+      "covered_venues": [
+        "CME_GLOBEX"
+      ],
+      "limitations": [
+        "The candidate is venue-specific and does not claim consolidated cross-venue order-book coverage."
+      ]
+    },
+    "depth_requirement": "ORDER_BY_ORDER",
+    "history_requirement": "At least 250 trading sessions spanning multiple volatility and liquidity states."
+  },
+  "early_feasibility": {
+    "assessment_status": "FEASIBLE",
+    "costs": {
+      "status": "ASSESSED",
+      "conservative_round_trip_cost": 1.25,
+      "unit": "ticks",
+      "assumptions": [
+        "Includes fees, spread crossing, and a conservative slippage allowance; the formal Phase-0 model may revise this estimate."
+      ]
+    },
+    "latency": {
+      "status": "ASSESSED",
+      "estimated_end_to_end_ms": 8,
+      "maximum_viable_ms": 50,
+      "notes": "Early engineering estimate only; production latency remains a later activation gate."
+    },
+    "queue": {
+      "status": "ASSESSED",
+      "model": "QUEUE_REPLAY",
+      "notes": "Passive execution variants require queue replay; aggressive variants still require realistic crossing costs."
+    },
+    "borrow": {
+      "status": "NOT_APPLICABLE",
+      "availability": "NOT_APPLICABLE",
+      "estimated_cost": null,
+      "unit": null,
+      "notes": "The scoped futures contract does not require equity borrow."
+    },
+    "blockers": []
+  },
+  "consumed_data_refs": [
+    "dataset:es-lob-discovery-v1"
+  ],
+  "epistemic_stage_status": {
+    "mechanism_supported": {
+      "status": "UNKNOWN",
+      "evidence_refs": [],
+      "rationale": "No mechanism-specific evidence has yet passed review for this candidate.",
+      "assessed_at": "2026-08-30T09:30:00Z"
+    },
+    "forward_predictive_oos": {
+      "status": "UNKNOWN",
+      "evidence_refs": [],
+      "rationale": "No frozen forward-OOS test has yet been run.",
+      "assessed_at": "2026-08-30T09:30:00Z"
+    },
+    "executable_net_edge": {
+      "status": "UNKNOWN",
+      "evidence_refs": [],
+      "rationale": "No executable-price after-cost validation has yet been run.",
+      "assessed_at": "2026-08-30T09:30:00Z"
+    }
+  },
+  "intake_status": "PROMOTED",
+  "transition": {
+    "screened_at": "2026-08-30T09:30:00Z",
+    "screening_rationale": "The idea is observable, falsifiable, scoped, and appears feasible enough to enter formal research. Promotion is not evidentiary support.",
+    "merged_into_idea_id": null,
+    "rejection_reasons": [],
+    "promotion_conditions": [
+      "Freeze the OFI definition and state-conditional threshold using development data only.",
+      "Retain all three epistemic stage statuses as UNKNOWN until their separate gates are actually passed."
+    ],
+    "promoted_research_id": "research:ofi-continuation"
+  }
+}

@@ -31,8 +31,76 @@ class EvalHarnessTests(unittest.TestCase):
         self.assertTrue(report["passed"])
         self.assertEqual(report["metrics"]["overall_score"], 1.0)
         self.assertEqual(report["metrics"]["critical_assertion_pass_rate"], 1.0)
+        self.assertEqual(report["metrics"]["hypothesis_intake_accuracy"], 1.0)
         self.assertFalse(report["gate_failures"])
         self.assertFalse(report["regression_failures"])
+
+    def test_contemporaneous_ofi_cannot_be_promoted_to_forward_oos(self) -> None:
+        regressed = copy.deepcopy(self.results)
+        regressed["run_id"] = "ofi-forward-scope-regression"
+        regressed["cases"]["ofi_contemporaneous_not_forward_edge"][
+            "hypothesis_intake"
+        ]["epistemic_stage_status"]["forward_predictive_oos"]["status"] = "SUPPORTED"
+
+        report = run_evals.score_results(self.catalog, regressed, self.baseline)
+        self.assertFalse(report["passed"])
+        self.assertLess(report["metrics"]["hypothesis_intake_accuracy"], 1.0)
+        self.assertFalse(
+            report["cases"]["ofi_contemporaneous_not_forward_edge"]["passed"]
+        )
+        self.assertTrue(report["regression_failures"])
+
+    def test_recurring_prints_cannot_confirm_twap_vwap_or_price_floor(self) -> None:
+        for field in ("twap_vwap_confirmed", "price_floor_established"):
+            with self.subTest(field=field):
+                regressed = copy.deepcopy(self.results)
+                regressed["run_id"] = f"recurring-prints-{field}-regression"
+                regressed["cases"]["recurring_prints_not_confirmed_execution_algo"][
+                    "hypothesis_intake"
+                ][field] = True
+
+                report = run_evals.score_results(self.catalog, regressed, self.baseline)
+                self.assertFalse(report["passed"])
+                self.assertLess(report["metrics"]["hypothesis_intake_accuracy"], 1.0)
+                self.assertFalse(
+                    report["cases"]["recurring_prints_not_confirmed_execution_algo"][
+                        "passed"
+                    ]
+                )
+                self.assertTrue(report["regression_failures"])
+                self.assertTrue(report["regression_failures"])
+
+        for claim_id in ("execution_algo_identity", "price_floor", "directional_net_edge"):
+            with self.subTest(claim_id=claim_id):
+                regressed = copy.deepcopy(self.results)
+                regressed["run_id"] = f"recurring-prints-{claim_id}-claim-regression"
+                regressed["cases"]["recurring_prints_not_confirmed_execution_algo"][
+                    "claims"
+                ][claim_id]["evidence_status"] = "SUPPORTED"
+
+                report = run_evals.score_results(self.catalog, regressed, self.baseline)
+                self.assertFalse(report["passed"])
+                self.assertLess(report["metrics"]["hypothesis_intake_accuracy"], 1.0)
+                self.assertFalse(
+                    report["cases"]["recurring_prints_not_confirmed_execution_algo"][
+                        "passed"
+                    ]
+                )
+
+    def test_not_using_news_as_signal_cannot_be_called_news_free(self) -> None:
+        regressed = copy.deepcopy(self.results)
+        regressed["run_id"] = "news-scope-laundering-regression"
+        regressed["cases"]["not_used_as_signal_not_news_free"][
+            "hypothesis_intake"
+        ]["news_free_claim_allowed"] = True
+
+        report = run_evals.score_results(self.catalog, regressed, self.baseline)
+        self.assertFalse(report["passed"])
+        self.assertLess(report["metrics"]["hypothesis_intake_accuracy"], 1.0)
+        self.assertFalse(
+            report["cases"]["not_used_as_signal_not_news_free"]["passed"]
+        )
+        self.assertTrue(report["regression_failures"])
 
     def test_cli_smoke_run_returns_zero(self) -> None:
         with redirect_stdout(io.StringIO()), redirect_stderr(io.StringIO()):

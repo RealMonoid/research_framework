@@ -1,6 +1,6 @@
 # 00_RESEARCH_AGENT_README.md
 
-**Version:** 1.6
+**Version:** 1.7
 **Stand:** 2026-08-30  
 **Status:** ENTWURF ZUR ÜBERNAHME  
 **Zweck:** Verbindliche Lese- und Ausführungsanweisung für AI-Agenten, die Trading-Research-Projekte bearbeiten.
@@ -18,7 +18,15 @@ Ein AI-Agent MUSS die Dateien in dieser Reihenfolge lesen:
 5. `04_CAUSAL_TOOLING.md`
 6. `05_AGENT_OPERATIONS.md`
 
-Für ein konkretes Research-Projekt wird anschließend **eine eigene Kopie** von `02_RESEARCH_CASE_TEMPLATE.md` angelegt und vollständig befüllt. Jeder tatsächliche Agentenlauf erhält zusätzlich ein valides Run-Manifest nach `schemas/run_manifest.schema.json`. Entscheidungsrelevante Aussagen, menschliche Reviews und Eval-Ergebnisse werden nach `05_AGENT_OPERATIONS.md` als getrennte operative Artefakte geführt und im Research Case referenziert.
+Vor einem neuen Research Case wird jede Rohidee als Hypothesen-Intake nach
+`schemas/hypothesis_candidate.schema.json` erfasst und gescreent. Erst ein
+`PROMOTED`-Intake darf in die Phase-0-Vorprüfung übergehen; Promotion ist keine
+Evidenzbestätigung. Für ein konkretes Research-Projekt wird anschließend **eine
+eigene Kopie** von `02_RESEARCH_CASE_TEMPLATE.md` angelegt und vollständig befüllt.
+Jeder tatsächliche Agentenlauf erhält zusätzlich ein valides Run-Manifest nach
+`schemas/run_manifest.schema.json`. Entscheidungsrelevante Aussagen, menschliche
+Reviews und Eval-Ergebnisse werden nach `05_AGENT_OPERATIONS.md` als getrennte
+operative Artefakte geführt und im Research Case referenziert.
 
 Die Abschnitte `U–Y` dieser Kopie bleiben bis zu einer bestandenen Phänomen-Entscheidung in Abschnitt `T` **inaktiv**. Nach `VALIDATED_PHENOMENON` werden sie nur durch eine ausdrückliche Fortsetzungsentscheidung aktiviert; andernfalls bleibt `VALIDATED_PHENOMENON` ein zulässiger eigenständiger Endzustand und der Block erhält `DEFERRED_AFTER_VALIDATION`. Wird `T` nicht als `VALIDATED_PHENOMENON` abgeschlossen, erhält der Block `NOT_ACTIVATED_BY_T_GATE`. Die einzelnen Felder werden in beiden Fällen nicht mit Serien von `N/A` befüllt. Abschnitt `Z` bleibt von Beginn an aktiv, weil Entscheidungs-, Versions- und Ablehnungsgründe während des gesamten Research-Prozesses protokolliert werden müssen.
 
@@ -32,7 +40,7 @@ Die Dateien erfüllen verschiedene Funktionen:
 | `03_RESEARCH_METHODS.md` | Methodenauswahl und Einsatzregeln | Nur einzelne nicht relevante Methodenabschnitte; Auswahl muss begründet werden |
 | `04_CAUSAL_TOOLING.md` | Verbindlicher Router für Kausalbibliotheken, Umgebungen und Reproduzierbarkeit | Bei rein prädiktivem Research nach dokumentiertem `TOOLING_NOT_REQUIRED`; sonst nein |
 | `05_AGENT_OPERATIONS.md` | Run-Provenance, Evidence Chain, Source Verification, Reviews, Evals und operative Freigaben | Bei jedem LLM-/Agentenlauf nein |
-| `schemas/` | Maschinenlesbare Verträge für Runs, Evidenz, Forecasts und Reviews | Nein, sobald der zugehörige Artefakttyp entsteht |
+| `schemas/` | Maschinenlesbare Verträge für Hypothesen-Intake, Runs, Evidenz, Forecasts und Reviews | Nein, sobald der zugehörige Artefakttyp entsteht |
 | `evals/` | Versionierter Eval-Satz und Regression Gate für Agentenänderungen | Vor produktiver Änderung an Prompt, Modell, Retrieval, Tools oder Output-Schema nein |
 | `decisions/` | Architekturentscheidungen und ihre Konsequenzen | Nur für nicht betroffene Entscheidungen |
 
@@ -160,6 +168,31 @@ Er muss aktiv prüfen auf:
 Wenn Abhängigkeit plausibel ist, muss die Inferenzmethode angepasst oder die Einschränkung ausdrücklich als `BLOCKED` ausgewiesen werden.
 
 Bei weniger als 30 plausibel unabhängigen Clustern wird zusätzlich `SMALL_CLUSTER_WARNING` gesetzt. Das ist **kein automatisches FAIL** und keine Behauptung, jedes Intervall sei dann zwingend zu schmal. Der Warnstatus verlangt eine für wenige Cluster geeignete Methode, eine designspezifische Simulation/Kalibrierung oder eine ausdrückliche Einstufung als `BLOCKED`.
+
+## 6a. Keine Rohidee ohne Intake und Scope
+
+Eine durch Beobachtung, Paper, LLM, Sekundärquelle oder Marktgeschichte erzeugte
+Idee ist zunächst `INBOX`. Der Agent MUSS Herkunft, Scope, vermuteten beobachtbaren
+Footprint, Alternativerklärungen, Datenanforderungen, frühe Ausführbarkeitshürde und
+bereits verbrauchte Daten protokollieren. Dubletten werden zusammengeführt, nicht
+als unabhängige Ideen gezählt.
+
+Für Intraday-Ideen sind Markt/Instrument, Venue/Feed, Handelsphase,
+Kalender/Zeitzone/DST, Clock- oder Event-Time-Horizont und Ereignisklasse Pflicht.
+Die News-/Makro-Policy wird als `INCLUDED_AS_SIGNAL`, `NOT_USED_AS_SIGNAL`,
+`FILTER_KNOWN_EVENTS` oder `SCHEDULED_EVENT_STUDY` deklariert. Nur
+`FILTER_KNOWN_EVENTS` mit benannten Feeds, Ausschlussfenstern und Coverage-Lücken
+erlaubt eine qualifizierte Aussage über ausgeschlossene bekannte Ereignisse.
+
+Der Agent führt getrennt:
+
+- `mechanism_supported`,
+- `forward_predictive_oos`,
+- `executable_net_edge`.
+
+Keine dieser Stufen wird aus einer früheren Stufe abgeleitet. Insbesondere ist ein
+plausibler oder publizierter Mechanismus keine automatische Forward-Prognose und
+keine handelbare Netto-Edge.
 
 ---
 
@@ -477,14 +510,15 @@ Research-Version und Agentenlauf sind verschiedene Identitäten:
 
 Für jeden LLM-/Agentenlauf gelten zusätzlich die Verträge aus `05_AGENT_OPERATIONS.md` und `schemas/`:
 
-1. Vor der Ausführung wird eine eindeutige Run-ID erzeugt; das Run-Manifest wird spätestens bei Laufabschluss vollständig persistiert.
-2. Entscheidungsrelevante Aussagen erhalten eine epistemische Klasse und eine Claim-ID.
-3. Fakten benötigen eine konkrete Quelle und Fundstelle; berechnete Werte und Inferenzclaims referenzieren ihre Inputs.
-4. Akademische Quellen erhalten work_id, konkrete Fassung, Publikations-/Integritätsstatus sowie Code-, Daten- und Replikationsstatus; Fassungen derselben Arbeit werden dedupliziert.
-5. Fehlende Evidenz wird als `UNKNOWN` beziehungsweise blockierender Evidenzstatus ausgewiesen und nicht durch plausible Prosa ersetzt.
-6. Menschliche Korrekturen und Overrides werden append-only gespeichert und dürfen nicht still überschrieben werden.
-7. Änderungen an System-/Task-Prompt, Modell oder Snapshot, Retrieval, Toolbeschreibung, Orchestrierung oder Output-Schema benötigen vor produktiver Freigabe einen bestandenen Eval- und Regressionslauf.
-8. Ein syntaktisch oder semantisch ungültiges Pflichtartefakt, eine ungeklärte kritische Quellenkollision oder eine nicht akzeptierte Regression blockiert die operative Freigabe, auch wenn das Research-Ergebnis inhaltlich plausibel klingt.
+1. Vor Eröffnung eines Research Case wird ein valider Hypothesen-Intake persistiert und auf `PROMOTED` gescreent.
+2. Vor der Ausführung wird eine eindeutige Run-ID erzeugt; das Run-Manifest wird spätestens bei Laufabschluss vollständig persistiert.
+3. Entscheidungsrelevante Aussagen erhalten eine epistemische Klasse und eine Claim-ID.
+4. Fakten benötigen eine konkrete Quelle und Fundstelle; berechnete Werte und Inferenzclaims referenzieren ihre Inputs.
+5. Akademische Quellen erhalten work_id, konkrete Fassung, Publikations-/Integritätsstatus sowie Code-, Daten- und Replikationsstatus; Fassungen derselben Arbeit werden dedupliziert.
+6. Fehlende Evidenz wird als `UNKNOWN` beziehungsweise blockierender Evidenzstatus ausgewiesen und nicht durch plausible Prosa ersetzt.
+7. Menschliche Korrekturen und Overrides werden append-only gespeichert und dürfen nicht still überschrieben werden.
+8. Änderungen an System-/Task-Prompt, Modell oder Snapshot, Retrieval, Toolbeschreibung, Orchestrierung oder Output-Schema benötigen vor produktiver Freigabe einen bestandenen Eval- und Regressionslauf.
+9. Ein syntaktisch oder semantisch ungültiges Pflichtartefakt, eine ungeklärte kritische Quellenkollision oder eine nicht akzeptierte Regression blockiert die operative Freigabe, auch wenn das Research-Ergebnis inhaltlich plausibel klingt.
 
 Ein einzelnes Run-Manifest ersetzt weder das Research Case noch dessen Gates. Umgekehrt macht ein methodisch vollständiges Research Case einen nicht reproduzierbaren Agentenlauf nicht operativ freigabefähig.
 

@@ -52,7 +52,8 @@ $positivePairs = @(
     @('examples\evidence.minimal.json', 'schemas\evidence.schema.json'),
     @('examples\evidence.academic.json', 'schemas\evidence.schema.json'),
     @('examples\forecast.minimal.json', 'schemas\forecast.schema.json'),
-    @('examples\review.minimal.json', 'schemas\review.schema.json')
+    @('examples\review.minimal.json', 'schemas\review.schema.json'),
+    @('examples\hypothesis_candidate.minimal.json', 'schemas\hypothesis_candidate.schema.json')
 )
 
 foreach ($pair in $positivePairs) {
@@ -147,6 +148,86 @@ $nonAcademicWithMetadata = Read-JsonText -RelativePath 'examples\evidence.minima
 $academicTemplate = Read-JsonText -RelativePath 'examples\evidence.academic.json' | ConvertFrom-Json -Depth 100
 $nonAcademicWithMetadata.sources[0] | Add-Member -NotePropertyName 'academic_metadata' -NotePropertyValue $academicTemplate.sources[0].academic_metadata
 Test-RejectedFixture -Name 'non-academic source rejects academic metadata' -Value $nonAcademicWithMetadata -Schema 'schemas\evidence.schema.json'
+
+$candidateUnexpected = Read-JsonText -RelativePath 'examples\hypothesis_candidate.minimal.json' | ConvertFrom-Json -Depth 100
+$candidateUnexpected | Add-Member -NotePropertyName 'confidence_score' -NotePropertyValue 0.95
+Test-RejectedFixture -Name 'hypothesis candidate rejects additional property' -Value $candidateUnexpected -Schema 'schemas\hypothesis_candidate.schema.json'
+
+$candidateWithoutInstrument = Read-JsonText -RelativePath 'examples\hypothesis_candidate.minimal.json' | ConvertFrom-Json -Depth 100
+$candidateWithoutInstrument.research_scope.instruments = @()
+Test-RejectedFixture -Name 'hypothesis candidate scope requires an instrument' -Value $candidateWithoutInstrument -Schema 'schemas\hypothesis_candidate.schema.json'
+
+$candidateWithoutTimezone = Read-JsonText -RelativePath 'examples\hypothesis_candidate.minimal.json' | ConvertFrom-Json -Depth 100
+$candidateWithoutTimezone.research_scope.PSObject.Properties.Remove('timezone')
+Test-RejectedFixture -Name 'intraday scope requires explicit timezone' -Value $candidateWithoutTimezone -Schema 'schemas\hypothesis_candidate.schema.json'
+
+$candidateFilteredWithoutFeed = Read-JsonText -RelativePath 'examples\hypothesis_candidate.minimal.json' | ConvertFrom-Json -Depth 100
+$candidateFilteredWithoutFeed.research_scope.news_event_coverage.feeds = @()
+Test-RejectedFixture -Name 'FILTER_KNOWN_EVENTS requires named feed coverage' -Value $candidateFilteredWithoutFeed -Schema 'schemas\hypothesis_candidate.schema.json'
+
+$candidateFilteredWithoutWindow = Read-JsonText -RelativePath 'examples\hypothesis_candidate.minimal.json' | ConvertFrom-Json -Depth 100
+$candidateFilteredWithoutWindow.research_scope.news_event_coverage.exclusion_windows = @()
+Test-RejectedFixture -Name 'FILTER_KNOWN_EVENTS requires exclusion window' -Value $candidateFilteredWithoutWindow -Schema 'schemas\hypothesis_candidate.schema.json'
+
+$candidateFilteredWithoutProvider = Read-JsonText -RelativePath 'examples\hypothesis_candidate.minimal.json' | ConvertFrom-Json -Depth 100
+$candidateFilteredWithoutProvider.research_scope.news_event_coverage.feeds[0].PSObject.Properties.Remove('provider')
+Test-RejectedFixture -Name 'event feed coverage requires provider provenance' -Value $candidateFilteredWithoutProvider -Schema 'schemas\hypothesis_candidate.schema.json'
+
+$candidateFilteredWithoutTimestampPolicy = Read-JsonText -RelativePath 'examples\hypothesis_candidate.minimal.json' | ConvertFrom-Json -Depth 100
+$candidateFilteredWithoutTimestampPolicy.research_scope.news_event_coverage.PSObject.Properties.Remove('timestamp_convention')
+Test-RejectedFixture -Name 'event filtering requires an explicit timestamp convention' -Value $candidateFilteredWithoutTimestampPolicy -Schema 'schemas\hypothesis_candidate.schema.json'
+
+$candidatePromotedWithoutAlternative = Read-JsonText -RelativePath 'examples\hypothesis_candidate.minimal.json' | ConvertFrom-Json -Depth 100
+$candidatePromotedWithoutAlternative.alternative_explanations = @()
+Test-RejectedFixture -Name 'PROMOTED candidate requires alternative explanation' -Value $candidatePromotedWithoutAlternative -Schema 'schemas\hypothesis_candidate.schema.json'
+
+$candidatePromotedWithoutResolution = Read-JsonText -RelativePath 'examples\hypothesis_candidate.minimal.json' | ConvertFrom-Json -Depth 100
+$candidatePromotedWithoutResolution.data_requirements.minimum_resolution = $null
+Test-RejectedFixture -Name 'PROMOTED candidate requires concrete data resolution' -Value $candidatePromotedWithoutResolution -Schema 'schemas\hypothesis_candidate.schema.json'
+
+$candidatePromotedWithUnknownQueue = Read-JsonText -RelativePath 'examples\hypothesis_candidate.minimal.json' | ConvertFrom-Json -Depth 100
+$candidatePromotedWithUnknownQueue.early_feasibility.queue.status = 'UNKNOWN'
+$candidatePromotedWithUnknownQueue.early_feasibility.queue.model = 'UNKNOWN'
+Test-RejectedFixture -Name 'PROMOTED candidate requires queue applicability screening' -Value $candidatePromotedWithUnknownQueue -Schema 'schemas\hypothesis_candidate.schema.json'
+
+$candidateFeasibleWithBlockedLatency = Read-JsonText -RelativePath 'examples\hypothesis_candidate.minimal.json' | ConvertFrom-Json -Depth 100
+$candidateFeasibleWithBlockedLatency.early_feasibility.latency.status = 'BLOCKED'
+$candidateFeasibleWithBlockedLatency.early_feasibility.blockers = @('End-to-end latency has not been measured.')
+Test-RejectedFixture -Name 'FEASIBLE assessment cannot contain a blocked component' -Value $candidateFeasibleWithBlockedLatency -Schema 'schemas\hypothesis_candidate.schema.json'
+
+$candidateBlockedWithoutBlockedComponent = Read-JsonText -RelativePath 'examples\hypothesis_candidate.minimal.json' | ConvertFrom-Json -Depth 100
+$candidateBlockedWithoutBlockedComponent.early_feasibility.assessment_status = 'BLOCKED'
+$candidateBlockedWithoutBlockedComponent.early_feasibility.blockers = @('Generic blocker without a mapped component.')
+Test-RejectedFixture -Name 'BLOCKED assessment requires a blocked feasibility component' -Value $candidateBlockedWithoutBlockedComponent -Schema 'schemas\hypothesis_candidate.schema.json'
+
+$candidateMergedWithoutTarget = Read-JsonText -RelativePath 'examples\hypothesis_candidate.minimal.json' | ConvertFrom-Json -Depth 100
+$candidateMergedWithoutTarget.intake_status = 'MERGED'
+$candidateMergedWithoutTarget.transition.merged_into_idea_id = $null
+$candidateMergedWithoutTarget.transition.promotion_conditions = @()
+$candidateMergedWithoutTarget.transition.promoted_research_id = $null
+Test-RejectedFixture -Name 'MERGED candidate requires target idea' -Value $candidateMergedWithoutTarget -Schema 'schemas\hypothesis_candidate.schema.json'
+
+$candidateRejectedWithoutReason = Read-JsonText -RelativePath 'examples\hypothesis_candidate.minimal.json' | ConvertFrom-Json -Depth 100
+$candidateRejectedWithoutReason.intake_status = 'REJECTED'
+$candidateRejectedWithoutReason.transition.rejection_reasons = @()
+$candidateRejectedWithoutReason.transition.promotion_conditions = @()
+$candidateRejectedWithoutReason.transition.promoted_research_id = $null
+Test-RejectedFixture -Name 'REJECTED candidate requires rejection reason' -Value $candidateRejectedWithoutReason -Schema 'schemas\hypothesis_candidate.schema.json'
+
+$candidateInvalidStage = Read-JsonText -RelativePath 'examples\hypothesis_candidate.minimal.json' | ConvertFrom-Json -Depth 100
+$candidateInvalidStage.epistemic_stage_status.forward_predictive_oos.status = 'PROBABLY'
+Test-RejectedFixture -Name 'epistemic stage status uses controlled independent states' -Value $candidateInvalidStage -Schema 'schemas\hypothesis_candidate.schema.json'
+
+$candidateSupportedStageWithoutEvidence = Read-JsonText -RelativePath 'examples\hypothesis_candidate.minimal.json' | ConvertFrom-Json -Depth 100
+$candidateSupportedStageWithoutEvidence.epistemic_stage_status.mechanism_supported.status = 'SUPPORTED'
+Test-RejectedFixture -Name 'supported epistemic stage requires evidence reference' -Value $candidateSupportedStageWithoutEvidence -Schema 'schemas\hypothesis_candidate.schema.json'
+
+$candidateNetEdgeWithoutForwardSupport = Read-JsonText -RelativePath 'examples\hypothesis_candidate.minimal.json' | ConvertFrom-Json -Depth 100
+$candidateNetEdgeWithoutForwardSupport.epistemic_stage_status.forward_predictive_oos.status = 'NOT_SUPPORTED'
+$candidateNetEdgeWithoutForwardSupport.epistemic_stage_status.forward_predictive_oos.evidence_refs = @('validation:forward-oos-negative')
+$candidateNetEdgeWithoutForwardSupport.epistemic_stage_status.executable_net_edge.status = 'SUPPORTED'
+$candidateNetEdgeWithoutForwardSupport.epistemic_stage_status.executable_net_edge.evidence_refs = @('validation:net-edge-positive')
+Test-RejectedFixture -Name 'supported executable net edge requires supported forward OOS evidence' -Value $candidateNetEdgeWithoutForwardSupport -Schema 'schemas\hypothesis_candidate.schema.json'
 
 $forecastUncalibrated = Read-JsonText -RelativePath 'examples\forecast.minimal.json' | ConvertFrom-Json -Depth 100
 $forecastUncalibrated.forecasts[0].prediction.kind = 'PROBABILITY'

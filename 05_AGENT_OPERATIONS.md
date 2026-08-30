@@ -1,6 +1,6 @@
 # 05_AGENT_OPERATIONS.md
 
-**Version:** 1.1
+**Version:** 1.2
 **Stand:** 2026-08-30  
 **Status:** ENTWURF ZUR ÜBERNAHME  
 **Zweck:** Normative operative Kontrollschicht für reproduzierbare, überprüfbare und revisionssichere Läufe eines AI-Research-Agenten.
@@ -56,6 +56,7 @@ IDs sind opake Schlüssel. Sie werden nicht nachträglich wiederverwendet oder a
 
 | Artefakt | Pflicht wann | Maschinenprüfung |
 |---|---|---|
+| Hypothesen-Intake | bei jeder persistierten Rohidee vor Eröffnung eines neuen Research Case | **schemas/hypothesis_candidate.schema.json** |
 | Run Manifest | bei jedem Lauf | **schemas/run_manifest.schema.json** |
 | Evidence-Dokument | sobald ein materieller Claim erzeugt oder übernommen wird | **schemas/evidence.schema.json** |
 | Review-Dokument | bei menschlicher Prüfung, Korrektur, Freigabe, Ablehnung oder Override | **schemas/review.schema.json** |
@@ -66,7 +67,10 @@ IDs sind opake Schlüssel. Sie werden nicht nachträglich wiederverwendet oder a
 | Eval Result | bei Agenten-, Prompt-, Modell-, Tool-, Router- oder Schemaänderung | **evals/catalog.v1.json** und §11 |
 | Multi-Agent Report | sobald mehr als ein Agent fachlich beiträgt | Regeln in §12 |
 
-Die Beispiele unter **examples/** zeigen minimale syntaktisch gültige Instanzen für Run Manifest, Evidence, Forecast Ledger und Review. Sie sind keine Freigabe eines realen Laufs und kein Ersatz für die semantischen Regeln dieses Dokuments.
+Die Beispiele unter **examples/** zeigen minimale syntaktisch gültige Instanzen für
+Hypothesen-Intake, Run Manifest, Evidence, Forecast Ledger und Review. Sie sind
+keine Freigabe eines realen Laufs und kein Ersatz für die semantischen Regeln
+dieses Dokuments.
 
 ## 2.3 Schema- und Integritätsregel
 
@@ -935,6 +939,7 @@ Ein Agent darf sich nicht direkt selbst modifizieren, Evals entfernen, Schwellen
 | calculation_accuracy | 1,00 |
 | thesis_governance_accuracy | 1,00 |
 | academic_source_governance_accuracy | 1,00 |
+| hypothesis_intake_accuracy | 1,00 |
 
 Zusätzlich gilt:
 
@@ -1112,7 +1117,12 @@ Ein Validator MUSS mindestens folgende Verstöße erkennen:
 22. positive Nutzung eines zurückgezogenen Claims ohne zwingende INSUFFICIENT-Folge,
 23. Replikationsbehauptung ohne getrennte source_ids und dokumentierte Unabhängigkeitsprüfung,
 24. Code-/Datenverfügbarkeit, die ohne geprüfte URI oder Snapshot als vorhanden behauptet wird,
-25. Journalprestige oder arXiv-Kategorie, die Evidence Grade oder Methodengate unmittelbar erhöht.
+25. Journalprestige oder arXiv-Kategorie, die Evidence Grade oder Methodengate unmittelbar erhöht,
+26. eröffneter Research Case ohne referenzierten `PROMOTED`-Hypothesen-Intake,
+27. `FILTER_KNOWN_EVENTS` ohne Feed-Coverage oder Ausschlussfenster,
+28. `PROMOTED`, das als bestätigter Mechanismus oder Edge ausgegeben wird,
+29. kontemporäre Mechanismusevidenz, die `forward_predictive_oos` automatisch hochstuft,
+30. positive Forward-Prognose, die `executable_net_edge` ohne ausführbare Kosten-/Fill-Prüfung automatisch hochstuft.
 
 Ein Verstoß gegen eine dieser Invarianten führt mindestens zu **BLOCKED**, bei Integritäts-, Provenance-, Forecast- oder Gate-Manipulation zu **FAILED**.
 

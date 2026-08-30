@@ -1,7 +1,7 @@
 # 01_RESEARCH_STANDARD.md
 
-**Version:** 1.4  
-**Stand:** 2026-08-27  
+**Version:** 1.5
+**Stand:** 2026-08-30
 **Status:** ENTWURF ZUR ÜBERNAHME  
 **Zweck:** Normativer Standard für die Entwicklung, Falsifikation, Validierung und Überwachung von Trading-Phänomenen, Edge-Hypothesen und Strategien.
 
@@ -206,6 +206,96 @@ Der Fallkatalog muss nicht nur Gewinner oder „schöne“ Beispiele enthalten, 
 - unterschiedliche Zeitperioden,
 - verschiedene Volatilitätszustände,
 - gegebenenfalls mehrere vergleichbare Instrumente.
+
+## 4.1 Vorgelagerter Hypothesen-Intake
+
+Eine Rohidee ist weder Evidenz noch eine `Candidate Hypothesis`. Sie wird vor der
+Phase-0-Vorprüfung als versionierter Intake-Datensatz erfasst und darf erst nach
+einem dokumentierten Screening in ein Research Case übergehen.
+
+Der Intake protokolliert mindestens:
+
+- Ursprung und konkrete Quelle der Idee; `LLM_IDEA` und Sekundärquellen werden
+  als Ideengeber, nicht als Beleg behandelt,
+- Ideenklasse
+  (`ASSOCIATIONAL_PATTERN / PREDICTIVE_PRECEDENCE / MECHANISM_CANDIDATE /
+  STRUCTURAL_FLOW_CANDIDATE / RELATIVE_VALUE_CANDIDATE /
+  EVENT_RESPONSE_CANDIDATE / RETURN_DECOMPOSITION_CANDIDATE / OTHER`),
+- Markt, Instrument, Venue, Handelsphase, Zeitzone/Kalender und Prognosehorizont,
+- die vermutete Akteurs-, Zwangs- oder Marktstrukturgeschichte, soweit vorhanden,
+- den beobachtbaren Footprint, der die Geschichte von bloßer Prosa unterscheidbar
+  machen soll,
+- mindestens eine konkurrierende Erklärung,
+- benötigte Daten, Auflösung, Timestamp-/Clock-Sync-, Venue- und Feed-Coverage,
+- frühe Hürden durch Spread, Gebühren, Slippage, Latenz, Queue-Position, Borrow,
+  Funding oder Leg-Risk, soweit anwendbar,
+- bereits betrachtete Daten und dadurch verbrauchtes Informationsbudget,
+- Dubletten-/Merge-Bezug und die Entscheidung
+  `INBOX / SCREENED / MERGED / REJECTED / PROMOTED`.
+
+`PROMOTED` bedeutet ausschließlich, dass eine Idee präzise und grundsätzlich
+testbar genug für Phase 0 ist. Es bestätigt weder den Mechanismus noch eine
+Prognose oder Trading-Edge. Ablehnung und Merge bleiben mit Begründung erhalten;
+eine verworfene Idee wird nicht gelöscht und später als neue unabhängige Idee
+wiedereingeführt.
+
+## 4.2 Verbindlicher Research Scope
+
+Vor dem Intake-Screening wird der Scope so eng angegeben, dass unterschiedliche
+Designs nicht unter demselben Etikett vermischt werden. Mindestens festzulegen
+sind Markt/Instrument, Venue und Datenfeed, Handelsphase
+(`PRE_MARKET / OPENING_AUCTION / CONTINUOUS / CLOSING_AUCTION / POST_MARKET /
+OVERNIGHT / CROSS_SESSION / OTHER`),
+Kalender/Zeitzone/DST-Regel, Clock- oder Event-Time-Horizont und eine der folgenden
+Ereignisklassen:
+
+- `INFORMATION_EVENT`,
+- `SCHEDULED_STRUCTURAL_EVENT`,
+- `CONTINUOUS_ENDOGENOUS_MECHANISM`,
+- `RETURN_DECOMPOSITION`.
+
+Diese Klassen sind ein Designrouter, keine abschließende Taxonomie von
+Marktmechanismen.
+
+Die News-/Makro-Policy lautet genau eine der folgenden:
+
+- `INCLUDED_AS_SIGNAL`,
+- `NOT_USED_AS_SIGNAL`,
+- `FILTER_KNOWN_EVENTS`,
+- `SCHEDULED_EVENT_STUDY`.
+
+`NOT_USED_AS_SIGNAL` bedeutet nicht, dass Informationsereignisse aus der Stichprobe
+entfernt wurden. `FILTER_KNOWN_EVENTS` benötigt benannte Feeds, Abdeckung,
+Zeitstempel, Ausschlussfenster und bekannte Coverage-Lücken. Deshalb ist die
+unqualifizierte Behauptung „newsfrei“ unzulässig; zulässig ist nur eine Aussage
+über nach dokumentierter Policy und Feed-Abdeckung bekannte Ereignisse.
+
+PEAD, CPI-, FOMC- oder vergleichbare Release-Studien gehören zu
+`INFORMATION_EVENT` und dürfen nicht als Beleg für einen strikt gefilterten,
+kontinuierlichen Intraday-Mechanismus ausgegeben werden. Indexumstellungen,
+Funding-Timestamps und Auktionen sind geplante Strukturereignisse und werden nicht
+mit kontinuierlicher Orderbuchmechanik zusammengelegt. Close-to-open- gegenüber
+Open-to-close-Renditen sind zunächst `RETURN_DECOMPOSITION`, keine eigenständige
+newsfreie Handelsregel.
+
+## 4.3 Drei getrennte Evidenzstufen
+
+Für jede auf einem vermuteten Mechanismus beruhende Idee werden drei Status getrennt
+geführt:
+
+1. `mechanism_supported` – der Mechanismus ist für den behaupteten Markt, Akteur
+   und Zeitraum ausreichend belegt;
+2. `forward_predictive_oos` – der zum Entscheidungszeitpunkt beobachtbare Footprint
+   prognostiziert das vorab definierte zukünftige Outcome auf unabhängigen Daten;
+3. `executable_net_edge` – die Prognose bleibt zu ausführbaren Preisen nach allen
+   relevanten Kosten, Latenz-, Fill-, Queue-, Borrow-, Funding- und Capacity-Effekten
+   wirtschaftlich positiv.
+
+Jeder Status lautet unabhängig `UNKNOWN`, `SUPPORTED`, `NOT_SUPPORTED` oder
+`BLOCKED`. Es gibt keine automatische Hochstufung: Eine Theorie oder ein Paper zum
+Mechanismus setzt die beiden späteren Stufen nicht auf `SUPPORTED`; eine
+kontemporäre Beziehung ist keine Forward-Prognose; und ein Midprice-Effekt ist
+keine ausführbare Netto-Edge.
 
 ---
 
@@ -1077,36 +1167,42 @@ Ein falsifiziertes Vorzeichen kann eine neue Hypothese erzeugen. Es wandelt den 
 40. Ein Bibliotheksoutput ersetzt weder Identifikation noch Domänenannahmen und erhöht den Claim-Level nicht.
 41. Exakte Laufzeit-, Paket-, API-, Seed- und Splitinformationen werden vor Freeze reproduzierbar protokolliert.
 42. `EconML`/`DoubleML` werden erst nach Identifikation eingesetzt; `Tigramite`-Discovery bleibt ein Kandidatengenerator.
+43. Eine Rohidee wird vor Phase 0 versioniert gescreent; `PROMOTED` bedeutet testbar, nicht bestätigt.
+44. Mechanismusevidenz, Forward-OOS-Prognose und ausführbare Netto-Edge sind drei getrennte Status.
+45. Intraday-Research fixiert Venue, Handelsphase, Kalender, Zeitbasis, Feed-Coverage und Ereignisklasse.
+46. „Newsfrei“ wird nie pauschal behauptet, sondern nur als dokumentierte News-/Makro-Policy mit bekannten Coverage-Grenzen operationalisiert.
+47. Mechanismenfamilien und Intraday-Router sind nicht abschließend und erzeugen keine Edge durch Klassifikation.
 
 ---
 
 # 22. Verbindliche Pipeline
 
 ```text
-0. Vorläufige Beobachtung / Outcome-Skala
-1. PHASE-0-VORPRÜFUNG
-2. Discovery / Fallkatalog + optionale Effect-Cause-Effect-Map
-3. Claim-Level + temporaler DAG + Identifikation + Beobachtbarkeit + Tooling-Router
-4. Operationalisierung
-5. Zielvariable + Nullmodell + gegebenenfalls Surprise-Faktoren/Shock-Response-Map
-6. Effektgröße + Unsicherheit
-7. Abhängigkeit + effektives N
-8. State-/Regimeanalyse
-9. Candidate Hypothesis
-10. Vorhersage-Liste + Pre-Mortem
-11. Multiple-Testing-/Einfluss-/Heavy-Tail-Plan
-12. FORMALE PHASE-0-RE-KALKULATION + VALIDATION-PLAN
-13. PIPELINE-INTEGRITÄTSGATE
-14. FREEZE
-15. Unabhängige Validation
-16. Final Holdout oder äußeres Walk-Forward
-17. Robustheit / Replikation
-18. Ökonomische Umsetzbarkeit
-19. Strategy Engineering
-20. Vollständige Strategie erneut OOS
-21. Forward-OOS
-22. Monitoring / Degradation
-23. Revalidieren / Suspendieren / Verwerfen
+0. HYPOTHESEN-INTAKE + SCOPE + SCREENING
+1. Vorläufige Beobachtung / Outcome-Skala
+2. PHASE-0-VORPRÜFUNG
+3. Discovery / Fallkatalog + optionale Effect-Cause-Effect-Map
+4. Claim-Level + temporaler DAG + Identifikation + Beobachtbarkeit + Tooling-Router
+5. Operationalisierung
+6. Zielvariable + Nullmodell + gegebenenfalls Surprise-Faktoren/Shock-Response-Map
+7. Effektgröße + Unsicherheit
+8. Abhängigkeit + effektives N
+9. State-/Regimeanalyse
+10. Candidate Hypothesis
+11. Vorhersage-Liste + Pre-Mortem
+12. Multiple-Testing-/Einfluss-/Heavy-Tail-Plan
+13. FORMALE PHASE-0-RE-KALKULATION + VALIDATION-PLAN
+14. PIPELINE-INTEGRITÄTSGATE
+15. FREEZE
+16. Unabhängige Validation
+17. Final Holdout oder äußeres Walk-Forward
+18. Robustheit / Replikation
+19. Ökonomische Umsetzbarkeit
+20. Strategy Engineering
+21. Vollständige Strategie erneut OOS
+22. Forward-OOS
+23. Monitoring / Degradation
+24. Revalidieren / Suspendieren / Verwerfen
 ```
 
 Kein AI-Agent darf einen Schritt stillschweigend überspringen. Nicht anwendbare Schritte müssen als `N/A` mit Begründung markiert werden.

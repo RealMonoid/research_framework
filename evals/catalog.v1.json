@@ -1,9 +1,9 @@
 {
   "schema_version": "eval-catalog.v1",
   "catalog_id": "research-agent-core",
-  "catalog_version": "1.1.0",
+  "catalog_version": "1.3.0",
   "created_at": "2026-08-30T00:00:00+02:00",
-  "description": "Deterministic core evals for evidence handling and thesis governance.",
+  "description": "Deterministic core evals for evidence handling, hypothesis intake, and thesis governance.",
   "cases": [
     {
       "case_id": "source_attribution_primary",
@@ -566,6 +566,273 @@
             "expected": "NOT_PEER_REVIEWED",
             "critical": true,
             "weight": 2
+          }
+        ]
+      }
+    },
+    {
+      "case_id": "ofi_contemporaneous_not_forward_edge",
+      "capability": "hypothesis_intake",
+      "description": "Keep contemporaneous OFI evidence at mechanism scope until forward out-of-sample prediction and executable net edge are tested separately.",
+      "input": {
+        "task": "Classify what the supplied OFI result establishes. Do not promote a same-interval association to a forward forecast or profitable trading edge.",
+        "as_of": "2026-08-30T12:00:00Z",
+        "sources": [
+          {
+            "source_id": "ofi_same_interval_study",
+            "title": "Synthetic OFI Same-Interval Study Record",
+            "published_at": "2026-08-15T10:00:00Z",
+            "accessed_at": "2026-08-30T11:50:00Z",
+            "authoritative": true,
+            "content": "The study reports a linear association between order-flow imbalance and the mid-price change measured over the same interval. It does not test future returns, a held-out period, executable bid/ask prices, latency, fees, slippage, or net profitability."
+          }
+        ]
+      },
+      "expected": {
+        "assertions": [
+          {
+            "assertion_id": "preserve_contemporaneous_ofi_scope",
+            "metric": "hypothesis_intake_accuracy",
+            "path": "hypothesis_intake.evidence_scope",
+            "operator": "equals",
+            "expected": "CONTEMPORANEOUS_ASSOCIATION",
+            "critical": true,
+            "weight": 2
+          },
+          {
+            "assertion_id": "do_not_infer_mechanism_from_same_interval_association",
+            "metric": "hypothesis_intake_accuracy",
+            "path": "hypothesis_intake.epistemic_stage_status.mechanism_supported.status",
+            "operator": "equals",
+            "expected": "UNKNOWN",
+            "critical": true,
+            "weight": 2
+          },
+          {
+            "assertion_id": "do_not_infer_forward_oos_from_contemporaneous_ofi",
+            "metric": "hypothesis_intake_accuracy",
+            "path": "hypothesis_intake.epistemic_stage_status.forward_predictive_oos.status",
+            "operator": "equals",
+            "expected": "UNKNOWN",
+            "critical": true,
+            "weight": 2
+          },
+          {
+            "assertion_id": "do_not_infer_net_edge_from_contemporaneous_ofi",
+            "metric": "hypothesis_intake_accuracy",
+            "path": "hypothesis_intake.epistemic_stage_status.executable_net_edge.status",
+            "operator": "equals",
+            "expected": "UNKNOWN",
+            "critical": true,
+            "weight": 2
+          },
+          {
+            "assertion_id": "mark_unobserved_ofi_edge_unknown",
+            "metric": "hypothesis_intake_accuracy",
+            "path": "claims.ofi_forward_edge.evidence_status",
+            "operator": "equals",
+            "expected": "UNKNOWN",
+            "critical": true,
+            "weight": 1
+          },
+          {
+            "assertion_id": "require_forward_executable_cost_gate",
+            "metric": "hypothesis_intake_accuracy",
+            "path": "hypothesis_intake.required_next_gate",
+            "operator": "equals",
+            "expected": "FORWARD_OOS_EXECUTABLE_AFTER_COSTS",
+            "critical": true,
+            "weight": 1
+          }
+        ]
+      }
+    },
+    {
+      "case_id": "recurring_prints_not_confirmed_execution_algo",
+      "capability": "hypothesis_intake",
+      "description": "Treat recurring public prints as an ambiguous pattern rather than confirmed TWAP or VWAP activity, a price floor, or a directional net edge.",
+      "input": {
+        "task": "Assess recurring buyer-initiated prints without participant or parent-order labels. Preserve alternative explanations and do not assert a price floor or tradable direction.",
+        "as_of": "2026-08-30T12:00:00Z",
+        "sources": [
+          {
+            "source_id": "anonymous_recurring_prints",
+            "title": "Synthetic Anonymous Public-Tape Observation",
+            "published_at": "2026-08-30T10:00:00Z",
+            "accessed_at": "2026-08-30T11:55:00Z",
+            "authoritative": true,
+            "content": "The public tape contains buyer-initiated prints of 500 units at approximately 30-second intervals for 20 minutes. It contains no participant identifiers, parent-order labels, routing data, unexecuted orders, or counterfactual price-impact test."
+          }
+        ]
+      },
+      "expected": {
+        "assertions": [
+          {
+            "assertion_id": "classify_execution_algo_identity_as_inference",
+            "metric": "hypothesis_intake_accuracy",
+            "path": "claims.execution_algo_identity.statement_class",
+            "operator": "equals",
+            "expected": "INFERENCE",
+            "critical": true,
+            "weight": 1
+          },
+          {
+            "assertion_id": "do_not_mark_execution_algo_identity_supported",
+            "metric": "hypothesis_intake_accuracy",
+            "path": "claims.execution_algo_identity.evidence_status",
+            "operator": "equals",
+            "expected": "PARTIAL",
+            "critical": true,
+            "weight": 2
+          },
+          {
+            "assertion_id": "keep_execution_algo_value_as_candidate",
+            "metric": "hypothesis_intake_accuracy",
+            "path": "claims.execution_algo_identity.value",
+            "operator": "equals",
+            "expected": "EXECUTION_ALGORITHM_CANDIDATE",
+            "critical": true,
+            "weight": 1
+          },
+          {
+            "assertion_id": "keep_execution_algo_detection_probabilistic",
+            "metric": "hypothesis_intake_accuracy",
+            "path": "hypothesis_intake.algorithm_identification",
+            "operator": "equals",
+            "expected": "PROBABILISTIC_ONLY",
+            "critical": true,
+            "weight": 2
+          },
+          {
+            "assertion_id": "do_not_confirm_twap_or_vwap",
+            "metric": "hypothesis_intake_accuracy",
+            "path": "hypothesis_intake.twap_vwap_confirmed",
+            "operator": "equals",
+            "expected": false,
+            "critical": true,
+            "weight": 2
+          },
+          {
+            "assertion_id": "do_not_infer_price_floor",
+            "metric": "hypothesis_intake_accuracy",
+            "path": "hypothesis_intake.price_floor_established",
+            "operator": "equals",
+            "expected": false,
+            "critical": true,
+            "weight": 2
+          },
+          {
+            "assertion_id": "price_floor_claim_remains_unknown",
+            "metric": "hypothesis_intake_accuracy",
+            "path": "claims.price_floor.evidence_status",
+            "operator": "equals",
+            "expected": "UNKNOWN",
+            "critical": true,
+            "weight": 2
+          },
+          {
+            "assertion_id": "price_floor_claim_has_no_value",
+            "metric": "hypothesis_intake_accuracy",
+            "path": "claims.price_floor.value",
+            "operator": "equals",
+            "expected": null,
+            "critical": true,
+            "weight": 1
+          },
+          {
+            "assertion_id": "do_not_infer_directional_net_edge",
+            "metric": "hypothesis_intake_accuracy",
+            "path": "hypothesis_intake.epistemic_stage_status.executable_net_edge.status",
+            "operator": "equals",
+            "expected": "UNKNOWN",
+            "critical": true,
+            "weight": 2
+          },
+          {
+            "assertion_id": "directional_net_edge_claim_remains_unknown",
+            "metric": "hypothesis_intake_accuracy",
+            "path": "claims.directional_net_edge.evidence_status",
+            "operator": "equals",
+            "expected": "UNKNOWN",
+            "critical": true,
+            "weight": 2
+          },
+          {
+            "assertion_id": "preserve_print_pattern_alternatives",
+            "metric": "hypothesis_intake_accuracy",
+            "path": "hypothesis_intake.alternative_explanations_preserved",
+            "operator": "equals",
+            "expected": true,
+            "critical": true,
+            "weight": 1
+          }
+        ]
+      }
+    },
+    {
+      "case_id": "not_used_as_signal_not_news_free",
+      "capability": "hypothesis_intake",
+      "description": "Do not relabel a design as news-free merely because news variables are not used as predictors when no event-feed coverage or exclusion windows are supplied.",
+      "input": {
+        "task": "Classify the event policy for this intraday idea. The researcher does not use news as a signal but supplied no news feed, event calendar, coverage audit, or exclusion window.",
+        "as_of": "2026-08-30T12:00:00Z",
+        "sources": [
+          {
+            "source_id": "scope_note_without_event_filter",
+            "title": "Synthetic Intraday Scope Note",
+            "published_at": "2026-08-30T09:00:00Z",
+            "accessed_at": "2026-08-30T11:58:00Z",
+            "authoritative": true,
+            "content": "The model uses only trade and quote variables. No news variable is used. No event feed, release calendar, event timestamp coverage, exclusion window, or coverage limitation has been specified."
+          }
+        ]
+      },
+      "expected": {
+        "assertions": [
+          {
+            "assertion_id": "classify_policy_as_not_used_as_signal",
+            "metric": "hypothesis_intake_accuracy",
+            "path": "hypothesis_intake.event_news_policy",
+            "operator": "equals",
+            "expected": "NOT_USED_AS_SIGNAL",
+            "critical": true,
+            "weight": 2
+          },
+          {
+            "assertion_id": "do_not_claim_known_events_filtered",
+            "metric": "hypothesis_intake_accuracy",
+            "path": "hypothesis_intake.known_events_filtered",
+            "operator": "equals",
+            "expected": false,
+            "critical": true,
+            "weight": 2
+          },
+          {
+            "assertion_id": "do_not_allow_news_free_claim",
+            "metric": "hypothesis_intake_accuracy",
+            "path": "hypothesis_intake.news_free_claim_allowed",
+            "operator": "equals",
+            "expected": false,
+            "critical": true,
+            "weight": 2
+          },
+          {
+            "assertion_id": "mark_news_free_claim_unknown",
+            "metric": "hypothesis_intake_accuracy",
+            "path": "claims.news_free_scope.evidence_status",
+            "operator": "equals",
+            "expected": "UNKNOWN",
+            "critical": true,
+            "weight": 1
+          },
+          {
+            "assertion_id": "require_event_coverage_before_filter_claim",
+            "metric": "hypothesis_intake_accuracy",
+            "path": "hypothesis_intake.required_next_gate",
+            "operator": "equals",
+            "expected": "EVENT_FEED_COVERAGE_AND_EXCLUSION_WINDOWS",
+            "critical": true,
+            "weight": 1
           }
         ]
       }

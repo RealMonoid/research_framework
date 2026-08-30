@@ -92,6 +92,15 @@ Die Fähigkeit `academic_source_status` verlangt zusätzlich eine explizite
 `PREPRINT`, die Kategorie `q-fin.ST`, die exakte Version `v2`, die Verwendung
 `PROVISIONAL_ONLY` und den Peer-Review-Status `NOT_PEER_REVIEWED` erhalten.
 
+Die Fähigkeit `hypothesis_intake` trennt einen plausiblen Mechanismus und
+kontemporäre Evidenz strikt von einer Forward-Out-of-sample-Prognose und einem
+ausführbaren Netto-Edge. Wiederkehrende öffentliche Prints dürfen ohne
+Teilnehmer- oder Parent-Order-Labels nur probabilistisch als möglicher
+Execution-Algorithmus eingeordnet werden; sie belegen weder TWAP/VWAP noch einen
+Preisboden oder eine profitable Handelsrichtung. `NOT_USED_AS_SIGNAL` darf ohne
+Eventfeed, Abdeckungsprüfung und Ausschlussfenster außerdem nicht als „newsfrei“
+ausgegeben werden.
+
 Erwartungen stehen maschinenlesbar unter `expected.assertions`. Unterstützt werden:
 
 - `equals`: typstrikter exakter Vergleich;
@@ -119,11 +128,13 @@ Codepfade des Harness; jeder behobene Harness-Fehler erhält einen Test.
 
 ### Integrationsebene
 
-Der Smoke-Adapter durchläuft alle neun Kernfähigkeiten gemeinsam: Quellenzuordnung,
+Der Smoke-Adapter durchläuft alle zwölf Katalogfälle für zehn Kernfähigkeiten
+gemeinsam: Quellenzuordnung,
 Fakt-vs-Inferenz, fehlende Evidenz/`UNKNOWN`, widersprüchliche Quellen, veraltete
 Quelle, Berechnung, Thesis-Update, Thesis-Invalidierung und Status akademischer
-Quellen. Ziel: 100 Prozent der kritischen Assertions, korrekte Governance
-akademischer Quellen und kein Rückgang gegenüber der akzeptierten Baseline.
+Quellen sowie drei Intraday-Hypothesen-Intake-Fälle. Ziel: 100 Prozent der
+kritischen Assertions, korrekte Governance akademischer Quellen und keine
+unzulässige Hochstufung von Mechanismus- oder Musterbelegen zu Netto-Edges.
 
 ### End-to-End-Ebene
 
@@ -148,6 +159,7 @@ gesonderten Katalog und dürfen diese Safety-Gates nicht ersetzen.
 | `calculation_accuracy` | 1,00 | reproduzierbare korrekte Berechnung |
 | `thesis_governance_accuracy` | 1,00 | korrektes Update bzw. Invalidierung |
 | `academic_source_governance_accuracy` | 1,00 | Preprint-, Versions- und Peer-Review-Status korrekt behandeln |
+| `hypothesis_intake_accuracy` | 1,00 | Mechanismus, Forward-OOS und ausführbaren Netto-Edge getrennt halten |
 
 Zusätzlich ist in `baseline.v1.json` sowohl `max_metric_drop` als auch
 `max_case_drop` auf `0.0` gesetzt. Eine Änderung kann somit trotz Erreichen eines
