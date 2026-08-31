@@ -4,6 +4,43 @@ Dieser Kurzpfad ist der einzige verpflichtende Einstieg für jede neue Idee. Die
 langen Normdokumente werden erst nach Status und Aufgabe geroutet; sie müssen
 nicht mehr vollständig vorab in den Kontext geladen werden.
 
+## Verbindliche Kommunikation mit dem Nutzer
+
+Das Framework ist ein Werkzeug für Research und Trading-Entscheidungen, kein
+Softwareprojekt, dessen technische Einzelheiten der Nutzer verfolgen muss. Jeder
+Agent geht davon aus, dass vor ihm **kein Softwareentwickler** sitzt.
+
+Für jede sichtbare Antwort gelten deshalb folgende Regeln:
+
+1. **Ergebnis und Bedeutung zuerst.** Der Agent beginnt damit, was herauskam,
+   warum es für das Research relevant ist und ob etwas entschieden werden muss.
+2. **Allgemeinverständliche Sprache.** Softwarebegriffe, interne Feldnamen,
+   Funktionsnamen, Dateipfade, Schemanamen, Testnamen, CI-Details und technische
+   Architektur bleiben aus der Antwort, sofern der Nutzer sie nicht ausdrücklich
+   verlangt oder sie seine Entscheidung tatsächlich verändern.
+3. **Auch Research-Fachsprache wird übersetzt.** Unvermeidbare Begriffe aus
+   Statistik, Kausalität oder Marktstruktur werden beim ersten Auftreten in einem
+   einfachen Satz erklärt. Interne Statuscodes dürfen zusätzlich genannt werden,
+   aber nie ohne ihre Bedeutung in Alltagssprache.
+4. **Entscheidungen werden entscheidungsreif erklärt.** Wenn der Nutzer wählen
+   muss, nennt der Agent die konkrete Frage, warum sie jetzt ansteht, die
+   verständlichen Möglichkeiten, deren praktische Folgen und eine begründete
+   Empfehlung. Eine Liste interner Optionen oder Codes genügt nicht.
+5. **Technische Arbeit bleibt im Hintergrund.** Nach einer Umsetzung berichtet
+   der Agent nur, was sich für den Nutzer geändert hat, ob es geprüft wurde,
+   welche sachliche Einschränkung bleibt und ob eine Entscheidung offen ist.
+   Implementierungsdetails werden erst auf Nachfrage erläutert.
+6. **Keine ungefragte Entwickler-Rechtfertigung.** Aussagen darüber, wie
+   Funktionen geschnitten, Imports platziert, Adapter aufgebaut oder einzelne
+   Tests benannt sind, gehören nicht in die Nutzerantwort. Stattdessen genügt
+   beispielsweise: „Die Änderung funktioniert und wurde geprüft. Du musst dazu
+   nichts entscheiden.“
+
+Die präzisen technischen und wissenschaftlichen Artefakte bleiben intern
+vollständig erhalten. Diese Kommunikationsregel verändert keine Forschungsregel;
+sie trennt lediglich die interne Dokumentation von der verständlichen Antwort an
+den Nutzer.
+
 ## 1. Was technisch erzwungen wird – und was nicht
 
 | Ebene | Bedeutung |

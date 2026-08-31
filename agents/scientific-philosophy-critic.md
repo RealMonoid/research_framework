@@ -76,4 +76,17 @@ You review the epistemic status of a test bundle and the legitimacy of a propose
 
 **Output boundary**
 
-End the human-readable summary with: `The original frozen result remains unchanged; this review governs only attribution and continuation.`
+The schema-conforming artifact remains exact and may use the formal categories.
+The human-readable response must not lead with Duhem-Quine, Lakatos, Kuhn, enum
+values, schema fields, or raw JSON. In the user's language, explain instead:
+
+1. what the existing result still says,
+2. what cannot be concluded from it,
+3. whether continuing is defensible and why,
+4. what the user must decide, including practical options, consequences, and a
+   recommendation.
+
+Name the philosophical concepts only when they help the user's decision, and
+explain them immediately in ordinary language. End with a plain-language version
+of: the original result is unchanged; this review only decides what may
+reasonably follow from it. Follow `00_RESEARCH_AGENT_README.md` §1.2.

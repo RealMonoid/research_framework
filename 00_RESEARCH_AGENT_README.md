@@ -69,6 +69,35 @@ produzierten `LIVE_AGENT`-Lauf.
 
 Dieses Paket ersetzt **nicht automatisch** aktive Projektregeln. Eine formale Aktivierung im Trading-Projekt erfolgt erst nach der dafür vorgesehenen Versions- und Freigabelogik.
 
+## 1.2 Verständliche Nutzerkommunikation ist Pflicht
+
+Der Nutzer wird als fachlicher Entscheider behandelt, nicht als
+Softwareentwickler. Interne Präzision und externe Sprache sind zwei getrennte
+Ebenen: Artefakte, Schemas, Logs und Tests behalten ihre exakten Begriffe; die
+sichtbare Nutzerantwort übersetzt deren Bedeutung in gewöhnliche Sprache.
+
+Jede Nutzerantwort MUSS:
+
+- mit Ergebnis, Bedeutung und einer eventuell offenen Entscheidung beginnen,
+- Fachbegriffe vermeiden oder bei erster Verwendung einfach erklären,
+- interne Codes in Alltagssprache übersetzen,
+- technische Implementierungsdetails weglassen, solange sie weder Ergebnis noch
+  Risiko noch Nutzerentscheidung verändern,
+- bei einer notwendigen Entscheidung Frage, Anlass, Möglichkeiten, praktische
+  Folgen und eine begründete Empfehlung erklären,
+- deutlich sagen, wenn der Nutzer nichts entscheiden oder technisch tun muss.
+
+Der Agent DARF NICHT ungefragt Funktions-, Klassen-, Adapter-, Import-, Schema-,
+CI- oder Testdetails als Fortschritts- oder Abschlussbericht ausgeben. Dateinamen
+und interne Statusfelder werden nur genannt, wenn der Nutzer sie verlangt oder
+für Nachvollziehbarkeit wirklich benötigt. Dass ein Agent etwas implementiert
+oder geprüft hat, ist kein Anlass, den Nutzer mit dem technischen Weg dorthin zu
+belasten.
+
+Diese Regel gilt auch für statistische, kausale und wissenschaftsphilosophische
+Fachsprache. Die präzise Bezeichnung darf intern bestehen bleiben; nach außen
+muss zuerst erklärt werden, was sie im konkreten Fall bedeutet.
+
 ---
 
 ## 2. Quellen- und Zuständigkeitsregel
@@ -532,9 +561,9 @@ Die Sicherheitsmarge ist ein **zusätzlicher Betrag** zur konservativen Kostensc
 
 ---
 
-## 15. Agenten-Ausgabeformat nach jedem Arbeitsschritt
+## 15. Internes Arbeitsprotokoll und verständliche Nutzerantwort
 
-Nach jeder bearbeiteten Phase muss der Agent festhalten:
+Nach jeder bearbeiteten Phase muss der Agent **im Research-Artefakt** festhalten:
 
 ```text
 PHASE:
@@ -547,6 +576,19 @@ NÄCHSTER ZULÄSSIGER SCHRITT:
 ```
 
 Keine Phase endet mit bloßer Prosa ohne Status.
+
+Dieser Block ist kein verpflichtendes Format für die sichtbare Nutzerantwort und
+wird dort nicht ungefragt wiedergegeben. Gegenüber dem Nutzer fasst der Agent
+stattdessen knapp und allgemeinverständlich zusammen:
+
+1. Was kam heraus?
+2. Was bedeutet das für die Idee oder Untersuchung?
+3. Muss der Nutzer etwas entscheiden? Wenn ja: welche Möglichkeiten gibt es,
+   welche praktischen Folgen haben sie und was empfiehlt der Agent?
+4. Was ist der nächste sachliche Schritt?
+
+Technische Details, interne Feldnamen und Statuscodes werden nur auf ausdrückliche
+Nachfrage oder bei entscheidungsrelevanter Auswirkung ergänzt.
 
 ---
 
