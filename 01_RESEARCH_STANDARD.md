@@ -1,6 +1,6 @@
 # 01_RESEARCH_STANDARD.md
 
-**Version:** 1.8
+**Version:** 1.9
 **Stand:** 2026-08-31
 **Status:** ENTWURF ZUR ÜBERNAHME  
 **Zweck:** Normativer Standard für die Entwicklung, Falsifikation, Validierung und Überwachung von Trading-Phänomenen, Edge-Hypothesen und Strategien.
@@ -74,6 +74,27 @@ Ein Datensatz kann durch Nutzung seinen unabhängigen Informationswert verlieren
 ---
 
 # 3. Phase 0 – Machbarkeit und Informationsbudget
+
+## 3.0 Eingangsschwelle vor Phase 0
+
+Eine beobachtungsgetriebene Idee darf Phase 0 erst nach einem frühen
+Surrogat-Screen betreten. Vor dem ersten Screen werden vollständiges
+Kandidatenuniversum, geplante Testzahl, Familien-Alpha und Korrekturmethode in
+`schemas/search_space.schema.json` fixiert. Alle erzeugten Kandidaten zählen zum
+Suchraum, sobald sie datenbasiert geprüft werden; nur Überlebende zu zählen ist
+unzulässig. Jeder untersuchte Rausch-Kandidat vergrößert diesen Suchraum und
+hebt damit die Nachweisschwelle für spätere echte Befunde. Bei mehr als einem
+geplanten Screen ist eine
+Multiplizitätskorrektur zwingend. `NONE_JUSTIFIED` ist ausschließlich für eine
+Ein-Test-Familie zulässig und kein Waiver für einen größeren Suchraum.
+
+Der Screen verwendet `DISCOVERY`- oder `SYNTHETIC`-Daten und erhält relevante
+Abhängigkeiten wie Sessionprofil, Autokorrelation oder Volatilitätscluster.
+Naive Permutation, die diese Struktur zerstört, ist unzulässig. Die Nullperiode
+muss zeitlich und marktstrukturell vergleichbar sein, weil auch sie driftet.
+`PASS` bedeutet nur, dass Phase-0-Aufwand gerechtfertigt ist. Es bestätigt weder
+Effekt, Mechanismus, OOS-Prognose noch Edge. Theorie-, terminierte Event- und
+publizierte Replikationsideen dürfen einen begründeten Waiver verwenden.
 
 ## 3.1 Zweck
 
@@ -247,6 +268,12 @@ gezwungenen Akteur noch Premortem, Validity-Selbsteinstufung, Backtest,
 Confidence, Evidence Grade oder Promotionsentscheidung. Ihr Endzustand ist
 ausschließlich ein ungescreenter Intake.
 
+Jeder Katalogeintrag führt mit `entry_origin` seinen Entstehungsweg. Eigene
+wiederholte Beobachtungen können über stabile Journalreferenzen als
+`INTERNAL_OBSERVATION` neue Mechanismen einspeisen; sie erhalten dadurch keine
+höhere Evidenzstufe. Der Generation-Run bleibt als vollständige
+Kandidatenuniversums-Referenz erhalten.
+
 ## 4.1 Vorgelagerter Hypothesen-Intake
 
 Eine Rohidee ist weder Evidenz noch eine `Candidate Hypothesis`. Sie wird vor der
@@ -266,7 +293,9 @@ Erst `PROMOTED` protokolliert zusätzlich mindestens:
   STRUCTURAL_FLOW_CANDIDATE / RELATIVE_VALUE_CANDIDATE /
   EVENT_RESPONSE_CANDIDATE / RETURN_DECOMPOSITION_CANDIDATE / OTHER`),
 - Markt, Instrument, Venue, Handelsphase, Zeitzone/Kalender und Prognosehorizont,
-- die vermutete Akteurs-, Zwangs- oder Marktstrukturgeschichte, soweit vorhanden,
+- einen benannten Akteur, Zwang, erwartete Handlung, beobachtbaren Bezug und
+  mindestens eine konkurrierende Akteurshypothese,
+- einen verknüpften Noise Screen oder begründeten zulässigen Waiver,
 - den beobachtbaren Footprint, der die Geschichte von bloßer Prosa unterscheidbar
   machen soll,
 - mindestens eine konkurrierende Erklärung,
@@ -277,6 +306,12 @@ Erst `PROMOTED` protokolliert zusätzlich mindestens:
   Informationsbudgets,
 - den Modus und die Provenienz der Variablen- und Konstruktauswahl,
 - die Promotion-Entscheidung und nächste Research-ID.
+
+Typische Intraday-Kandidaten für den Akteurszwang sind Market Maker unter
+Inventarrisiko, Options-Desks beim Hedging, zeitgebundene
+Ausführungsalgorithmen, Rebalancing- und Margin-Prozesse sowie Stop-Cluster an
+technischen Marken. Die Nennung bleibt eine Plausibilitätsprüfung und ist kein
+Mechanismusnachweis.
 
 `PROMOTED` bedeutet ausschließlich, dass eine Idee präzise und grundsätzlich
 testbar genug für Phase 0 ist. Es bestätigt weder den Mechanismus noch eine
@@ -918,6 +953,12 @@ Zum Suchraum gehören nicht nur Parameter, sondern jede Designentscheidung:
 - Schwellenwerte.
 
 Die Anzahl und Art der getesteten Varianten wird dokumentiert.
+
+Generatorläufe gelten als Kandidatenuniversum. Werden alle 96 Kandidaten eines
+Laufs gescreent, ist die vorab fixierte Familiengröße 96 und nicht die Zahl der
+späteren Überlebenden. `scripts/validate_entry_thresholds.py` rechnet
+Bonferroni-/Effective-Tests-Schwellen nach; Benjamini–Hochberg entscheidet erst
+nach vollständigem Batch.
 
 Je nach Umfang werden geeignete Verfahren gewählt, beispielsweise:
 

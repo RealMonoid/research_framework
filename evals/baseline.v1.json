@@ -1,8 +1,8 @@
 {
   "schema_version": "eval-baseline.v1",
   "catalog_id": "research-agent-core",
-  "catalog_version": "1.4.0",
-  "baseline_id": "protocol-reference-1-4-0",
+  "catalog_version": "1.5.0",
+  "baseline_id": "protocol-reference-1-5-0",
   "recorded_at": "2026-08-31T00:00:00+02:00",
   "minimums": {
     "overall_score": 0.95,
@@ -43,7 +43,9 @@
     "ofi_contemporaneous_not_forward_edge": 1.0,
     "recurring_prints_not_confirmed_execution_algo": 1.0,
     "not_used_as_signal_not_news_free": 1.0,
-    "identified_effect_not_automatic_net_edge": 1.0
+    "identified_effect_not_automatic_net_edge": 1.0,
+    "noise_screen_not_evidence": 1.0,
+    "actor_constraint_not_mechanism": 1.0
   },
   "regression_policy": {
     "max_metric_drop": 0.0,

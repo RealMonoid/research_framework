@@ -35,6 +35,18 @@ vorhandenen Ergebnisse. Er schreibt:
 - `generation-run.json` mit Katalog-, Mechanismen- und Operator-Provenienz,
 - `candidates/*.json` als valide, ungescreente Hypothesen-Intakes.
 
+Der Generation-Run ist zugleich die vollständige Kandidatenuniversums-Referenz.
+Wer alle erzeugten Kandidaten datenbasiert screent, trägt deren Anzahl vor dem
+ersten Screen als `planned_screen_count` in ein Search-Space-Register ein.
+
+## Katalog erweitern
+
+Der Katalog ist der eigentliche Ideenbestand. Jeder Mechanismus besitzt deshalb
+ein `entry_origin` mit Ursprungstyp, Referenzen, Kurzbegründung und Zeitpunkt.
+Eigene wiederholte Beobachtungen werden als `INTERNAL_OBSERVATION` mit einer
+stabilen Journal- oder Beobachtungsreferenz aufgenommen. Der Ursprung macht den
+Eintrag generierbar, aber noch nicht wahr oder profitabel.
+
 ## Erzeugungsrouten
 
 - `CONSTRAINT_FIRST`: terminierte oder erzwungene Transaktionen,

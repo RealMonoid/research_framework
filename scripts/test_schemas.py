@@ -113,10 +113,18 @@ def invalidate_data_driven_selection(field: str, value: Any) -> Mutation:
     return mutate
 
 
+def replace_noise_screen_with_invalid_waiver(document: dict[str, Any]) -> None:
+    del document["noise_screen_ref"]
+    document["noise_screen_waiver"] = {"reason": "THEORY_DRIVEN"}
+
+
 POSITIVES = [
     ("generation/mechanism_catalog.v1.json", "schemas/mechanism_catalog.schema.json"),
     ("examples/generated-run/generation-run.json", "schemas/generation_run.schema.json"),
     ("examples/generated-run/candidates/mechanism-futures-cash-price-discovery-phase-transmission.json", "schemas/hypothesis_candidate.schema.json"),
+    ("examples/search_space.minimal.json", "schemas/search_space.schema.json"),
+    ("examples/noise_screen.pass.json", "schemas/noise_screen.schema.json"),
+    ("examples/noise_screen.fail.json", "schemas/noise_screen.schema.json"),
     ("examples/run_manifest.minimal.json", "schemas/run_manifest.schema.json"),
     ("examples/evidence.minimal.json", "schemas/evidence.schema.json"),
     ("examples/evidence.academic.json", "schemas/evidence.schema.json"),
@@ -132,9 +140,15 @@ POSITIVES = [
 NEGATIVES: list[tuple[str, str, str, Mutation]] = [
     ("mechanism catalog rejects additional property", "generation/mechanism_catalog.v1.json", "schemas/mechanism_catalog.schema.json", set_value(("confidence_score",), 0.8)),
     ("mechanism catalog requires literature source", "generation/mechanism_catalog.v1.json", "schemas/mechanism_catalog.schema.json", set_value(("mechanisms", 0, "literature_sources"), [])),
+    ("mechanism catalog requires entry origin", "generation/mechanism_catalog.v1.json", "schemas/mechanism_catalog.schema.json", delete_value(("mechanisms", 0, "entry_origin"))),
     ("generation run uses controlled operators", "examples/generated-run/generation-run.json", "schemas/generation_run.schema.json", set_value(("request", "operators", 0), "PREMORTEM")),
     ("generation run candidate path stays relative", "examples/generated-run/generation-run.json", "schemas/generation_run.schema.json", set_value(("candidate_records", 0, "candidate_file"), "C:/tmp/candidate.json")),
     ("generated candidate requires generator source reference", "examples/generated-run/candidates/mechanism-futures-cash-price-discovery-phase-transmission.json", "schemas/hypothesis_candidate.schema.json", set_value(("provenance", "source_refs"), [])),
+    ("noise screen cannot consume validation data", "examples/noise_screen.pass.json", "schemas/noise_screen.schema.json", set_value(("data_role",), "VALIDATION")),
+    ("noise screen cannot consume final holdout", "examples/noise_screen.pass.json", "schemas/noise_screen.schema.json", set_value(("data_role",), "FINAL_HOLDOUT")),
+    ("surrogate count below minimum is rejected", "examples/noise_screen.pass.json", "schemas/noise_screen.schema.json", set_value(("surrogate_count",), 199)),
+    ("session preserving shuffle requires preserved structure", "examples/noise_screen.pass.json", "schemas/noise_screen.schema.json", set_value(("preserved_structure",), ["SESSION_PROFILE"])),
+    ("BLOCKED screen requires blocking reason", "examples/noise_screen.pass.json", "schemas/noise_screen.schema.json", set_value(("screen_result",), "BLOCKED")),
     ("run rejects additional property", "examples/run_manifest.minimal.json", "schemas/run_manifest.schema.json", set_value(("unexpected_field",), True)),
     ("SUCCEEDED run requires release PASS", "examples/run_manifest.minimal.json", "schemas/run_manifest.schema.json", set_value(("operational_release", "overall_status"), "FAIL")),
     ("release PASS cannot hide failed subgate", "examples/run_manifest.minimal.json", "schemas/run_manifest.schema.json", set_value(("operational_release", "gates", "evidence_chain"), "FAIL")),
@@ -163,6 +177,11 @@ NEGATIVES: list[tuple[str, str, str, Mutation]] = [
     ("INBOX candidate cannot pretend that screening already occurred", "examples/hypothesis_candidate.inbox.json", "schemas/hypothesis_candidate.schema.json", set_value(("transition", "screened_at"), None)),
     ("PROMOTED candidate requires full research scope", "examples/hypothesis_candidate.minimal.json", "schemas/hypothesis_candidate.schema.json", delete_value(("research_scope",))),
     ("PROMOTED candidate requires variable-selection provenance", "examples/hypothesis_candidate.minimal.json", "schemas/hypothesis_candidate.schema.json", delete_value(("variable_selection",))),
+    ("PROMOTED candidate requires noise screen or waiver", "examples/hypothesis_candidate.minimal.json", "schemas/hypothesis_candidate.schema.json", delete_value(("noise_screen_ref",))),
+    ("noise screen waiver requires justification", "examples/hypothesis_candidate.minimal.json", "schemas/hypothesis_candidate.schema.json", replace_noise_screen_with_invalid_waiver),
+    ("PROMOTED candidate requires actor constraint", "examples/hypothesis_candidate.minimal.json", "schemas/hypothesis_candidate.schema.json", delete_value(("actor_constraint",))),
+    ("PROMOTED actor constraint rejects UNKNOWN observability", "examples/hypothesis_candidate.minimal.json", "schemas/hypothesis_candidate.schema.json", set_value(("actor_constraint", "observability"), "UNKNOWN")),
+    ("actor constraint requires alternative actor hypotheses", "examples/hypothesis_candidate.minimal.json", "schemas/hypothesis_candidate.schema.json", delete_value(("actor_constraint", "alternative_actor_hypotheses"))),
     ("hypothesis candidate scope requires an instrument", "examples/hypothesis_candidate.minimal.json", "schemas/hypothesis_candidate.schema.json", set_value(("research_scope", "instruments"), [])),
     ("intraday scope requires explicit timezone", "examples/hypothesis_candidate.minimal.json", "schemas/hypothesis_candidate.schema.json", delete_value(("research_scope", "timezone"))),
     ("FILTER_KNOWN_EVENTS requires named feed coverage", "examples/hypothesis_candidate.minimal.json", "schemas/hypothesis_candidate.schema.json", set_value(("research_scope", "news_event_coverage", "feeds"), [])),
@@ -242,6 +261,17 @@ def main() -> int:
             return 1
         positive_count += 1
         print(f"PASS positive: {example_path}")
+
+    intake_schema = load("schemas/hypothesis_candidate.schema.json")
+    inbox = load("examples/hypothesis_candidate.inbox.json")
+    if len(intake_schema["required"]) != 12:
+        print("INBOX top-level required list no longer contains exactly 12 fields", file=sys.stderr)
+        return 1
+    if "actor_constraint" in inbox or "noise_screen_ref" in inbox or "noise_screen_waiver" in inbox:
+        print("INBOX fixture was burdened with promotion-only entry fields", file=sys.stderr)
+        return 1
+    positive_count += 1
+    print("PASS positive: INBOX remains a 12-field actor/noise-free cheap path")
 
     data_driven = load("examples/hypothesis_candidate.minimal.json")
     configure_data_driven_selection(data_driven)

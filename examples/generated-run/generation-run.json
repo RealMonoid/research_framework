@@ -9,7 +9,7 @@
   },
   "catalog_ref": {
     "catalog_id": "catalog:short-horizon-market-mechanisms",
-    "catalog_version": "1.0.0"
+    "catalog_version": "1.1.0"
   },
   "request": {
     "generation_modes": [],

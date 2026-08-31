@@ -1,0 +1,25 @@
+{
+  "schema_version": "1.0.0",
+  "screen_id": "noise-screen:ofi-entry-001",
+  "candidate_ref": "candidate:ofi-continuation:1.0.0",
+  "created_at": "2026-08-31T09:00:00Z",
+  "test_statistic": {
+    "name": "state-conditioned forward-return contrast",
+    "definition": "Absolute difference between the mean 30-second forward midprice return after frozen extreme OFI events and the matched state-conditioned reference mean."
+  },
+  "observed_value": 0.42,
+  "surrogate_method": "SESSION_PRESERVING_SHUFFLE",
+  "preserved_structure": [
+    "VOLATILITY_CLUSTERING",
+    "SESSION_PROFILE",
+    "WEEKDAY_PATTERN"
+  ],
+  "surrogate_count": 1000,
+  "threshold_percentile": 98.75,
+  "threshold_set_at": "2026-08-31T08:30:00Z",
+  "surrogate_exceedance_count": 5,
+  "screen_result": "PASS",
+  "data_role": "DISCOVERY",
+  "screen_index": 1,
+  "search_space_ref": "search-space:generated-example-family"
+}

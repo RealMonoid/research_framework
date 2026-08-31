@@ -3,6 +3,7 @@
 
 from __future__ import annotations
 
+import copy
 import json
 import subprocess
 import sys
@@ -42,8 +43,19 @@ def main() -> int:
         raise AssertionError("Catalog mechanism IDs are not unique")
     if not any(not item["actors"] for item in catalog["mechanisms"]):
         raise AssertionError("Catalog must demonstrate that actor naming is not universal")
+    if not all(item.get("entry_origin") for item in catalog["mechanisms"]):
+        raise AssertionError("Every mechanism must retain its catalog-entry origin")
     if any("portfolio allocation" in item["mechanism_summary"].lower() for item in catalog["mechanisms"]):
         raise AssertionError("Long-horizon portfolio theory leaked into the mechanism catalog")
+
+    observed_catalog = copy.deepcopy(catalog)
+    observed_catalog["mechanisms"][0]["entry_origin"] = {
+        "origin_kind": "INTERNAL_OBSERVATION",
+        "origin_refs": ["observation:order-book-journal-2026-08-31-001"],
+        "origin_summary": "A repeated internal tape observation proposed a new catalog entry.",
+        "captured_at": "2026-08-31T12:03:00Z",
+    }
+    assert_valid(observed_catalog, "schemas/mechanism_catalog.schema.json")
 
     expected_run = load("examples/generated-run/generation-run.json")
     assert_valid(expected_run, "schemas/generation_run.schema.json")

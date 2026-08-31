@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "urn:research-framework:schema:hypothesis-candidate:1.3.0",
+  "$id": "urn:research-framework:schema:hypothesis-candidate:1.4.0",
   "title": "Hypothesis Candidate Inbox Entry",
   "description": "Versionierter Intake-Datensatz fuer rohe Research-Ideen. Promotion bedeutet nur, dass das Screening vollstaendig genug fuer formales Research ist; sie bestaetigt weder Mechanismus noch OOS-Prognosewert noch ausfuehrbare Netto-Edge.",
   "type": "object",
@@ -21,7 +21,7 @@
   ],
   "properties": {
     "schema_version": {
-      "const": "1.3.0"
+      "const": "1.4.0"
     },
     "candidate_id": {
       "$ref": "#/$defs/stableId",
@@ -81,6 +81,12 @@
     },
     "actor_constraint": {
       "$ref": "#/$defs/actorConstraint"
+    },
+    "noise_screen_ref": {
+      "$ref": "#/$defs/stableId"
+    },
+    "noise_screen_waiver": {
+      "$ref": "#/$defs/noiseScreenWaiver"
     },
     "observable_footprints": {
       "type": "array",
@@ -300,13 +306,47 @@
           "variable_selection",
           "idea_class",
           "mechanism_family",
+          "actor_constraint",
           "observable_footprints",
           "alternative_explanations",
           "data_requirements",
           "early_feasibility",
           "epistemic_stage_status"
         ],
+        "oneOf": [
+          {
+            "required": [
+              "noise_screen_ref"
+            ],
+            "not": {
+              "required": [
+                "noise_screen_waiver"
+              ]
+            }
+          },
+          {
+            "required": [
+              "noise_screen_waiver"
+            ],
+            "not": {
+              "required": [
+                "noise_screen_ref"
+              ]
+            }
+          }
+        ],
         "properties": {
+          "actor_constraint": {
+            "properties": {
+              "observability": {
+                "enum": [
+                  "DIRECT",
+                  "PROXY",
+                  "LATENT"
+                ]
+              }
+            }
+          },
           "observable_footprints": {
             "minItems": 1
           },
@@ -985,7 +1025,8 @@
         "actor",
         "constraint",
         "compelled_action",
-        "observability"
+        "observability",
+        "alternative_actor_hypotheses"
       ],
       "properties": {
         "actor": {
@@ -1011,6 +1052,39 @@
             "LATENT",
             "UNKNOWN"
           ]
+        },
+        "alternative_actor_hypotheses": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2000
+          }
+        }
+      }
+    },
+    "noiseScreenWaiver": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "reason",
+        "justification"
+      ],
+      "properties": {
+        "reason": {
+          "type": "string",
+          "enum": [
+            "THEORY_DRIVEN",
+            "EVENT_STUDY_SCHEDULED",
+            "REPLICATION_OF_PUBLISHED_RESULT"
+          ]
+        },
+        "justification": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4000
         }
       }
     },

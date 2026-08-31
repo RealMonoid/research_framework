@@ -1,5 +1,5 @@
 {
-  "schema_version": "1.3.0",
+  "schema_version": "1.4.0",
   "candidate_id": "candidate:ofi-continuation:1.0.0",
   "candidate_version": "1.0.0",
   "inbox_id": "inbox:intraday-market-structure",
@@ -106,8 +106,12 @@
     "actor": "Passive liquidity providers",
     "constraint": "Inventory and adverse-selection risk may reduce displayed liquidity after one-sided aggressive flow.",
     "compelled_action": "Reprice, cancel, or reduce passive quotes; this action is hypothesized rather than observed directly.",
-    "observability": "PROXY"
+    "observability": "PROXY",
+    "alternative_actor_hypotheses": [
+      "The observed quote withdrawal is caused by informed takers or a common information shock rather than inventory management by passive liquidity providers."
+    ]
   },
+  "noise_screen_ref": "noise-screen:ofi-entry-001",
   "observable_footprints": [
     {
       "footprint_id": "footprint:ofi-extreme",

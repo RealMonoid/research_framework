@@ -30,6 +30,12 @@ expectation-violation, mechanism-connection, and assumption-relaxation
 operators. Its output remains unscreened `INBOX`; it does not backtest, rank, or
 promote ideas.
 
+Generation runs are candidate-universe records. Before data-driven entry
+screens begin, a search-space artifact freezes the tested family and its
+multiplicity correction; a passing noise screen only authorizes Phase-0 effort.
+Catalog entries also retain whether they originated in literature, a market
+rule, or a stable internal-observation reference.
+
 Promoted candidates record how their variables were chosen. Predefined,
 theory-led variables need only a compact rationale; data-driven and hybrid
 searches must disclose the candidate universe, data role, outcome visibility,

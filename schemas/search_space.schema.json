@@ -1,0 +1,234 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:research-framework:schema:search-space:1.0.0",
+  "title": "Entry-Screen Search Space",
+  "description": "Vorab fixiertes Register einer Hypothesenfamilie und ihrer multiplikitaetskorrigierten Noise Screens.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "search_space_id",
+    "created_at",
+    "updated_at",
+    "scope_description",
+    "candidate_universe_refs",
+    "candidates_registered",
+    "planned_screen_count",
+    "screens_performed",
+    "screens_passed",
+    "family_alpha",
+    "effective_threshold_percentile",
+    "adjustment_method",
+    "method_parameters",
+    "correlation_note"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "1.0.0"
+    },
+    "search_space_id": {
+      "$ref": "#/$defs/stableId"
+    },
+    "created_at": {
+      "$ref": "#/$defs/timestamp"
+    },
+    "updated_at": {
+      "$ref": "#/$defs/timestamp"
+    },
+    "scope_description": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 4000
+    },
+    "candidate_universe_refs": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "$ref": "#/$defs/stableId"
+      },
+      "description": "Referenzen auf Generatorlaeufe, Intake-Batches oder andere vollstaendige Kandidatenlisten."
+    },
+    "candidates_registered": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "planned_screen_count": {
+      "type": "integer",
+      "minimum": 1,
+      "description": "Vor dem ersten Screen fixierte Familiengroesse. Nicht nach Ergebnissicht anpassen."
+    },
+    "screens_performed": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "screens_passed": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "family_alpha": {
+      "type": "number",
+      "exclusiveMinimum": 0,
+      "exclusiveMaximum": 1
+    },
+    "effective_threshold_percentile": {
+      "type": "number",
+      "exclusiveMinimum": 0,
+      "maximum": 100
+    },
+    "adjustment_method": {
+      "type": "string",
+      "enum": [
+        "BONFERRONI",
+        "BENJAMINI_HOCHBERG",
+        "EFFECTIVE_TESTS_ESTIMATE",
+        "NONE_JUSTIFIED"
+      ]
+    },
+    "method_parameters": {
+      "$ref": "#/$defs/methodParameters"
+    },
+    "correlation_note": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 4000
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "adjustment_method": {
+            "const": "BENJAMINI_HOCHBERG"
+          }
+        },
+        "required": [
+          "adjustment_method"
+        ]
+      },
+      "then": {
+        "properties": {
+          "method_parameters": {
+            "required": [
+              "bh_rank",
+              "p_values_ref"
+            ],
+            "properties": {
+              "bh_rank": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "p_values_ref": {
+                "$ref": "#/$defs/stableId"
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "adjustment_method": {
+            "const": "EFFECTIVE_TESTS_ESTIMATE"
+          }
+        },
+        "required": [
+          "adjustment_method"
+        ]
+      },
+      "then": {
+        "properties": {
+          "method_parameters": {
+            "required": [
+              "effective_test_count",
+              "method_evidence_ref"
+            ],
+            "properties": {
+              "effective_test_count": {
+                "type": "number",
+                "minimum": 1
+              },
+              "method_evidence_ref": {
+                "$ref": "#/$defs/stableId"
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "adjustment_method": {
+            "const": "NONE_JUSTIFIED"
+          }
+        },
+        "required": [
+          "adjustment_method"
+        ]
+      },
+      "then": {
+        "properties": {
+          "planned_screen_count": {
+            "const": 1
+          }
+        }
+      }
+    }
+  ],
+  "$defs": {
+    "stableId": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"
+    },
+    "timestamp": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "methodParameters": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "justification"
+      ],
+      "properties": {
+        "justification": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4000
+        },
+        "effective_test_count": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 1
+        },
+        "bh_rank": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0
+        },
+        "p_values_ref": {
+          "$ref": "#/$defs/nullableStableId"
+        },
+        "method_evidence_ref": {
+          "$ref": "#/$defs/nullableStableId"
+        }
+      }
+    },
+    "nullableStableId": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/stableId"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    }
+  }
+}

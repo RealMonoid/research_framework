@@ -91,6 +91,10 @@ function Set-DataDrivenVariableSelection {
 }
 
 $positivePairs = @(
+    @('generation\mechanism_catalog.v1.json', 'schemas\mechanism_catalog.schema.json'),
+    @('examples\search_space.minimal.json', 'schemas\search_space.schema.json'),
+    @('examples\noise_screen.pass.json', 'schemas\noise_screen.schema.json'),
+    @('examples\noise_screen.fail.json', 'schemas\noise_screen.schema.json'),
     @('examples\run_manifest.minimal.json', 'schemas\run_manifest.schema.json'),
     @('examples\evidence.minimal.json', 'schemas\evidence.schema.json'),
     @('examples\evidence.academic.json', 'schemas\evidence.schema.json'),
@@ -105,6 +109,19 @@ $positivePairs = @(
 foreach ($pair in $positivePairs) {
     Test-ValidFixture -Example $pair[0] -Schema $pair[1]
 }
+
+$candidateSchema = Read-JsonText -RelativePath 'schemas\hypothesis_candidate.schema.json' | ConvertFrom-Json -Depth 100
+$candidateInbox = Read-JsonText -RelativePath 'examples\hypothesis_candidate.inbox.json' | ConvertFrom-Json -Depth 100
+if (@($candidateSchema.required).Count -ne 12) {
+    throw 'INBOX top-level required list no longer contains exactly 12 fields'
+}
+$promotionOnlyInboxFields = @('actor_constraint', 'noise_screen_ref', 'noise_screen_waiver') |
+    Where-Object { $candidateInbox.PSObject.Properties.Name -contains $_ }
+if ($promotionOnlyInboxFields.Count -ne 0) {
+    throw 'INBOX fixture was burdened with promotion-only entry fields'
+}
+$script:PositiveCount++
+Write-Output 'PASS positive: INBOX remains a 12-field actor/noise-free cheap path'
 
 $candidateDataDriven = Read-JsonText -RelativePath 'examples\hypothesis_candidate.minimal.json' | ConvertFrom-Json -Depth 100
 Set-DataDrivenVariableSelection -Candidate $candidateDataDriven
@@ -236,6 +253,27 @@ Test-RejectedFixture -Name 'PROMOTED candidate requires full research scope' -Va
 $candidatePromotedWithoutVariableSelection = Read-JsonText -RelativePath 'examples\hypothesis_candidate.minimal.json' | ConvertFrom-Json -Depth 100
 $candidatePromotedWithoutVariableSelection.PSObject.Properties.Remove('variable_selection')
 Test-RejectedFixture -Name 'PROMOTED candidate requires variable-selection provenance' -Value $candidatePromotedWithoutVariableSelection -Schema 'schemas\hypothesis_candidate.schema.json'
+
+$candidatePromotedWithoutNoiseDecision = Read-JsonText -RelativePath 'examples\hypothesis_candidate.minimal.json' | ConvertFrom-Json -Depth 100
+$candidatePromotedWithoutNoiseDecision.PSObject.Properties.Remove('noise_screen_ref')
+Test-RejectedFixture -Name 'PROMOTED candidate requires noise screen or waiver' -Value $candidatePromotedWithoutNoiseDecision -Schema 'schemas\hypothesis_candidate.schema.json'
+
+$candidateInvalidNoiseWaiver = Read-JsonText -RelativePath 'examples\hypothesis_candidate.minimal.json' | ConvertFrom-Json -Depth 100
+$candidateInvalidNoiseWaiver.PSObject.Properties.Remove('noise_screen_ref')
+$candidateInvalidNoiseWaiver | Add-Member -NotePropertyName 'noise_screen_waiver' -NotePropertyValue ([PSCustomObject]@{ reason = 'THEORY_DRIVEN' })
+Test-RejectedFixture -Name 'noise screen waiver requires justification' -Value $candidateInvalidNoiseWaiver -Schema 'schemas\hypothesis_candidate.schema.json'
+
+$candidateWithoutActorConstraint = Read-JsonText -RelativePath 'examples\hypothesis_candidate.minimal.json' | ConvertFrom-Json -Depth 100
+$candidateWithoutActorConstraint.PSObject.Properties.Remove('actor_constraint')
+Test-RejectedFixture -Name 'PROMOTED candidate requires actor constraint' -Value $candidateWithoutActorConstraint -Schema 'schemas\hypothesis_candidate.schema.json'
+
+$candidateWithUnknownActor = Read-JsonText -RelativePath 'examples\hypothesis_candidate.minimal.json' | ConvertFrom-Json -Depth 100
+$candidateWithUnknownActor.actor_constraint.observability = 'UNKNOWN'
+Test-RejectedFixture -Name 'PROMOTED actor constraint rejects UNKNOWN observability' -Value $candidateWithUnknownActor -Schema 'schemas\hypothesis_candidate.schema.json'
+
+$candidateWithoutAlternativeActor = Read-JsonText -RelativePath 'examples\hypothesis_candidate.minimal.json' | ConvertFrom-Json -Depth 100
+$candidateWithoutAlternativeActor.actor_constraint.PSObject.Properties.Remove('alternative_actor_hypotheses')
+Test-RejectedFixture -Name 'actor constraint requires alternative actor hypotheses' -Value $candidateWithoutAlternativeActor -Schema 'schemas\hypothesis_candidate.schema.json'
 
 $candidateWithoutInstrument = Read-JsonText -RelativePath 'examples\hypothesis_candidate.minimal.json' | ConvertFrom-Json -Depth 100
 $candidateWithoutInstrument.research_scope.instruments = @()
