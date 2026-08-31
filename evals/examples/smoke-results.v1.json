@@ -1,7 +1,7 @@
 {
   "schema_version": "eval-results.v2",
   "catalog_id": "research-agent-core",
-  "catalog_version": "1.6.0",
+  "catalog_version": "1.7.0",
   "run_id": "smoke-reference-v1",
   "created_at": "2026-08-30T00:00:00+02:00",
   "run_kind": "PROTOCOL_SMOKE",
@@ -401,6 +401,42 @@
           "viable_rival_available": false,
           "absence_of_rival_counts_as_support": false
         }
+      }
+    },
+    "route_incomplete_prose_before_operationalization": {
+      "claims": {},
+      "routing": {
+        "route": "SCIENTIFIC_PHILOSOPHY_PRE_OPERATIONALIZATION",
+        "selected_agent": "scientific-philosophy-critic",
+        "empirical_test_authorized": false,
+        "original_result_may_change": false
+      }
+    },
+    "route_measurement_question_after_provisional_definition": {
+      "claims": {},
+      "routing": {
+        "route": "CONDITION_INQUIRY",
+        "selected_agent": "condition-inquiry-analyst",
+        "empirical_test_authorized": false,
+        "original_result_may_change": false
+      }
+    },
+    "route_non_positive_revision_to_philosophy": {
+      "claims": {},
+      "routing": {
+        "route": "SCIENTIFIC_PHILOSOPHY_POST_RESULT",
+        "selected_agent": "scientific-philosophy-critic",
+        "empirical_test_authorized": false,
+        "original_result_may_change": false
+      }
+    },
+    "route_plain_result_explanation_without_specialist": {
+      "claims": {},
+      "routing": {
+        "route": "CONDUCT_RESEARCH",
+        "selected_agent": null,
+        "empirical_test_authorized": false,
+        "original_result_may_change": false
       }
     }
   }

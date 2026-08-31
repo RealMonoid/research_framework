@@ -1,9 +1,9 @@
 {
   "schema_version": "eval-catalog.v1",
   "catalog_id": "research-agent-core",
-  "catalog_version": "1.6.0",
+  "catalog_version": "1.7.0",
   "created_at": "2026-08-30T00:00:00+02:00",
-  "description": "Deterministic core evals for evidence handling, hypothesis intake, and thesis governance.",
+  "description": "Deterministic core evals for evidence handling, hypothesis intake, thesis governance, and research orchestration.",
   "cases": [
     {
       "case_id": "source_attribution_primary",
@@ -1166,6 +1166,179 @@
             "path": "philosophy_review.kuhn_context.absence_of_rival_counts_as_support",
             "operator": "equals",
             "expected": false,
+            "critical": true,
+            "weight": 2
+          }
+        ]
+      }
+    },
+    {
+      "case_id": "route_incomplete_prose_before_operationalization",
+      "capability": "research_orchestration",
+      "description": "Route an incomplete prose strategy through source reconstruction and mandatory concept audit before operationalization, without authorizing empirical work.",
+      "input": {
+        "task": "I have a book strategy with undefined terms. The source reconstruction is complete, but no concept audit or operationalization exists. I want it operationalized. Return the next route only; do not run a backtest.",
+        "as_of": "2026-08-31T18:00:00Z",
+        "sources": [
+          {
+            "source_id": "synthetic_prose_state",
+            "title": "Synthetic Orchestration State",
+            "published_at": "2026-08-31T17:55:00Z",
+            "accessed_at": "2026-08-31T17:59:00Z",
+            "authoritative": true,
+            "content": "Source kind PROSE_STRATEGY; source completeness INCOMPLETE; reconstruction COMPLETE; concept audit MISSING; operationalization NONE; frozen result NONE."
+          }
+        ]
+      },
+      "expected": {
+        "assertions": [
+          {
+            "assertion_id": "route_to_pre_operational_philosophy",
+            "metric": "research_orchestration_accuracy",
+            "path": "routing.route",
+            "operator": "equals",
+            "expected": "SCIENTIFIC_PHILOSOPHY_PRE_OPERATIONALIZATION",
+            "critical": true,
+            "weight": 3
+          },
+          {
+            "assertion_id": "select_philosophy_critic",
+            "metric": "research_orchestration_accuracy",
+            "path": "routing.selected_agent",
+            "operator": "equals",
+            "expected": "scientific-philosophy-critic",
+            "critical": true,
+            "weight": 2
+          },
+          {
+            "assertion_id": "do_not_authorize_empirical_test",
+            "metric": "research_orchestration_accuracy",
+            "path": "routing.empirical_test_authorized",
+            "operator": "equals",
+            "expected": false,
+            "critical": true,
+            "weight": 2
+          }
+        ]
+      }
+    },
+    {
+      "case_id": "route_measurement_question_after_provisional_definition",
+      "capability": "research_orchestration",
+      "description": "Route a measurement-usefulness question to the condition analyst only after concept audit and provisional operationalization exist.",
+      "input": {
+        "task": "The concept audit is complete and a provisional state filter definition is fixed. Does this filter distinguish useful future behavior? Return the next route.",
+        "as_of": "2026-08-31T18:05:00Z",
+        "sources": [
+          {
+            "source_id": "synthetic_measurement_state",
+            "title": "Synthetic Measurement-Orchestration State",
+            "published_at": "2026-08-31T18:00:00Z",
+            "accessed_at": "2026-08-31T18:04:00Z",
+            "authoritative": true,
+            "content": "Concept audit COMPLETE; operationalization PROVISIONAL; intent ASSESS_MEASUREMENT; frozen result NONE."
+          }
+        ]
+      },
+      "expected": {
+        "assertions": [
+          {
+            "assertion_id": "route_to_condition_inquiry",
+            "metric": "research_orchestration_accuracy",
+            "path": "routing.route",
+            "operator": "equals",
+            "expected": "CONDITION_INQUIRY",
+            "critical": true,
+            "weight": 3
+          },
+          {
+            "assertion_id": "select_condition_analyst",
+            "metric": "research_orchestration_accuracy",
+            "path": "routing.selected_agent",
+            "operator": "equals",
+            "expected": "condition-inquiry-analyst",
+            "critical": true,
+            "weight": 2
+          }
+        ]
+      }
+    },
+    {
+      "case_id": "route_non_positive_revision_to_philosophy",
+      "capability": "research_orchestration",
+      "description": "Route a proposed revision after a frozen non-positive result to the post-result philosophy review.",
+      "input": {
+        "task": "The frozen result is FALSIFIED. I want to change the operationalization and test again. Return the next route without changing the old result.",
+        "as_of": "2026-08-31T18:10:00Z",
+        "sources": [
+          {
+            "source_id": "synthetic_post_result_state",
+            "title": "Synthetic Post-Result Orchestration State",
+            "published_at": "2026-08-31T18:06:00Z",
+            "accessed_at": "2026-08-31T18:09:00Z",
+            "authoritative": true,
+            "content": "Frozen result FALSIFIED; intent REVISE_AFTER_RESULT; no scientific-philosophy review exists."
+          }
+        ]
+      },
+      "expected": {
+        "assertions": [
+          {
+            "assertion_id": "route_to_post_result_philosophy",
+            "metric": "research_orchestration_accuracy",
+            "path": "routing.route",
+            "operator": "equals",
+            "expected": "SCIENTIFIC_PHILOSOPHY_POST_RESULT",
+            "critical": true,
+            "weight": 3
+          },
+          {
+            "assertion_id": "retain_frozen_result",
+            "metric": "research_orchestration_accuracy",
+            "path": "routing.original_result_may_change",
+            "operator": "equals",
+            "expected": false,
+            "critical": true,
+            "weight": 3
+          }
+        ]
+      }
+    },
+    {
+      "case_id": "route_plain_result_explanation_without_specialist",
+      "capability": "research_orchestration",
+      "description": "Do not invoke a specialist when the user only requests a plain explanation of an existing result and proposes no attribution or continuation.",
+      "input": {
+        "task": "Please explain what this already documented result means. I am not asking to revise it, attribute the failure, or continue testing.",
+        "as_of": "2026-08-31T18:15:00Z",
+        "sources": [
+          {
+            "source_id": "synthetic_explanation_state",
+            "title": "Synthetic Explanation-Only State",
+            "published_at": "2026-08-31T18:11:00Z",
+            "accessed_at": "2026-08-31T18:14:00Z",
+            "authoritative": true,
+            "content": "Intent INTERPRET_RESULT; frozen result PRECISE_NULL; no material revision, attribution, or continuation is requested."
+          }
+        ]
+      },
+      "expected": {
+        "assertions": [
+          {
+            "assertion_id": "plain_explanation_stays_with_conductor",
+            "metric": "research_orchestration_accuracy",
+            "path": "routing.route",
+            "operator": "equals",
+            "expected": "CONDUCT_RESEARCH",
+            "critical": true,
+            "weight": 3
+          },
+          {
+            "assertion_id": "no_specialist_for_plain_explanation",
+            "metric": "research_orchestration_accuracy",
+            "path": "routing.selected_agent",
+            "operator": "equals",
+            "expected": null,
             "critical": true,
             "weight": 2
           }

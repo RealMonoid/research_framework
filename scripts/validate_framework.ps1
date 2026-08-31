@@ -51,6 +51,12 @@ if ($LASTEXITCODE -ne 0) {
     throw "Wissenschaftsphilosophie-Review-Tests fehlgeschlagen (Exit $LASTEXITCODE)."
 }
 
+Write-Output '== Research orchestration =='
+& $PythonExecutable (Join-Path $repoRoot 'scripts\test_research_orchestration.py')
+if ($LASTEXITCODE -ne 0) {
+    throw "Research-Orchestration-Tests fehlgeschlagen (Exit $LASTEXITCODE)."
+}
+
 Write-Output '== Entry thresholds =='
 & $PythonExecutable (Join-Path $repoRoot 'scripts\test_entry_thresholds.py')
 if ($LASTEXITCODE -ne 0) {

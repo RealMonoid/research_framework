@@ -44,6 +44,10 @@ def main(argv: Sequence[str] | None = None) -> int:
         "Scientific-philosophy review",
         [python, "scripts/test_scientific_philosophy_review.py"],
     )
+    run(
+        "Research orchestration",
+        [python, "scripts/test_research_orchestration.py"],
+    )
     run("Entry thresholds", [python, "scripts/test_entry_thresholds.py"])
     run("Hypothesis generator", [python, "scripts/test_generator.py"])
     run("Eval protocol smoke", [python, "evals/run_evals.py"])

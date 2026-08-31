@@ -21,6 +21,12 @@ aus `requirements-dev.txt`.
 - `tests/test_produce_results.py`: Producerblindheit und Run-Klassen.
 - `tests/test_run_evals.py`: Scoring, Fehlerpfade und Regressionserkennung.
 
+Der Katalog prüft zusätzlich die Ablaufsteuerung des Forschungsleiters: die
+zwingende Begriffsprüfung vor der Operationalisierung einer unvollständigen
+Prosastrategie, die Bedingungsanalyse nach einer vorläufigen Definition, die
+Fortsetzungsprüfung nach einem nicht positiven Ergebnis und den Gegenfall einer
+reinen Ergebniserklärung ohne unnötigen Fachagenten.
+
 Katalog, Ergebnis und Baseline müssen dieselbe `catalog_version` nennen. Änderungen
 an Input, Erwartung, Gewichtung oder Fallbedeutung erhöhen die Katalogversion.
 

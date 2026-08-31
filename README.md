@@ -24,6 +24,15 @@ small [inbox example](examples/hypothesis_candidate.inbox.json) and a full
 decisions are recorded in [`decisions/`](decisions/), and deterministic agent
 regression tests live in [`evals/`](evals/).
 
+Every user-facing research task is coordinated by the
+[research conductor](agents/research-conductor.md). It records a persistent
+[orchestration checkpoint](schemas/orchestration_state.schema.json), obtains one
+hard-rule next step from the executable
+[router](scripts/route_research_task.py), and invokes the philosophy, condition,
+or idea specialist only when its prerequisites and trigger are present. The
+conductor retains the conversation, validates each returned artifact, and routes
+again; a specialist never silently changes the research question.
+
 The generator is deliberately not another gate. It combines mechanisms with
 phases and observable responses, then applies phase-path,
 expectation-violation, mechanism-connection, and assumption-relaxation
