@@ -1,0 +1,178 @@
+{
+  "schema_version": "1.0.0",
+  "review_id": "philosophy-review:synthetic-vwap-failure:v1",
+  "created_at": "2026-08-31T10:00:00+02:00",
+  "updated_at": "2026-08-31T10:00:00+02:00",
+  "agent_contract_version": "1.0.0",
+  "mode": "POST_RESULT_CONTINUATION",
+  "research_id": "research:synthetic-vwap-breakout-original",
+  "research_version": 1,
+  "input_artifact_refs": [
+    "reconstruction:vwap-wave-price-discovery:v1",
+    "validation:synthetic-opposite-sign:v1"
+  ],
+  "frozen_result": {
+    "status": "FALSIFIED",
+    "decision_ref": "validation:synthetic-opposite-sign:v1",
+    "summary": "Synthetic illustration only: an imagined frozen validation precisely supported an economically relevant effect opposite to the registered continuation direction. No market test was run for this repository example.",
+    "remains_unchanged": true
+  },
+  "test_bundle": {
+    "core_claims": [
+      {
+        "claim_id": "core:accepted-breakout-continuation",
+        "statement": "A source-faithful accepted breakout is followed by continuation in the breakout direction over the registered intraday horizon.",
+        "source_refs": ["claim:band-break", "claim:volume-confirmation"]
+      }
+    ],
+    "auxiliary_assumptions": [
+      {
+        "assumption_id": "aux:session-vwap-definition",
+        "category": "OPERATIONALIZATION",
+        "statement": "The chosen session reset and price input preserve the source meaning of session VWAP.",
+        "frozen_before_result": true,
+        "status": "UNKNOWN",
+        "evidence_refs": ["construct:session-vwap"]
+      },
+      {
+        "assumption_id": "aux:band-calculation",
+        "category": "MEASUREMENT",
+        "statement": "The selected deviation-band calculation measures the source's intended notion of stretch from value.",
+        "frozen_before_result": true,
+        "status": "UNKNOWN",
+        "evidence_refs": ["construct:vwap-deviation-bands"]
+      },
+      {
+        "assumption_id": "aux:clear-breakout-rule",
+        "category": "OPERATIONALIZATION",
+        "statement": "The frozen numerical breakout rule is a defensible translation of the source's qualitative clear-breakout condition.",
+        "frozen_before_result": true,
+        "status": "CHALLENGED",
+        "evidence_refs": ["construct:clear-breakout"]
+      },
+      {
+        "assumption_id": "aux:strong-volume-rule",
+        "category": "OPERATIONALIZATION",
+        "statement": "The frozen volume threshold is a defensible translation of strong volume rather than a materially different strategy.",
+        "frozen_before_result": true,
+        "status": "UNKNOWN",
+        "evidence_refs": ["construct:strong-volume"]
+      },
+      {
+        "assumption_id": "aux:intraday-data-resolution",
+        "category": "DATA_QUALITY",
+        "statement": "The available timestamps and bar construction are sufficiently fine to observe the registered trigger before the outcome window begins.",
+        "frozen_before_result": true,
+        "status": "SUPPORTED",
+        "evidence_refs": ["validation:synthetic-opposite-sign:v1"]
+      },
+      {
+        "assumption_id": "aux:registered-market-scope",
+        "category": "SCOPE",
+        "statement": "The registered futures sessions are a relevant target population for the reconstructed source strategy.",
+        "frozen_before_result": true,
+        "status": "UNKNOWN",
+        "evidence_refs": ["reconstruction:vwap-wave-price-discovery:v1"]
+      }
+    ],
+    "bundle_summary": "The synthetic result bears on the core continuation claim only through several frozen translation, measurement, data and scope assumptions. Failure of the bundle does not logically identify which member failed."
+  },
+  "underdetermination": {
+    "attribution_status": "NON_UNIQUE",
+    "rationale": "The synthetic opposite-sign result conflicts with the registered bundle, but no supplied comparison separates a false continuation claim from a poor translation of clear breakout, volume confirmation or band construction.",
+    "candidate_failure_points": [
+      {
+        "failure_point_id": "failure-point:core-continuation",
+        "target_ref": "core:accepted-breakout-continuation",
+        "status": "OPEN",
+        "rationale": "The core continuation claim may be false in the registered target population.",
+        "evidence_refs": ["validation:synthetic-opposite-sign:v1"]
+      },
+      {
+        "failure_point_id": "failure-point:breakout-translation",
+        "target_ref": "aux:clear-breakout-rule",
+        "status": "PLAUSIBLE",
+        "rationale": "The source left clear breakout qualitative, so the frozen numerical rule may have selected a materially different event class.",
+        "evidence_refs": ["construct:clear-breakout"]
+      },
+      {
+        "failure_point_id": "failure-point:volume-translation",
+        "target_ref": "aux:strong-volume-rule",
+        "status": "OPEN",
+        "rationale": "The source did not supply a unique strong-volume threshold.",
+        "evidence_refs": ["construct:strong-volume"]
+      }
+    ],
+    "discriminating_evidence_refs": [],
+    "needed_distinguishing_tests": [
+      "A pre-registered comparison must distinguish the old breakout translation from a source-concordant alternative on data independent of the failed validation.",
+      "A diagnostic implementation check may inspect the trigger timestamps, but it cannot convert the original FALSIFIED result into success."
+    ]
+  },
+  "research_program": {
+    "hard_core_claim_refs": ["core:accepted-breakout-continuation"],
+    "protective_belt_assumption_refs": [
+      "aux:session-vwap-definition",
+      "aux:band-calculation",
+      "aux:clear-breakout-rule",
+      "aux:strong-volume-rule",
+      "aux:intraday-data-resolution",
+      "aux:registered-market-scope"
+    ],
+    "anomaly_assessment": {
+      "status": "ISOLATED",
+      "viable_rival_available": false,
+      "rival_program_refs": [],
+      "rationale": "One synthetic failed test is an anomaly for this reconstructed programme, not evidence that the programme as a whole succeeded or failed. No better rival programme is supplied; that absence is not positive evidence for the original claim.",
+      "does_not_override_frozen_result": true
+    }
+  },
+  "revision_proposals": [
+    {
+      "revision_id": "revision:exclude-adverse-months",
+      "target_refs": ["aux:registered-market-scope"],
+      "timing": "AFTER_RESULT",
+      "change_summary": "Remove adverse high-volatility months after observing that they contributed heavily to the opposite-sign result.",
+      "motivation": "Restore the desired continuation sign by narrowing the sample.",
+      "classification": "DEGENERATIVE",
+      "novel_prediction": {
+        "statement": "The retained months should show the originally desired sign.",
+        "relation_to_prior": "ALREADY_IMPLIED",
+        "falsifier": null,
+        "evaluation_scope": null,
+        "independence_plan": null
+      },
+      "new_research_id_required": true,
+      "proposed_research_id": null,
+      "authorizes_empirical_continuation": false,
+      "rationale": "The exclusion is selected because of the observed failure and adds no independently risky prediction beyond recovering the prior sign. It may be described diagnostically but does not justify a rescue test."
+    },
+    {
+      "revision_id": "revision:source-concordant-breakout-contrast",
+      "target_refs": ["aux:clear-breakout-rule"],
+      "timing": "AFTER_RESULT",
+      "change_summary": "Replace the single numerical breakout threshold with a pre-specified source-concordant event definition and compare the newly included events with the old trigger class.",
+      "motivation": "Test whether the original operationalization selected a different event class than the qualitative source construct.",
+      "classification": "PROGRESSIVE",
+      "novel_prediction": {
+        "statement": "On an independent period, events admitted only by the source-concordant definition will have a more positive registered forward response than events admitted by the old numerical definition.",
+        "relation_to_prior": "NOT_IMPLIED",
+        "falsifier": "The pre-registered response contrast is non-positive or too imprecise to exclude the registered minimum contrast.",
+        "evaluation_scope": "A future, previously unseen futures-session period with the same market and clock scope as the original test.",
+        "independence_plan": "Freeze the new event definition and contrast before opening the future period; do not reuse the failed validation as confirmation."
+      },
+      "new_research_id_required": true,
+      "proposed_research_id": "research:synthetic-vwap-breakout-translation-contrast",
+      "authorizes_empirical_continuation": true,
+      "rationale": "The revision risks a new observable contrast that the original continuation claim did not imply and can fail on independent data. It therefore qualifies as a new research programme branch, not a repair of the old result."
+    }
+  ],
+  "continuation": {
+    "disposition": "NEW_RESEARCH_ID",
+    "selected_revision_ref": "revision:source-concordant-breakout-contrast",
+    "new_research_id": "research:synthetic-vwap-breakout-translation-contrast",
+    "rationale": "Only the progressive contrast proposal may continue empirically. The original Research-ID remains FALSIFIED and the exclusion proposal is not authorized.",
+    "original_result_relabelled": false
+  },
+  "overall_note": "This fixture demonstrates the review contract with a synthetic imagined failure. It does not report a real backtest, select an operationalization for the book strategy, or claim that any VWAP setup works."
+}

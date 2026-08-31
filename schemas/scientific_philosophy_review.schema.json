@@ -1,0 +1,317 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.org/schemas/scientific_philosophy_review.schema.json",
+  "title": "Scientific Philosophy Review",
+  "description": "Machine-readable Duhem-Quine bundle map and Lakatos/Kuhn continuation review. It never changes the frozen result it references.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "review_id",
+    "created_at",
+    "updated_at",
+    "agent_contract_version",
+    "mode",
+    "research_id",
+    "research_version",
+    "input_artifact_refs",
+    "frozen_result",
+    "test_bundle",
+    "underdetermination",
+    "research_program",
+    "revision_proposals",
+    "continuation",
+    "overall_note"
+  ],
+  "properties": {
+    "schema_version": {"const": "1.0.0"},
+    "review_id": {"$ref": "#/$defs/stableId"},
+    "created_at": {"$ref": "#/$defs/timestamp"},
+    "updated_at": {"$ref": "#/$defs/timestamp"},
+    "agent_contract_version": {"const": "1.0.0"},
+    "mode": {
+      "type": "string",
+      "enum": ["PRE_FREEZE_BUNDLE_MAP", "POST_RESULT_CONTINUATION"]
+    },
+    "research_id": {"$ref": "#/$defs/stableId"},
+    "research_version": {"type": "integer", "minimum": 1},
+    "input_artifact_refs": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {"$ref": "#/$defs/stableId"}
+    },
+    "frozen_result": {"$ref": "#/$defs/frozenResult"},
+    "test_bundle": {"$ref": "#/$defs/testBundle"},
+    "underdetermination": {"$ref": "#/$defs/underdetermination"},
+    "research_program": {"$ref": "#/$defs/researchProgram"},
+    "revision_proposals": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/revisionProposal"}
+    },
+    "continuation": {"$ref": "#/$defs/continuation"},
+    "overall_note": {"$ref": "#/$defs/text"}
+  },
+  "allOf": [
+    {
+      "if": {"properties": {"mode": {"const": "PRE_FREEZE_BUNDLE_MAP"}}, "required": ["mode"]},
+      "then": {
+        "properties": {
+          "frozen_result": {"properties": {"status": {"const": "NOT_AVAILABLE_PRE_FREEZE"}}},
+          "revision_proposals": {"maxItems": 0},
+          "continuation": {"properties": {"disposition": {"const": "NOT_APPLICABLE_PRE_FREEZE"}}}
+        }
+      }
+    },
+    {
+      "if": {"properties": {"mode": {"const": "POST_RESULT_CONTINUATION"}}, "required": ["mode"]},
+      "then": {
+        "properties": {
+          "frozen_result": {
+            "properties": {
+              "status": {
+                "enum": ["VALIDATED", "FALSIFIED", "PRECISE_NULL", "INCONCLUSIVE", "INVALID_TEST"]
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "continuation": {"properties": {"disposition": {"const": "NEW_RESEARCH_ID"}}, "required": ["disposition"]}
+        },
+        "required": ["continuation"]
+      },
+      "then": {
+        "properties": {
+          "revision_proposals": {
+            "contains": {
+              "properties": {
+                "classification": {"const": "PROGRESSIVE"},
+                "authorizes_empirical_continuation": {"const": true}
+              },
+              "required": ["classification", "authorizes_empirical_continuation"]
+            },
+            "minContains": 1
+          },
+          "continuation": {
+            "properties": {
+              "selected_revision_ref": {"$ref": "#/$defs/stableId"},
+              "new_research_id": {"$ref": "#/$defs/stableId"}
+            }
+          }
+        }
+      }
+    }
+  ],
+  "$defs": {
+    "stableId": {"type": "string", "pattern": "^[A-Za-z][A-Za-z0-9._:-]{2,199}$"},
+    "timestamp": {"type": "string", "format": "date-time"},
+    "text": {"type": "string", "minLength": 1, "maxLength": 8000},
+    "shortText": {"type": "string", "minLength": 1, "maxLength": 2000},
+    "nullableText": {
+      "oneOf": [
+        {"type": "string", "minLength": 1, "maxLength": 8000},
+        {"type": "null"}
+      ]
+    },
+    "nullableStableId": {
+      "oneOf": [{"$ref": "#/$defs/stableId"}, {"type": "null"}]
+    },
+    "refList": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {"$ref": "#/$defs/stableId"}
+    },
+    "frozenResult": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status", "decision_ref", "summary", "remains_unchanged"],
+      "properties": {
+        "status": {
+          "type": "string",
+          "enum": ["NOT_AVAILABLE_PRE_FREEZE", "VALIDATED", "FALSIFIED", "PRECISE_NULL", "INCONCLUSIVE", "INVALID_TEST"]
+        },
+        "decision_ref": {"$ref": "#/$defs/nullableStableId"},
+        "summary": {"$ref": "#/$defs/shortText"},
+        "remains_unchanged": {"const": true}
+      }
+    },
+    "coreClaim": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["claim_id", "statement", "source_refs"],
+      "properties": {
+        "claim_id": {"$ref": "#/$defs/stableId"},
+        "statement": {"$ref": "#/$defs/shortText"},
+        "source_refs": {"$ref": "#/$defs/refList"}
+      }
+    },
+    "auxiliaryAssumption": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["assumption_id", "category", "statement", "frozen_before_result", "status", "evidence_refs"],
+      "properties": {
+        "assumption_id": {"$ref": "#/$defs/stableId"},
+        "category": {
+          "type": "string",
+          "enum": ["THEORY", "OPERATIONALIZATION", "MEASUREMENT", "DATA_QUALITY", "SCOPE", "MODEL", "INFERENCE", "IMPLEMENTATION", "OTHER"]
+        },
+        "statement": {"$ref": "#/$defs/shortText"},
+        "frozen_before_result": {"type": "boolean"},
+        "status": {"type": "string", "enum": ["SUPPORTED", "CHALLENGED", "UNKNOWN", "NOT_APPLICABLE"]},
+        "evidence_refs": {"$ref": "#/$defs/refList"}
+      }
+    },
+    "testBundle": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["core_claims", "auxiliary_assumptions", "bundle_summary"],
+      "properties": {
+        "core_claims": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/coreClaim"}},
+        "auxiliary_assumptions": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/auxiliaryAssumption"}},
+        "bundle_summary": {"$ref": "#/$defs/text"}
+      }
+    },
+    "failurePoint": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["failure_point_id", "target_ref", "status", "rationale", "evidence_refs"],
+      "properties": {
+        "failure_point_id": {"$ref": "#/$defs/stableId"},
+        "target_ref": {"$ref": "#/$defs/stableId"},
+        "status": {"type": "string", "enum": ["OPEN", "PLAUSIBLE", "DISFAVORED", "IDENTIFIED"]},
+        "rationale": {"$ref": "#/$defs/shortText"},
+        "evidence_refs": {"$ref": "#/$defs/refList"}
+      }
+    },
+    "underdetermination": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["attribution_status", "rationale", "candidate_failure_points", "discriminating_evidence_refs", "needed_distinguishing_tests"],
+      "properties": {
+        "attribution_status": {"type": "string", "enum": ["NON_UNIQUE", "UNIQUE_IDENTIFIED", "UNRESOLVED"]},
+        "rationale": {"$ref": "#/$defs/text"},
+        "candidate_failure_points": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/failurePoint"}},
+        "discriminating_evidence_refs": {"$ref": "#/$defs/refList"},
+        "needed_distinguishing_tests": {
+          "type": "array",
+          "items": {"$ref": "#/$defs/shortText"}
+        }
+      },
+      "allOf": [
+        {
+          "if": {"properties": {"attribution_status": {"const": "UNIQUE_IDENTIFIED"}}, "required": ["attribution_status"]},
+          "then": {
+            "properties": {
+              "candidate_failure_points": {
+                "contains": {"properties": {"status": {"const": "IDENTIFIED"}}, "required": ["status"]},
+                "minContains": 1
+              },
+              "discriminating_evidence_refs": {"minItems": 1}
+            }
+          }
+        }
+      ]
+    },
+    "anomalyAssessment": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status", "viable_rival_available", "rival_program_refs", "rationale", "does_not_override_frozen_result"],
+      "properties": {
+        "status": {"type": "string", "enum": ["ISOLATED", "RECURRING", "PROGRAM_LEVEL", "UNRESOLVED"]},
+        "viable_rival_available": {"type": "boolean"},
+        "rival_program_refs": {"$ref": "#/$defs/refList"},
+        "rationale": {"$ref": "#/$defs/text"},
+        "does_not_override_frozen_result": {"const": true}
+      }
+    },
+    "researchProgram": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["hard_core_claim_refs", "protective_belt_assumption_refs", "anomaly_assessment"],
+      "properties": {
+        "hard_core_claim_refs": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"$ref": "#/$defs/stableId"}},
+        "protective_belt_assumption_refs": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"$ref": "#/$defs/stableId"}},
+        "anomaly_assessment": {"$ref": "#/$defs/anomalyAssessment"}
+      }
+    },
+    "novelPrediction": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["statement", "relation_to_prior", "falsifier", "evaluation_scope", "independence_plan"],
+      "properties": {
+        "statement": {"$ref": "#/$defs/nullableText"},
+        "relation_to_prior": {"type": "string", "enum": ["NOT_IMPLIED", "ALREADY_IMPLIED", "UNCLEAR", "NOT_APPLICABLE"]},
+        "falsifier": {"$ref": "#/$defs/nullableText"},
+        "evaluation_scope": {"$ref": "#/$defs/nullableText"},
+        "independence_plan": {"$ref": "#/$defs/nullableText"}
+      }
+    },
+    "revisionProposal": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "revision_id", "target_refs", "timing", "change_summary", "motivation",
+        "classification", "novel_prediction", "new_research_id_required",
+        "proposed_research_id", "authorizes_empirical_continuation", "rationale"
+      ],
+      "properties": {
+        "revision_id": {"$ref": "#/$defs/stableId"},
+        "target_refs": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"$ref": "#/$defs/stableId"}},
+        "timing": {"type": "string", "enum": ["BEFORE_RESULT", "AFTER_RESULT"]},
+        "change_summary": {"$ref": "#/$defs/shortText"},
+        "motivation": {"$ref": "#/$defs/shortText"},
+        "classification": {"type": "string", "enum": ["PROGRESSIVE", "DEGENERATIVE", "DIAGNOSTIC_ONLY", "UNRESOLVED"]},
+        "novel_prediction": {"$ref": "#/$defs/novelPrediction"},
+        "new_research_id_required": {"type": "boolean"},
+        "proposed_research_id": {"$ref": "#/$defs/nullableStableId"},
+        "authorizes_empirical_continuation": {"type": "boolean"},
+        "rationale": {"$ref": "#/$defs/text"}
+      },
+      "allOf": [
+        {
+          "if": {"properties": {"classification": {"const": "PROGRESSIVE"}}, "required": ["classification"]},
+          "then": {
+            "properties": {
+              "timing": {"const": "AFTER_RESULT"},
+              "novel_prediction": {
+                "properties": {
+                  "statement": {"type": "string", "minLength": 1},
+                  "relation_to_prior": {"const": "NOT_IMPLIED"},
+                  "falsifier": {"type": "string", "minLength": 1},
+                  "evaluation_scope": {"type": "string", "minLength": 1},
+                  "independence_plan": {"type": "string", "minLength": 1}
+                }
+              },
+              "new_research_id_required": {"const": true},
+              "proposed_research_id": {"$ref": "#/$defs/stableId"},
+              "authorizes_empirical_continuation": {"const": true}
+            }
+          }
+        },
+        {
+          "if": {"properties": {"classification": {"enum": ["DEGENERATIVE", "DIAGNOSTIC_ONLY", "UNRESOLVED"]}}, "required": ["classification"]},
+          "then": {"properties": {"authorizes_empirical_continuation": {"const": false}}}
+        }
+      ]
+    },
+    "continuation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["disposition", "selected_revision_ref", "new_research_id", "rationale", "original_result_relabelled"],
+      "properties": {
+        "disposition": {
+          "type": "string",
+          "enum": ["NOT_APPLICABLE_PRE_FREEZE", "NO_CONTINUATION", "NEW_RESEARCH_ID", "DIAGNOSTIC_ONLY", "SUSPEND_JUDGMENT", "RETAIN_PROGRAM_PROVISIONALLY", "RIVAL_PROGRAM_REQUIRED"]
+        },
+        "selected_revision_ref": {"$ref": "#/$defs/nullableStableId"},
+        "new_research_id": {"$ref": "#/$defs/nullableStableId"},
+        "rationale": {"$ref": "#/$defs/text"},
+        "original_result_relabelled": {"const": false}
+      }
+    }
+  }
+}

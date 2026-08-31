@@ -38,6 +38,7 @@ CAPABILITIES = {
     "thesis_invalidation",
     "academic_source_status",
     "hypothesis_intake",
+    "scientific_philosophy_review",
 }
 STATEMENT_CLASSES = {
     "SOURCE_FACT",
@@ -66,6 +67,7 @@ METRICS = {
     "thesis_governance_accuracy",
     "academic_source_governance_accuracy",
     "hypothesis_intake_accuracy",
+    "scientific_philosophy_accuracy",
 }
 
 SEMVER_RE = re.compile(r"^[0-9]+\.[0-9]+\.[0-9]+$")
