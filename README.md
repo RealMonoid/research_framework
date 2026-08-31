@@ -33,6 +33,12 @@ or idea specialist only when its prerequisites and trigger are present. The
 conductor retains the conversation, validates each returned artifact, and routes
 again; a specialist never silently changes the research question.
 
+Every specialist handoff on existing research also carries a compact six-part
+identity guard: research question, strategy, market, time horizon, trigger, and
+target. The deterministic [handoff check](scripts/check_research_identity.py)
+must report no change before the returned work can be accepted; otherwise the
+original remains in force and the user receives a plain-language choice.
+
 The generator is deliberately not another gate. It combines mechanisms with
 phases and observable responses, then applies phase-path,
 expectation-violation, mechanism-connection, and assumption-relaxation

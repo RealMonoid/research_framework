@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "urn:research-framework:schema:routing-decision:1.0.0",
+  "$id": "urn:research-framework:schema:routing-decision:1.1.0",
   "title": "Research Routing Decision",
   "description": "Deterministic routing decision and bounded work order owned by the research conductor.",
   "type": "object",
@@ -18,16 +18,17 @@
     "decision_basis",
     "input_artifact_refs",
     "work_order",
+    "identity_guard",
     "next_required_route",
     "user_interaction",
     "control"
   ],
   "properties": {
-    "schema_version": {"const": "1.0.0"},
+    "schema_version": {"const": "1.1.0"},
     "decision_id": {"$ref": "#/$defs/stableId"},
     "created_at": {"$ref": "#/$defs/timestamp"},
     "orchestration_ref": {"$ref": "#/$defs/stableId"},
-    "conductor_version": {"const": "1.0.0"},
+    "conductor_version": {"const": "1.1.0"},
     "route": {"$ref": "#/$defs/route"},
     "execution_mode": {
       "type": "string",
@@ -46,6 +47,7 @@
       "items": {"$ref": "#/$defs/stableId"}
     },
     "work_order": {"$ref": "#/$defs/workOrder"},
+    "identity_guard": {"$ref": "#/$defs/identityGuard"},
     "next_required_route": {
       "oneOf": [
         {"$ref": "#/$defs/route"},
@@ -62,7 +64,10 @@
         "properties": {
           "execution_mode": {"const": "SPECIALIST_AS_TOOL"},
           "selected_agent": {"const": "scientific-philosophy-critic"},
-          "specialist_mode": {"const": "PRE_OPERATIONALIZATION"}
+          "specialist_mode": {"const": "PRE_OPERATIONALIZATION"},
+          "identity_guard": {
+            "properties": {"mode": {"const": "PRESERVE_EXISTING"}}
+          }
         }
       }
     },
@@ -72,7 +77,10 @@
         "properties": {
           "execution_mode": {"const": "SPECIALIST_AS_TOOL"},
           "selected_agent": {"const": "scientific-philosophy-critic"},
-          "specialist_mode": {"const": "POST_RESULT"}
+          "specialist_mode": {"const": "POST_RESULT"},
+          "identity_guard": {
+            "properties": {"mode": {"const": "PRESERVE_EXISTING"}}
+          }
         }
       }
     },
@@ -81,7 +89,10 @@
       "then": {
         "properties": {
           "execution_mode": {"const": "SPECIALIST_AS_TOOL"},
-          "selected_agent": {"const": "condition-inquiry-analyst"}
+          "selected_agent": {"const": "condition-inquiry-analyst"},
+          "identity_guard": {
+            "properties": {"mode": {"const": "PRESERVE_EXISTING"}}
+          }
         }
       }
     },
@@ -90,7 +101,10 @@
       "then": {
         "properties": {
           "execution_mode": {"const": "SPECIALIST_AS_TOOL"},
-          "selected_agent": {"const": "intraday-hypothesis-generator"}
+          "selected_agent": {"const": "intraday-hypothesis-generator"},
+          "identity_guard": {
+            "properties": {"mode": {"const": "NEW_IDENTITY_CREATION"}}
+          }
         }
       }
     },
@@ -112,7 +126,10 @@
         "properties": {
           "execution_mode": {"const": "CONDUCTOR_ONLY"},
           "selected_agent": {"type": "null"},
-          "specialist_mode": {"type": "null"}
+          "specialist_mode": {"type": "null"},
+          "identity_guard": {
+            "properties": {"mode": {"const": "NOT_APPLICABLE"}}
+          }
         }
       }
     },
@@ -123,6 +140,9 @@
           "execution_mode": {"const": "PAUSE_FOR_USER"},
           "selected_agent": {"type": "null"},
           "specialist_mode": {"type": "null"},
+          "identity_guard": {
+            "properties": {"mode": {"const": "NOT_APPLICABLE"}}
+          },
           "user_interaction": {
             "properties": {"status": {"const": "REQUIRED"}}
           }
@@ -135,7 +155,10 @@
         "properties": {
           "execution_mode": {"const": "BLOCKED"},
           "selected_agent": {"type": "null"},
-          "specialist_mode": {"type": "null"}
+          "specialist_mode": {"type": "null"},
+          "identity_guard": {
+            "properties": {"mode": {"const": "NOT_APPLICABLE"}}
+          }
         }
       }
     }
@@ -151,6 +174,142 @@
       "oneOf": [
         {"$ref": "#/$defs/shortText"},
         {"type": "null"}
+      ]
+    },
+    "dimension": {
+      "type": "string",
+      "enum": [
+        "research_question",
+        "strategy",
+        "market",
+        "time_horizon",
+        "trigger",
+        "target"
+      ]
+    },
+    "identityComponent": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status", "statement"],
+      "properties": {
+        "status": {
+          "type": "string",
+          "enum": ["DEFINED", "UNRESOLVED", "NOT_APPLICABLE"]
+        },
+        "statement": {
+          "oneOf": [
+            {"$ref": "#/$defs/shortText"},
+            {"type": "null"}
+          ]
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {"status": {"enum": ["DEFINED", "UNRESOLVED"]}},
+            "required": ["status"]
+          },
+          "then": {"properties": {"statement": {"$ref": "#/$defs/shortText"}}}
+        },
+        {
+          "if": {
+            "properties": {"status": {"const": "NOT_APPLICABLE"}},
+            "required": ["status"]
+          },
+          "then": {"properties": {"statement": {"type": "null"}}}
+        }
+      ]
+    },
+    "researchIdentity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "research_question",
+        "strategy",
+        "market",
+        "time_horizon",
+        "trigger",
+        "target"
+      ],
+      "properties": {
+        "research_question": {"$ref": "#/$defs/identityComponent"},
+        "strategy": {"$ref": "#/$defs/identityComponent"},
+        "market": {"$ref": "#/$defs/identityComponent"},
+        "time_horizon": {"$ref": "#/$defs/identityComponent"},
+        "trigger": {"$ref": "#/$defs/identityComponent"},
+        "target": {"$ref": "#/$defs/identityComponent"}
+      }
+    },
+    "identityGuard": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "mode",
+        "baseline_identity",
+        "compared_dimensions",
+        "difference_disposition"
+      ],
+      "properties": {
+        "mode": {
+          "type": "string",
+          "enum": ["PRESERVE_EXISTING", "NEW_IDENTITY_CREATION", "NOT_APPLICABLE"]
+        },
+        "baseline_identity": {
+          "oneOf": [
+            {"$ref": "#/$defs/researchIdentity"},
+            {"type": "null"}
+          ]
+        },
+        "compared_dimensions": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {"$ref": "#/$defs/dimension"}
+        },
+        "difference_disposition": {
+          "type": "string",
+          "enum": ["PAUSE_FOR_USER", "RECORD_NEW_IDENTITY", "NOT_APPLICABLE"]
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {"mode": {"const": "PRESERVE_EXISTING"}},
+            "required": ["mode"]
+          },
+          "then": {
+            "properties": {
+              "baseline_identity": {"$ref": "#/$defs/researchIdentity"},
+              "compared_dimensions": {"minItems": 6, "maxItems": 6},
+              "difference_disposition": {"const": "PAUSE_FOR_USER"}
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {"mode": {"const": "NEW_IDENTITY_CREATION"}},
+            "required": ["mode"]
+          },
+          "then": {
+            "properties": {
+              "baseline_identity": {"type": "null"},
+              "compared_dimensions": {"maxItems": 0},
+              "difference_disposition": {"const": "RECORD_NEW_IDENTITY"}
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {"mode": {"const": "NOT_APPLICABLE"}},
+            "required": ["mode"]
+          },
+          "then": {
+            "properties": {
+              "baseline_identity": {"type": "null"},
+              "compared_dimensions": {"maxItems": 0},
+              "difference_disposition": {"const": "NOT_APPLICABLE"}
+            }
+          }
+        }
       ]
     },
     "route": {
@@ -264,14 +423,16 @@
         "specialist_may_address_user",
         "sequential_execution",
         "checkpoint_required",
-        "specialist_output_requires_validation"
+        "specialist_output_requires_validation",
+        "identity_check_required_before_acceptance"
       ],
       "properties": {
         "coordinator_retains_control": {"const": true},
         "specialist_may_address_user": {"const": false},
         "sequential_execution": {"const": true},
         "checkpoint_required": {"const": true},
-        "specialist_output_requires_validation": {"const": true}
+        "specialist_output_requires_validation": {"const": true},
+        "identity_check_required_before_acceptance": {"const": true}
       }
     }
   }

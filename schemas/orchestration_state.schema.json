@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "urn:research-framework:schema:orchestration-state:1.0.0",
+  "$id": "urn:research-framework:schema:orchestration-state:1.1.0",
   "title": "Research Orchestration State",
   "description": "Persistent checkpoint used by the research conductor before every material research step.",
   "type": "object",
@@ -13,19 +13,23 @@
     "next_decision_sequence",
     "request",
     "research_context",
+    "research_identity",
+    "handoff_control",
     "artifacts",
     "blocking_issues",
     "completed_steps",
     "routing_history"
   ],
   "properties": {
-    "schema_version": {"const": "1.0.0"},
+    "schema_version": {"const": "1.1.0"},
     "orchestration_id": {"$ref": "#/$defs/stableId"},
     "updated_at": {"$ref": "#/$defs/timestamp"},
-    "conductor_version": {"const": "1.0.0"},
+    "conductor_version": {"const": "1.1.0"},
     "next_decision_sequence": {"type": "integer", "minimum": 1},
     "request": {"$ref": "#/$defs/request"},
     "research_context": {"$ref": "#/$defs/researchContext"},
+    "research_identity": {"$ref": "#/$defs/researchIdentity"},
+    "handoff_control": {"$ref": "#/$defs/handoffControl"},
     "artifacts": {"$ref": "#/$defs/artifacts"},
     "blocking_issues": {
       "type": "array",
@@ -59,6 +63,163 @@
       "oneOf": [
         {"$ref": "#/$defs/stableId"},
         {"type": "null"}
+      ]
+    },
+    "dimension": {
+      "type": "string",
+      "enum": [
+        "research_question",
+        "strategy",
+        "market",
+        "time_horizon",
+        "trigger",
+        "target"
+      ]
+    },
+    "identityComponent": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status", "statement"],
+      "properties": {
+        "status": {
+          "type": "string",
+          "enum": ["DEFINED", "UNRESOLVED", "NOT_APPLICABLE"]
+        },
+        "statement": {
+          "oneOf": [
+            {"$ref": "#/$defs/shortText"},
+            {"type": "null"}
+          ]
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {"status": {"enum": ["DEFINED", "UNRESOLVED"]}},
+            "required": ["status"]
+          },
+          "then": {"properties": {"statement": {"$ref": "#/$defs/shortText"}}}
+        },
+        {
+          "if": {
+            "properties": {"status": {"const": "NOT_APPLICABLE"}},
+            "required": ["status"]
+          },
+          "then": {"properties": {"statement": {"type": "null"}}}
+        }
+      ]
+    },
+    "researchIdentity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "research_question",
+        "strategy",
+        "market",
+        "time_horizon",
+        "trigger",
+        "target"
+      ],
+      "properties": {
+        "research_question": {"$ref": "#/$defs/identityComponent"},
+        "strategy": {"$ref": "#/$defs/identityComponent"},
+        "market": {"$ref": "#/$defs/identityComponent"},
+        "time_horizon": {"$ref": "#/$defs/identityComponent"},
+        "trigger": {"$ref": "#/$defs/identityComponent"},
+        "target": {"$ref": "#/$defs/identityComponent"}
+      }
+    },
+    "handoffControl": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "status",
+        "routing_decision_ref",
+        "report_ref",
+        "changed_dimensions",
+        "plain_language_summary"
+      ],
+      "properties": {
+        "status": {
+          "type": "string",
+          "enum": [
+            "IDLE",
+            "AWAITING_SPECIALIST",
+            "UNCHANGED",
+            "DRIFT_DETECTED",
+            "NOT_COMPARABLE_NEW_IDENTITY"
+          ]
+        },
+        "routing_decision_ref": {"$ref": "#/$defs/nullableStableId"},
+        "report_ref": {"$ref": "#/$defs/nullableStableId"},
+        "changed_dimensions": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {"$ref": "#/$defs/dimension"}
+        },
+        "plain_language_summary": {"$ref": "#/$defs/nullableText"}
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {"status": {"const": "IDLE"}},
+            "required": ["status"]
+          },
+          "then": {
+            "properties": {
+              "routing_decision_ref": {"type": "null"},
+              "report_ref": {"type": "null"},
+              "changed_dimensions": {"maxItems": 0},
+              "plain_language_summary": {"type": "null"}
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {"status": {"const": "AWAITING_SPECIALIST"}},
+            "required": ["status"]
+          },
+          "then": {
+            "properties": {
+              "routing_decision_ref": {"$ref": "#/$defs/stableId"},
+              "report_ref": {"type": "null"},
+              "changed_dimensions": {"maxItems": 0},
+              "plain_language_summary": {"type": "null"}
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "status": {
+                "enum": ["UNCHANGED", "NOT_COMPARABLE_NEW_IDENTITY"]
+              }
+            },
+            "required": ["status"]
+          },
+          "then": {
+            "properties": {
+              "routing_decision_ref": {"$ref": "#/$defs/stableId"},
+              "report_ref": {"$ref": "#/$defs/stableId"},
+              "changed_dimensions": {"maxItems": 0},
+              "plain_language_summary": {"$ref": "#/$defs/shortText"}
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {"status": {"const": "DRIFT_DETECTED"}},
+            "required": ["status"]
+          },
+          "then": {
+            "properties": {
+              "routing_decision_ref": {"$ref": "#/$defs/stableId"},
+              "report_ref": {"$ref": "#/$defs/stableId"},
+              "changed_dimensions": {"minItems": 1},
+              "plain_language_summary": {"$ref": "#/$defs/shortText"}
+            }
+          }
+        }
       ]
     },
     "request": {

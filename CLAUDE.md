@@ -12,6 +12,11 @@
   run `scripts/route_research_task.py`; follow mandatory specialist routes.
 - Specialists return bounded artifacts to the conductor and do not take over
   the user conversation. Validate their output before advancing.
+- Around every specialist handoff on existing research, preserve and compare
+  the six-part research identity: question, strategy, market, time horizon,
+  trigger, and target. Run `scripts/check_research_identity.py` before accepting
+  the output. If it differs, keep the original in force and explain the change
+  to the user before any new version is created.
 - If a required specialist cannot be invoked, stop at that prerequisite instead
   of simulating its contribution.
 - Reconstructing or operationalizing a strategy does not authorize a backtest.

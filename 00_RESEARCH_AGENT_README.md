@@ -1,6 +1,6 @@
 # 00_RESEARCH_AGENT_README.md
 
-**Version:** 2.3
+**Version:** 2.4
 **Stand:** 2026-08-31
 **Status:** ENTWURF ZUR ÜBERNAHME  
 **Zweck:** Verbindliche Lese- und Ausführungsanweisung für AI-Agenten, die Trading-Research-Projekte bearbeiten.
@@ -131,6 +131,17 @@ Forschungsleiter das geforderte Artefakt, aktualisiert den Arbeitsstand und
 routet erneut. Ist ein zwingender Fachagent technisch nicht verfügbar, bleibt
 der Schritt `BLOCKED`; der Forschungsleiter darf dessen Beitrag nicht selbst
 simulieren und zugleich als erfolgt ausgeben.
+
+Vor jeder Fachagenten-Übergabe wird außerdem die wirksame Forschungsidentität
+aus sechs Punkten festgehalten: Forschungsfrage, Strategie, Markt,
+Zeithorizont, Auslöser und Ziel. Nach der Rückgabe vergleicht
+`scripts/check_research_identity.py` dieselben sechs Punkte. Nur `UNCHANGED`
+erlaubt die Annahme des Fachbeitrags. Bei `DRIFT_DETECTED` bleibt der ursprüngliche
+Stand wirksam; die Abweichung und ihre praktische Folge werden dem Nutzer
+verständlich erklärt. Erst eine ausdrückliche Entscheidung darf daraus eine
+neue Research-Version machen. Ein bloßer Änderungsvorschlag des Fachagenten
+darf getrennt dokumentiert werden, ersetzt aber nicht stillschweigend den
+wirksamen Stand.
 
 Insbesondere wird bei einer unvollständigen Prosastrategie zuerst die Quelle
 rekonstruiert, danach zwingend die Begriffs- und Voraussetzungenprüfung durch den

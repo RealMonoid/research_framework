@@ -69,6 +69,23 @@ class EvalHarnessTests(unittest.TestCase):
         )
         self.assertTrue(report["regression_failures"])
 
+    def test_handoff_drift_cannot_be_silently_accepted(self) -> None:
+        regressed = copy.deepcopy(self.results)
+        regressed["run_id"] = "handoff-drift-acceptance-regression"
+        routing = regressed["cases"]["route_detected_handoff_drift_to_user"][
+            "routing"
+        ]
+        routing["changed_output_accepted"] = True
+        routing["original_identity_remains_effective"] = False
+
+        report = run_evals.score_results(self.catalog, regressed, self.baseline)
+        self.assertFalse(report["passed"])
+        self.assertLess(report["metrics"]["research_orchestration_accuracy"], 1.0)
+        self.assertFalse(
+            report["cases"]["route_detected_handoff_drift_to_user"]["passed"]
+        )
+        self.assertTrue(report["regression_failures"])
+
     def test_identified_effect_cannot_be_promoted_to_executable_net_edge(self) -> None:
         regressed = copy.deepcopy(self.results)
         regressed["run_id"] = "causal-effect-net-edge-regression"

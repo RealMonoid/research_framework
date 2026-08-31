@@ -15,7 +15,17 @@ material research transition it must:
    `scripts/route_research_task.py`;
 4. invoke any mandatory specialist as a bounded tool while retaining the user
    conversation and final responsibility;
-5. validate the returned artifact before advancing and save a new checkpoint.
+5. before accepting the returned artifact, compare research question,
+   strategy, market, time horizon, trigger, and target with
+   `scripts/check_research_identity.py`;
+6. accept and validate the artifact only when that check reports `UNCHANGED`,
+   then save a new checkpoint.
+
+If the identity check finds a difference, keep the pre-handoff identity and the
+returned artifact unaccepted. Explain the changed dimensions and practical
+consequences in ordinary language, then ask whether the original research
+should remain in force or an explicitly new version should be created. A
+specialist may propose a change, but may not make it effective silently.
 
 Do not substitute a prose claim that a specialist "would be useful" for the
 required specialist call. If the host cannot invoke that specialist, stop at

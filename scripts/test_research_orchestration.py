@@ -18,12 +18,14 @@ except ImportError as exc:  # pragma: no cover - environment failure.
         "Install with: python -m pip install -r requirements-dev.txt"
     ) from exc
 
+from check_research_identity import build_identity_check
 from route_research_task import route_state
 
 
 ROOT = Path(__file__).resolve().parents[1]
 STATE_FIXTURE = "examples/orchestration_state.prose_strategy.json"
 DECISION_FIXTURE = "examples/routing_decision.pre_operationalization.json"
+IDENTITY_CHECK_FIXTURE = "examples/research_identity_check.unchanged.json"
 
 
 def load(relative_path: str) -> dict[str, Any]:
@@ -42,6 +44,7 @@ def validator(relative_path: str) -> Draft202012Validator:
 
 STATE_VALIDATOR = validator("schemas/orchestration_state.schema.json")
 DECISION_VALIDATOR = validator("schemas/routing_decision.schema.json")
+IDENTITY_CHECK_VALIDATOR = validator("schemas/research_identity_check.schema.json")
 
 
 def assert_route(state: dict[str, Any], expected: str) -> dict[str, Any]:
@@ -103,6 +106,61 @@ def main() -> int:
     if actual_fixture != expected_fixture:
         raise AssertionError("Committed routing fixture differs from deterministic output")
 
+    unchanged_report = build_identity_check(
+        expected_fixture,
+        copy.deepcopy(base),
+        checked_at="2026-08-31T18:05:00+02:00",
+    )
+    report_errors = list(IDENTITY_CHECK_VALIDATOR.iter_errors(unchanged_report))
+    if report_errors:
+        raise AssertionError(
+            "Identity checker produced an invalid unchanged report:\n- "
+            + "\n- ".join(
+                f"{error.json_path}: {error.message}" for error in report_errors
+            )
+        )
+    if unchanged_report != load(IDENTITY_CHECK_FIXTURE):
+        raise AssertionError("Committed identity-check fixture differs from deterministic output")
+
+    changed_target = copy.deepcopy(base)
+    changed_target["research_identity"]["target"] = {
+        "status": "DEFINED",
+        "statement": "Price must reach the opposite edge of the reconstructed range.",
+    }
+    drift_report = build_identity_check(
+        expected_fixture,
+        changed_target,
+        checked_at="2026-08-31T18:06:00+02:00",
+    )
+    if drift_report["overall_status"] != "DRIFT_DETECTED":
+        raise AssertionError("A changed target was not classified as research drift")
+    if drift_report["changed_dimensions"] != ["target"]:
+        raise AssertionError("Drift report did not isolate the changed target")
+    if drift_report["handoff_may_be_accepted"]:
+        raise AssertionError("A drifted handoff was incorrectly accepted")
+
+    awaiting_check = copy.deepcopy(base)
+    awaiting_check["handoff_control"] = {
+        "status": "AWAITING_SPECIALIST",
+        "routing_decision_ref": expected_fixture["decision_id"],
+        "report_ref": None,
+        "changed_dimensions": [],
+        "plain_language_summary": None,
+    }
+    assert_route(awaiting_check, "BLOCKED")
+
+    drift_detected = copy.deepcopy(base)
+    drift_detected["handoff_control"] = {
+        "status": "DRIFT_DETECTED",
+        "routing_decision_ref": expected_fixture["decision_id"],
+        "report_ref": drift_report["check_id"],
+        "changed_dimensions": ["target"],
+        "plain_language_summary": drift_report["plain_language_summary"],
+    }
+    drift_decision = assert_route(drift_detected, "USER_DECISION_REQUIRED")
+    if drift_decision["user_interaction"]["status"] != "REQUIRED":
+        raise AssertionError("Detected drift did not become a user-visible decision")
+
     missing_reconstruction = copy.deepcopy(base)
     missing_reconstruction["artifacts"]["strategy_reconstruction"] = {
         "status": "MISSING",
@@ -146,7 +204,9 @@ def main() -> int:
     generation["research_context"].update(
         {"source_kind": "NONE", "stage": "NO_IDEA", "research_id": None, "research_version": None}
     )
-    assert_route(generation, "GENERATE_INTRADAY_IDEAS")
+    decision = assert_route(generation, "GENERATE_INTRADAY_IDEAS")
+    if decision["identity_guard"]["mode"] != "NEW_IDENTITY_CREATION":
+        raise AssertionError("Idea generation did not declare intentional identity creation")
 
     raw_idea = neutral_state()
     raw_idea["research_context"].update(
@@ -188,7 +248,9 @@ def main() -> int:
             "operationalization_status": "DRAFT",
         }
     )
-    assert_route(formal_strategy, "OPERATIONALIZE_SOURCE_STRATEGY")
+    decision = assert_route(formal_strategy, "OPERATIONALIZE_SOURCE_STRATEGY")
+    if decision["identity_guard"]["mode"] != "NOT_APPLICABLE":
+        raise AssertionError("A conductor-only route incorrectly requested a handoff comparison")
 
     command = [
         sys.executable,
@@ -204,8 +266,9 @@ def main() -> int:
         raise AssertionError("Router CLI output differs from committed fixture")
 
     print(
-        "Research-orchestration tests passed: 10 routes, mandatory philosophy "
-        "handoffs, prerequisite ordering, user pause, and blocker behavior."
+        "Research-orchestration tests passed: mandatory philosophy handoffs, "
+        "six-part identity continuity, drift pause, prerequisite ordering, "
+        "user pause, and blocker behavior."
     )
     return 0
 
