@@ -27,6 +27,12 @@ if (-not $PythonExecutable -or -not (Test-Path -LiteralPath $PythonExecutable)) 
 Write-Output '== Schema contracts =='
 & (Join-Path $PSScriptRoot 'test_schemas.ps1')
 
+Write-Output '== Strategy reconstruction =='
+& $PythonExecutable (Join-Path $repoRoot 'scripts\test_strategy_reconstruction.py')
+if ($LASTEXITCODE -ne 0) {
+    throw "Strategy-Reconstruction-Tests fehlgeschlagen (Exit $LASTEXITCODE)."
+}
+
 Write-Output '== Entry thresholds =='
 & $PythonExecutable (Join-Path $repoRoot 'scripts\test_entry_thresholds.py')
 if ($LASTEXITCODE -ne 0) {

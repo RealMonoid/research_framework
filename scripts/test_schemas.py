@@ -120,6 +120,7 @@ def replace_noise_screen_with_invalid_waiver(document: dict[str, Any]) -> None:
 
 POSITIVES = [
     ("generation/mechanism_catalog.v1.json", "schemas/mechanism_catalog.schema.json"),
+    ("examples/strategy_reconstruction.vwap_wave_price_discovery.json", "schemas/strategy_reconstruction.schema.json"),
     ("examples/generated-run/generation-run.json", "schemas/generation_run.schema.json"),
     ("examples/generated-run/candidates/mechanism-futures-cash-price-discovery-phase-transmission.json", "schemas/hypothesis_candidate.schema.json"),
     ("examples/search_space.minimal.json", "schemas/search_space.schema.json"),
@@ -139,6 +140,10 @@ POSITIVES = [
 
 NEGATIVES: list[tuple[str, str, str, Mutation]] = [
     ("mechanism catalog rejects additional property", "generation/mechanism_catalog.v1.json", "schemas/mechanism_catalog.schema.json", set_value(("confidence_score",), 0.8)),
+    ("strategy reconstruction rejects additional property", "examples/strategy_reconstruction.vwap_wave_price_discovery.json", "schemas/strategy_reconstruction.schema.json", set_value(("backtest_result",), "invented")),
+    ("source extraction cannot select an operationalization", "examples/strategy_reconstruction.vwap_wave_price_discovery.json", "schemas/strategy_reconstruction.schema.json", set_value(("constructs", 0, "decision", "status"), "SELECTED")),
+    ("source alternatives require at least two candidates", "examples/strategy_reconstruction.vwap_wave_price_discovery.json", "schemas/strategy_reconstruction.schema.json", set_value(("constructs", 3, "operationalization_candidates"), [])),
+    ("unspecified construct requires an unresolved question", "examples/strategy_reconstruction.vwap_wave_price_discovery.json", "schemas/strategy_reconstruction.schema.json", set_value(("constructs", 0, "unresolved_questions"), [])),
     ("mechanism catalog requires literature source", "generation/mechanism_catalog.v1.json", "schemas/mechanism_catalog.schema.json", set_value(("mechanisms", 0, "literature_sources"), [])),
     ("mechanism catalog requires entry origin", "generation/mechanism_catalog.v1.json", "schemas/mechanism_catalog.schema.json", delete_value(("mechanisms", 0, "entry_origin"))),
     ("generation run uses controlled operators", "examples/generated-run/generation-run.json", "schemas/generation_run.schema.json", set_value(("request", "operators", 0), "PREMORTEM")),

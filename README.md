@@ -30,6 +30,14 @@ expectation-violation, mechanism-connection, and assumption-relaxation
 operators. Its output remains unscreened `INBOX`; it does not backtest, rank, or
 promote ideas.
 
+Strategies described in books, articles, videos, or courses have a separate
+[prose-reconstruction path](reconstruction/README.md). It records the reviewed
+source scope, distinguishes rules from examples, exposes missing or
+discretionary definitions, and lists possible translations without choosing or
+testing them. The committed
+[VWAP example](examples/strategy_reconstruction.vwap_wave_price_discovery.json)
+is a source extraction, not a backtest or profitability claim.
+
 Generation runs are candidate-universe records. Before data-driven entry
 screens begin, a search-space artifact freezes the tested family and its
 multiplicity correction; a passing noise screen only authorizes Phase-0 effort.

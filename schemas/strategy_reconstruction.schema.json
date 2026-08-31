@@ -1,0 +1,716 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:research-framework:schema:strategy-reconstruction:1.0.0",
+  "title": "Strategy Reconstruction from Prose",
+  "description": "Quellennahe Uebersetzung einer Buch-, Artikel-, Video- oder Kursstrategie in explizite Konstrukte und offene Operationalisierungsentscheidungen. Das Artefakt fuehrt weder Backtests noch automatische Definitionauswahl durch.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "reconstruction_id",
+    "created_at",
+    "updated_at",
+    "source",
+    "strategy_label",
+    "translation_scope",
+    "source_claims",
+    "strategy_identity_claim_refs",
+    "constructs",
+    "reconstruction_status",
+    "fidelity_label",
+    "overall_note"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "1.0.0"
+    },
+    "reconstruction_id": {
+      "$ref": "#/$defs/stableId"
+    },
+    "created_at": {
+      "$ref": "#/$defs/timestamp"
+    },
+    "updated_at": {
+      "$ref": "#/$defs/timestamp"
+    },
+    "source": {
+      "$ref": "#/$defs/source"
+    },
+    "strategy_label": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 500
+    },
+    "translation_scope": {
+      "$ref": "#/$defs/translationScope"
+    },
+    "source_claims": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/$defs/sourceClaim"
+      }
+    },
+    "strategy_identity_claim_refs": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "$ref": "#/$defs/stableId"
+      },
+      "description": "Claims, ohne die nicht mehr dieselbe Quellenstrategie rekonstruiert wuerde. Die Liste ist eine Uebersetzungsaussage, kein Wirksamkeitsurteil."
+    },
+    "constructs": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/$defs/construct"
+      }
+    },
+    "reconstruction_status": {
+      "type": "string",
+      "enum": [
+        "SOURCE_EXTRACTION",
+        "TRANSLATION_DRAFT",
+        "RECONSTRUCTION_COMPLETE",
+        "DISCRETIONARY_PROTOCOL_COMPLETE",
+        "NOT_OPERATIONALIZABLE"
+      ]
+    },
+    "fidelity_label": {
+      "type": "string",
+      "enum": [
+        "UNASSESSED",
+        "REPLICATION",
+        "DOCUMENTED_RECONSTRUCTION",
+        "SIMPLIFIED_VARIANT",
+        "PLAYBOOK_ONLY"
+      ]
+    },
+    "overall_note": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 8000
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "required": [
+          "reconstruction_status"
+        ],
+        "properties": {
+          "reconstruction_status": {
+            "const": "SOURCE_EXTRACTION"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "fidelity_label": {
+            "const": "UNASSESSED"
+          },
+          "constructs": {
+            "items": {
+              "properties": {
+                "decision": {
+                  "properties": {
+                    "status": {
+                      "const": "UNDECIDED"
+                    },
+                    "chosen_candidate_id": {
+                      "type": "null"
+                    },
+                    "choice_basis": {
+                      "type": "null"
+                    },
+                    "rationale": {
+                      "type": "null"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "required": [
+          "reconstruction_status"
+        ],
+        "properties": {
+          "reconstruction_status": {
+            "enum": [
+              "RECONSTRUCTION_COMPLETE",
+              "DISCRETIONARY_PROTOCOL_COMPLETE"
+            ]
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "fidelity_label": {
+            "not": {
+              "const": "UNASSESSED"
+            }
+          },
+          "constructs": {
+            "items": {
+              "properties": {
+                "decision": {
+                  "properties": {
+                    "status": {
+                      "not": {
+                        "const": "UNDECIDED"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  ],
+  "$defs": {
+    "stableId": {
+      "type": "string",
+      "pattern": "^[A-Za-z][A-Za-z0-9._:-]{2,199}$"
+    },
+    "timestamp": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "nullableStableId": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/stableId"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "nullableText": {
+      "oneOf": [
+        {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4000
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "source": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "source_id",
+        "source_type",
+        "title",
+        "source_completeness",
+        "locators_reviewed",
+        "access_note"
+      ],
+      "properties": {
+        "source_id": {
+          "$ref": "#/$defs/stableId"
+        },
+        "source_type": {
+          "type": "string",
+          "enum": [
+            "BOOK",
+            "ARTICLE",
+            "PAPER",
+            "VIDEO",
+            "COURSE",
+            "WEBSITE",
+            "OTHER"
+          ]
+        },
+        "title": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 1000
+        },
+        "creators": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 500
+          }
+        },
+        "edition_or_version": {
+          "$ref": "#/$defs/nullableText"
+        },
+        "source_completeness": {
+          "type": "string",
+          "enum": [
+            "FULL_SOURCE",
+            "PARTIAL_SOURCE",
+            "EXCERPTS_ONLY"
+          ]
+        },
+        "locators_reviewed": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/sourceLocator"
+          }
+        },
+        "access_note": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4000
+        }
+      }
+    },
+    "sourceLocator": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "locator_id",
+        "label",
+        "content_scope"
+      ],
+      "properties": {
+        "locator_id": {
+          "$ref": "#/$defs/stableId"
+        },
+        "label": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 500
+        },
+        "content_scope": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 2000
+        }
+      }
+    },
+    "translationScope": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "included",
+        "excluded",
+        "scope_limitations"
+      ],
+      "properties": {
+        "included": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/$defs/stableId"
+          }
+        },
+        "excluded": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 1000
+          }
+        },
+        "scope_limitations": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4000
+        }
+      }
+    },
+    "sourceClaim": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "claim_id",
+        "summary",
+        "source_locator_refs",
+        "role",
+        "source_force",
+        "core_to_strategy"
+      ],
+      "properties": {
+        "claim_id": {
+          "$ref": "#/$defs/stableId"
+        },
+        "summary": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4000,
+          "description": "Quellennahe Paraphrase; keine erfundene Praezisierung und kein unnoetiges Langzitat."
+        },
+        "source_locator_refs": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/$defs/stableId"
+          }
+        },
+        "role": {
+          "type": "string",
+          "enum": [
+            "CONTEXT",
+            "SETUP_IDENTITY",
+            "CONDITION",
+            "CONFIRMATION",
+            "ENTRY",
+            "STOP",
+            "EXIT",
+            "MANAGEMENT",
+            "DISCRETION",
+            "EXAMPLE",
+            "RATIONALE",
+            "OTHER"
+          ]
+        },
+        "source_force": {
+          "type": "string",
+          "enum": [
+            "REQUIRED",
+            "RECOMMENDED",
+            "OPTIONAL",
+            "ILLUSTRATIVE",
+            "UNCLEAR"
+          ],
+          "description": "Stellung der Aussage in der Quelle. ILLUSTRATIVE verhindert, dass ein Beispiel stillschweigend zur Regel wird."
+        },
+        "core_to_strategy": {
+          "type": "boolean"
+        }
+      }
+    },
+    "construct": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "construct_id",
+        "label",
+        "role",
+        "source_status",
+        "source_claim_refs",
+        "source_summary",
+        "operationalization_candidates",
+        "unresolved_questions",
+        "decision"
+      ],
+      "properties": {
+        "construct_id": {
+          "$ref": "#/$defs/stableId"
+        },
+        "label": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 500
+        },
+        "role": {
+          "type": "string",
+          "enum": [
+            "MARKET_SCOPE",
+            "SESSION",
+            "STATE",
+            "TRIGGER",
+            "CONFIRMATION",
+            "ENTRY",
+            "STOP",
+            "EXIT",
+            "MANAGEMENT",
+            "EXCEPTION",
+            "OTHER"
+          ]
+        },
+        "source_status": {
+          "type": "string",
+          "enum": [
+            "SOURCE_SPECIFIED",
+            "SOURCE_ALTERNATIVES",
+            "UNSPECIFIED",
+            "DISCRETIONARY",
+            "CONTRADICTORY"
+          ]
+        },
+        "source_claim_refs": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/$defs/stableId"
+          }
+        },
+        "source_summary": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4000
+        },
+        "operationalization_candidates": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/operationalizationCandidate"
+          },
+          "description": "Moegliche Uebersetzungen, keine automatisch getesteten Varianten und keine automatische Auswahl."
+        },
+        "unresolved_questions": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2000
+          }
+        },
+        "decision": {
+          "$ref": "#/$defs/decision"
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "required": [
+              "source_status"
+            ],
+            "properties": {
+              "source_status": {
+                "enum": [
+                  "UNSPECIFIED",
+                  "CONTRADICTORY"
+                ]
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "unresolved_questions": {
+                "minItems": 1
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "required": [
+              "source_status"
+            ],
+            "properties": {
+              "source_status": {
+                "const": "SOURCE_ALTERNATIVES"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "operationalization_candidates": {
+                "minItems": 2
+              }
+            }
+          }
+        }
+      ]
+    },
+    "operationalizationCandidate": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "candidate_id",
+        "label",
+        "definition",
+        "origin",
+        "provenance_refs",
+        "parameters_still_open",
+        "preserves_source_intent"
+      ],
+      "properties": {
+        "candidate_id": {
+          "$ref": "#/$defs/stableId"
+        },
+        "label": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 500
+        },
+        "definition": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4000
+        },
+        "origin": {
+          "type": "string",
+          "enum": [
+            "SOURCE",
+            "SOURCE_EXAMPLE",
+            "DOMAIN_CONVENTION",
+            "EXTERNAL_LITERATURE",
+            "RESEARCHER_PROPOSAL",
+            "HUMAN_PROTOCOL"
+          ]
+        },
+        "provenance_refs": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/$defs/stableId"
+          }
+        },
+        "parameters_still_open": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 1000
+          }
+        },
+        "preserves_source_intent": {
+          "type": "string",
+          "enum": [
+            "YES",
+            "PARTLY",
+            "NO",
+            "UNKNOWN"
+          ]
+        }
+      }
+    },
+    "decision": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "status",
+        "chosen_candidate_id",
+        "choice_basis",
+        "rationale"
+      ],
+      "properties": {
+        "status": {
+          "type": "string",
+          "enum": [
+            "UNDECIDED",
+            "SELECTED",
+            "HUMAN_PROTOCOL",
+            "OMITTED",
+            "NOT_OPERATIONALIZABLE"
+          ]
+        },
+        "chosen_candidate_id": {
+          "$ref": "#/$defs/nullableStableId"
+        },
+        "choice_basis": {
+          "oneOf": [
+            {
+              "type": "string",
+              "enum": [
+                "SOURCE_SPECIFIED",
+                "SOURCE_PREFERENCE",
+                "DOMAIN_CONVENTION",
+                "EXTERNAL_LITERATURE",
+                "RESEARCHER_DECISION",
+                "HUMAN_PROTOCOL"
+              ]
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "rationale": {
+          "$ref": "#/$defs/nullableText"
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "required": [
+              "status"
+            ],
+            "properties": {
+              "status": {
+                "const": "UNDECIDED"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "chosen_candidate_id": {
+                "type": "null"
+              },
+              "choice_basis": {
+                "type": "null"
+              },
+              "rationale": {
+                "type": "null"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "required": [
+              "status"
+            ],
+            "properties": {
+              "status": {
+                "enum": [
+                  "SELECTED",
+                  "HUMAN_PROTOCOL"
+                ]
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "chosen_candidate_id": {
+                "$ref": "#/$defs/stableId"
+              },
+              "choice_basis": {
+                "type": "string"
+              },
+              "rationale": {
+                "type": "string",
+                "minLength": 1
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "required": [
+              "status"
+            ],
+            "properties": {
+              "status": {
+                "enum": [
+                  "OMITTED",
+                  "NOT_OPERATIONALIZABLE"
+                ]
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "chosen_candidate_id": {
+                "type": "null"
+              },
+              "choice_basis": {
+                "type": "null"
+              },
+              "rationale": {
+                "type": "string",
+                "minLength": 1
+              }
+            }
+          }
+        }
+      ]
+    }
+  }
+}
