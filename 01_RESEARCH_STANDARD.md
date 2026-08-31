@@ -1,6 +1,6 @@
 # 01_RESEARCH_STANDARD.md
 
-**Version:** 1.9
+**Version:** 2.0
 **Stand:** 2026-08-31
 **Status:** ENTWURF ZUR ÜBERNAHME  
 **Zweck:** Normativer Standard für die Entwicklung, Falsifikation, Validierung und Überwachung von Trading-Phänomenen, Edge-Hypothesen und Strategien.
@@ -799,6 +799,39 @@ Zulässig sind nur:
 - mehr unabhängige Daten,
 - bereits vorab definierte Zusatzanalyse,
 - oder Abschluss als `INCONCLUSIVE`.
+
+## 8.3 Testbündel, Fehlerzurechnung und Anschlussrevision
+
+Ein Validation-Ergebnis prüft nie nur einen isolierten Satz. Es betrifft ein
+Bündel aus Kernhypothese, Hilfsannahmen, Operationalisierung, Messverfahren,
+Datenqualität, Scope, Modell, Inferenz und Implementierung. Ein negatives oder
+unentscheidbares Ergebnis bestimmt daher ohne ein unterscheidendes Design nicht
+eindeutig, welches Bündelglied falsch ist. Diese Duhem-Quine-Unterbestimmtheit
+ändert den Ergebniszustand aus §8.2 nicht.
+
+Nach `FALSIFIED`, `PRECISE_NULL`, `INCONCLUSIVE` oder `INVALID_TEST` gilt bei
+einer erwogenen materiellen Revision:
+
+1. Das eingefrorene Ergebnis und seine Research-ID bleiben unverändert.
+2. Der getestete Kern und die tatsächlich benötigten Hilfsannahmen werden in
+   einem `scientific_philosophy_review` getrennt ausgewiesen.
+3. Eine eindeutige Fehlerzurechnung ist nur mit Evidenz zulässig, die das
+   verdächtige Bündelglied gegen die Alternativen unterscheidet.
+4. Eine **progressive** Anschlussrevision erzeugt eine zuvor nicht implizierte,
+   widerlegbare Vorhersage, benennt ihren Falsifikator, friert einen unabhängigen
+   Evaluationsplan ein und erhält eine neue Research-ID.
+5. Eine **degenerative** Revision erklärt hauptsächlich den bereits gesehenen
+   Misserfolg weg, restauriert das gewünschte Vorzeichen oder verengt die
+   Stichprobe nachträglich ohne neuen empirischen Gehalt. Sie autorisiert keinen
+   neuen Bestätigungstest.
+6. **Diagnostik** darf Mess-, Daten- oder Implementierungsprobleme lokalisieren.
+   Sie ist weder Bestätigung noch Rettung der ursprünglichen Hypothese.
+
+Im Sinne Lakatos' darf ein Forschungsprogramm trotz einer Anomalie vorläufig
+beibehalten werden; das macht den fehlgeschlagenen Einzeltest nicht erfolgreich.
+Im Sinne Kuhns werden isolierte, wiederkehrende und programmweite Anomalien sowie
+verfügbare Rivalen protokolliert. Das Fehlen eines besseren Rivalen ist keine
+positive Evidenz für die getestete Hypothese.
 
 ---
 

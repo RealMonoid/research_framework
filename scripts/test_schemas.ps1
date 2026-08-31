@@ -93,6 +93,7 @@ function Set-DataDrivenVariableSelection {
 $positivePairs = @(
     @('generation\mechanism_catalog.v1.json', 'schemas\mechanism_catalog.schema.json'),
     @('examples\strategy_reconstruction.vwap_wave_price_discovery.json', 'schemas\strategy_reconstruction.schema.json'),
+    @('examples\scientific_philosophy_review.synthetic_failed_reconstruction.json', 'schemas\scientific_philosophy_review.schema.json'),
     @('examples\search_space.minimal.json', 'schemas\search_space.schema.json'),
     @('examples\noise_screen.pass.json', 'schemas\noise_screen.schema.json'),
     @('examples\noise_screen.fail.json', 'schemas\noise_screen.schema.json'),
@@ -110,6 +111,14 @@ $positivePairs = @(
 foreach ($pair in $positivePairs) {
     Test-ValidFixture -Example $pair[0] -Schema $pair[1]
 }
+
+$philosophyRelabelled = Read-JsonText -RelativePath 'examples\scientific_philosophy_review.synthetic_failed_reconstruction.json' | ConvertFrom-Json -Depth 100
+$philosophyRelabelled.frozen_result.remains_unchanged = $false
+Test-RejectedFixture -Name 'philosophy review cannot relabel frozen result' -Value $philosophyRelabelled -Schema 'schemas\scientific_philosophy_review.schema.json'
+
+$philosophyFakeProgress = Read-JsonText -RelativePath 'examples\scientific_philosophy_review.synthetic_failed_reconstruction.json' | ConvertFrom-Json -Depth 100
+$philosophyFakeProgress.revision_proposals[1].novel_prediction.relation_to_prior = 'ALREADY_IMPLIED'
+Test-RejectedFixture -Name 'progressive revision requires a genuinely new prediction' -Value $philosophyFakeProgress -Schema 'schemas\scientific_philosophy_review.schema.json'
 
 $candidateSchema = Read-JsonText -RelativePath 'schemas\hypothesis_candidate.schema.json' | ConvertFrom-Json -Depth 100
 $candidateInbox = Read-JsonText -RelativePath 'examples\hypothesis_candidate.inbox.json' | ConvertFrom-Json -Depth 100

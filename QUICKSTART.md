@@ -107,6 +107,24 @@ Nach `PROMOTED` wird nicht pauschal alles geladen:
 Das Nicht-Überspringen-Protokoll gilt innerhalb des aktivierten Pfads. Nicht
 aktivierte optionale Methoden erzeugen keine Serien begründeter `N/A`-Einträge.
 
+## 4a. Nach einem nicht positiven Validation-Ergebnis
+
+`FALSIFIED`, `PRECISE_NULL`, `INCONCLUSIVE` und `INVALID_TEST` werden nicht durch
+eine nachträglich verdächtigte Operationalisierung ersetzt. Wird dennoch eine
+materielle Revision oder ein neuer empirischer Test erwogen, ist der
+[`scientific-philosophy-critic`](agents/scientific-philosophy-critic.md) zu
+verwenden. Sein
+[`scientific_philosophy_review`](schemas/scientific_philosophy_review.schema.json)
+trennt Kernclaim und Hilfsannahmen, hält eine nicht eindeutige Fehlerzurechnung
+offen und klassifiziert Anschlussideen als `PROGRESSIVE`, `DEGENERATIVE`,
+`DIAGNOSTIC_ONLY` oder `UNRESOLVED`.
+
+Nur `PROGRESSIVE` autorisiert eine empirische Fortsetzung: neue Research-ID,
+zuvor nicht implizierte Vorhersage, Falsifikator und unabhängiger
+Evaluationsplan. Das
+[`synthetische Beispiel`](examples/scientific_philosophy_review.synthetic_failed_reconstruction.json)
+zeigt die Buchstrategie nur als Gedankenfall; es enthält keinen Backtest.
+
 ## 5. Nicht verhandelbare Kernregeln
 
 - Beobachtung, Mechanismus, Forward-OOS-Prognose und ausführbare Netto-Edge bleiben getrennte Aussagen.

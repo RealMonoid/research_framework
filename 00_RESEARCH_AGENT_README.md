@@ -1,6 +1,6 @@
 # 00_RESEARCH_AGENT_README.md
 
-**Version:** 2.1
+**Version:** 2.2
 **Stand:** 2026-08-31
 **Status:** ENTWURF ZUR ÜBERNAHME  
 **Zweck:** Verbindliche Lese- und Ausführungsanweisung für AI-Agenten, die Trading-Research-Projekte bearbeiten.
@@ -42,6 +42,7 @@ Die Dateien erfüllen verschiedene Funktionen:
 | `generation/mechanism_catalog.v1.json` | Literaturgestützte Mechanismen für Intraday- und kurze Swing-Ideen | Wenn Ideen erzeugt oder der Katalog erweitert werden soll |
 | `generation/README.md` | Bedienung und Grenzen des Generators | Bei einem Generatorlauf |
 | `agents/intraday-hypothesis-generator.md` | Optionaler autonomer Generatorvertrag | Bei agentischer Ideenerzeugung |
+| `agents/scientific-philosophy-critic.md` | Duhem-Quine-Buendelkarte und Lakatos-/Kuhn-Fortsetzungspruefung | Vor Freeze optional bei komplexer Quellenrekonstruktion; nach nicht positivem Q8-Ergebnis, sobald eine materielle Revision oder Fortsetzung erwogen wird |
 | `reconstruction/README.md` | Quellennahe Übersetzung von Buch-/Artikel-/Video-/Kursstrategien | Wenn eine Quellenstrategie nicht vollständig operationalisiert ist |
 | `00_RESEARCH_AGENT_README.md` | Routing, Gate- und Nicht-Überspringen-Regeln | Ab `PROMOTED` |
 | `01_RESEARCH_STANDARD.md` | Normativer Forschungsstandard | Ab `PROMOTED` |
@@ -144,6 +145,30 @@ Wenn ein Gate `FAILED` ist, endet die aktuelle Research-Version. Eine Fortsetzun
 - eine neue Research-Version,
 - eine neue Hypothese,
 - oder einen Abbruch.
+
+## 4.1 Wissenschaftsphilosophische Fortsetzungsprüfung
+
+`FALSIFIED`, `PRECISE_NULL`, `INCONCLUSIVE` und `INVALID_TEST` bleiben Ergebnisse
+der eingefrorenen Research-ID. Sie werden nicht dadurch umetikettiert, dass nach
+dem Ergebnis eine Operationalisierung, Hilfsannahme oder Stichprobe verdächtig
+erscheint.
+
+Sobald nach einem solchen Q8-Ergebnis eine materielle Revision oder ein neuer
+empirischer Test erwogen wird, ist der Agentenvertrag
+`agents/scientific-philosophy-critic.md` zu laden und ein
+`scientific_philosophy_review` nach
+`schemas/scientific_philosophy_review.schema.json` anzulegen. Der Review:
+
+- macht nach Duhem-Quine das getestete Bündel sichtbar,
+- behauptet ohne unterscheidende Evidenz keine eindeutige Fehlerursache,
+- trennt nach Lakatos progressive, degenerative und rein diagnostische Änderungen,
+- und verwendet Kuhns Anomalie-/Rivalenperspektive nur zur Beurteilung des
+  Forschungsprogramms, nie zur Rettung des eingefrorenen Einzeltests.
+
+Empirische Fortsetzung ist nur als neue Research-ID zulässig, wenn die Revision
+eine zuvor nicht implizierte, widerlegbare Vorhersage und einen unabhängigen
+Evaluationsplan festhält. Diagnostik darf Fehler lokalisieren, validiert aber
+weder die alte noch die neue Hypothese.
 
 ---
 

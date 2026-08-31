@@ -32,6 +32,7 @@ class EvalHarnessTests(unittest.TestCase):
         self.assertEqual(report["metrics"]["overall_score"], 1.0)
         self.assertEqual(report["metrics"]["critical_assertion_pass_rate"], 1.0)
         self.assertEqual(report["metrics"]["hypothesis_intake_accuracy"], 1.0)
+        self.assertEqual(report["metrics"]["scientific_philosophy_accuracy"], 1.0)
         self.assertFalse(report["gate_failures"])
         self.assertFalse(report["regression_failures"])
 
@@ -165,6 +166,25 @@ class EvalHarnessTests(unittest.TestCase):
         report = run_evals.score_results(self.catalog, regressed, self.baseline)
         self.assertFalse(report["passed"])
         self.assertFalse(report["cases"]["actor_constraint_not_mechanism"]["passed"])
+        self.assertTrue(report["regression_failures"])
+
+    def test_failed_bundle_cannot_be_rescued_by_posthoc_scope_exclusion(self) -> None:
+        regressed = copy.deepcopy(self.results)
+        regressed["run_id"] = "philosophy-posthoc-rescue-regression"
+        review = regressed["cases"]["failed_bundle_progressive_vs_degenerative"][
+            "philosophy_review"
+        ]
+        review["revision_assessments"]["exclude_adverse_sessions"][
+            "classification"
+        ] = "PROGRESSIVE"
+        review["original_result_relabelled"] = True
+
+        report = run_evals.score_results(self.catalog, regressed, self.baseline)
+        self.assertFalse(report["passed"])
+        self.assertLess(report["metrics"]["scientific_philosophy_accuracy"], 1.0)
+        self.assertFalse(
+            report["cases"]["failed_bundle_progressive_vs_degenerative"]["passed"]
+        )
         self.assertTrue(report["regression_failures"])
 
     def test_cli_smoke_run_returns_zero(self) -> None:

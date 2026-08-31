@@ -76,6 +76,21 @@ Replikation bezeichnet.
 7. Erst bei einer wirklichen Rekonstruktion Definitionen waehlen oder ein
    Human-Protocol festlegen und das Fidelity-Label setzen.
 
+## Wenn die spaetere Validation scheitert
+
+Ein Fehlschlag beweist nicht automatisch, dass gerade die selbst gewaehlte
+Operationalisierung falsch war; getestet wurde das gesamte Buendel aus
+Kernhypothese und Hilfsannahmen. Er erlaubt aber ebenso wenig, nach dem Ergebnis
+eine guenstigere Definition aus der Kandidatenliste zu waehlen und den alten
+Test zu retten.
+
+Wird eine Fortsetzung erwogen, erstellt der
+[`scientific-philosophy-critic`](../agents/scientific-philosophy-critic.md) ein
+[`scientific_philosophy_review`](../schemas/scientific_philosophy_review.schema.json).
+Das alte Ergebnis bleibt bestehen. Eine alternative Definition darf nur unter
+neuer Research-ID empirisch weiterverfolgt werden, wenn sie eine neue,
+widerlegbare und auf unabhaengigen Daten pruefbare Vorhersage erzeugt.
+
 Das durchgearbeitete Quellenbeispiel ist
 [`examples/strategy_reconstruction.vwap_wave_price_discovery.json`](../examples/strategy_reconstruction.vwap_wave_price_discovery.json).
 Es endet bewusst bei `SOURCE_EXTRACTION`: keine Definition ist gewaehlt.

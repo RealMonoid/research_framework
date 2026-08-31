@@ -1,6 +1,6 @@
 # 02_RESEARCH_CASE_TEMPLATE.md
 
-**Template-Version:** 1.9
+**Template-Version:** 2.0
 **ANWEISUNG:** Diese Datei pro Research-Projekt kopieren. Kein Pflichtfeld löschen. Nicht anwendbare Felder mit `N/A + Begründung` ausfüllen. Unbekannte Pflichtfelder mit `BLOCKED + fehlende Information` markieren.
 
 **BEDINGTE AKTIVIERUNG:** Die Abschnitte `U–Y` werden erst geöffnet, wenn Abschnitt `T` mit `VALIDATED_PHENOMENON` abgeschlossen **und** Strategy Engineering ausdrücklich als nächster Schritt beschlossen wurde. Bei validiertem, aber nicht fortgesetztem Phänomen erhält der Block `DEFERRED_AFTER_VALIDATION`; ohne validiertes Phänomen erhält er `NOT_ACTIVATED_BY_T_GATE`. In beiden Fällen wird er nicht feldweise mit `N/A` befüllt. Abschnitt `Z` bleibt während des gesamten Projekts aktiv.
@@ -70,6 +70,7 @@ Das Register referenziert die maschinenlesbaren Artefakte nach `05_AGENT_OPERATI
 | Eval-Ergebnis | | | | | `PASS / FAIL / BLOCKED / NOT_RUN` |
 | Hypothesen-Intake | | `1.4.0` | | | `INBOX / SCREENED / MERGED / REJECTED / PROMOTED` |
 | Strategy Reconstruction, falls Quellenstrategie | | `1.0.0` | | | `SOURCE_EXTRACTION / TRANSLATION_DRAFT / RECONSTRUCTION_COMPLETE / DISCRETIONARY_PROTOCOL_COMPLETE / NOT_OPERATIONALIZABLE` |
+| Wissenschaftsphilosophie-Review, falls Q9 aktiviert | | `1.0.0` | | | `BUNDLE_MAPPED / CONTINUATION_REVIEWED / BLOCKED` |
 | Search-Space-Register | | `1.0.0` | | | `N/A (Zählregister)` |
 | Entry Noise Screen | | `1.0.0` | | | `PASS / FAIL / BLOCKED` oder Intake-Waiver |
 
@@ -1127,6 +1128,39 @@ Falls NEIN: Welche Designentscheidung wurde beeinflusst? ...
 
 **Begründung:** ...
 
+## Q9. Wissenschaftsphilosophische Fortsetzungsprüfung
+
+**Aktivierung:** `AKTIVIERT`, sobald nach `FALSIFIED`, `PRECISE_NULL`,
+`INCONCLUSIVE` oder `INVALID_TEST` eine materielle Revision oder empirische
+Fortsetzung erwogen wird; sonst `NOT_ACTIVATED_NO_CONTINUATION`.
+
+**Review-ID nach `schemas/scientific_philosophy_review.schema.json`:** ...
+
+**Eingefrorenes Q8-Ergebnis unverändert übernommen?** `JA / NEIN → FAILED`
+
+| Ebene | Eintrag |
+|---|---|
+| Kernclaim des Forschungsprogramms | |
+| Schutzgürtel/Hilfsannahmen | |
+| Fehlerzurechnung | `NON_UNIQUE / UNIQUE_IDENTIFIED / UNRESOLVED` |
+| unterscheidende Evidenz für eindeutige Zurechnung | |
+| Anomaliestatus | `ISOLATED / RECURRING / PROGRAM_LEVEL / UNRESOLVED` |
+| tragfähiges Rivalenprogramm vorhanden? | `JA + Referenz / NEIN; keine positive Evidenz fuer den alten Claim` |
+
+| Revisions-ID | geändertes Bündelglied | neuer, vorher nicht implizierter Vorhersagesatz | Falsifikator | unabhängiger Evaluationsplan | Klassifikation |
+|---|---|---|---|---|---|
+| | | | | | `PROGRESSIVE / DEGENERATIVE / DIAGNOSTIC_ONLY / UNRESOLVED` |
+
+**Fortsetzungsentscheidung:**
+`NO_CONTINUATION / NEW_RESEARCH_ID / DIAGNOSTIC_ONLY / SUSPEND_JUDGMENT / RETAIN_PROGRAM_PROVISIONALLY / RIVAL_PROGRAM_REQUIRED`
+
+**Bei `NEW_RESEARCH_ID`:** ausgewählte progressive Revisions-ID und neue
+Research-ID: ...
+
+Eine neue ID allein genügt nicht. Ohne neue widerlegbare Vorhersage und
+Unabhängigkeitsplan ist keine empirische Fortsetzung autorisiert. Diagnostik
+darf das alte Q8-Ergebnis nicht in Erfolg umetikettieren.
+
 ---
 
 # R. Final Holdout / äußeres Walk-Forward
@@ -1357,6 +1391,8 @@ Diese Gründe werden **vor** dem relevanten Test notiert.
 
 **Nächste Prozessentscheidung:** `WEITER / NEUE_VERSION / MEHR_DATEN / ABBRECHEN / N/A`
 
+**Falls Q9 `NEW_RESEARCH_ID`:** neue Research-ID und progressive Revisions-ID: ...
+
 **Begründung:** ...
 
 ---
@@ -1409,6 +1445,7 @@ Der Agent darf den jeweils aktivierten Teil des Research-Artefakts nicht als vol
 - [ ] Wurden OOS-/Backtest-Erfolg und kausale Identifikation getrennt beurteilt?
 - [ ] Wurde ein unpräzises Ergebnis nicht als Anlass zur ergebnisgetriebenen Revision benutzt?
 - [ ] Wurde ein entgegengesetztes Vorzeichen als neue Hypothese behandelt?
+- [ ] Wurde bei einer Fortsetzung nach nicht positivem Q8-Ergebnis das getestete Bündel offengelegt, das alte Ergebnis unverändert gelassen und nur eine progressive Revision mit neuer Vorhersage, Falsifikator, unabhängigem Evaluationsplan und neuer Research-ID autorisiert?
 - [ ] Wurde Abschnitt `Z` während des gesamten Research-Prozesses geführt?
 
 ## Nur bei `POST-T-BLOCKSTATUS: ACTIVATED` – Strategy Engineering `U–Y`

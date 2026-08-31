@@ -38,6 +38,15 @@ testing them. The committed
 [VWAP example](examples/strategy_reconstruction.vwap_wave_price_discovery.json)
 is a source extraction, not a backtest or profitability claim.
 
+When a frozen result fails or remains undecidable, the dedicated
+[scientific-philosophy critic](agents/scientific-philosophy-critic.md) maps the
+hypothesis-plus-auxiliaries bundle and reviews proposed continuations. Its
+[review contract](schemas/scientific_philosophy_review.schema.json) preserves
+the original result, blocks unique failure attribution without discriminating
+evidence, and permits a new empirical branch only for a genuinely new,
+falsifiable prediction under a new Research-ID. The committed example is
+synthetic and runs no backtest.
+
 Generation runs are candidate-universe records. Before data-driven entry
 screens begin, a search-space artifact freezes the tested family and its
 multiplicity correction; a passing noise screen only authorizes Phase-0 effort.

@@ -1,7 +1,7 @@
 {
   "schema_version": "eval-catalog.v1",
   "catalog_id": "research-agent-core",
-  "catalog_version": "1.5.0",
+  "catalog_version": "1.6.0",
   "created_at": "2026-08-30T00:00:00+02:00",
   "description": "Deterministic core evals for evidence handling, hypothesis intake, and thesis governance.",
   "cases": [
@@ -1062,6 +1062,110 @@
             "path": "hypothesis_intake.required_next_gate",
             "operator": "equals",
             "expected": "MECHANISM_IDENTIFICATION",
+            "critical": true,
+            "weight": 2
+          }
+        ]
+      }
+    },
+    {
+      "case_id": "failed_bundle_progressive_vs_degenerative",
+      "capability": "scientific_philosophy_review",
+      "description": "Keep a frozen failure unchanged, preserve Duhem-Quine underdetermination, and distinguish a Lakatos-progressive new prediction from a posthoc rescue.",
+      "input": {
+        "task": "Review the failed test bundle and the two proposed continuations. Preserve the frozen result, assess failure attribution, classify each revision, and state whether any empirical continuation is legitimate.",
+        "as_of": "2026-08-31T15:00:00Z",
+        "sources": [
+          {
+            "source_id": "synthetic_failed_bundle_note",
+            "title": "Synthetic Failed Bundle and Continuation Proposals",
+            "published_at": "2026-08-31T14:30:00Z",
+            "accessed_at": "2026-08-31T14:59:00Z",
+            "authoritative": true,
+            "content": "This is a synthetic evaluation input, not a real backtest. A frozen intraday continuation hypothesis predicted a positive economically relevant response. Independent validation precisely supported an economically relevant negative response, so the frozen Research-ID was marked FALSIFIED. The test depended on a qualitative breakout translation, a volume threshold, a VWAP-band calculation, timestamp resolution, and market scope. No supplied diagnostic distinguishes a false core claim from a failed auxiliary assumption. Proposal A was created after the result and removes the high-volatility sessions because those sessions contributed most of the adverse result; it adds no prediction beyond restoring the desired sign. Proposal B creates a new Research-ID and freezes a source-concordant event definition before a future unopened period. It predicts that events admitted only by the new definition will have a response at least 0.3 ticks more positive than events admitted by the old definition; a non-positive or insufficiently precise contrast falsifies it. No viable rival research programme is supplied."
+          }
+        ]
+      },
+      "expected": {
+        "assertions": [
+          {
+            "assertion_id": "preserve_frozen_falsification",
+            "metric": "scientific_philosophy_accuracy",
+            "path": "philosophy_review.frozen_result_status",
+            "operator": "equals",
+            "expected": "FALSIFIED",
+            "critical": true,
+            "weight": 3
+          },
+          {
+            "assertion_id": "never_relabel_original_result",
+            "metric": "scientific_philosophy_accuracy",
+            "path": "philosophy_review.original_result_relabelled",
+            "operator": "equals",
+            "expected": false,
+            "critical": true,
+            "weight": 3
+          },
+          {
+            "assertion_id": "retain_duhem_quine_underdetermination",
+            "metric": "scientific_philosophy_accuracy",
+            "path": "philosophy_review.failure_attribution",
+            "operator": "equals",
+            "expected": "NON_UNIQUE",
+            "critical": true,
+            "weight": 2
+          },
+          {
+            "assertion_id": "posthoc_exclusion_is_degenerative",
+            "metric": "scientific_philosophy_accuracy",
+            "path": "philosophy_review.revision_assessments.exclude_adverse_sessions.classification",
+            "operator": "equals",
+            "expected": "DEGENERATIVE",
+            "critical": true,
+            "weight": 3
+          },
+          {
+            "assertion_id": "new_risky_contrast_is_progressive",
+            "metric": "scientific_philosophy_accuracy",
+            "path": "philosophy_review.revision_assessments.source_concordant_contrast.classification",
+            "operator": "equals",
+            "expected": "PROGRESSIVE",
+            "critical": true,
+            "weight": 3
+          },
+          {
+            "assertion_id": "progressive_prediction_was_not_previously_implied",
+            "metric": "scientific_philosophy_accuracy",
+            "path": "philosophy_review.revision_assessments.source_concordant_contrast.novel_prediction_relation",
+            "operator": "equals",
+            "expected": "NOT_IMPLIED",
+            "critical": true,
+            "weight": 2
+          },
+          {
+            "assertion_id": "progressive_branch_requires_new_research_id",
+            "metric": "scientific_philosophy_accuracy",
+            "path": "philosophy_review.revision_assessments.source_concordant_contrast.new_research_id_required",
+            "operator": "equals",
+            "expected": true,
+            "critical": true,
+            "weight": 2
+          },
+          {
+            "assertion_id": "continue_only_as_new_research",
+            "metric": "scientific_philosophy_accuracy",
+            "path": "philosophy_review.continuation_disposition",
+            "operator": "equals",
+            "expected": "NEW_RESEARCH_ID",
+            "critical": true,
+            "weight": 2
+          },
+          {
+            "assertion_id": "absence_of_rival_does_not_override_failure",
+            "metric": "scientific_philosophy_accuracy",
+            "path": "philosophy_review.kuhn_context.absence_of_rival_counts_as_support",
+            "operator": "equals",
+            "expected": false,
             "critical": true,
             "weight": 2
           }
