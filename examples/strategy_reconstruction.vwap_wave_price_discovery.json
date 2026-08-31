@@ -1,0 +1,1030 @@
+{
+  "schema_version": "1.0.0",
+  "reconstruction_id": "reconstruction:vwap-wave-price-discovery:v1",
+  "created_at": "2026-08-31T03:10:00+02:00",
+  "updated_at": "2026-08-31T03:10:00+02:00",
+  "source": {
+    "source_id": "book:vwap-wave-system:english-edition",
+    "source_type": "BOOK",
+    "title": "VWAP Wave System: Day Trade the Futures Market with Structure, Context, and a Discretionary Edge",
+    "edition_or_version": "English Edition",
+    "source_completeness": "EXCERPTS_ONLY",
+    "locators_reviewed": [
+      {
+        "locator_id": "loc:vwap-wave:ch3:p16-20",
+        "label": "Chapter 3, Kindle pages 16-20",
+        "content_scope": "Discretion, microstructure reading, selective trade choice and human overrides."
+      },
+      {
+        "locator_id": "loc:vwap-wave:ch4:p23-35",
+        "label": "Chapters 4-5 transition, Kindle pages 23-35",
+        "content_scope": "Auction terminology, volume profile, VWAP, deviation bands, prior-session levels and session phases."
+      },
+      {
+        "locator_id": "loc:vwap-wave:ch5:p39-49",
+        "label": "Chapter 5, Kindle pages 39-49",
+        "content_scope": "VWAP map, band zones, daily routine and routing to the four setups."
+      },
+      {
+        "locator_id": "loc:vwap-wave:ch6:p50-57",
+        "label": "Chapter 6, Kindle pages 50-57",
+        "content_scope": "Price Discovery Breakout criteria, entries, stops, targets, management, example and false-breakout discussion."
+      }
+    ],
+    "access_note": "Reconstruction is based only on 31 user-provided screenshots. No copyrighted page images or long quotations are stored in the repository."
+  },
+  "strategy_label": "Price Discovery Breakout",
+  "translation_scope": {
+    "included": [
+      "loc:vwap-wave:ch3:p16-20",
+      "loc:vwap-wave:ch4:p23-35",
+      "loc:vwap-wave:ch5:p39-49",
+      "loc:vwap-wave:ch6:p50-57"
+    ],
+    "excluded": [
+      "The other three named setups",
+      "Book sections after the supplied Price Discovery Breakout excerpts",
+      "Any independent claim that the setup is profitable"
+    ],
+    "scope_limitations": "This is a source-extraction example for one setup, not a full-book transcription, an executable strategy, a backtest specification or an effectiveness assessment."
+  },
+  "source_claims": [
+    {
+      "claim_id": "claim:vwap-session-anchor",
+      "summary": "The source treats session VWAP as an evolving intraday value anchor and combines it with deviation bands.",
+      "source_locator_refs": [
+        "loc:vwap-wave:ch4:p23-35",
+        "loc:vwap-wave:ch5:p39-49"
+      ],
+      "role": "CONTEXT",
+      "source_force": "REQUIRED",
+      "core_to_strategy": true
+    },
+    {
+      "claim_id": "claim:band-map",
+      "summary": "The source uses plus and minus one- and two-standard-deviation bands as zones around VWAP, while warning that a band touch alone is not a signal.",
+      "source_locator_refs": [
+        "loc:vwap-wave:ch4:p23-35",
+        "loc:vwap-wave:ch5:p39-49"
+      ],
+      "role": "CONTEXT",
+      "source_force": "REQUIRED",
+      "core_to_strategy": true
+    },
+    {
+      "claim_id": "claim:prior-range",
+      "summary": "A candidate breakout requires an established range or value boundary, with initial balance, day extremes and multi-hour ranges offered as examples.",
+      "source_locator_refs": [
+        "loc:vwap-wave:ch5:p39-49",
+        "loc:vwap-wave:ch6:p50-57"
+      ],
+      "role": "CONDITION",
+      "source_force": "REQUIRED",
+      "core_to_strategy": true
+    },
+    {
+      "claim_id": "claim:band-break",
+      "summary": "The setup requires a range break that reaches beyond the corresponding one-deviation band; reaching the two-deviation area is described as stronger confirmation.",
+      "source_locator_refs": [
+        "loc:vwap-wave:ch6:p50-57"
+      ],
+      "role": "SETUP_IDENTITY",
+      "source_force": "REQUIRED",
+      "core_to_strategy": true
+    },
+    {
+      "claim_id": "claim:volume-confirmation",
+      "summary": "The source recommends strong or above-average volume and optionally order-flow aggression as breakout confirmation.",
+      "source_locator_refs": [
+        "loc:vwap-wave:ch6:p50-57"
+      ],
+      "role": "CONFIRMATION",
+      "source_force": "RECOMMENDED",
+      "core_to_strategy": false
+    },
+    {
+      "claim_id": "claim:vwap-slope-confirmation",
+      "summary": "A VWAP line beginning to move in the breakout direction is described as confirmation.",
+      "source_locator_refs": [
+        "loc:vwap-wave:ch6:p50-57"
+      ],
+      "role": "CONFIRMATION",
+      "source_force": "RECOMMENDED",
+      "core_to_strategy": false
+    },
+    {
+      "claim_id": "claim:cross-market-confirmation",
+      "summary": "Alignment with correlated futures or broader market internals is offered as additional confidence rather than a universal requirement.",
+      "source_locator_refs": [
+        "loc:vwap-wave:ch6:p50-57"
+      ],
+      "role": "CONFIRMATION",
+      "source_force": "OPTIONAL",
+      "core_to_strategy": false
+    },
+    {
+      "claim_id": "claim:resistance-context",
+      "summary": "The source prefers breakouts without nearby heavy resistance or support in the breakout path.",
+      "source_locator_refs": [
+        "loc:vwap-wave:ch6:p50-57"
+      ],
+      "role": "CONDITION",
+      "source_force": "RECOMMENDED",
+      "core_to_strategy": false
+    },
+    {
+      "claim_id": "claim:entry-alternatives",
+      "summary": "The source offers several entries: the first minor pullback that holds, a strong close outside the range, a limit near the break, or partial entry followed by an add-on.",
+      "source_locator_refs": [
+        "loc:vwap-wave:ch6:p50-57"
+      ],
+      "role": "ENTRY",
+      "source_force": "OPTIONAL",
+      "core_to_strategy": true
+    },
+    {
+      "claim_id": "claim:stop-alternatives",
+      "summary": "Stops may be placed beyond the broken level, beyond a recent swing, or with reference to VWAP and volatility tolerance.",
+      "source_locator_refs": [
+        "loc:vwap-wave:ch6:p50-57"
+      ],
+      "role": "STOP",
+      "source_force": "OPTIONAL",
+      "core_to_strategy": false
+    },
+    {
+      "claim_id": "claim:exit-alternatives",
+      "summary": "The source offers several objectives and management styles, including the two-deviation band, a measured range, fixed reward-to-risk, partial exits and trailing by VWAP or a deviation band.",
+      "source_locator_refs": [
+        "loc:vwap-wave:ch6:p50-57"
+      ],
+      "role": "EXIT",
+      "source_force": "OPTIONAL",
+      "core_to_strategy": false
+    },
+    {
+      "claim_id": "claim:initial-balance-rule",
+      "summary": "The daily routine defines initial balance as the first 60 minutes.",
+      "source_locator_refs": [
+        "loc:vwap-wave:ch5:p39-49"
+      ],
+      "role": "CONDITION",
+      "source_force": "REQUIRED",
+      "core_to_strategy": false
+    },
+    {
+      "claim_id": "claim:initial-balance-example",
+      "summary": "A worked scenario describes an initial balance ending after roughly 45 minutes.",
+      "source_locator_refs": [
+        "loc:vwap-wave:ch6:p50-57"
+      ],
+      "role": "EXAMPLE",
+      "source_force": "ILLUSTRATIVE",
+      "core_to_strategy": false
+    },
+    {
+      "claim_id": "claim:discretion",
+      "summary": "The broader method deliberately delegates contextual filtering, trap recognition, entry urgency, position management and some overrides to trader judgment.",
+      "source_locator_refs": [
+        "loc:vwap-wave:ch3:p16-20",
+        "loc:vwap-wave:ch6:p50-57"
+      ],
+      "role": "DISCRETION",
+      "source_force": "REQUIRED",
+      "core_to_strategy": true
+    },
+    {
+      "claim_id": "claim:time-context",
+      "summary": "The source assigns different expectations to the opening, midday and late-day phases, but uses more than one boundary for those phases across the supplied excerpts.",
+      "source_locator_refs": [
+        "loc:vwap-wave:ch4:p23-35",
+        "loc:vwap-wave:ch5:p39-49",
+        "loc:vwap-wave:ch6:p50-57"
+      ],
+      "role": "CONTEXT",
+      "source_force": "RECOMMENDED",
+      "core_to_strategy": false
+    },
+    {
+      "claim_id": "claim:news-treatment",
+      "summary": "Scheduled and unexpected news are discussed as special breakout circumstances with altered volatility and execution judgment rather than as a consistently excluded event class.",
+      "source_locator_refs": [
+        "loc:vwap-wave:ch6:p50-57"
+      ],
+      "role": "DISCRETION",
+      "source_force": "UNCLEAR",
+      "core_to_strategy": false
+    }
+  ],
+  "strategy_identity_claim_refs": [
+    "claim:vwap-session-anchor",
+    "claim:band-map",
+    "claim:prior-range",
+    "claim:band-break",
+    "claim:entry-alternatives",
+    "claim:discretion"
+  ],
+  "constructs": [
+    {
+      "construct_id": "construct:session-vwap",
+      "label": "Session VWAP",
+      "role": "STATE",
+      "source_status": "UNSPECIFIED",
+      "source_claim_refs": [
+        "claim:vwap-session-anchor"
+      ],
+      "source_summary": "The source names a session-resetting volume-weighted anchor but does not completely specify price input, aggregation or treatment of overnight trading.",
+      "operationalization_candidates": [
+        {
+          "candidate_id": "op:vwap:trade-level",
+          "label": "Trade-level session VWAP",
+          "definition": "Cumulative traded notional divided by cumulative traded volume from a declared session reset.",
+          "origin": "DOMAIN_CONVENTION",
+          "provenance_refs": [],
+          "parameters_still_open": [
+            "session reset",
+            "venue coverage",
+            "trade correction handling"
+          ],
+          "preserves_source_intent": "YES"
+        },
+        {
+          "candidate_id": "op:vwap:bar-typical-price",
+          "label": "Bar-based VWAP approximation",
+          "definition": "Cumulative bar typical price times bar volume divided by cumulative bar volume from a declared session reset.",
+          "origin": "DOMAIN_CONVENTION",
+          "provenance_refs": [],
+          "parameters_still_open": [
+            "bar size",
+            "session reset",
+            "typical-price formula"
+          ],
+          "preserves_source_intent": "PARTLY"
+        }
+      ],
+      "unresolved_questions": [
+        "Which session resets VWAP?",
+        "Is the source using transaction data or a platform-specific bar approximation?"
+      ],
+      "decision": {
+        "status": "UNDECIDED",
+        "chosen_candidate_id": null,
+        "choice_basis": null,
+        "rationale": null
+      }
+    },
+    {
+      "construct_id": "construct:vwap-deviation-bands",
+      "label": "VWAP deviation bands",
+      "role": "STATE",
+      "source_status": "UNSPECIFIED",
+      "source_claim_refs": [
+        "claim:band-map"
+      ],
+      "source_summary": "One- and two-deviation zones are central, but the observations, weighting, denominator and update convention used for standard deviation are not stated.",
+      "operationalization_candidates": [
+        {
+          "candidate_id": "op:bands:volume-weighted-running",
+          "label": "Running volume-weighted price deviation",
+          "definition": "Running volume-weighted standard deviation of prices around session VWAP, updated with the same observations used by VWAP.",
+          "origin": "DOMAIN_CONVENTION",
+          "provenance_refs": [],
+          "parameters_still_open": [
+            "price observation",
+            "population or sample denominator"
+          ],
+          "preserves_source_intent": "YES"
+        },
+        {
+          "candidate_id": "op:bands:bar-running",
+          "label": "Running bar-price deviation",
+          "definition": "Running unweighted standard deviation of a declared bar price around a bar-based VWAP approximation.",
+          "origin": "RESEARCHER_PROPOSAL",
+          "provenance_refs": [],
+          "parameters_still_open": [
+            "bar size",
+            "price field",
+            "population or sample denominator"
+          ],
+          "preserves_source_intent": "UNKNOWN"
+        }
+      ],
+      "unresolved_questions": [
+        "Which platform formula produced the bands shown in the source?",
+        "Are the percentages stated by the source intended as empirical coverage or only a normal-distribution analogy?"
+      ],
+      "decision": {
+        "status": "UNDECIDED",
+        "chosen_candidate_id": null,
+        "choice_basis": null,
+        "rationale": null
+      }
+    },
+    {
+      "construct_id": "construct:initial-balance",
+      "label": "Initial Balance",
+      "role": "STATE",
+      "source_status": "CONTRADICTORY",
+      "source_claim_refs": [
+        "claim:initial-balance-rule",
+        "claim:initial-balance-example"
+      ],
+      "source_summary": "The formal routine says 60 minutes, while the worked scenario uses a roughly 45-minute range. The example cannot silently replace the stated routine.",
+      "operationalization_candidates": [
+        {
+          "candidate_id": "op:ib:60-minute",
+          "label": "First 60 minutes",
+          "definition": "High and low of the first 60 minutes of the declared regular session.",
+          "origin": "SOURCE",
+          "provenance_refs": [
+            "loc:vwap-wave:ch5:p39-49"
+          ],
+          "parameters_still_open": [
+            "regular-session calendar"
+          ],
+          "preserves_source_intent": "YES"
+        },
+        {
+          "candidate_id": "op:ib:45-minute-example",
+          "label": "Worked-example range",
+          "definition": "High and low of the opening interval illustrated as approximately 45 minutes in the worked scenario.",
+          "origin": "SOURCE_EXAMPLE",
+          "provenance_refs": [
+            "loc:vwap-wave:ch6:p50-57"
+          ],
+          "parameters_still_open": [],
+          "preserves_source_intent": "UNKNOWN"
+        }
+      ],
+      "unresolved_questions": [
+        "Is the 45-minute interval merely narrative compression or an intended alternative?"
+      ],
+      "decision": {
+        "status": "UNDECIDED",
+        "chosen_candidate_id": null,
+        "choice_basis": null,
+        "rationale": null
+      }
+    },
+    {
+      "construct_id": "construct:prior-range",
+      "label": "Established prior range or value boundary",
+      "role": "STATE",
+      "source_status": "SOURCE_ALTERNATIVES",
+      "source_claim_refs": [
+        "claim:prior-range"
+      ],
+      "source_summary": "The source explicitly allows more than one boundary family and does not define a priority among them.",
+      "operationalization_candidates": [
+        {
+          "candidate_id": "op:range:initial-balance",
+          "label": "Initial Balance boundary",
+          "definition": "Use the high or low of the declared Initial Balance interval.",
+          "origin": "SOURCE",
+          "provenance_refs": [
+            "loc:vwap-wave:ch5:p39-49",
+            "loc:vwap-wave:ch6:p50-57"
+          ],
+          "parameters_still_open": [
+            "Initial Balance definition"
+          ],
+          "preserves_source_intent": "YES"
+        },
+        {
+          "candidate_id": "op:range:day-extreme",
+          "label": "Current day high or low",
+          "definition": "Use the high or low formed before the candidate break within the declared session.",
+          "origin": "SOURCE",
+          "provenance_refs": [
+            "loc:vwap-wave:ch6:p50-57"
+          ],
+          "parameters_still_open": [
+            "minimum history before boundary is eligible"
+          ],
+          "preserves_source_intent": "YES"
+        },
+        {
+          "candidate_id": "op:range:multi-hour",
+          "label": "Multi-hour consolidation",
+          "definition": "Use the high or low of a separately defined multi-hour consolidation interval.",
+          "origin": "SOURCE",
+          "provenance_refs": [
+            "loc:vwap-wave:ch6:p50-57"
+          ],
+          "parameters_still_open": [
+            "minimum duration",
+            "maximum range width",
+            "consolidation rule"
+          ],
+          "preserves_source_intent": "YES"
+        }
+      ],
+      "unresolved_questions": [
+        "Can several boundary families be active at the same time?",
+        "What makes a consolidation lengthy or obvious?"
+      ],
+      "decision": {
+        "status": "UNDECIDED",
+        "chosen_candidate_id": null,
+        "choice_basis": null,
+        "rationale": null
+      }
+    },
+    {
+      "construct_id": "construct:clear-breakout",
+      "label": "Clear breakout",
+      "role": "TRIGGER",
+      "source_status": "UNSPECIFIED",
+      "source_claim_refs": [
+        "claim:band-break"
+      ],
+      "source_summary": "A clear range break outside one deviation is required, but close-versus-touch, minimum distance and persistence are not fixed.",
+      "operationalization_candidates": [
+        {
+          "candidate_id": "op:break:first-close",
+          "label": "First bar close beyond both boundaries",
+          "definition": "The first completed bar closes beyond the selected range boundary and the corresponding one-deviation band.",
+          "origin": "RESEARCHER_PROPOSAL",
+          "provenance_refs": [],
+          "parameters_still_open": [
+            "bar size",
+            "minimum excess distance"
+          ],
+          "preserves_source_intent": "PARTLY"
+        },
+        {
+          "candidate_id": "op:break:trade-through",
+          "label": "Intrabar trade-through",
+          "definition": "Price trades beyond both selected boundaries by a declared minimum amount without waiting for bar completion.",
+          "origin": "RESEARCHER_PROPOSAL",
+          "provenance_refs": [],
+          "parameters_still_open": [
+            "minimum excess distance",
+            "minimum persistence"
+          ],
+          "preserves_source_intent": "UNKNOWN"
+        }
+      ],
+      "unresolved_questions": [
+        "Does a wick qualify?",
+        "How far and how long must price remain beyond the boundary?"
+      ],
+      "decision": {
+        "status": "UNDECIDED",
+        "chosen_candidate_id": null,
+        "choice_basis": null,
+        "rationale": null
+      }
+    },
+    {
+      "construct_id": "construct:strong-volume",
+      "label": "Strong or above-average volume",
+      "role": "CONFIRMATION",
+      "source_status": "UNSPECIFIED",
+      "source_claim_refs": [
+        "claim:volume-confirmation"
+      ],
+      "source_summary": "The source repeatedly asks for strong volume but supplies neither baseline nor threshold.",
+      "operationalization_candidates": [
+        {
+          "candidate_id": "op:volume:time-of-day-relative",
+          "label": "Time-of-day relative volume",
+          "definition": "Compare event-window volume with the historical distribution for the same instrument and session-clock window.",
+          "origin": "DOMAIN_CONVENTION",
+          "provenance_refs": [],
+          "parameters_still_open": [
+            "history length",
+            "event window",
+            "threshold statistic"
+          ],
+          "preserves_source_intent": "YES"
+        },
+        {
+          "candidate_id": "op:volume:rolling-relative",
+          "label": "Rolling within-session relative volume",
+          "definition": "Compare current bar or event-window volume with a trailing within-session baseline.",
+          "origin": "DOMAIN_CONVENTION",
+          "provenance_refs": [],
+          "parameters_still_open": [
+            "lookback",
+            "bar size",
+            "threshold statistic"
+          ],
+          "preserves_source_intent": "PARTLY"
+        }
+      ],
+      "unresolved_questions": [
+        "Should volume be normalized by time of day?",
+        "Is confirmation based on the breakout bar or a surrounding window?"
+      ],
+      "decision": {
+        "status": "UNDECIDED",
+        "chosen_candidate_id": null,
+        "choice_basis": null,
+        "rationale": null
+      }
+    },
+    {
+      "construct_id": "construct:vwap-slope",
+      "label": "VWAP begins to slope",
+      "role": "CONFIRMATION",
+      "source_status": "UNSPECIFIED",
+      "source_claim_refs": [
+        "claim:vwap-slope-confirmation"
+      ],
+      "source_summary": "Direction is described visually, but horizon, magnitude and normalization are open.",
+      "operationalization_candidates": [
+        {
+          "candidate_id": "op:slope:finite-difference",
+          "label": "Finite difference over fixed horizon",
+          "definition": "Difference between current VWAP and VWAP a declared number of bars earlier, optionally normalized by price or volatility.",
+          "origin": "DOMAIN_CONVENTION",
+          "provenance_refs": [],
+          "parameters_still_open": [
+            "horizon",
+            "normalization",
+            "minimum magnitude"
+          ],
+          "preserves_source_intent": "YES"
+        },
+        {
+          "candidate_id": "op:slope:regression",
+          "label": "Local linear slope",
+          "definition": "Slope from a linear fit to recent VWAP observations over a declared window.",
+          "origin": "RESEARCHER_PROPOSAL",
+          "provenance_refs": [],
+          "parameters_still_open": [
+            "window",
+            "sampling interval",
+            "minimum fit quality"
+          ],
+          "preserves_source_intent": "PARTLY"
+        }
+      ],
+      "unresolved_questions": [
+        "Is direction alone sufficient or is a material slope required?"
+      ],
+      "decision": {
+        "status": "UNDECIDED",
+        "chosen_candidate_id": null,
+        "choice_basis": null,
+        "rationale": null
+      }
+    },
+    {
+      "construct_id": "construct:cross-market-alignment",
+      "label": "Correlated-market alignment",
+      "role": "CONFIRMATION",
+      "source_status": "UNSPECIFIED",
+      "source_claim_refs": [
+        "claim:cross-market-confirmation"
+      ],
+      "source_summary": "The source names examples such as ES and NQ strength but does not define the comparison or simultaneity window.",
+      "operationalization_candidates": [
+        {
+          "candidate_id": "op:cross-market:direction",
+          "label": "Same-direction return",
+          "definition": "The declared companion market has a return with the same sign over the same event window.",
+          "origin": "RESEARCHER_PROPOSAL",
+          "provenance_refs": [],
+          "parameters_still_open": [
+            "companion market",
+            "event window",
+            "minimum move"
+          ],
+          "preserves_source_intent": "PARTLY"
+        },
+        {
+          "candidate_id": "op:cross-market:matching-break-state",
+          "label": "Matching breakout state",
+          "definition": "The declared companion market simultaneously satisfies its own selected breakout-state definition.",
+          "origin": "RESEARCHER_PROPOSAL",
+          "provenance_refs": [],
+          "parameters_still_open": [
+            "companion market",
+            "breakout-state definition",
+            "synchronization tolerance"
+          ],
+          "preserves_source_intent": "YES"
+        }
+      ],
+      "unresolved_questions": [
+        "Which markets or internals are admissible?",
+        "Is this optional context or a required filter in the intended reconstruction?"
+      ],
+      "decision": {
+        "status": "UNDECIDED",
+        "chosen_candidate_id": null,
+        "choice_basis": null,
+        "rationale": null
+      }
+    },
+    {
+      "construct_id": "construct:limited-resistance",
+      "label": "No nearby heavy resistance or support",
+      "role": "CONFIRMATION",
+      "source_status": "DISCRETIONARY",
+      "source_claim_refs": [
+        "claim:resistance-context"
+      ],
+      "source_summary": "The source asks for a contextual chart judgment and gives an isolated numeric illustration, not a general distance rule.",
+      "operationalization_candidates": [
+        {
+          "candidate_id": "op:resistance:level-distance",
+          "label": "Distance to declared reference levels",
+          "definition": "Measure distance from the trigger to a predefined list of prior highs, lows and profile levels, then compare it with a declared scale.",
+          "origin": "RESEARCHER_PROPOSAL",
+          "provenance_refs": [],
+          "parameters_still_open": [
+            "eligible levels",
+            "distance normalization",
+            "minimum clearance"
+          ],
+          "preserves_source_intent": "PARTLY"
+        },
+        {
+          "candidate_id": "op:resistance:human-rubric",
+          "label": "Pre-trade human context rubric",
+          "definition": "A reviewer records the nearest material opposing level, its provenance and a categorical clearance judgment before acting.",
+          "origin": "HUMAN_PROTOCOL",
+          "provenance_refs": [],
+          "parameters_still_open": [
+            "material-level rubric",
+            "clearance categories"
+          ],
+          "preserves_source_intent": "YES"
+        }
+      ],
+      "unresolved_questions": [
+        "What makes a level heavy or material?",
+        "May this remain a human judgment rather than a numeric filter?"
+      ],
+      "decision": {
+        "status": "UNDECIDED",
+        "chosen_candidate_id": null,
+        "choice_basis": null,
+        "rationale": null
+      }
+    },
+    {
+      "construct_id": "construct:entry-method",
+      "label": "Entry method",
+      "role": "ENTRY",
+      "source_status": "SOURCE_ALTERNATIVES",
+      "source_claim_refs": [
+        "claim:entry-alternatives"
+      ],
+      "source_summary": "The source intentionally offers several ways to enter and leaves the situational choice to the trader.",
+      "operationalization_candidates": [
+        {
+          "candidate_id": "op:entry:pullback-hold",
+          "label": "First pullback that holds",
+          "definition": "Enter after the first post-break pullback judged to hold near the broken level.",
+          "origin": "SOURCE",
+          "provenance_refs": [
+            "loc:vwap-wave:ch6:p50-57"
+          ],
+          "parameters_still_open": [
+            "pullback definition",
+            "near",
+            "hold criterion"
+          ],
+          "preserves_source_intent": "YES"
+        },
+        {
+          "candidate_id": "op:entry:strong-close",
+          "label": "Strong close outside range",
+          "definition": "Enter at market after a completed bar judged to close strongly outside the range.",
+          "origin": "SOURCE",
+          "provenance_refs": [
+            "loc:vwap-wave:ch6:p50-57"
+          ],
+          "parameters_still_open": [
+            "bar size",
+            "strong-close criterion"
+          ],
+          "preserves_source_intent": "YES"
+        },
+        {
+          "candidate_id": "op:entry:limit-near-break",
+          "label": "Limit near broken level",
+          "definition": "Place a limit order at a declared offset around the selected broken boundary.",
+          "origin": "SOURCE",
+          "provenance_refs": [
+            "loc:vwap-wave:ch6:p50-57"
+          ],
+          "parameters_still_open": [
+            "offset",
+            "order lifetime"
+          ],
+          "preserves_source_intent": "YES"
+        },
+        {
+          "candidate_id": "op:entry:scale-in",
+          "label": "Partial break entry plus retrace add",
+          "definition": "Enter a declared fraction on the break and add a declared fraction on a qualifying shallow retrace.",
+          "origin": "SOURCE",
+          "provenance_refs": [
+            "loc:vwap-wave:ch6:p50-57"
+          ],
+          "parameters_still_open": [
+            "fractions",
+            "break rule",
+            "shallow-retrace rule"
+          ],
+          "preserves_source_intent": "YES"
+        }
+      ],
+      "unresolved_questions": [
+        "Is one entry method to be reconstructed or is situational choice part of the strategy identity?"
+      ],
+      "decision": {
+        "status": "UNDECIDED",
+        "chosen_candidate_id": null,
+        "choice_basis": null,
+        "rationale": null
+      }
+    },
+    {
+      "construct_id": "construct:stop-method",
+      "label": "Stop method",
+      "role": "STOP",
+      "source_status": "SOURCE_ALTERNATIVES",
+      "source_claim_refs": [
+        "claim:stop-alternatives"
+      ],
+      "source_summary": "The source provides structurally different stop references and leaves buffers to volatility and tolerance.",
+      "operationalization_candidates": [
+        {
+          "candidate_id": "op:stop:broken-boundary",
+          "label": "Beyond broken boundary",
+          "definition": "Place the stop on the invalidating side of the selected broken range boundary plus an open buffer.",
+          "origin": "SOURCE",
+          "provenance_refs": [
+            "loc:vwap-wave:ch6:p50-57"
+          ],
+          "parameters_still_open": [
+            "buffer"
+          ],
+          "preserves_source_intent": "YES"
+        },
+        {
+          "candidate_id": "op:stop:recent-swing",
+          "label": "Beyond recent swing",
+          "definition": "Place the stop beyond the most recent qualifying pre-break swing plus an open buffer.",
+          "origin": "SOURCE",
+          "provenance_refs": [
+            "loc:vwap-wave:ch6:p50-57"
+          ],
+          "parameters_still_open": [
+            "swing definition",
+            "buffer"
+          ],
+          "preserves_source_intent": "YES"
+        },
+        {
+          "candidate_id": "op:stop:vwap-context",
+          "label": "VWAP-context stop",
+          "definition": "Use VWAP or a declared amount beyond it when the example context places VWAP near structural invalidation.",
+          "origin": "SOURCE_EXAMPLE",
+          "provenance_refs": [
+            "loc:vwap-wave:ch6:p50-57"
+          ],
+          "parameters_still_open": [
+            "offset",
+            "eligibility condition"
+          ],
+          "preserves_source_intent": "UNKNOWN"
+        }
+      ],
+      "unresolved_questions": [
+        "Which stop has priority when references disagree?"
+      ],
+      "decision": {
+        "status": "UNDECIDED",
+        "chosen_candidate_id": null,
+        "choice_basis": null,
+        "rationale": null
+      }
+    },
+    {
+      "construct_id": "construct:exit-management",
+      "label": "Exit and management",
+      "role": "EXIT",
+      "source_status": "SOURCE_ALTERNATIVES",
+      "source_claim_refs": [
+        "claim:exit-alternatives"
+      ],
+      "source_summary": "Several profit objectives, partial-exit and trailing approaches are presented without a universal selection rule.",
+      "operationalization_candidates": [
+        {
+          "candidate_id": "op:exit:two-sigma",
+          "label": "Two-deviation objective",
+          "definition": "Take a declared amount of profit at or beyond the corresponding two-deviation band.",
+          "origin": "SOURCE",
+          "provenance_refs": [
+            "loc:vwap-wave:ch6:p50-57"
+          ],
+          "parameters_still_open": [
+            "position fraction",
+            "touch or close condition"
+          ],
+          "preserves_source_intent": "YES"
+        },
+        {
+          "candidate_id": "op:exit:measured-range",
+          "label": "Measured range objective",
+          "definition": "Project the selected prior range size beyond its broken boundary.",
+          "origin": "SOURCE",
+          "provenance_refs": [
+            "loc:vwap-wave:ch6:p50-57"
+          ],
+          "parameters_still_open": [
+            "range definition",
+            "fill convention"
+          ],
+          "preserves_source_intent": "YES"
+        },
+        {
+          "candidate_id": "op:exit:fixed-risk-reward",
+          "label": "Fixed reward-to-risk objective",
+          "definition": "Set the objective at a declared multiple of initial risk; the source illustrates two to one.",
+          "origin": "SOURCE",
+          "provenance_refs": [
+            "loc:vwap-wave:ch6:p50-57"
+          ],
+          "parameters_still_open": [
+            "risk multiple"
+          ],
+          "preserves_source_intent": "YES"
+        },
+        {
+          "candidate_id": "op:exit:trail-vwap-band",
+          "label": "Trail by VWAP or deviation band",
+          "definition": "After an optional partial exit, trail the remainder against VWAP or a declared deviation band and offset.",
+          "origin": "SOURCE",
+          "provenance_refs": [
+            "loc:vwap-wave:ch6:p50-57"
+          ],
+          "parameters_still_open": [
+            "trail reference",
+            "offset",
+            "bar or intrabar trigger"
+          ],
+          "preserves_source_intent": "YES"
+        }
+      ],
+      "unresolved_questions": [
+        "Are objectives alternatives or parts of a scale-out sequence?",
+        "How is a trend day recognized without hindsight?"
+      ],
+      "decision": {
+        "status": "UNDECIDED",
+        "chosen_candidate_id": null,
+        "choice_basis": null,
+        "rationale": null
+      }
+    },
+    {
+      "construct_id": "construct:session-phase",
+      "label": "Intraday session phase",
+      "role": "SESSION",
+      "source_status": "CONTRADICTORY",
+      "source_claim_refs": [
+        "claim:time-context"
+      ],
+      "source_summary": "Opening, midday and afternoon behavior matter, but supplied passages use overlapping and differing cutoffs for midday and late-day activity.",
+      "operationalization_candidates": [
+        {
+          "candidate_id": "op:phase:chapter4-windows",
+          "label": "Chapter 4 phase map",
+          "definition": "Use the explicit phase windows supplied in the chapter-level session map.",
+          "origin": "SOURCE",
+          "provenance_refs": [
+            "loc:vwap-wave:ch4:p23-35"
+          ],
+          "parameters_still_open": [
+            "closing-period boundary"
+          ],
+          "preserves_source_intent": "YES"
+        },
+        {
+          "candidate_id": "op:phase:setup1-windows",
+          "label": "Setup-specific time references",
+          "definition": "Use the narrower midday caution and later power-hour references stated inside the setup discussion.",
+          "origin": "SOURCE",
+          "provenance_refs": [
+            "loc:vwap-wave:ch6:p50-57"
+          ],
+          "parameters_still_open": [
+            "exact power-hour start"
+          ],
+          "preserves_source_intent": "UNKNOWN"
+        }
+      ],
+      "unresolved_questions": [
+        "Which phase map governs Setup 1 when the general and setup-specific descriptions differ?"
+      ],
+      "decision": {
+        "status": "UNDECIDED",
+        "chosen_candidate_id": null,
+        "choice_basis": null,
+        "rationale": null
+      }
+    },
+    {
+      "construct_id": "construct:news-policy",
+      "label": "News and catalyst treatment",
+      "role": "EXCEPTION",
+      "source_status": "UNSPECIFIED",
+      "source_claim_refs": [
+        "claim:news-treatment"
+      ],
+      "source_summary": "News may produce qualifying breakouts, wider risk or urgent execution, but the source does not supply a repeatable event policy.",
+      "operationalization_candidates": [
+        {
+          "candidate_id": "op:news:human-exception",
+          "label": "Human news exception protocol",
+          "definition": "Record whether scheduled or unexpected news is present and delegate the altered execution decision to a documented human protocol.",
+          "origin": "HUMAN_PROTOCOL",
+          "provenance_refs": [],
+          "parameters_still_open": [
+            "event feed",
+            "scheduled-event window",
+            "permitted overrides"
+          ],
+          "preserves_source_intent": "YES"
+        },
+        {
+          "candidate_id": "op:news:separate-variant",
+          "label": "Separate news-driven variant",
+          "definition": "Treat news-driven occurrences as a separate reconstruction rather than mixing them with ordinary setup occurrences.",
+          "origin": "RESEARCHER_PROPOSAL",
+          "provenance_refs": [],
+          "parameters_still_open": [
+            "news classification",
+            "separation window"
+          ],
+          "preserves_source_intent": "PARTLY"
+        }
+      ],
+      "unresolved_questions": [
+        "Is news part of the intended setup or a separate discretionary exception?"
+      ],
+      "decision": {
+        "status": "UNDECIDED",
+        "chosen_candidate_id": null,
+        "choice_basis": null,
+        "rationale": null
+      }
+    },
+    {
+      "construct_id": "construct:discretion-protocol",
+      "label": "Trader discretion",
+      "role": "OTHER",
+      "source_status": "DISCRETIONARY",
+      "source_claim_refs": [
+        "claim:discretion"
+      ],
+      "source_summary": "Discretion is presented as part of the method rather than an accidental omission, so removing it may create a simplified variant instead of a faithful replication.",
+      "operationalization_candidates": [
+        {
+          "candidate_id": "op:discretion:predecision-rubric",
+          "label": "Pre-decision observation rubric",
+          "definition": "Record the visible cues, allowed actions and reason for any pass, entry, size change or early exit at the time of judgment.",
+          "origin": "HUMAN_PROTOCOL",
+          "provenance_refs": [],
+          "parameters_still_open": [
+            "cue vocabulary",
+            "allowed override classes",
+            "review method"
+          ],
+          "preserves_source_intent": "YES"
+        },
+        {
+          "candidate_id": "op:discretion:mechanical-subset",
+          "label": "Mechanical subset",
+          "definition": "Omit unobservable judgment and retain only explicitly translated conditions, with the result labelled a simplified variant.",
+          "origin": "RESEARCHER_PROPOSAL",
+          "provenance_refs": [],
+          "parameters_still_open": [
+            "retained conditions"
+          ],
+          "preserves_source_intent": "NO"
+        }
+      ],
+      "unresolved_questions": [
+        "Should the intended result preserve human discretion or deliberately define a mechanical subset?"
+      ],
+      "decision": {
+        "status": "UNDECIDED",
+        "chosen_candidate_id": null,
+        "choice_basis": null,
+        "rationale": null
+      }
+    }
+  ],
+  "reconstruction_status": "SOURCE_EXTRACTION",
+  "fidelity_label": "UNASSESSED",
+  "overall_note": "The excerpts provide a recognizable setup identity but not one executable ruleset. This artifact preserves the source claims, marks examples as illustrative, records alternatives without selecting them and exposes the remaining translation work. It makes no backtest, profitability or evidence claim."
+}

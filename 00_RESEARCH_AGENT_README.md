@@ -42,6 +42,7 @@ Die Dateien erfüllen verschiedene Funktionen:
 | `generation/mechanism_catalog.v1.json` | Literaturgestützte Mechanismen für Intraday- und kurze Swing-Ideen | Wenn Ideen erzeugt oder der Katalog erweitert werden soll |
 | `generation/README.md` | Bedienung und Grenzen des Generators | Bei einem Generatorlauf |
 | `agents/intraday-hypothesis-generator.md` | Optionaler autonomer Generatorvertrag | Bei agentischer Ideenerzeugung |
+| `reconstruction/README.md` | Quellennahe Übersetzung von Buch-/Artikel-/Video-/Kursstrategien | Wenn eine Quellenstrategie nicht vollständig operationalisiert ist |
 | `00_RESEARCH_AGENT_README.md` | Routing, Gate- und Nicht-Überspringen-Regeln | Ab `PROMOTED` |
 | `01_RESEARCH_STANDARD.md` | Normativer Forschungsstandard | Ab `PROMOTED` |
 | `02_RESEARCH_CASE_TEMPLATE.md` | Operatives Arbeitsartefakt je Research-ID | Beim Eröffnen eines Research Case |

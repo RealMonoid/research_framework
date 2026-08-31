@@ -69,6 +69,7 @@ Das Register referenziert die maschinenlesbaren Artefakte nach `05_AGENT_OPERATI
 | Forecast Ledger | | | | | `N/A / OPEN / PARTIALLY_RESOLVED / RESOLVED` |
 | Eval-Ergebnis | | | | | `PASS / FAIL / BLOCKED / NOT_RUN` |
 | Hypothesen-Intake | | `1.4.0` | | | `INBOX / SCREENED / MERGED / REJECTED / PROMOTED` |
+| Strategy Reconstruction, falls Quellenstrategie | | `1.0.0` | | | `SOURCE_EXTRACTION / TRANSLATION_DRAFT / RECONSTRUCTION_COMPLETE / DISCRETIONARY_PROTOCOL_COMPLETE / NOT_OPERATIONALIZABLE` |
 | Search-Space-Register | | `1.0.0` | | | `N/A (Zählregister)` |
 | Entry Noise Screen | | `1.0.0` | | | `PASS / FAIL / BLOCKED` oder Intake-Waiver |
 
@@ -472,6 +473,10 @@ Welche Begriffe wurden verworfen, geändert oder präzisiert? ...
 # F. Operationalisierung
 
 **PHASENSTATUS:** `COMPLETE / BLOCKED`
+
+**Strategy-Reconstruction-ID, falls die Idee aus einer unvollständig definierten Quelle stammt:** ... / `N/A + Begründung`
+
+**Fidelity-Label der Übersetzung:** `REPLICATION / DOCUMENTED_RECONSTRUCTION / SIMPLIFIED_VARIANT / PLAYBOOK_ONLY / N/A`
 
 | Konzept | Exakte Messdefinition | Einheit | Lookback | Session | Timeframe | Zeitpunkt | kontinuierlich oder diskret? |
 |---|---|---|---|---|---|---|---|

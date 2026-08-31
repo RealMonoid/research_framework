@@ -339,6 +339,32 @@ kein Holdout mehr. Feature Importance, SHAP-/Shapley-, Impurity- oder vergleichb
 Verfahren sind optionale Modell- oder Assoziationsdiagnosen. Sie sind weder
 Pflicht noch Beleg für kausale Relevanz.
 
+## 4.1b Rekonstruktion einer Strategie aus Prosa
+
+Stammt eine Idee aus einem Buch, Artikel, Video oder Kurs und fehlen dort
+reproduzierbare Definitionen, wird Quelleninterpretation nicht unmittelbar als
+fertige Strategie ausgegeben. Vor einer eigenen Spezifikation darf ein
+`strategy_reconstruction` nach
+`schemas/strategy_reconstruction.schema.json` angelegt werden.
+
+Das Artefakt trennt:
+
+- den tatsächlich geprüften Quellenausschnitt,
+- Regel, Empfehlung, Option, Beispiel und ausdrückliche Discretion,
+- die für die Strategieidentität unverzichtbaren Quellenbehauptungen,
+- quellenfestgelegte, alternative, offene, diskretionäre und
+  widersprüchliche Konstrukte,
+- mögliche Definitionen und deren wirkliche Herkunft,
+- die spätere bewusste Auswahl oder ein Human-Protocol.
+
+Ein Beispiel wird nicht automatisch zur allgemeinen Regel. Eine Liste
+möglicher Operationalisierungen ist weder eine Auswahl noch ein Backtest oder
+automatisch ein tatsächlich untersuchter Suchraum. Wird Discretion entfernt,
+kann das Ergebnis eine `SIMPLIFIED_VARIANT`, aber keine stillschweigende
+Replikation sein. `REPLICATION` ist nur zulässig, wenn die Quelle alle
+wesentlichen Konstrukte reproduzierbar festlegt. Details und Beispiel stehen in
+`reconstruction/README.md`.
+
 ## 4.2 Verbindlicher Research Scope
 
 Vor `PROMOTED` wird der Scope so eng angegeben, dass unterschiedliche Designs
@@ -577,6 +603,12 @@ Eine Bibliothek darf mehrere Rollen übernehmen, aber kein API-Output ersetzt Do
 ---
 
 # 6. Operationalisierung
+
+Liegt eine nicht vollständig operationalisierte Quellenstrategie zugrunde,
+wird vor dieser Phase die Quellenrekonstruktion aus §4.1b referenziert. Abschnitt
+6 dokumentiert anschließend die tatsächlich gewählte Spezifikation; er darf
+nicht rückwirkend verschleiern, welche Definition aus der Quelle stammt und
+welche erst bei der Rekonstruktion ergänzt wurde.
 
 Begriffe wie:
 

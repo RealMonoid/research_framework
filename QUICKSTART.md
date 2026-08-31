@@ -47,6 +47,21 @@ fixiert. Die Schwelle jedes
 [`noise_screen`](schemas/noise_screen.schema.json) muss der dort hinterlegten
 Multiplikitätskorrektur entsprechen.
 
+## 2a. Optional: Strategie aus Buch, Artikel, Video oder Kurs übersetzen
+
+Beschreibt eine Quelle ein Setup, operationalisiert Begriffe und Alternativen
+aber nicht vollständig, wird vor einer eigenen Spezifikation ein
+[`strategy_reconstruction`](schemas/strategy_reconstruction.schema.json)
+angelegt. Der Pfad trennt Quellenregel, Empfehlung, Option, Beispiel,
+Discretion und offene Definition. Mögliche Übersetzungen bleiben Kandidaten;
+sie werden weder automatisch gewählt noch getestet.
+
+Der Arbeitsablauf steht in
+[`reconstruction/README.md`](reconstruction/README.md). Das ausgefüllte
+[`VWAP-Price-Discovery-Beispiel`](examples/strategy_reconstruction.vwap_wave_price_discovery.json)
+endet bewusst als `SOURCE_EXTRACTION` mit lauter offenen Entscheidungen. Es ist
+kein Backtest und keine Behauptung, die Quelle sei profitabel.
+
 ## 3. Günstiger Intake
 
 Eine neue Idee beginnt als `INBOX` nach

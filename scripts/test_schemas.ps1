@@ -92,6 +92,7 @@ function Set-DataDrivenVariableSelection {
 
 $positivePairs = @(
     @('generation\mechanism_catalog.v1.json', 'schemas\mechanism_catalog.schema.json'),
+    @('examples\strategy_reconstruction.vwap_wave_price_discovery.json', 'schemas\strategy_reconstruction.schema.json'),
     @('examples\search_space.minimal.json', 'schemas\search_space.schema.json'),
     @('examples\noise_screen.pass.json', 'schemas\noise_screen.schema.json'),
     @('examples\noise_screen.fail.json', 'schemas\noise_screen.schema.json'),
