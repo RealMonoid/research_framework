@@ -49,11 +49,16 @@ def main(argv: Sequence[str] | None = None) -> int:
         [python, "scripts/test_research_orchestration.py"],
     )
     run("Entry thresholds", [python, "scripts/test_entry_thresholds.py"])
+    run("Data snapshot contract", [python, "scripts/test_data_snapshot.py"])
     run("Hypothesis generator", [python, "scripts/test_generator.py"])
     run("Eval protocol smoke", [python, "evals/run_evals.py"])
     run(
         "Eval unit and producer integration tests",
         [python, "-m", "unittest", "discover", "-s", "evals/tests", "-v"],
+    )
+    run(
+        "Ingest adapter offline tests",
+        [python, "-m", "unittest", "discover", "-s", "ingest/tests", "-v"],
     )
     if args.live_results:
         command = [

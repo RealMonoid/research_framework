@@ -33,6 +33,15 @@ or idea specialist only when its prerequisites and trigger are present. The
 conductor retains the conversation, validates each returned artifact, and routes
 again; a specialist never silently changes the research question.
 
+Data entering the process is itself contracted. The
+[data snapshot schema](schemas/data_snapshot.schema.json) records provider,
+instrument, coverage, gaps, and a `sha256` per file, so `consumed_data_refs` can
+point at a resolvable, verifiable state instead of an opaque label. A split
+declared after retrieval is rejected. Provider-specific retrieval lives in the
+explicitly non-normative [`ingest/`](ingest/) adapters, whose pure planning and
+coverage functions are tested offline; a snapshot proves origin, coverage, and
+integrity, never that the data suffices for a given hypothesis.
+
 The generator is deliberately not another gate. It combines mechanisms with
 phases and observable responses, then applies phase-path,
 expectation-violation, mechanism-connection, and assumption-relaxation

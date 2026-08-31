@@ -63,6 +63,12 @@ if ($LASTEXITCODE -ne 0) {
     throw "Entry-Threshold-Tests fehlgeschlagen (Exit $LASTEXITCODE)."
 }
 
+Write-Output '== Data snapshot contract =='
+& $PythonExecutable (Join-Path $repoRoot 'scripts\test_data_snapshot.py')
+if ($LASTEXITCODE -ne 0) {
+    throw "Data-Snapshot-Vertragstests fehlgeschlagen (Exit $LASTEXITCODE)."
+}
+
 Write-Output '== Hypothesis generator =='
 & $PythonExecutable (Join-Path $repoRoot 'scripts\test_generator.py')
 if ($LASTEXITCODE -ne 0) {
@@ -79,6 +85,12 @@ Write-Output '== Eval unit tests =='
 & $PythonExecutable -m unittest discover -s (Join-Path $repoRoot 'evals\tests') -v
 if ($LASTEXITCODE -ne 0) {
     throw "Eval-Unit-Tests fehlgeschlagen (Exit $LASTEXITCODE)."
+}
+
+Write-Output '== Ingest adapter offline tests =='
+& $PythonExecutable -m unittest discover -s (Join-Path $repoRoot 'ingest\tests') -v
+if ($LASTEXITCODE -ne 0) {
+    throw "Ingest-Adapter-Tests fehlgeschlagen (Exit $LASTEXITCODE)."
 }
 
 Write-Output 'Framework integrity passed. LIVE_AGENT release gate was NOT run; use scripts/validate_framework.py --live-results <path> for a model or prompt release claim.'

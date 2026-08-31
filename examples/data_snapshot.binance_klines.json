@@ -1,0 +1,69 @@
+{
+  "schema_version": "1.0.0",
+  "snapshot_id": "snapshot:binance-um-ethusdt-1m:2019-11..2019-12",
+  "created_at": "2026-08-31T15:00:00Z",
+  "data_kind": "OHLCV",
+  "source": {
+    "provider": "BINANCE_PUBLIC_DATA",
+    "access_method": "BULK_ARCHIVE",
+    "base_location": "https://data.binance.vision/data/futures/um/monthly/klines/ETHUSDT/1m/",
+    "retrieved_at": "2026-08-31T14:55:00Z",
+    "terms_ref": "Binance Public Data, frei zugaenglich ohne API-Key; Nutzungsbedingungen des Anbieters gelten.",
+    "provider_checksums_verified": true
+  },
+  "instrument": {
+    "venue": "BINANCE_USDM",
+    "symbol": "ETHUSDT",
+    "instrument_class": "PERPETUAL",
+    "timeframe": "1m",
+    "settlement_currency": "USDT"
+  },
+  "coverage": {
+    "first_observation": "2019-11-27T00:00:00Z",
+    "last_observation": "2019-12-31T23:59:00Z",
+    "row_count": 49680,
+    "timezone": "UTC",
+    "continuity_checked": true,
+    "gap_count": 2,
+    "missing_units": 37,
+    "gaps": [
+      {
+        "from": "2019-12-04T14:12:00Z",
+        "to": "2019-12-04T14:31:00Z",
+        "missing_units": 18
+      },
+      {
+        "from": "2019-12-18T08:02:00Z",
+        "to": "2019-12-18T08:21:00Z",
+        "missing_units": 19
+      }
+    ],
+    "zero_volume_rows": 1044
+  },
+  "files": [
+    {
+      "path": "data/binance/um/ETHUSDT/1m/ETHUSDT-1m-2019-11.parquet",
+      "bytes": 118422,
+      "sha256": "9f2c1a4be5d7038c6b91ee40a2d5c78f31b0a96e4c2d8f7051ab3e6c9d47f280",
+      "row_count": 5040
+    },
+    {
+      "path": "data/binance/um/ETHUSDT/1m/ETHUSDT-1m-2019-12.parquet",
+      "bytes": 129884,
+      "sha256": "3ac7f0916b5e28d407c31fa9e6b280d5c47139a8e0f62b4d3915ca87e026bd41",
+      "row_count": 44640
+    }
+  ],
+  "known_limitations": [
+    "Zwei-Monats-Ausschnitt als Vertragsbeispiel, kein vollstaendiger Datenstand.",
+    "Binance-Daten vor 2020-05-14 gelten beim Anbieter als weniger zuverlaessig in volatilen Phasen.",
+    "Aggregierte Bars erlauben kein echtes Volume-at-Price; Profilgroessen bleiben Naeherungen, solange kein AGG_TRADES-Snapshot referenziert wird."
+  ],
+  "split_declaration": {
+    "declared_at": "2026-08-31T14:40:00Z",
+    "document_sha256": "db64c876eeb3da9c0917223a217d21e9b144b919dbb3f81cd6b90854e24b5d67",
+    "method": "CHRONOLOGICAL",
+    "is_boundary": "2019-12-10T00:00:00Z",
+    "val_boundary": "2019-12-21T00:00:00Z"
+  }
+}
