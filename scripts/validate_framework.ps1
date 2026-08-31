@@ -51,6 +51,12 @@ if ($LASTEXITCODE -ne 0) {
     throw "Wissenschaftsphilosophie-Review-Tests fehlgeschlagen (Exit $LASTEXITCODE)."
 }
 
+Write-Output '== Causal-identification review =='
+& $PythonExecutable (Join-Path $repoRoot 'scripts\test_causal_identification.py')
+if ($LASTEXITCODE -ne 0) {
+    throw "Kausalitätsprüfer-Tests fehlgeschlagen (Exit $LASTEXITCODE)."
+}
+
 Write-Output '== Research orchestration =='
 & $PythonExecutable (Join-Path $repoRoot 'scripts\test_research_orchestration.py')
 if ($LASTEXITCODE -ne 0) {

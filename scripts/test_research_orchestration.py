@@ -183,6 +183,31 @@ def main() -> int:
     if decision["selected_agent"] != "condition-inquiry-analyst":
         raise AssertionError("Condition inquiry did not select its specialist")
 
+    causal_request = neutral_state()
+    causal_request["request"]["intent"] = "ASSESS_CAUSAL_CLAIM"
+    causal_request["request"]["requested_claim_level"] = "INTERVENTIONAL"
+    causal_request["artifacts"]["causal_identification_assessment"] = {
+        "status": "MISSING",
+        "artifact_ref": None,
+    }
+    decision = assert_route(causal_request, "CAUSAL_IDENTIFICATION_REVIEW")
+    if decision["selected_agent"] != "causal-identification-critic":
+        raise AssertionError("Causal claim did not select the identification specialist")
+    if decision["work_order"]["required_output_type"] != "causal_identification_assessment":
+        raise AssertionError("Causal route did not require its identification artifact")
+
+    predictive_request = neutral_state()
+    predictive_request["request"]["intent"] = "START_OR_CONTINUE_RESEARCH"
+    predictive_request["request"]["requested_claim_level"] = "ASSOCIATIONAL_PREDICTIVE"
+    assert_route(predictive_request, "CONDUCT_RESEARCH")
+
+    identified_request = copy.deepcopy(causal_request)
+    identified_request["artifacts"]["causal_identification_assessment"] = {
+        "status": "COMPLETE",
+        "artifact_ref": "causal-assessment:synthetic-hfi:v1",
+    }
+    assert_route(identified_request, "CONDUCT_RESEARCH")
+
     post_result = neutral_state()
     post_result["request"]["intent"] = "REVISE_AFTER_RESULT"
     post_result["research_context"]["stage"] = "POST_RESULT"
@@ -267,8 +292,8 @@ def main() -> int:
 
     print(
         "Research-orchestration tests passed: mandatory philosophy handoffs, "
-        "six-part identity continuity, drift pause, prerequisite ordering, "
-        "user pause, and blocker behavior."
+        "causal-identification routing, predictive bypass, six-part identity "
+        "continuity, drift pause, prerequisite ordering, user pause, and blocker behavior."
     )
     return 0
 

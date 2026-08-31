@@ -96,6 +96,7 @@ IDs sind opake Schlüssel. Sie werden nicht nachträglich wiederverwendet oder a
 | Constraint-/Lever-Assessment | bei Verwendung eines der vier Constraint-/Lever-Labels | **schemas/constraint_assessment.schema.json** |
 | Strategy Concept Audit | vor Abschluss jeder unvollständig definierten Quellenrekonstruktion | **schemas/strategy_concept_audit.schema.json** plus semantischer Inspector |
 | Condition Inquiry | nach vorläufiger Operationalisierung, sobald Messnutzen, Definitionsabhängigkeit oder unbekannte Erfolgsmodifikatoren quantitativ untersucht werden | **schemas/condition_inquiry.schema.json** plus semantischer Inspector |
+| Causal-Identification-Assessment | vor jeder interventionalen oder kontrafaktischen Schätzung beziehungsweise kausalen Formulierung | **schemas/causal_identification_assessment.schema.json** plus **scripts/inspect_causal_identification.py** |
 | Wissenschaftsphilosophie-Review | nach `FALSIFIED / PRECISE_NULL / INCONCLUSIVE / INVALID_TEST`, sobald eine materielle Revision oder empirische Fortsetzung erwogen wird | **schemas/scientific_philosophy_review.schema.json** plus semantischer Inspector |
 | Orchestration State | vor jedem materiellen Research-Übergang und nach jedem akzeptierten Fachbeitrag, Blocker oder Nutzerentscheid | **schemas/orchestration_state.schema.json** plus deterministischer Routertest |
 | Routing Decision | für jeden aus einem Orchestration State abgeleiteten nächsten Arbeitsauftrag | **schemas/routing_decision.schema.json** plus **scripts/route_research_task.py** |
@@ -1110,6 +1111,10 @@ Zwingende Fachrouten sind insbesondere:
   Operationalisierung,
 - `scientific-philosophy-critic / POST_RESULT` bei Attribution, Revision oder
   Fortsetzung nach einem eingefrorenen nicht positiven Ergebnis,
+- `causal-identification-critic / PRE_ESTIMATION` sobald ein
+  `INTERVENTIONAL`- oder `COUNTERFACTUAL`-Claim beabsichtigt ist und noch kein
+  akzeptiertes Identifikationsassessment vorliegt; ausdrücklich nicht bei
+  einer rein prädiktiven Frage,
 - `intraday-hypothesis-generator` nur bei tatsächlicher Suche nach neuen
   kurzfristigen Ideen.
 

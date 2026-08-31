@@ -1,8 +1,8 @@
 {
   "schema_version": "eval-baseline.v1",
   "catalog_id": "research-agent-core",
-  "catalog_version": "1.8.0",
-  "baseline_id": "protocol-reference-1-8-0",
+  "catalog_version": "1.9.0",
+  "baseline_id": "protocol-reference-1-9-0",
   "recorded_at": "2026-08-31T00:00:00+02:00",
   "minimums": {
     "overall_score": 0.95,
@@ -17,6 +17,7 @@
     "academic_source_governance_accuracy": 1.0,
     "hypothesis_intake_accuracy": 1.0,
     "scientific_philosophy_accuracy": 1.0,
+    "causal_identification_accuracy": 1.0,
     "research_orchestration_accuracy": 1.0
   },
   "metrics": {
@@ -32,6 +33,7 @@
     "academic_source_governance_accuracy": 1.0,
     "hypothesis_intake_accuracy": 1.0,
     "scientific_philosophy_accuracy": 1.0,
+    "causal_identification_accuracy": 1.0,
     "research_orchestration_accuracy": 1.0
   },
   "case_scores": {
@@ -55,7 +57,11 @@
     "route_measurement_question_after_provisional_definition": 1.0,
     "route_non_positive_revision_to_philosophy": 1.0,
     "route_plain_result_explanation_without_specialist": 1.0,
-    "route_detected_handoff_drift_to_user": 1.0
+    "route_detected_handoff_drift_to_user": 1.0,
+    "route_causal_claim_to_identification_critic": 1.0,
+    "dml_is_not_identification": 1.0,
+    "financial_event_study_requires_counterfactual": 1.0,
+    "predictive_question_bypasses_causal_gate": 1.0
   },
   "regression_policy": {
     "max_metric_drop": 0.0,

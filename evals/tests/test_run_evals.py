@@ -34,8 +34,41 @@ class EvalHarnessTests(unittest.TestCase):
         self.assertEqual(report["metrics"]["hypothesis_intake_accuracy"], 1.0)
         self.assertEqual(report["metrics"]["scientific_philosophy_accuracy"], 1.0)
         self.assertEqual(report["metrics"]["research_orchestration_accuracy"], 1.0)
+        self.assertEqual(report["metrics"]["causal_identification_accuracy"], 1.0)
         self.assertFalse(report["gate_failures"])
         self.assertFalse(report["regression_failures"])
+
+    def test_dml_cannot_substitute_for_causal_identification(self) -> None:
+        regressed = copy.deepcopy(self.results)
+        regressed["run_id"] = "dml-identification-regression"
+        assessment = regressed["cases"]["dml_is_not_identification"][
+            "causal_identification"
+        ]
+        assessment["identification_status"] = "PASS"
+        assessment["dml_role"] = "IDENTIFICATION"
+
+        report = run_evals.score_results(self.catalog, regressed, self.baseline)
+        self.assertFalse(report["passed"])
+        self.assertLess(report["metrics"]["causal_identification_accuracy"], 1.0)
+        self.assertFalse(report["cases"]["dml_is_not_identification"]["passed"])
+        self.assertTrue(report["regression_failures"])
+
+    def test_misspecified_event_study_cannot_authorize_causal_language(self) -> None:
+        regressed = copy.deepcopy(self.results)
+        regressed["run_id"] = "event-study-causal-language-regression"
+        regressed["cases"]["financial_event_study_requires_counterfactual"][
+            "causal_identification"
+        ]["causal_language_authorized"] = True
+
+        report = run_evals.score_results(self.catalog, regressed, self.baseline)
+        self.assertFalse(report["passed"])
+        self.assertLess(report["metrics"]["causal_identification_accuracy"], 1.0)
+        self.assertFalse(
+            report["cases"]["financial_event_study_requires_counterfactual"][
+                "passed"
+            ]
+        )
+        self.assertTrue(report["regression_failures"])
 
     def test_contemporaneous_ofi_cannot_be_promoted_to_forward_oos(self) -> None:
         regressed = copy.deepcopy(self.results)

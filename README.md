@@ -29,7 +29,8 @@ Every user-facing research task is coordinated by the
 [orchestration checkpoint](schemas/orchestration_state.schema.json), obtains one
 hard-rule next step from the executable
 [router](scripts/route_research_task.py), and invokes the philosophy, condition,
-or idea specialist only when its prerequisites and trigger are present. The
+causal-identification, or idea specialist only when its prerequisites and
+trigger are present. The
 conductor retains the conversation, validates each returned artifact, and routes
 again; a specialist never silently changes the research question.
 
@@ -38,6 +39,16 @@ identity guard: research question, strategy, market, time horizon, trigger, and
 target. The deterministic [handoff check](scripts/check_research_identity.py)
 must report no change before the returned work can be accepted; otherwise the
 original remains in force and the user receives a plain-language choice.
+
+An interventional or counterfactual claim has an additional mandatory stop. The
+[causal-identification critic](agents/causal-identification-critic.md) must
+produce a validated
+[identification assessment](schemas/causal_identification_assessment.schema.json)
+before causal estimation or causal wording. The review uses a versioned
+[quant-finance research basis](references/CAUSAL_IDENTIFICATION_FOR_FINANCE.md)
+and checks event timing, counterfactual return models, simultaneity,
+information shocks, spillovers, post-treatment variables, dependence, and
+regime instability. A clearly predictive strategy question bypasses this gate.
 
 The generator is deliberately not another gate. It combines mechanisms with
 phases and observable responses, then applies phase-path,

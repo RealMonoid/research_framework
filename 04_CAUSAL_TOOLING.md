@@ -2,12 +2,20 @@
 
 **Version:** 1.1
 **Stand:** 2026-08-31
-**Status:** ENTWURF ZUR ÜBERNAHME  
+**Status:** VERBINDLICH
 **Zweck:** Verbindlicher Router für spezialisierte Python-Bibliotheken bei expliziter Identifikation, optionaler DAG-Prüfung, kausaler Schätzung, Refutation und zeitserienspezifischer Causal Discovery.
 
 ---
 
 # 1. Grundregel
+
+Dieses Dokument regelt erst die Werkzeuge **nach** der inhaltlichen
+Identifikationsprüfung. Bei `INTERVENTIONAL` oder `COUNTERFACTUAL` muss zuvor
+ein validiertes `causal_identification_assessment` nach
+`schemas/causal_identification_assessment.schema.json` vorliegen. Ein
+Bibliothekslauf kann dieses Pflichtartefakt nicht ersetzen. Die verbindliche
+finanzmarktspezifische Forschungsbasis steht in
+`references/CAUSAL_IDENTIFICATION_FOR_FINANCE.md`.
 
 Sobald eine kausale Methode als Code ausgeführt wird, verwendet der Agent eine geeignete spezialisierte Bibliothek, sofern eine gepflegte und für das Design passende Implementierung verfügbar ist. Kausale Kernalgorithmen werden nicht ad hoc neu geschrieben.
 

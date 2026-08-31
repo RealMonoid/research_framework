@@ -1,6 +1,6 @@
 # 00_RESEARCH_AGENT_README.md
 
-**Version:** 2.4
+**Version:** 2.5
 **Stand:** 2026-08-31
 **Status:** ENTWURF ZUR ÜBERNAHME  
 **Zweck:** Verbindliche Lese- und Ausführungsanweisung für AI-Agenten, die Trading-Research-Projekte bearbeiten.
@@ -44,6 +44,8 @@ Die Dateien erfüllen verschiedene Funktionen:
 | `agents/intraday-hypothesis-generator.md` | Optionaler autonomer Generatorvertrag | Bei agentischer Ideenerzeugung |
 | `agents/scientific-philosophy-critic.md` | Begriffs-/Voraussetzungspruefung vor Operationalisierung sowie Duhem-Quine-/Lakatos-/Kuhn-Fortsetzungspruefung | Vor Abschluss jeder unvollstaendig definierten Quellenrekonstruktion; nach nicht positivem Q8-Ergebnis bei materieller Revision oder Fortsetzung |
 | `agents/condition-inquiry-analyst.md` | Quantitative Beurteilung von Messinstrumenten und Erzeugung beobachtbarer Bedingungshypothesen | Nach vorlaeufiger Operationalisierung, wenn Messnutzen, Definitionsabhaengigkeit oder unbekannte Erfolgsmodifikatoren untersucht werden |
+| `agents/causal-identification-critic.md` | Unabhängige Prüfung, ob ein Finanzmarktdesign die beabsichtigte kausale Aussage trägt | Vor jeder interventionalen oder kontrafaktischen Schätzung und vor kausaler Sprache; nicht für rein prädiktive Fragen |
+| `references/CAUSAL_IDENTIFICATION_FOR_FINANCE.md` | Versionierte Forschungsbasis für finanzmarktspezifische Identifikationsrisiken | Bei jeder Kausalitätsprüfung |
 | `reconstruction/README.md` | Quellennahe Übersetzung von Buch-/Artikel-/Video-/Kursstrategien | Wenn eine Quellenstrategie nicht vollständig operationalisiert ist |
 | `00_RESEARCH_AGENT_README.md` | Routing, Gate- und Nicht-Überspringen-Regeln | Ab `PROMOTED` |
 | `01_RESEARCH_STANDARD.md` | Normativer Forschungsstandard | Ab `PROMOTED` |
@@ -147,6 +149,15 @@ Insbesondere wird bei einer unvollständigen Prosastrategie zuerst die Quelle
 rekonstruiert, danach zwingend die Begriffs- und Voraussetzungenprüfung durch den
 `scientific-philosophy-critic` durchgeführt und erst anschließend
 operationalisiert. Dieser Ablauf autorisiert keinen Backtest.
+
+Sobald der stärkste beabsichtigte Claim `INTERVENTIONAL` oder
+`COUNTERFACTUAL` lautet, ist vor Schätzung und kausaler Formulierung zusätzlich
+der `causal-identification-critic` zwingend. Er prüft Estimand, Quelle der
+identifizierenden Variation, ökonomisches Modell, Annahmen, finanzmarkttypische
+Verzerrungen, Gegenproben und Sensitivität. DML, Local Projections,
+Event-Study-Regressionen, zeitliche Reihenfolge und Causal Discovery ersetzen
+diese Prüfung nicht. Ein explizit prädiktives Projekt wird nicht aus Vorsicht in
+diese zusätzliche Route gezwungen.
 
 ---
 

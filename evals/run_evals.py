@@ -39,6 +39,7 @@ CAPABILITIES = {
     "academic_source_status",
     "hypothesis_intake",
     "scientific_philosophy_review",
+    "causal_identification",
     "research_orchestration",
 }
 STATEMENT_CLASSES = {
@@ -69,6 +70,7 @@ METRICS = {
     "academic_source_governance_accuracy",
     "hypothesis_intake_accuracy",
     "scientific_philosophy_accuracy",
+    "causal_identification_accuracy",
     "research_orchestration_accuracy",
 }
 

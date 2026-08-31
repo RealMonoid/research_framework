@@ -21,6 +21,13 @@ material research transition it must:
 6. accept and validate the artifact only when that check reports `UNCHANGED`,
    then save a new checkpoint.
 
+If the requested conclusion is `INTERVENTIONAL` or `COUNTERFACTUAL`, the router
+must send the design to `agents/causal-identification-critic.md` before any
+causal estimate or causal wording is accepted. A predictive strategy question
+does not trigger this review. An estimator, event window, temporal ordering, or
+causal-discovery result is never a substitute for the required identification
+assessment.
+
 If the identity check finds a difference, keep the pre-handoff identity and the
 returned artifact unaccepted. Explain the changed dimensions and practical
 consequences in ordinary language, then ask whether the original research
