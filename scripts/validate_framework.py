@@ -37,6 +37,7 @@ def main(argv: Sequence[str] | None = None) -> int:
     args = build_parser().parse_args(argv)
     python = sys.executable
     run("Schema contracts", [python, "scripts/test_schemas.py"])
+    run("Hypothesis generator", [python, "scripts/test_generator.py"])
     run("Eval protocol smoke", [python, "evals/run_evals.py"])
     run(
         "Eval unit and producer integration tests",

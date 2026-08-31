@@ -1,7 +1,7 @@
 # 00_RESEARCH_AGENT_README.md
 
-**Version:** 1.9
-**Stand:** 2026-08-30  
+**Version:** 2.0
+**Stand:** 2026-08-31
 **Status:** ENTWURF ZUR ÜBERNAHME  
 **Zweck:** Verbindliche Lese- und Ausführungsanweisung für AI-Agenten, die Trading-Research-Projekte bearbeiten.
 
@@ -9,11 +9,16 @@
 
 ## 1. Gestaffelter Einstieg und Dokumentrouter
 
-Jede neue Idee beginnt ausschließlich mit `QUICKSTART.md` und einem Intake nach
-`schemas/hypothesis_candidate.schema.json`. Für `INBOX`, `MERGED` oder
-`REJECTED` müssen die sechs Detaildokumente nicht vorab geladen werden. Der
-kurze Intake hält dennoch Herkunft, Rohidee und bereits verbrauchte
-Informationsreferenzen fest.
+Jede vorhandene neue Idee beginnt mit `QUICKSTART.md` und einem Intake nach
+`schemas/hypothesis_candidate.schema.json`. Wenn noch keine Rohidee existiert,
+kann davor optional `scripts/generate_hypotheses.py` den versionierten Katalog
+`generation/mechanism_catalog.v1.json` in günstige `INBOX`-Kandidaten
+überführen. Dieser Generator ist eine Produktionsschicht und trifft keine
+Screening-, Evidenz-, Backtest- oder Promotionsentscheidung.
+
+Für `INBOX`, `MERGED` oder `REJECTED` müssen die sechs Detaildokumente nicht
+vorab geladen werden. Der kurze Intake hält dennoch Herkunft, Rohidee und bereits
+verbrauchte Informationsreferenzen fest.
 
 Erst ein `PROMOTED`-Intake öffnet Phase 0; Promotion ist keine
 Evidenzbestätigung. Dann werden `00_RESEARCH_AGENT_README.md` und
@@ -34,6 +39,9 @@ Die Dateien erfüllen verschiedene Funktionen:
 | Datei | Funktion | Wann laden? |
 |---|---|---|
 | `QUICKSTART.md` | Kurzpfad, Enforcement-Grenze und Statusrouter | Immer |
+| `generation/mechanism_catalog.v1.json` | Literaturgestützte Mechanismen für Intraday- und kurze Swing-Ideen | Wenn Ideen erzeugt oder der Katalog erweitert werden soll |
+| `generation/README.md` | Bedienung und Grenzen des Generators | Bei einem Generatorlauf |
+| `agents/intraday-hypothesis-generator.md` | Optionaler autonomer Generatorvertrag | Bei agentischer Ideenerzeugung |
 | `00_RESEARCH_AGENT_README.md` | Routing, Gate- und Nicht-Überspringen-Regeln | Ab `PROMOTED` |
 | `01_RESEARCH_STANDARD.md` | Normativer Forschungsstandard | Ab `PROMOTED` |
 | `02_RESEARCH_CASE_TEMPLATE.md` | Operatives Arbeitsartefakt je Research-ID | Beim Eröffnen eines Research Case |
@@ -554,6 +562,7 @@ Research-Version und Agentenlauf sind verschiedene Identitäten:
 
 Für jeden LLM-/Agentenlauf gelten zusätzlich die Verträge aus `05_AGENT_OPERATIONS.md` und `schemas/`:
 
+0. Ein optionaler Generation-Run endet bei `INBOX`; er darf weder Screening noch Promotion vorwegnehmen. Nutzt er ein LLM oder einen Agenten, erhält auch dieser Aufruf ein Run-Manifest.
 1. Vor Eröffnung eines Research Case wird ein valider Hypothesen-Intake persistiert und auf `PROMOTED` gescreent.
 2. Vor der Ausführung wird eine eindeutige Run-ID erzeugt; das Run-Manifest wird spätestens bei Laufabschluss vollständig persistiert.
 3. Entscheidungsrelevante Aussagen erhalten eine epistemische Klasse und eine Claim-ID.

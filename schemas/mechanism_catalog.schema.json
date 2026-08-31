@@ -1,0 +1,394 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:research-framework:schema:mechanism-catalog:1.0.0",
+  "title": "Short-Horizon Market Mechanism Catalog",
+  "description": "Versionierter Quellenkatalog fuer die Erzeugung von Intraday- und kurzen Swing-Hypothesen. Der Katalog ist ein Ideengenerator, kein Screening- oder Evidenzgate.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "catalog_id",
+    "catalog_version",
+    "title",
+    "scope",
+    "mechanisms"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "1.0.0"
+    },
+    "catalog_id": {
+      "$ref": "#/$defs/stableId"
+    },
+    "catalog_version": {
+      "$ref": "#/$defs/semanticVersion"
+    },
+    "title": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 300
+    },
+    "scope": {
+      "$ref": "#/$defs/catalogScope"
+    },
+    "mechanisms": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/$defs/mechanism"
+      }
+    }
+  },
+  "$defs": {
+    "stableId": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"
+    },
+    "semanticVersion": {
+      "type": "string",
+      "pattern": "^(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)(-[0-9A-Za-z.-]+)?(\\+[0-9A-Za-z.-]+)?$"
+    },
+    "generationMode": {
+      "type": "string",
+      "enum": [
+        "CONSTRAINT_FIRST",
+        "MICROSTRUCTURE_STATE",
+        "LINKAGE_OR_IDENTITY",
+        "LITERATURE_REPLICATION",
+        "OBSERVATION_DRIVEN"
+      ]
+    },
+    "marketScope": {
+      "type": "string",
+      "enum": [
+        "EQUITIES",
+        "INDEX_ETF",
+        "FUTURES",
+        "OPTIONS",
+        "FX",
+        "CRYPTO_SPOT",
+        "CRYPTO_PERPETUAL",
+        "RATES",
+        "COMMODITIES",
+        "CROSS_MARKET"
+      ]
+    },
+    "naturalHorizon": {
+      "type": "string",
+      "enum": [
+        "SUB_SECOND",
+        "SECONDS",
+        "MINUTES",
+        "HOURS",
+        "SESSION",
+        "ONE_TO_FIVE_DAYS"
+      ]
+    },
+    "phaseName": {
+      "type": "string",
+      "enum": [
+        "ANTICIPATION",
+        "ACTIVE",
+        "ABSORPTION",
+        "TRANSMISSION",
+        "EXHAUSTION",
+        "UNWIND"
+      ]
+    },
+    "catalogScope": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "holding_horizons",
+        "out_of_scope"
+      ],
+      "properties": {
+        "holding_horizons": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/$defs/naturalHorizon"
+          }
+        },
+        "out_of_scope": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 500
+          }
+        }
+      }
+    },
+    "mechanism": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "mechanism_id",
+        "mechanism_version",
+        "title",
+        "generation_modes",
+        "mechanism_family",
+        "mechanism_summary",
+        "market_scopes",
+        "natural_horizons",
+        "actors",
+        "constraints_or_rules",
+        "expected_actions",
+        "observable_signatures",
+        "phases",
+        "alternative_observables",
+        "violation_hypotheses",
+        "connection_tags",
+        "literature_sources"
+      ],
+      "properties": {
+        "mechanism_id": {
+          "$ref": "#/$defs/stableId"
+        },
+        "mechanism_version": {
+          "$ref": "#/$defs/semanticVersion"
+        },
+        "title": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 300
+        },
+        "generation_modes": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/$defs/generationMode"
+          }
+        },
+        "mechanism_family": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 300
+        },
+        "mechanism_summary": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 2000
+        },
+        "market_scopes": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/$defs/marketScope"
+          }
+        },
+        "natural_horizons": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/$defs/naturalHorizon"
+          }
+        },
+        "actors": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 500
+          },
+          "description": "Darf leer sein. Ein benannter Akteur ist keine universelle Zulassungsbedingung fuer generierte Ideen."
+        },
+        "constraints_or_rules": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 1000
+          },
+          "description": "Darf bei rein zustands- oder literaturgetriebenen Mechanismen leer sein."
+        },
+        "expected_actions": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 1000
+          }
+        },
+        "observable_signatures": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/observableSignature"
+          }
+        },
+        "phases": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/phase"
+          }
+        },
+        "alternative_observables": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/alternativeObservable"
+          }
+        },
+        "violation_hypotheses": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 1500
+          }
+        },
+        "connection_tags": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/$defs/stableId"
+          }
+        },
+        "literature_sources": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/literatureSource"
+          }
+        }
+      }
+    },
+    "observableSignature": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "signature_id",
+        "observable_kind",
+        "statement"
+      ],
+      "properties": {
+        "signature_id": {
+          "$ref": "#/$defs/stableId"
+        },
+        "observable_kind": {
+          "type": "string",
+          "enum": [
+            "ORDER_BOOK",
+            "TRADE_FLOW",
+            "PRICE",
+            "SPREAD_OR_BASIS",
+            "VOLATILITY",
+            "VOLUME",
+            "AUCTION",
+            "DERIVATIVES_POSITIONING",
+            "CLOCK_OR_CALENDAR",
+            "CROSS_MARKET"
+          ]
+        },
+        "statement": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 1200
+        }
+      }
+    },
+    "phase": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "phase",
+        "trigger",
+        "expected_response",
+        "horizon"
+      ],
+      "properties": {
+        "phase": {
+          "$ref": "#/$defs/phaseName"
+        },
+        "trigger": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 1200
+        },
+        "expected_response": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 1500
+        },
+        "horizon": {
+          "$ref": "#/$defs/naturalHorizon"
+        }
+      }
+    },
+    "alternativeObservable": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "observable",
+        "hypothesis_prompt"
+      ],
+      "properties": {
+        "observable": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 800
+        },
+        "hypothesis_prompt": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 1500
+        }
+      }
+    },
+    "literatureSource": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "source_id",
+        "source_type",
+        "citation",
+        "url",
+        "supports"
+      ],
+      "properties": {
+        "source_id": {
+          "$ref": "#/$defs/stableId"
+        },
+        "source_type": {
+          "type": "string",
+          "enum": [
+            "PEER_REVIEWED",
+            "WORKING_PAPER",
+            "MARKET_RULE",
+            "OTHER_PRIMARY"
+          ]
+        },
+        "citation": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 1000
+        },
+        "url": {
+          "type": "string",
+          "format": "uri"
+        },
+        "supports": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 1500
+        }
+      }
+    }
+  }
+}

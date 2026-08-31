@@ -1,7 +1,7 @@
 # 01_RESEARCH_STANDARD.md
 
-**Version:** 1.7
-**Stand:** 2026-08-30
+**Version:** 1.8
+**Stand:** 2026-08-31
 **Status:** ENTWURF ZUR ÜBERNAHME  
 **Zweck:** Normativer Standard für die Entwicklung, Falsifikation, Validierung und Überwachung von Trading-Phänomenen, Edge-Hypothesen und Strategien.
 
@@ -222,6 +222,30 @@ Der Fallkatalog muss nicht nur Gewinner oder „schöne“ Beispiele enthalten, 
 - unterschiedliche Zeitperioden,
 - verschiedene Volatilitätszustände,
 - gegebenenfalls mehrere vergleichbare Instrumente.
+
+## 4.0 Optionale vorgelagerte Ideenerzeugung
+
+Fehlt eine Rohidee, darf vor dem Intake der Mechanismenkatalog-Producer aus
+`generation/` ausgeführt werden. Er kombiniert einen Literatur- oder
+Marktmechanismus mit einer Phase und einem beobachtbaren Abdruck. Zulässige
+Erzeugungsrouten sind:
+
+- `CONSTRAINT_FIRST`,
+- `MICROSTRUCTURE_STATE`,
+- `LINKAGE_OR_IDENTITY`,
+- `LITERATURE_REPLICATION`,
+- `OBSERVATION_DRIVEN`.
+
+Die Operatoren `PHASE_PATH`, `EXPECTATION_VIOLATION`,
+`MECHANISM_CONNECTION` und `ASSUMPTION_RELAXATION` erzeugen getrennte
+Ideenfamilien. Insbesondere ist ein ausbleibender oder invertierter erwarteter
+Abdruck keine nachträgliche Rettung der ursprünglichen Idee, sondern ein neuer
+`INBOX`-Candidate mit eigener ID.
+
+Ideenerzeugung ist kein Gate. Sie benötigt weder einen universell benannten
+gezwungenen Akteur noch Premortem, Validity-Selbsteinstufung, Backtest,
+Confidence, Evidence Grade oder Promotionsentscheidung. Ihr Endzustand ist
+ausschließlich ein ungescreenter Intake.
 
 ## 4.1 Vorgelagerter Hypothesen-Intake
 
@@ -1250,12 +1274,14 @@ Ein falsifiziertes Vorzeichen kann eine neue Hypothese erzeugen. Es wandelt den 
 45. Intraday-Research fixiert Venue, Handelsphase, Kalender, Zeitbasis, Feed-Coverage und Ereignisklasse.
 46. „Newsfrei“ wird nie pauschal behauptet, sondern nur als dokumentierte News-/Makro-Policy mit bekannten Coverage-Grenzen operationalisiert.
 47. Mechanismenfamilien und Intraday-Router sind nicht abschließend und erzeugen keine Edge durch Klassifikation.
+48. Ein Generation-Run erzeugt nur `INBOX`-Kandidaten; Mechanismenkatalog, Operator oder Literaturquelle bestätigen weder Hypothese noch Edge.
 
 ---
 
 # 22. Verbindliche Pipeline
 
 ```text
+G. OPTIONALE IDEENGENERATION AUS MECHANISMENKATALOG → INBOX
 0. HYPOTHESEN-INTAKE + SCOPE + SCREENING
 1. Vorläufige Beobachtung / Outcome-Skala
 2. PHASE-0-VORPRÜFUNG

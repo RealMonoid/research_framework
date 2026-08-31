@@ -16,7 +16,30 @@ Normative Sprache steuert Verhalten, ersetzt aber keine technische Enforcement.
 Das Framework beansprucht nur dort automatische Durchsetzung, wo ein Schema,
 Test oder CI-Check benannt ist.
 
-## 2. Günstiger Intake
+## 2. Optional: Ideen erzeugen
+
+Wenn noch keine Rohidee existiert, darf vor dem Intake der ausführbare
+Kurzfristgenerator verwendet werden:
+
+```bash
+python scripts/generate_hypotheses.py --output-dir artifacts/ideas-001 \
+  --run-id generation:ideas-001 --markets FUTURES --max-candidates 20
+```
+
+Grundlage sind
+[`generation/mechanism_catalog.v1.json`](generation/mechanism_catalog.v1.json)
+und die vier Operatoren `PHASE_PATH`, `EXPECTATION_VIOLATION`,
+`MECHANISM_CONNECTION` und `ASSUMPTION_RELAXATION`. Die Erzeugungsrouten sind
+Constraint-first, Mikrostrukturzustand, Instrumentenverknüpfung,
+Literaturreplikation und Beobachtung. Ein benannter gezwungener Akteur ist keine
+universelle Bedingung.
+
+Der Lauf schreibt einen validierten Generation-Run und minimale `INBOX`-Dateien.
+Er führt kein Screening, Backtesting, Evidence Grading, Ranking oder Promotion
+durch. Details und Filteroptionen stehen in
+[`generation/README.md`](generation/README.md).
+
+## 3. Günstiger Intake
 
 Eine neue Idee beginnt als `INBOX` nach
 [`schemas/hypothesis_candidate.schema.json`](schemas/hypothesis_candidate.schema.json).
@@ -44,7 +67,7 @@ Kontrollen gegen Auswahlbias. SHAP, Impurity- oder andere
 Feature-Importance-Verfahren sind mögliche Diagnosen, aber weder Pflicht noch
 Kausalitätsnachweis. Promotion bestätigt keine Evidenzstufe.
 
-## 3. Dokumentrouter nach Promotion
+## 4. Dokumentrouter nach Promotion
 
 Nach `PROMOTED` wird nicht pauschal alles geladen:
 
@@ -58,7 +81,7 @@ Nach `PROMOTED` wird nicht pauschal alles geladen:
 Das Nicht-Überspringen-Protokoll gilt innerhalb des aktivierten Pfads. Nicht
 aktivierte optionale Methoden erzeugen keine Serien begründeter `N/A`-Einträge.
 
-## 4. Nicht verhandelbare Kernregeln
+## 5. Nicht verhandelbare Kernregeln
 
 - Beobachtung, Mechanismus, Forward-OOS-Prognose und ausführbare Netto-Edge bleiben getrennte Aussagen.
 - Claim-Level (`ASSOCIATIONAL_PREDICTIVE / INTERVENTIONAL / COUNTERFACTUAL`) und Validierungs-/Handelsstatus (`mechanism_supported / forward_predictive_oos / executable_net_edge`) sind unabhängige Achsen. Keine Achse stuft die andere automatisch hoch.
@@ -74,7 +97,7 @@ Die letzten beiden Regeln sind in
 [`schemas/constraint_assessment.schema.json`](schemas/constraint_assessment.schema.json)
 maschinenprüfbar.
 
-## 5. Framework-Integrität prüfen
+## 6. Framework-Integrität prüfen
 
 Plattformneutral:
 
@@ -92,7 +115,7 @@ Windows/PowerShell bleibt als zweiter, in CI geprüfter Einstieg erhalten:
 Beide Pfade prüfen Framework-Verträge. Der mitgelieferte 1,000-Eval-Lauf ist nur
 `PROTOCOL_SMOKE` und kein Qualitätsbeleg für einen Live-Agenten.
 
-## 6. Echten Agenten evaluieren
+## 7. Echten Agenten evaluieren
 
 `evals/produce_results.py` sendet jedem Agentenadapter nur Fallinput und
 Outputvertrag – niemals die erwarteten Assertions. Es unterstützt einen lokalen
@@ -112,7 +135,7 @@ python scripts/validate_framework.py \
 Ohne produziertes `LIVE_AGENT`-Artefakt ist nur die Framework-Integrität geprüft,
 nicht die Qualität einer Modell- oder Promptänderung.
 
-## 7. Bekannte offene Validierungslücke
+## 8. Bekannte offene Validierungslücke
 
 Das Repository enthält derzeit keinen vollständig durchgearbeiteten realen
 Research Case. Schema-Fixtures und Eval-Fälle testen Verträge, nicht die
