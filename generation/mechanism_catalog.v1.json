@@ -1,0 +1,1075 @@
+{
+  "schema_version": "1.0.0",
+  "catalog_id": "catalog:short-horizon-market-mechanisms",
+  "catalog_version": "1.0.0",
+  "title": "Literature-backed mechanisms for intraday and short swing idea generation",
+  "scope": {
+    "holding_horizons": [
+      "SUB_SECOND",
+      "SECONDS",
+      "MINUTES",
+      "HOURS",
+      "SESSION",
+      "ONE_TO_FIVE_DAYS"
+    ],
+    "out_of_scope": [
+      "Strategic portfolio allocation and long-horizon asset pricing",
+      "Buy-and-hold investment theses",
+      "Monthly or annual factor portfolios without a short-horizon transmission mechanism",
+      "News sentiment as a standalone signal"
+    ]
+  },
+  "mechanisms": [
+    {
+      "mechanism_id": "mechanism:order-flow-imbalance",
+      "mechanism_version": "1.0.0",
+      "title": "Order-flow imbalance relative to displayed depth",
+      "generation_modes": [
+        "MICROSTRUCTURE_STATE",
+        "LITERATURE_REPLICATION",
+        "OBSERVATION_DRIVEN"
+      ],
+      "mechanism_family": "Limit-order-book liquidity",
+      "mechanism_summary": "Over short intervals, additions, cancellations and aggressive executions alter the balance of supplied liquidity; the price response depends on imbalance relative to depth.",
+      "market_scopes": [
+        "EQUITIES",
+        "FUTURES",
+        "FX",
+        "CRYPTO_SPOT",
+        "CRYPTO_PERPETUAL"
+      ],
+      "natural_horizons": [
+        "SUB_SECOND",
+        "SECONDS",
+        "MINUTES"
+      ],
+      "actors": [
+        "Aggressive liquidity takers",
+        "Passive liquidity providers"
+      ],
+      "constraints_or_rules": [],
+      "expected_actions": [
+        "Consume, cancel, replenish or reprice displayed liquidity as imbalance changes"
+      ],
+      "observable_signatures": [
+        {
+          "signature_id": "signature:ofi-depth-normalized",
+          "observable_kind": "ORDER_BOOK",
+          "statement": "Signed order-flow imbalance normalized by contemporaneous displayed depth"
+        },
+        {
+          "signature_id": "signature:queue-imbalance",
+          "observable_kind": "ORDER_BOOK",
+          "statement": "Persistent imbalance between best bid and ask queues before the next mid-price change"
+        }
+      ],
+      "phases": [
+        {
+          "phase": "ACTIVE",
+          "trigger": "Depth-normalized order-flow imbalance becomes extreme",
+          "expected_response": "The next short-horizon mid-price change is more likely in the direction of the imbalance",
+          "horizon": "SECONDS"
+        },
+        {
+          "phase": "ABSORPTION",
+          "trigger": "Extreme signed flow persists while the mid-price barely moves",
+          "expected_response": "Passive replenishment or hidden liquidity absorbs the flow and changes the subsequent response path",
+          "horizon": "MINUTES"
+        },
+        {
+          "phase": "EXHAUSTION",
+          "trigger": "Previously persistent imbalance decays or reverses",
+          "expected_response": "Continuation weakens or the price partially retraces as pressure ends",
+          "horizon": "MINUTES"
+        }
+      ],
+      "alternative_observables": [
+        {
+          "observable": "Replenishment rate at the depleted best quote",
+          "hypothesis_prompt": "Test whether replenishment, rather than price direction, identifies absorption and predicts whether the next imbalance produces continuation."
+        }
+      ],
+      "violation_hypotheses": [
+        "A missing price response despite extreme imbalance may reveal hidden or rapidly replenished liquidity; exhaustion of that absorber may predict a delayed move."
+      ],
+      "connection_tags": [
+        "tag:liquidity-absorption",
+        "tag:short-horizon-flow",
+        "tag:price-discovery"
+      ],
+      "literature_sources": [
+        {
+          "source_id": "source:cont-kukanov-stoikov-2014",
+          "source_type": "PEER_REVIEWED",
+          "citation": "Cont, Kukanov and Stoikov (2014), The Price Impact of Order Book Events, Journal of Financial Econometrics 12(1), 47-88.",
+          "url": "https://doi.org/10.1093/jjfinec/nbt003",
+          "supports": "Short-interval price changes are strongly related to order-flow imbalance, with impact inversely related to depth."
+        },
+        {
+          "source_id": "source:gould-bonart-2016",
+          "source_type": "WORKING_PAPER",
+          "citation": "Gould and Bonart (2016), Queue Imbalance as a One-Tick-Ahead Price Predictor.",
+          "url": "https://arxiv.org/abs/1512.03492",
+          "supports": "Queue imbalance contains information about the direction of the next mid-price movement, particularly for large-tick stocks."
+        }
+      ]
+    },
+    {
+      "mechanism_id": "mechanism:metaorder-splitting",
+      "mechanism_version": "1.0.0",
+      "title": "Incremental execution of large hidden orders",
+      "generation_modes": [
+        "CONSTRAINT_FIRST",
+        "MICROSTRUCTURE_STATE",
+        "LITERATURE_REPLICATION"
+      ],
+      "mechanism_family": "Execution algorithms and metaorders",
+      "mechanism_summary": "A large parent order cannot be executed immediately without excessive impact, so it is split into a persistent sequence of child orders whose impact grows during execution and partially reverts afterward.",
+      "market_scopes": [
+        "EQUITIES",
+        "FUTURES",
+        "CRYPTO_SPOT",
+        "CRYPTO_PERPETUAL"
+      ],
+      "natural_horizons": [
+        "MINUTES",
+        "HOURS",
+        "SESSION"
+      ],
+      "actors": [
+        "Institutional investors",
+        "Execution algorithms"
+      ],
+      "constraints_or_rules": [
+        "A large desired position change must be spread across time to limit impact and information leakage"
+      ],
+      "expected_actions": [
+        "Submit correlated same-sign child orders at a participation rate linked to market activity"
+      ],
+      "observable_signatures": [
+        {
+          "signature_id": "signature:persistent-signed-flow",
+          "observable_kind": "TRADE_FLOW",
+          "statement": "Persistent same-sign trade flow and autocorrelated initiator direction"
+        },
+        {
+          "signature_id": "signature:concave-impact-path",
+          "observable_kind": "PRICE",
+          "statement": "Concave price impact that grows while the inferred execution remains active"
+        }
+      ],
+      "phases": [
+        {
+          "phase": "ACTIVE",
+          "trigger": "A persistent same-sign flow episode begins",
+          "expected_response": "Price impact continues in the direction of the inferred parent order while participation remains elevated",
+          "horizon": "HOURS"
+        },
+        {
+          "phase": "EXHAUSTION",
+          "trigger": "Same-sign persistence and participation fall toward baseline",
+          "expected_response": "Directional impact stops accumulating as the inferred parent order completes",
+          "horizon": "MINUTES"
+        },
+        {
+          "phase": "UNWIND",
+          "trigger": "The inferred metaorder ends",
+          "expected_response": "A temporary component of peak impact partially reverts",
+          "horizon": "HOURS"
+        }
+      ],
+      "alternative_observables": [
+        {
+          "observable": "Participation rate and child-order timing rather than repeated identical print size",
+          "hypothesis_prompt": "Test whether persistent participation relative to market volume is a better footprint than exact periodicity or block-size repetition."
+        }
+      ],
+      "violation_hypotheses": [
+        "Persistent same-sign flow without impact may indicate strategic passive execution or a competing metaorder; the eventual imbalance of participation rates may be the tradable state."
+      ],
+      "connection_tags": [
+        "tag:short-horizon-flow",
+        "tag:liquidity-absorption",
+        "tag:scheduled-volume-profile"
+      ],
+      "literature_sources": [
+        {
+          "source_id": "source:moro-et-al-2009",
+          "source_type": "PEER_REVIEWED",
+          "citation": "Moro et al. (2009), Market impact and trading profile of hidden orders in stock markets, Physical Review E 80, 066102.",
+          "url": "https://doi.org/10.1103/PhysRevE.80.066102",
+          "supports": "Reconstructed hidden orders are executed incrementally; impact grows during execution and partially reverts after completion."
+        }
+      ]
+    },
+    {
+      "mechanism_id": "mechanism:intermediary-inventory-pressure",
+      "mechanism_version": "1.0.0",
+      "title": "Intermediary inventory pressure and mean reversion",
+      "generation_modes": [
+        "CONSTRAINT_FIRST",
+        "MICROSTRUCTURE_STATE",
+        "LITERATURE_REPLICATION"
+      ],
+      "mechanism_family": "Risk-bearing intermediation",
+      "mechanism_summary": "Risk-averse intermediaries absorb asynchronous investor demand and use temporary price concessions to attract offsetting flow and mean-revert inventory.",
+      "market_scopes": [
+        "EQUITIES",
+        "FUTURES",
+        "OPTIONS",
+        "FX"
+      ],
+      "natural_horizons": [
+        "HOURS",
+        "SESSION",
+        "ONE_TO_FIVE_DAYS"
+      ],
+      "actors": [
+        "Dealers and market makers",
+        "Liquidity-demanding investors"
+      ],
+      "constraints_or_rules": [
+        "Intermediaries have finite risk capacity and seek to reduce unwanted inventory"
+      ],
+      "expected_actions": [
+        "Adjust prices, trade timing or supplied liquidity to induce offsetting demand"
+      ],
+      "observable_signatures": [
+        {
+          "signature_id": "signature:temporary-price-pressure",
+          "observable_kind": "PRICE",
+          "statement": "Return in the direction of a non-informational imbalance followed by partial reversal"
+        },
+        {
+          "signature_id": "signature:cross-stock-pressure",
+          "observable_kind": "CROSS_MARKET",
+          "statement": "Price pressure transmitted to correlated instruments through shared risk-bearing capacity"
+        }
+      ],
+      "phases": [
+        {
+          "phase": "ABSORPTION",
+          "trigger": "A large imbalance reaches constrained intermediaries",
+          "expected_response": "A temporary price concession develops while intermediaries absorb inventory",
+          "horizon": "SESSION"
+        },
+        {
+          "phase": "UNWIND",
+          "trigger": "Offsetting demand arrives and intermediary inventory normalizes",
+          "expected_response": "The temporary component of price pressure mean-reverts",
+          "horizon": "ONE_TO_FIVE_DAYS"
+        }
+      ],
+      "alternative_observables": [
+        {
+          "observable": "Cross-instrument pressure conditional on return correlation",
+          "hypothesis_prompt": "Test whether a large imbalance in one instrument predicts a temporary move and reversal in correlated instruments that share liquidity providers."
+        }
+      ],
+      "violation_hypotheses": [
+        "Price continuation instead of reversal may indicate informed flow or insufficient intermediary capacity rather than temporary inventory pressure."
+      ],
+      "connection_tags": [
+        "tag:liquidity-absorption",
+        "tag:cross-market-transmission",
+        "tag:temporary-price-pressure"
+      ],
+      "literature_sources": [
+        {
+          "source_id": "source:hendershott-menkveld-2014",
+          "source_type": "PEER_REVIEWED",
+          "citation": "Hendershott and Menkveld (2014), Price Pressures, Journal of Financial Economics 114(3), 405-423.",
+          "url": "https://doi.org/10.1016/j.jfineco.2014.08.001",
+          "supports": "A dynamic intermediary inventory model and data imply temporary price pressure with inventory mean reversion at roughly a one-day scale."
+        }
+      ]
+    },
+    {
+      "mechanism_id": "mechanism:stop-order-clustering",
+      "mechanism_version": "1.0.0",
+      "title": "Stop-loss and take-profit clustering around salient levels",
+      "generation_modes": [
+        "MICROSTRUCTURE_STATE",
+        "LITERATURE_REPLICATION",
+        "OBSERVATION_DRIVEN"
+      ],
+      "mechanism_family": "Conditional order activation",
+      "mechanism_summary": "Stop-loss and take-profit orders cluster around salient price levels; reaching or crossing those levels changes the composition and urgency of executable flow.",
+      "market_scopes": [
+        "FX",
+        "FUTURES",
+        "CRYPTO_SPOT",
+        "CRYPTO_PERPETUAL"
+      ],
+      "natural_horizons": [
+        "SECONDS",
+        "MINUTES",
+        "HOURS"
+      ],
+      "actors": [
+        "Traders using conditional stop-loss or take-profit orders"
+      ],
+      "constraints_or_rules": [
+        "Conditional orders become executable when specified price levels are reached"
+      ],
+      "expected_actions": [
+        "Trigger urgent same-direction stop flow beyond clustered levels and offsetting take-profit flow near levels"
+      ],
+      "observable_signatures": [
+        {
+          "signature_id": "signature:round-level-acceleration",
+          "observable_kind": "PRICE",
+          "statement": "Acceleration after crossing a salient round-number region"
+        },
+        {
+          "signature_id": "signature:pre-level-reversal",
+          "observable_kind": "TRADE_FLOW",
+          "statement": "Opposing flow and reversal near a level where take-profit orders cluster"
+        }
+      ],
+      "phases": [
+        {
+          "phase": "ANTICIPATION",
+          "trigger": "Price approaches a salient level from one side",
+          "expected_response": "Take-profit flow can slow or reverse the approach before the stop region is crossed",
+          "horizon": "MINUTES"
+        },
+        {
+          "phase": "ACTIVE",
+          "trigger": "Price crosses beyond the salient level into the stop region",
+          "expected_response": "Urgent stop execution accelerates the move beyond its pre-crossing rate",
+          "horizon": "MINUTES"
+        },
+        {
+          "phase": "EXHAUSTION",
+          "trigger": "Triggered stop flow decays after the level crossing",
+          "expected_response": "Acceleration fades and a temporary overshoot may retrace",
+          "horizon": "HOURS"
+        }
+      ],
+      "alternative_observables": [
+        {
+          "observable": "Change in trade arrival intensity immediately before and after the crossing",
+          "hypothesis_prompt": "Test whether arrival-intensity discontinuity around the level is more stable than the raw return pattern."
+        }
+      ],
+      "violation_hypotheses": [
+        "A level crossing without acceleration may indicate that stops were already depleted or absorbed; the absence of the expected cascade may predict reversal."
+      ],
+      "connection_tags": [
+        "tag:conditional-flow",
+        "tag:short-horizon-flow",
+        "tag:liquidation-cascade"
+      ],
+      "literature_sources": [
+        {
+          "source_id": "source:osler-2003",
+          "source_type": "PEER_REVIEWED",
+          "citation": "Osler (2003), Currency Orders and Exchange Rate Dynamics, Journal of Finance 58(5), 1791-1819.",
+          "url": "https://doi.org/10.1111/1540-6261.00588",
+          "supports": "Currency stop-loss and take-profit orders cluster around round numbers and can explain acceleration after crossings and reversals near levels."
+        }
+      ]
+    },
+    {
+      "mechanism_id": "mechanism:gamma-hedging",
+      "mechanism_version": "1.0.0",
+      "title": "Delta hedging under short or long gamma exposure",
+      "generation_modes": [
+        "CONSTRAINT_FIRST",
+        "LINKAGE_OR_IDENTITY",
+        "LITERATURE_REPLICATION"
+      ],
+      "mechanism_family": "Derivatives hedging",
+      "mechanism_summary": "Option and leveraged-product hedgers adjust underlying exposure as price and time change; short-gamma hedging trades with the move while long-gamma hedging can trade against it.",
+      "market_scopes": [
+        "EQUITIES",
+        "INDEX_ETF",
+        "FUTURES",
+        "OPTIONS",
+        "CROSS_MARKET"
+      ],
+      "natural_horizons": [
+        "MINUTES",
+        "HOURS",
+        "SESSION",
+        "ONE_TO_FIVE_DAYS"
+      ],
+      "actors": [
+        "Option market makers",
+        "Leveraged ETF hedgers",
+        "Other delta hedgers"
+      ],
+      "constraints_or_rules": [
+        "Delta exposure changes mechanically with the underlying price, volatility and time to expiry"
+      ],
+      "expected_actions": [
+        "Buy or sell the underlying or a linked future to restore target hedge exposure"
+      ],
+      "observable_signatures": [
+        {
+          "signature_id": "signature:late-session-gamma-momentum",
+          "observable_kind": "PRICE",
+          "statement": "Continuation into the final part of the session when hedgers are plausibly short gamma"
+        },
+        {
+          "signature_id": "signature:underlying-derivative-transmission",
+          "observable_kind": "CROSS_MARKET",
+          "statement": "Price and volume response across option, future and underlying markets as hedge demand changes"
+        }
+      ],
+      "phases": [
+        {
+          "phase": "ACTIVE",
+          "trigger": "A directional move changes estimated net hedge demand materially",
+          "expected_response": "Short-gamma hedging reinforces the move while long-gamma hedging dampens it",
+          "horizon": "HOURS"
+        },
+        {
+          "phase": "TRANSMISSION",
+          "trigger": "Hedge adjustment is executed in a linked future or ETF",
+          "expected_response": "The hedge instrument moves first and transmits pressure to the cash basket or underlying",
+          "horizon": "MINUTES"
+        },
+        {
+          "phase": "UNWIND",
+          "trigger": "The hedging need falls after expiry, close or a reversal in the underlying",
+          "expected_response": "Reinforcing pressure weakens and part of the move can reverse over subsequent sessions",
+          "horizon": "ONE_TO_FIVE_DAYS"
+        }
+      ],
+      "alternative_observables": [
+        {
+          "observable": "Difference between late-session realized sensitivity in negative- and positive-gamma states",
+          "hypothesis_prompt": "Test a state interaction in continuation or volatility rather than relying on an unconditional directional signal."
+        }
+      ],
+      "violation_hypotheses": [
+        "A strong directional move without the expected gamma-state response may reveal offsetting auction, index or discretionary flow, or that hedging occurs in another linked instrument."
+      ],
+      "connection_tags": [
+        "tag:derivatives-hedging",
+        "tag:cross-market-transmission",
+        "tag:closing-session",
+        "tag:expiry"
+      ],
+      "literature_sources": [
+        {
+          "source_id": "source:baltussen-et-al-2021",
+          "source_type": "PEER_REVIEWED",
+          "citation": "Baltussen et al. (2021), Hedging Demand and Market Intraday Momentum, Journal of Financial Economics 142(1), 377-403.",
+          "url": "https://doi.org/10.1016/j.jfineco.2021.04.029",
+          "supports": "Late-session intraday momentum across futures is linked to gamma hedging demand from options and leveraged products."
+        }
+      ]
+    },
+    {
+      "mechanism_id": "mechanism:option-expiration-strike",
+      "mechanism_version": "1.0.0",
+      "title": "Underlying-price pressure near option strikes at expiration",
+      "generation_modes": [
+        "CONSTRAINT_FIRST",
+        "LITERATURE_REPLICATION"
+      ],
+      "mechanism_family": "Option expiration",
+      "mechanism_summary": "Near option expiration, hedge rebalancing and strategic trading can concentrate underlying prices around option strike levels.",
+      "market_scopes": [
+        "EQUITIES",
+        "INDEX_ETF",
+        "OPTIONS"
+      ],
+      "natural_horizons": [
+        "HOURS",
+        "SESSION"
+      ],
+      "actors": [
+        "Option market makers",
+        "Proprietary traders",
+        "Option holders near exercise thresholds"
+      ],
+      "constraints_or_rules": [
+        "Expiration fixes exercise and settlement relevance around discrete strike prices"
+      ],
+      "expected_actions": [
+        "Rebalance hedges or trade the underlying as spot approaches economically important strikes"
+      ],
+      "observable_signatures": [
+        {
+          "signature_id": "signature:expiration-strike-clustering",
+          "observable_kind": "PRICE",
+          "statement": "Closing prices of optionable underlyings cluster near listed strikes on expiration dates"
+        }
+      ],
+      "phases": [
+        {
+          "phase": "ANTICIPATION",
+          "trigger": "Expiration approaches with spot near a strike carrying material option interest",
+          "expected_response": "Hedge sensitivity and strategic interest increase as distance to the strike shrinks",
+          "horizon": "HOURS"
+        },
+        {
+          "phase": "ACTIVE",
+          "trigger": "The underlying trades near the strike into the expiration close",
+          "expected_response": "Underlying-price pressure or clustering around the strike becomes stronger",
+          "horizon": "SESSION"
+        },
+        {
+          "phase": "UNWIND",
+          "trigger": "Expiration and associated settlement complete",
+          "expected_response": "Strike-related pressure disappears and any temporary component can release",
+          "horizon": "HOURS"
+        }
+      ],
+      "alternative_observables": [
+        {
+          "observable": "Closing-distance change to the nearest high-interest strike",
+          "hypothesis_prompt": "Test whether distance compression, not raw return direction, intensifies in the final interval on expiration days."
+        }
+      ],
+      "violation_hypotheses": [
+        "Failure to cluster near a seemingly important strike may identify insufficient dealer exposure, dominant fundamental flow or an incorrect proxy for economically active open interest."
+      ],
+      "connection_tags": [
+        "tag:derivatives-hedging",
+        "tag:expiry",
+        "tag:closing-session"
+      ],
+      "literature_sources": [
+        {
+          "source_id": "source:ni-pearson-poteshman-2005",
+          "source_type": "PEER_REVIEWED",
+          "citation": "Ni, Pearson and Poteshman (2005), Stock Price Clustering on Option Expiration Dates, Journal of Financial Economics 78(1), 49-87.",
+          "url": "https://doi.org/10.1016/j.jfineco.2004.08.005",
+          "supports": "Optionable stocks cluster near strike prices on expiration dates, with evidence for hedge rebalancing and proprietary trading."
+        }
+      ]
+    },
+    {
+      "mechanism_id": "mechanism:predictable-futures-roll",
+      "mechanism_version": "1.0.0",
+      "title": "Predictable futures-roll flow and strategic liquidity provision",
+      "generation_modes": [
+        "CONSTRAINT_FIRST",
+        "LINKAGE_OR_IDENTITY",
+        "LITERATURE_REPLICATION"
+      ],
+      "mechanism_family": "Contract roll and calendar spread",
+      "mechanism_summary": "A fund or index that follows a public roll schedule must transfer exposure between expiries; strategic traders can anticipate, absorb and redistribute that pressure across contracts and days.",
+      "market_scopes": [
+        "FUTURES",
+        "COMMODITIES",
+        "CROSS_MARKET"
+      ],
+      "natural_horizons": [
+        "MINUTES",
+        "HOURS",
+        "ONE_TO_FIVE_DAYS"
+      ],
+      "actors": [
+        "Index-tracking commodity funds",
+        "Strategic liquidity providers",
+        "Calendar-spread traders"
+      ],
+      "constraints_or_rules": [
+        "Exposure must be moved from an expiring contract to a later contract on a known schedule"
+      ],
+      "expected_actions": [
+        "Sell one expiry and buy another while liquidity providers pre-position and later unwind"
+      ],
+      "observable_signatures": [
+        {
+          "signature_id": "signature:roll-calendar-spread-pressure",
+          "observable_kind": "SPREAD_OR_BASIS",
+          "statement": "Temporary pressure in the calendar spread around the announced roll window"
+        },
+        {
+          "signature_id": "signature:roll-liquidity-replenishment",
+          "observable_kind": "ORDER_BOOK",
+          "statement": "Increased strategic liquidity provision and rapid replenishment during a predictable roll"
+        }
+      ],
+      "phases": [
+        {
+          "phase": "ANTICIPATION",
+          "trigger": "A public roll date approaches",
+          "expected_response": "Strategic traders position ahead of the known directional spread flow",
+          "horizon": "ONE_TO_FIVE_DAYS"
+        },
+        {
+          "phase": "ABSORPTION",
+          "trigger": "The scheduled roll executes",
+          "expected_response": "Additional liquidity providers absorb the predictable flow and compress its immediate impact",
+          "horizon": "MINUTES"
+        },
+        {
+          "phase": "UNWIND",
+          "trigger": "The scheduled roll flow ends",
+          "expected_response": "Temporary spread pressure reverses as strategic positions are offloaded",
+          "horizon": "HOURS"
+        }
+      ],
+      "alternative_observables": [
+        {
+          "observable": "Resiliency time of each expiry after an order imbalance",
+          "hypothesis_prompt": "Test whether predictable roll days change resiliency and liquidity provision rather than simply causing a directional futures return."
+        }
+      ],
+      "violation_hypotheses": [
+        "No raw price pressure during a predictable roll may indicate successful sunshine liquidity; the opportunity may move to pre-positioning, spread resiliency or the post-roll unwind."
+      ],
+      "connection_tags": [
+        "tag:scheduled-flow",
+        "tag:liquidity-absorption",
+        "tag:calendar-spread"
+      ],
+      "literature_sources": [
+        {
+          "source_id": "source:bessembinder-et-al-2016",
+          "source_type": "PEER_REVIEWED",
+          "citation": "Bessembinder et al. (2016), Liquidity, Resiliency and Market Quality around Predictable Trades, Journal of Financial Economics 121(1), 142-166.",
+          "url": "https://doi.org/10.1016/j.jfineco.2016.02.011",
+          "supports": "Strategic traders anticipate a large predictable USO roll; temporary impact reverses rapidly and liquidity can improve on roll days."
+        }
+      ]
+    },
+    {
+      "mechanism_id": "mechanism:closing-auction-imbalance",
+      "mechanism_version": "1.0.0",
+      "title": "Closing-auction imbalance, absorption and reversal",
+      "generation_modes": [
+        "CONSTRAINT_FIRST",
+        "MICROSTRUCTURE_STATE",
+        "LITERATURE_REPLICATION",
+        "OBSERVATION_DRIVEN"
+      ],
+      "mechanism_family": "Auction market design",
+      "mechanism_summary": "Benchmarking and end-of-day execution concentrate volume in the closing auction; published imbalance information attracts liquidity and creates phase-specific price impact and later reversal.",
+      "market_scopes": [
+        "EQUITIES",
+        "INDEX_ETF"
+      ],
+      "natural_horizons": [
+        "MINUTES",
+        "SESSION",
+        "ONE_TO_FIVE_DAYS"
+      ],
+      "actors": [
+        "Benchmark-aware funds",
+        "Market-on-close traders",
+        "Auction liquidity providers"
+      ],
+      "constraints_or_rules": [
+        "Closing auctions publish indicative prices or imbalances and produce the official closing price"
+      ],
+      "expected_actions": [
+        "Submit, cancel or offset auction interest as imbalance information evolves"
+      ],
+      "observable_signatures": [
+        {
+          "signature_id": "signature:published-closing-imbalance",
+          "observable_kind": "AUCTION",
+          "statement": "Time series of published imbalance, indicative match price, paired volume and reference price before the close"
+        },
+        {
+          "signature_id": "signature:closing-auction-impact",
+          "observable_kind": "PRICE",
+          "statement": "Auction price impact conditional on imbalance and available offsetting depth"
+        }
+      ],
+      "phases": [
+        {
+          "phase": "ANTICIPATION",
+          "trigger": "A material closing imbalance is disseminated before the auction",
+          "expected_response": "Liquidity providers and anticipatory traders adjust continuous-book and auction orders before the cross",
+          "horizon": "MINUTES"
+        },
+        {
+          "phase": "ACTIVE",
+          "trigger": "The closing auction clears",
+          "expected_response": "The clearing price reflects imbalance relative to auction depth and market-design rules",
+          "horizon": "MINUTES"
+        },
+        {
+          "phase": "UNWIND",
+          "trigger": "The market reopens after a closing auction with a large temporary component",
+          "expected_response": "Temporary auction impact dissipates over following sessions",
+          "horizon": "ONE_TO_FIVE_DAYS"
+        }
+      ],
+      "alternative_observables": [
+        {
+          "observable": "Revision path of indicative price and paired volume",
+          "hypothesis_prompt": "Test whether improving versus worsening imbalance revisions predict the final auction displacement more directly than the last published imbalance level."
+        }
+      ],
+      "violation_hypotheses": [
+        "A large buy imbalance with a falling indicative price may reveal faster offsetting supply, cancellations or a different auction allocation response; that revision path may be more informative than imbalance sign."
+      ],
+      "connection_tags": [
+        "tag:scheduled-flow",
+        "tag:closing-session",
+        "tag:liquidity-absorption",
+        "tag:temporary-price-pressure"
+      ],
+      "literature_sources": [
+        {
+          "source_id": "source:wu-jegadeesh-2022",
+          "source_type": "PEER_REVIEWED",
+          "citation": "Wu and Jegadeesh (2022), Closing Auctions: Nasdaq versus NYSE, Journal of Financial Economics 143(3), 1120-1139.",
+          "url": "https://doi.org/10.1016/j.jfineco.2021.12.003",
+          "supports": "Closing-auction imbalance, depth, impact and resiliency differ by market design; a temporary impact component dissipates over subsequent days."
+        }
+      ]
+    },
+    {
+      "mechanism_id": "mechanism:futures-cash-price-discovery",
+      "mechanism_version": "1.0.0",
+      "title": "Lead-lag price discovery between futures and cash instruments",
+      "generation_modes": [
+        "LINKAGE_OR_IDENTITY",
+        "LITERATURE_REPLICATION",
+        "OBSERVATION_DRIVEN"
+      ],
+      "mechanism_family": "Cross-market price discovery",
+      "mechanism_summary": "Economically linked instruments process common information and liquidity shocks at different speeds; leadership can depend on liquidity, volatility, market hours and shock type.",
+      "market_scopes": [
+        "EQUITIES",
+        "INDEX_ETF",
+        "FUTURES",
+        "CROSS_MARKET"
+      ],
+      "natural_horizons": [
+        "SUB_SECOND",
+        "SECONDS",
+        "MINUTES"
+      ],
+      "actors": [
+        "Cross-market arbitrageurs",
+        "Liquidity takers choosing among linked venues"
+      ],
+      "constraints_or_rules": [
+        "Linked contracts share an underlying payoff or basket identity, subject to basis and execution frictions"
+      ],
+      "expected_actions": [
+        "Trade the faster or cheaper venue first and arbitrage temporary dislocations across linked instruments"
+      ],
+      "observable_signatures": [
+        {
+          "signature_id": "signature:lagged-cross-market-response",
+          "observable_kind": "CROSS_MARKET",
+          "statement": "A statistically ordered response of cash, ETF or component prices after a futures move"
+        },
+        {
+          "signature_id": "signature:temporary-basis-dislocation",
+          "observable_kind": "SPREAD_OR_BASIS",
+          "statement": "Short-lived divergence from the contemporaneous linked-instrument relation"
+        }
+      ],
+      "phases": [
+        {
+          "phase": "TRANSMISSION",
+          "trigger": "One linked market moves while another remains temporarily stale",
+          "expected_response": "The lagging instrument catches up or the leading move reverses as the basis closes",
+          "horizon": "SECONDS"
+        },
+        {
+          "phase": "EXHAUSTION",
+          "trigger": "The cross-market basis returns to its normal band",
+          "expected_response": "The ordered catch-up or leader-reversal response ends as the linked-instrument relation normalizes",
+          "horizon": "MINUTES"
+        }
+      ],
+      "alternative_observables": [
+        {
+          "observable": "Time-varying leadership score by session and shock type",
+          "hypothesis_prompt": "Test whether leadership switches across open, continuous session and high-volatility states instead of assuming a permanent leader."
+        }
+      ],
+      "violation_hypotheses": [
+        "When the usual leader fails to transmit, the move may be a venue-specific liquidity shock; reversal in the apparent leader can be a separate candidate from catch-up in the laggard."
+      ],
+      "connection_tags": [
+        "tag:price-discovery",
+        "tag:cross-market-transmission",
+        "tag:relative-value"
+      ],
+      "literature_sources": [
+        {
+          "source_id": "source:chan-1992",
+          "source_type": "PEER_REVIEWED",
+          "citation": "Chan (1992), A Further Analysis of the Lead-Lag Relationship between the Cash Market and Stock Index Futures Market, Review of Financial Studies 5(1), 123-152.",
+          "url": "https://doi.org/10.1093/rfs/5.1.123",
+          "supports": "Intraday index futures lead cash indexes and components more strongly for market-wide movements in the studied sample."
+        }
+      ]
+    },
+    {
+      "mechanism_id": "mechanism:intraday-clock-recurrence",
+      "mechanism_version": "1.0.0",
+      "title": "Recurring intraday return and liquidity patterns at clock time",
+      "generation_modes": [
+        "LITERATURE_REPLICATION",
+        "OBSERVATION_DRIVEN"
+      ],
+      "mechanism_family": "Intraday seasonality",
+      "mechanism_summary": "Returns, order imbalance, volume, volatility and spreads can recur at the same intraday interval across days even when no single compelled actor is identified.",
+      "market_scopes": [
+        "EQUITIES",
+        "INDEX_ETF",
+        "FUTURES"
+      ],
+      "natural_horizons": [
+        "MINUTES",
+        "HOURS",
+        "SESSION"
+      ],
+      "actors": [],
+      "constraints_or_rules": [],
+      "expected_actions": [
+        "Repeated execution and liquidity patterns recur at matching clock intervals across sessions"
+      ],
+      "observable_signatures": [
+        {
+          "signature_id": "signature:same-interval-continuation",
+          "observable_kind": "CLOCK_OR_CALENDAR",
+          "statement": "Cross-sectional return continuation at half-hour intervals separated by exact multiples of a trading day"
+        },
+        {
+          "signature_id": "signature:same-interval-liquidity",
+          "observable_kind": "VOLUME",
+          "statement": "Recurring volume, imbalance, volatility or spread state at the same intraday interval"
+        }
+      ],
+      "phases": [
+        {
+          "phase": "ANTICIPATION",
+          "trigger": "A clock interval with a documented recurring flow pattern approaches",
+          "expected_response": "Liquidity and order placement adjust before the interval if participants anticipate the recurring flow",
+          "horizon": "MINUTES"
+        },
+        {
+          "phase": "ACTIVE",
+          "trigger": "The matching intraday interval begins",
+          "expected_response": "Return or liquidity state shows continuation related to prior same-time observations",
+          "horizon": "MINUTES"
+        }
+      ],
+      "alternative_observables": [
+        {
+          "observable": "Execution-cost or spread recurrence at matching clock intervals",
+          "hypothesis_prompt": "Test whether the repeatable object is liquidity or execution cost rather than directional return."
+        }
+      ],
+      "violation_hypotheses": [
+        "A return pattern that disappears while the liquidity pattern remains may indicate that anticipation has moved the opportunity from price direction to execution timing."
+      ],
+      "connection_tags": [
+        "tag:scheduled-volume-profile",
+        "tag:closing-session",
+        "tag:liquidity-absorption"
+      ],
+      "literature_sources": [
+        {
+          "source_id": "source:heston-korajczyk-sadka-2010",
+          "source_type": "PEER_REVIEWED",
+          "citation": "Heston, Korajczyk and Sadka (2010), Intraday Patterns in the Cross-Section of Stock Returns, Journal of Finance 65(4), 1369-1407.",
+          "url": "https://doi.org/10.1111/j.1540-6261.2010.01573.x",
+          "supports": "Return continuation and liquidity variables recur at half-hour intervals that are exact multiples of a trading day; sub-hour reversal is linked to temporary liquidity imbalance."
+        }
+      ]
+    },
+    {
+      "mechanism_id": "mechanism:index-rebalance",
+      "mechanism_version": "1.0.0",
+      "title": "Benchmark-driven index rebalancing",
+      "generation_modes": [
+        "CONSTRAINT_FIRST",
+        "LITERATURE_REPLICATION"
+      ],
+      "mechanism_family": "Benchmark and passive-fund flow",
+      "mechanism_summary": "Index additions, deletions and weight changes induce benchmark-linked trading, while anticipatory arbitrage and changing implementation practice can move pressure before the effective close or reduce it over time.",
+      "market_scopes": [
+        "EQUITIES",
+        "INDEX_ETF",
+        "CROSS_MARKET"
+      ],
+      "natural_horizons": [
+        "HOURS",
+        "SESSION",
+        "ONE_TO_FIVE_DAYS"
+      ],
+      "actors": [
+        "Passive index funds",
+        "Benchmark-constrained active funds",
+        "Index arbitrageurs"
+      ],
+      "constraints_or_rules": [
+        "Funds seek to track announced benchmark composition and weights around an effective date"
+      ],
+      "expected_actions": [
+        "Buy additions or weight increases and sell deletions or weight decreases, often near the benchmark close"
+      ],
+      "observable_signatures": [
+        {
+          "signature_id": "signature:rebalance-closing-flow",
+          "observable_kind": "AUCTION",
+          "statement": "Concentrated effective-date closing-auction flow aligned with benchmark weight changes"
+        },
+        {
+          "signature_id": "signature:rebalance-anticipation",
+          "observable_kind": "PRICE",
+          "statement": "Price adjustment before the effective date as arbitrageurs anticipate benchmark demand"
+        }
+      ],
+      "phases": [
+        {
+          "phase": "ANTICIPATION",
+          "trigger": "An index change is announced before its effective date",
+          "expected_response": "Part of expected benchmark pressure moves into the announcement-to-effective window",
+          "horizon": "ONE_TO_FIVE_DAYS"
+        },
+        {
+          "phase": "ACTIVE",
+          "trigger": "The effective-date closing auction executes",
+          "expected_response": "Benchmark-aligned flow concentrates in affected securities relative to available auction liquidity",
+          "horizon": "SESSION"
+        },
+        {
+          "phase": "UNWIND",
+          "trigger": "Mandatory benchmark trading completes",
+          "expected_response": "Any temporary price-pressure component can reverse after the effective date",
+          "horizon": "ONE_TO_FIVE_DAYS"
+        }
+      ],
+      "alternative_observables": [
+        {
+          "observable": "Timing shift from effective close to pre-effective trading",
+          "hypothesis_prompt": "Test whether the remaining opportunity is anticipation timing or auction liquidity rather than the historical close-to-close index effect."
+        }
+      ],
+      "violation_hypotheses": [
+        "A weak effective-date return despite large benchmark demand may indicate anticipation and improved liquidity provision; pressure may have migrated to earlier sessions or auction-depth variables."
+      ],
+      "connection_tags": [
+        "tag:scheduled-flow",
+        "tag:closing-session",
+        "tag:temporary-price-pressure"
+      ],
+      "literature_sources": [
+        {
+          "source_id": "source:pavlova-sikorskaya-2023",
+          "source_type": "PEER_REVIEWED",
+          "citation": "Pavlova and Sikorskaya (2023), Benchmarking Intensity, Review of Financial Studies 36(3), 859-903.",
+          "url": "https://doi.org/10.1093/rfs/hhac055",
+          "supports": "Benchmark additions and deletions induce passive and active fund rebalancing and cross-sectional price pressure related to benchmarking intensity."
+        },
+        {
+          "source_id": "source:greenwood-sammon-2025",
+          "source_type": "PEER_REVIEWED",
+          "citation": "Greenwood and Sammon (2025), The Disappearing Index Effect, Journal of Finance 80(2), 657-698.",
+          "url": "https://doi.org/10.1111/jofi.13410",
+          "supports": "The abnormal return around major index additions and deletions declined materially over time, motivating anticipation and adaptation hypotheses."
+        }
+      ]
+    },
+    {
+      "mechanism_id": "mechanism:perpetual-funding-liquidation",
+      "mechanism_version": "1.0.0",
+      "title": "Perpetual-futures funding and forced liquidation feedback",
+      "generation_modes": [
+        "CONSTRAINT_FIRST",
+        "LINKAGE_OR_IDENTITY",
+        "LITERATURE_REPLICATION",
+        "OBSERVATION_DRIVEN"
+      ],
+      "mechanism_family": "Crypto perpetual contract mechanics",
+      "mechanism_summary": "Periodic funding transfers anchor perpetual futures to spot, while leveraged positions can be forcibly liquidated when maintenance margin is breached, creating urgent flow and cross-market feedback.",
+      "market_scopes": [
+        "CRYPTO_SPOT",
+        "CRYPTO_PERPETUAL",
+        "CROSS_MARKET"
+      ],
+      "natural_horizons": [
+        "SECONDS",
+        "MINUTES",
+        "HOURS",
+        "SESSION"
+      ],
+      "actors": [
+        "Leveraged perpetual-futures traders",
+        "Exchange liquidation engines",
+        "Funding arbitrageurs"
+      ],
+      "constraints_or_rules": [
+        "Funding is exchanged at scheduled intervals according to contract rules",
+        "Positions breaching maintenance margin are forcibly reduced or closed"
+      ],
+      "expected_actions": [
+        "Adjust basis positions near funding or submit urgent liquidation flow after margin breaches"
+      ],
+      "observable_signatures": [
+        {
+          "signature_id": "signature:funding-basis-cycle",
+          "observable_kind": "SPREAD_OR_BASIS",
+          "statement": "Perpetual-spot basis and positioning change around funding timestamps"
+        },
+        {
+          "signature_id": "signature:liquidation-cascade",
+          "observable_kind": "TRADE_FLOW",
+          "statement": "Aggressive forced flow, rapid open-interest reduction and volatility spike after liquidation thresholds are crossed"
+        }
+      ],
+      "phases": [
+        {
+          "phase": "ANTICIPATION",
+          "trigger": "A funding timestamp approaches with an extreme basis or funding rate",
+          "expected_response": "Basis and hedge positions adjust before the payment snapshot",
+          "horizon": "HOURS"
+        },
+        {
+          "phase": "ACTIVE",
+          "trigger": "A leveraged price move breaches clustered maintenance-margin thresholds",
+          "expected_response": "Forced liquidation flow reinforces the move and reduces open interest",
+          "horizon": "MINUTES"
+        },
+        {
+          "phase": "UNWIND",
+          "trigger": "Forced liquidation flow subsides after a large open-interest reduction",
+          "expected_response": "Urgent flow disappears and an overshoot or basis dislocation can partially reverse",
+          "horizon": "HOURS"
+        }
+      ],
+      "alternative_observables": [
+        {
+          "observable": "Open-interest change and perpetual-spot basis rather than exchange-reported liquidation notional",
+          "hypothesis_prompt": "Test whether joint basis compression and open-interest collapse identify the end of forced flow more reliably than a liquidation print alone."
+        }
+      ],
+      "violation_hypotheses": [
+        "A large price move without open-interest contraction may be voluntary directional flow rather than liquidation; a price move with open-interest collapse but no continuation may mark immediate absorption."
+      ],
+      "connection_tags": [
+        "tag:conditional-flow",
+        "tag:liquidation-cascade",
+        "tag:cross-market-transmission",
+        "tag:scheduled-flow"
+      ],
+      "literature_sources": [
+        {
+          "source_id": "source:cheng-deng-wang-yu-2021",
+          "source_type": "WORKING_PAPER",
+          "citation": "Cheng, Deng, Wang and Yu (2021), Liquidation, Leverage and Optimal Margin in Bitcoin Futures Markets, arXiv:2102.04591v1 [q-fin.TR].",
+          "url": "https://arxiv.org/abs/2102.04591",
+          "supports": "Forced liquidations are economically substantial in BitMEX perpetual futures and execute aggressively at high leverage."
+        },
+        {
+          "source_id": "source:he-et-al-2022",
+          "source_type": "WORKING_PAPER",
+          "citation": "He et al. (2022), Fundamentals of Perpetual Futures.",
+          "url": "https://arxiv.org/abs/2212.06888",
+          "supports": "Periodic funding transfers are the contract mechanism used to anchor perpetual futures to their target spot value."
+        }
+      ]
+    }
+  ]
+}

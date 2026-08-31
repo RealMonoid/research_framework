@@ -114,6 +114,9 @@ def invalidate_data_driven_selection(field: str, value: Any) -> Mutation:
 
 
 POSITIVES = [
+    ("generation/mechanism_catalog.v1.json", "schemas/mechanism_catalog.schema.json"),
+    ("examples/generated-run/generation-run.json", "schemas/generation_run.schema.json"),
+    ("examples/generated-run/candidates/mechanism-futures-cash-price-discovery-phase-transmission.json", "schemas/hypothesis_candidate.schema.json"),
     ("examples/run_manifest.minimal.json", "schemas/run_manifest.schema.json"),
     ("examples/evidence.minimal.json", "schemas/evidence.schema.json"),
     ("examples/evidence.academic.json", "schemas/evidence.schema.json"),
@@ -127,6 +130,11 @@ POSITIVES = [
 
 
 NEGATIVES: list[tuple[str, str, str, Mutation]] = [
+    ("mechanism catalog rejects additional property", "generation/mechanism_catalog.v1.json", "schemas/mechanism_catalog.schema.json", set_value(("confidence_score",), 0.8)),
+    ("mechanism catalog requires literature source", "generation/mechanism_catalog.v1.json", "schemas/mechanism_catalog.schema.json", set_value(("mechanisms", 0, "literature_sources"), [])),
+    ("generation run uses controlled operators", "examples/generated-run/generation-run.json", "schemas/generation_run.schema.json", set_value(("request", "operators", 0), "PREMORTEM")),
+    ("generation run candidate path stays relative", "examples/generated-run/generation-run.json", "schemas/generation_run.schema.json", set_value(("candidate_records", 0, "candidate_file"), "C:/tmp/candidate.json")),
+    ("generated candidate requires generator source reference", "examples/generated-run/candidates/mechanism-futures-cash-price-discovery-phase-transmission.json", "schemas/hypothesis_candidate.schema.json", set_value(("provenance", "source_refs"), [])),
     ("run rejects additional property", "examples/run_manifest.minimal.json", "schemas/run_manifest.schema.json", set_value(("unexpected_field",), True)),
     ("SUCCEEDED run requires release PASS", "examples/run_manifest.minimal.json", "schemas/run_manifest.schema.json", set_value(("operational_release", "overall_status"), "FAIL")),
     ("release PASS cannot hide failed subgate", "examples/run_manifest.minimal.json", "schemas/run_manifest.schema.json", set_value(("operational_release", "gates", "evidence_chain"), "FAIL")),

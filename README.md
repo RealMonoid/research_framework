@@ -5,13 +5,16 @@ research hypotheses without silently promoting an observed pattern to a causal
 mechanism, forward prediction, or executable net trading edge.
 
 The normative documents are written in German. AI agents and human reviewers
-start with the compact [QUICKSTART.md](QUICKSTART.md). Detailed documents are
-loaded by status and task instead of being mandatory up-front:
+start with the compact [QUICKSTART.md](QUICKSTART.md). If no raw idea exists,
+the executable [short-horizon generator](generation/README.md) can produce a
+batch of literature-anchored intraday or short swing candidates first. Detailed
+documents are loaded by status and task instead of being mandatory up-front:
 
-1. Record or reject a raw idea with the tiered hypothesis-intake schema.
-2. Read [agent instructions](00_RESEARCH_AGENT_README.md) and the
+1. Optionally generate raw ideas from the versioned market-mechanism catalog.
+2. Record or reject a raw idea with the tiered hypothesis-intake schema.
+3. Read [agent instructions](00_RESEARCH_AGENT_README.md) and the
    [research standard](01_RESEARCH_STANDARD.md) only after promotion.
-3. Load the case template, selected methods, causal tooling, and operational
+4. Load the case template, selected methods, causal tooling, and operational
    rules when that part of the workflow is activated.
 
 The machine-readable entry point for a new idea is the
@@ -20,6 +23,12 @@ small [inbox example](examples/hypothesis_candidate.inbox.json) and a full
 [promoted example](examples/hypothesis_candidate.minimal.json). Architecture
 decisions are recorded in [`decisions/`](decisions/), and deterministic agent
 regression tests live in [`evals/`](evals/).
+
+The generator is deliberately not another gate. It combines mechanisms with
+phases and observable responses, then applies phase-path,
+expectation-violation, mechanism-connection, and assumption-relaxation
+operators. Its output remains unscreened `INBOX`; it does not backtest, rank, or
+promote ideas.
 
 Promoted candidates record how their variables were chosen. Predefined,
 theory-led variables need only a compact rationale; data-driven and hybrid
@@ -43,10 +52,10 @@ Or from PowerShell:
 .\scripts\validate_framework.ps1
 ```
 
-This validates JSON Schema contracts, the producer/scorer protocol, and the
-regression suite. The bundled score-1.000 result is explicitly a protocol smoke,
-not evidence of live-agent quality. A release claim requires a produced
-`LIVE_AGENT` result.
+This validates JSON Schema contracts, the executable hypothesis generator, the
+producer/scorer protocol, and the regression suite. The bundled score-1.000
+result is explicitly a protocol smoke, not evidence of live-agent quality. A
+release claim requires a produced `LIVE_AGENT` result.
 
 ## Direct raw entry point for automated readers
 

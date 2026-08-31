@@ -1,6 +1,6 @@
 # 05_AGENT_OPERATIONS.md
 
-**Version:** 1.4
+**Version:** 1.5
 **Stand:** 2026-08-31
 **Status:** ENTWURF ZUR ÜBERNAHME  
 **Zweck:** Normative operative Kontrollschicht für reproduzierbare, überprüfbare und revisionssichere Läufe eines AI-Research-Agenten.
@@ -69,6 +69,8 @@ IDs sind opake Schlüssel. Sie werden nicht nachträglich wiederverwendet oder a
 
 | Artefakt | Pflicht wann | Maschinenprüfung |
 |---|---|---|
+| Mechanismenkatalog | wenn der versionierte Generatorbestand erweitert oder veröffentlicht wird | **schemas/mechanism_catalog.schema.json** |
+| Generation-Run | wenn der Mechanismenkatalog-Producer persistierte Ideen erzeugt | **schemas/generation_run.schema.json** |
 | Hypothesen-Intake | bei jeder persistierten Rohidee vor Eröffnung eines neuen Research Case | **schemas/hypothesis_candidate.schema.json** |
 | Run Manifest | bei jedem Lauf | **schemas/run_manifest.schema.json** |
 | Evidence-Dokument | sobald ein materieller Claim erzeugt oder übernommen wird | **schemas/evidence.schema.json** |
@@ -86,6 +88,13 @@ Sie sind keine Freigabe eines realen Laufs und kein Ersatz für die semantischen
 Regeln dieses Dokuments. Insbesondere enthält das Repository noch keinen
 vollständig durchgearbeiteten realen Research Case und beansprucht daher keine
 end-to-end Praxisvalidierung.
+
+Ein Generation-Run ist kein Research- oder Release-Gate. Der deterministische
+Producer benötigt kein LLM-Run-Manifest. Sobald jedoch der optionale
+Generator-Agent oder ein anderes Modell den Inhalt erzeugt oder materiell
+verändert, gilt dieser Modellaufruf zusätzlich als Agentenlauf mit Run-Manifest.
+In beiden Fällen bleiben die erzeugten Candidates `INBOX`, bis der getrennte
+Intake-Prozess sie bearbeitet.
 
 ## 2.3 Schema- und Integritätsregel
 

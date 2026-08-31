@@ -1,0 +1,268 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:research-framework:schema:generation-run:1.0.0",
+  "title": "Hypothesis Generation Run",
+  "description": "Provenienz eines Ideengenerator-Laufs. Ein Generation-Run erzeugt INBOX-Kandidaten und trifft keine Screening-, Evidenz- oder Promotionsentscheidung.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "generation_run_id",
+    "created_at",
+    "producer",
+    "catalog_ref",
+    "request",
+    "candidate_count",
+    "candidate_records"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "1.0.0"
+    },
+    "generation_run_id": {
+      "$ref": "#/$defs/stableId"
+    },
+    "created_at": {
+      "$ref": "#/$defs/timestamp"
+    },
+    "producer": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "kind",
+        "producer_id",
+        "producer_version"
+      ],
+      "properties": {
+        "kind": {
+          "type": "string",
+          "enum": [
+            "DETERMINISTIC",
+            "AGENT"
+          ]
+        },
+        "producer_id": {
+          "$ref": "#/$defs/stableId"
+        },
+        "producer_version": {
+          "$ref": "#/$defs/semanticVersion"
+        }
+      }
+    },
+    "catalog_ref": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "catalog_id",
+        "catalog_version"
+      ],
+      "properties": {
+        "catalog_id": {
+          "$ref": "#/$defs/stableId"
+        },
+        "catalog_version": {
+          "$ref": "#/$defs/semanticVersion"
+        }
+      }
+    },
+    "request": {
+      "$ref": "#/$defs/generationRequest"
+    },
+    "candidate_count": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "candidate_records": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/$defs/candidateRecord"
+      }
+    }
+  },
+  "$defs": {
+    "stableId": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"
+    },
+    "semanticVersion": {
+      "type": "string",
+      "pattern": "^(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)(-[0-9A-Za-z.-]+)?(\\+[0-9A-Za-z.-]+)?$"
+    },
+    "timestamp": {
+      "type": "string",
+      "pattern": "^[0-9]{4}-(0[1-9]|1[0-2])-([0-2][0-9]|3[01])T([01][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9](\\.[0-9]+)?(Z|[+-]([01][0-9]|2[0-3]):[0-5][0-9])$"
+    },
+    "generationMode": {
+      "type": "string",
+      "enum": [
+        "CONSTRAINT_FIRST",
+        "MICROSTRUCTURE_STATE",
+        "LINKAGE_OR_IDENTITY",
+        "LITERATURE_REPLICATION",
+        "OBSERVATION_DRIVEN"
+      ]
+    },
+    "operator": {
+      "type": "string",
+      "enum": [
+        "PHASE_PATH",
+        "EXPECTATION_VIOLATION",
+        "MECHANISM_CONNECTION",
+        "ASSUMPTION_RELAXATION"
+      ]
+    },
+    "marketScope": {
+      "type": "string",
+      "enum": [
+        "EQUITIES",
+        "INDEX_ETF",
+        "FUTURES",
+        "OPTIONS",
+        "FX",
+        "CRYPTO_SPOT",
+        "CRYPTO_PERPETUAL",
+        "RATES",
+        "COMMODITIES",
+        "CROSS_MARKET"
+      ]
+    },
+    "naturalHorizon": {
+      "type": "string",
+      "enum": [
+        "SUB_SECOND",
+        "SECONDS",
+        "MINUTES",
+        "HOURS",
+        "SESSION",
+        "ONE_TO_FIVE_DAYS"
+      ]
+    },
+    "phaseName": {
+      "type": "string",
+      "enum": [
+        "ANTICIPATION",
+        "ACTIVE",
+        "ABSORPTION",
+        "TRANSMISSION",
+        "EXHAUSTION",
+        "UNWIND",
+        "CROSS_MECHANISM"
+      ]
+    },
+    "generationRequest": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "generation_modes",
+        "operators",
+        "market_scopes",
+        "natural_horizons",
+        "mechanism_ids",
+        "max_candidates"
+      ],
+      "properties": {
+        "generation_modes": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/$defs/generationMode"
+          }
+        },
+        "operators": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/$defs/operator"
+          }
+        },
+        "market_scopes": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/$defs/marketScope"
+          }
+        },
+        "natural_horizons": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/$defs/naturalHorizon"
+          }
+        },
+        "mechanism_ids": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/$defs/stableId"
+          }
+        },
+        "max_candidates": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 500
+        }
+      }
+    },
+    "candidateRecord": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "candidate_id",
+        "idea_id",
+        "candidate_file",
+        "generation_mode",
+        "operators",
+        "mechanism_refs",
+        "phase",
+        "expected_signature",
+        "idea_statement"
+      ],
+      "properties": {
+        "candidate_id": {
+          "$ref": "#/$defs/stableId"
+        },
+        "idea_id": {
+          "$ref": "#/$defs/stableId"
+        },
+        "candidate_file": {
+          "type": "string",
+          "pattern": "^candidates/[a-z0-9][a-z0-9._-]*\\.json$"
+        },
+        "generation_mode": {
+          "$ref": "#/$defs/generationMode"
+        },
+        "operators": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/$defs/operator"
+          }
+        },
+        "mechanism_refs": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/$defs/stableId"
+          }
+        },
+        "phase": {
+          "$ref": "#/$defs/phaseName"
+        },
+        "expected_signature": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 2000
+        },
+        "idea_statement": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 8000
+        }
+      }
+    }
+  }
+}

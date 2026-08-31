@@ -1,7 +1,7 @@
 # 03_RESEARCH_METHODS.md
 
-**Version:** 1.7
-**Stand:** 2026-08-30
+**Version:** 1.8
+**Stand:** 2026-08-31
 **Status:** ENTWURF ZUR ÜBERNAHME  
 **Zweck:** Methodenauswahl für AI-Agenten. Dieses Dokument sagt nicht, dass jede Methode immer angewendet werden muss. Es verhindert, dass notwendige Methoden vergessen oder dekorativ genannt werden.
 
@@ -916,6 +916,48 @@ Primärquellen für die in diesem Abschnitt verwendeten Grenzen und Verfahren:
 - James Stock und Mark Watson (2018), *Identification and Estimation of Dynamic Causal Effects in Macroeconomics Using External Instruments* – Relevanz- und Exogenitätsbedingungen für strukturelle dynamische Effekte: <https://www.nber.org/papers/w24216>
 
 Diese Quellen rechtfertigen keine konkrete Trading-Edge. Sie begründen die methodischen Schranken und die Pflicht, Identifikation, Prognose und Handelsnutzen getrennt zu prüfen.
+
+---
+
+# 25a. Mechanismenbasierte Ideenerzeugung
+
+Dieser Abschnitt wird nur aktiviert, wenn neue Intraday- oder kurze Swing-Ideen
+erzeugt werden sollen. Er ist kein Teil des nachgelagerten Screenings.
+
+Der ausführbare Producer unter `scripts/generate_hypotheses.py` liest
+`generation/mechanism_catalog.v1.json`. Jeder Katalogeintrag enthält
+Mechanismusgeschichte, mögliche Akteure oder Regeln, erwartete Handlungen,
+beobachtbare Signaturen, natürliche Phasen, alternative Observablen,
+Widerspruchshypothesen, Verbindungstags und Primärquellen.
+
+Die Grundgrammatik lautet:
+
+```text
+Mechanismus × Phase × beobachtbare Reaktion → ungescreenter INBOX-Candidate
+```
+
+Aus derselben Quelle werden unterschiedliche Kandidaten erzeugt:
+
+- `PHASE_PATH`: Antizipation, aktive Phase, Absorption, Transmission,
+  Erschöpfung oder Unwind,
+- `EXPECTATION_VIOLATION`: der erwartete Abdruck bleibt aus oder kehrt sich um;
+  daraus entsteht eine separate Hypothese über Absorption, einen konkurrierenden
+  Flow, einen anderen Übertragungspfad oder eine Zustandsänderung,
+- `MECHANISM_CONNECTION`: zwei Mechanismen teilen einen Takt, Venue, Flow,
+  Hedge-Pfad oder Payoff,
+- `ASSUMPTION_RELAXATION`: der Abdruck wird von Preisrichtung auf Tiefe, Spread,
+  Basis, Volumen, Volatilität, Timing oder ein verknüpftes Instrument verlagert.
+
+Die Akteursfrage ist eine produktive Route, aber keine allgemeine
+Zulassungsbedingung. Sie passt besonders zu Rolls, Auktionen, Verfall,
+Benchmarking, Hedging, Funding und Liquidationen. Orderbuchzustände,
+Instrumentenverknüpfungen und Clock-Time-Wiederholungen dürfen ohne eindeutig
+identifizierten gezwungenen Akteur erzeugt werden.
+
+Nicht Bestandteil dieser Methode sind Portfolioallokation, langfristige
+Faktorideen, Premortem, Validity-Labels, Ablehnungsstatistik, Noise Screen,
+Backtest, Ranking oder Promotion. Diese Trennung ist in
+`decisions/ADR-006-mechanism-first-hypothesis-generator.md` festgehalten.
 
 ---
 

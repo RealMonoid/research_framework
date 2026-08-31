@@ -1,0 +1,96 @@
+{
+  "schema_version": "1.0.0",
+  "generation_run_id": "generation:example-001",
+  "created_at": "2026-08-31T12:00:00Z",
+  "producer": {
+    "kind": "DETERMINISTIC",
+    "producer_id": "producer:mechanism-hypothesis-generator",
+    "producer_version": "1.0.0"
+  },
+  "catalog_ref": {
+    "catalog_id": "catalog:short-horizon-market-mechanisms",
+    "catalog_version": "1.0.0"
+  },
+  "request": {
+    "generation_modes": [],
+    "operators": [
+      "PHASE_PATH",
+      "EXPECTATION_VIOLATION",
+      "MECHANISM_CONNECTION",
+      "ASSUMPTION_RELAXATION"
+    ],
+    "market_scopes": [
+      "FUTURES"
+    ],
+    "natural_horizons": [],
+    "mechanism_ids": [
+      "mechanism:futures-cash-price-discovery",
+      "mechanism:gamma-hedging"
+    ],
+    "max_candidates": 4
+  },
+  "candidate_count": 4,
+  "candidate_records": [
+    {
+      "candidate_id": "candidate:mechanism-futures-cash-price-discovery-phase-transmission:1.0.0",
+      "idea_id": "idea:mechanism-futures-cash-price-discovery-phase-transmission",
+      "candidate_file": "candidates/mechanism-futures-cash-price-discovery-phase-transmission.json",
+      "generation_mode": "LINKAGE_OR_IDENTITY",
+      "operators": [
+        "PHASE_PATH"
+      ],
+      "mechanism_refs": [
+        "mechanism:futures-cash-price-discovery"
+      ],
+      "phase": "TRANSMISSION",
+      "expected_signature": "A statistically ordered response of cash, ETF or component prices after a futures move",
+      "idea_statement": "When one linked market moves while another remains temporarily stale, test whether the lagging instrument catches up or the leading move reverses as the basis closes. Observable signature: A statistically ordered response of cash, ETF or component prices after a futures move. Natural horizon: SECONDS."
+    },
+    {
+      "candidate_id": "candidate:mechanism-futures-cash-price-discovery-expectation-violation:1.0.0",
+      "idea_id": "idea:mechanism-futures-cash-price-discovery-expectation-violation",
+      "candidate_file": "candidates/mechanism-futures-cash-price-discovery-expectation-violation.json",
+      "generation_mode": "LINKAGE_OR_IDENTITY",
+      "operators": [
+        "EXPECTATION_VIOLATION"
+      ],
+      "mechanism_refs": [
+        "mechanism:futures-cash-price-discovery"
+      ],
+      "phase": "TRANSMISSION",
+      "expected_signature": "A statistically ordered response of cash, ETF or component prices after a futures move",
+      "idea_statement": "When one linked market moves while another remains temporarily stale, but the expected signature 'A statistically ordered response of cash, ETF or component prices after a futures move' is absent or inverted, test this separate hypothesis: When the usual leader fails to transmit, the move may be a venue-specific liquidity shock; reversal in the apparent leader can be a separate candidate from catch-up in the laggard."
+    },
+    {
+      "candidate_id": "candidate:mechanism-futures-cash-price-discovery-mechanism-gamma-hedging-connection:1.0.0",
+      "idea_id": "idea:mechanism-futures-cash-price-discovery-mechanism-gamma-hedging-connection",
+      "candidate_file": "candidates/mechanism-futures-cash-price-discovery-mechanism-gamma-hedging-connection.json",
+      "generation_mode": "LINKAGE_OR_IDENTITY",
+      "operators": [
+        "MECHANISM_CONNECTION"
+      ],
+      "mechanism_refs": [
+        "mechanism:futures-cash-price-discovery",
+        "mechanism:gamma-hedging"
+      ],
+      "phase": "CROSS_MECHANISM",
+      "expected_signature": "A statistically ordered response of cash, ETF or component prices after a futures move; Continuation into the final part of the session when hedgers are plausibly short gamma",
+      "idea_statement": "Test the connection between 'Lead-lag price discovery between futures and cash instruments' and 'Delta hedging under short or long gamma exposure' through their shared context tag:cross-market-transmission. When 'One linked market moves while another remains temporarily stale' and 'A directional move changes estimated net hedge demand materially' overlap, test whether the joint footprint appears more strongly, earlier, or in a different instrument than either mechanism alone. Observables: A statistically ordered response of cash, ETF or component prices after a futures move; Continuation into the final part of the session when hedgers are plausibly short gamma."
+    },
+    {
+      "candidate_id": "candidate:mechanism-futures-cash-price-discovery-assumption-relaxation:1.0.0",
+      "idea_id": "idea:mechanism-futures-cash-price-discovery-assumption-relaxation",
+      "candidate_file": "candidates/mechanism-futures-cash-price-discovery-assumption-relaxation.json",
+      "generation_mode": "LINKAGE_OR_IDENTITY",
+      "operators": [
+        "ASSUMPTION_RELAXATION"
+      ],
+      "mechanism_refs": [
+        "mechanism:futures-cash-price-discovery"
+      ],
+      "phase": "TRANSMISSION",
+      "expected_signature": "Time-varying leadership score by session and shock type",
+      "idea_statement": "Relax the assumption that primary price return is the best footprint of 'Lead-lag price discovery between futures and cash instruments'. Use 'Time-varying leadership score by session and shock type' instead: Test whether leadership switches across open, continuous session and high-volatility states instead of assuming a permanent leader."
+    }
+  ]
+}
