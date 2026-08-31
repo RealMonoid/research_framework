@@ -94,7 +94,9 @@ IDs sind opake Schlüssel. Sie werden nicht nachträglich wiederverwendet oder a
 | Evidence-Dokument | sobald ein materieller Claim erzeugt oder übernommen wird | **schemas/evidence.schema.json** |
 | Review-Dokument | bei menschlicher Prüfung, Korrektur, Freigabe, Ablehnung oder Override | **schemas/review.schema.json** |
 | Constraint-/Lever-Assessment | bei Verwendung eines der vier Constraint-/Lever-Labels | **schemas/constraint_assessment.schema.json** |
-| Wissenschaftsphilosophie-Review | vor Freeze optional zur Buendelkarte; nach `FALSIFIED / PRECISE_NULL / INCONCLUSIVE / INVALID_TEST`, sobald eine materielle Revision oder empirische Fortsetzung erwogen wird | **schemas/scientific_philosophy_review.schema.json** plus semantischer Inspector |
+| Strategy Concept Audit | vor Abschluss jeder unvollständig definierten Quellenrekonstruktion | **schemas/strategy_concept_audit.schema.json** plus semantischer Inspector |
+| Condition Inquiry | nach vorläufiger Operationalisierung, sobald Messnutzen, Definitionsabhängigkeit oder unbekannte Erfolgsmodifikatoren quantitativ untersucht werden | **schemas/condition_inquiry.schema.json** plus semantischer Inspector |
+| Wissenschaftsphilosophie-Review | nach `FALSIFIED / PRECISE_NULL / INCONCLUSIVE / INVALID_TEST`, sobald eine materielle Revision oder empirische Fortsetzung erwogen wird | **schemas/scientific_philosophy_review.schema.json** plus semantischer Inspector |
 | Trace | bei jedem Modell-, Tool-, Retrieval- und Validierungsschritt | Regeln in §6 |
 | Error Log | sobald Warnung oder Fehler auftritt | Regeln in §7 |
 | Delta Report | wenn ein Baseline-Lauf oder eine freigegebene Vorgängerversion existiert | Regeln in §9 |
@@ -121,6 +123,18 @@ Maschinenprüfung erzwingt Referenzintegrität und formale Bedingungen einer
 progressiven Fortsetzung; ob eine behauptete Vorhersage sachlich wirklich neu
 ist, bleibt eine semantische Prüfaufgabe. Der zugehörige Inspector ist
 `scripts/inspect_scientific_philosophy_review.py`.
+
+Das vorgelagerte `strategy_concept_audit` wird vom selben Agentenvertrag in
+einem anderen Modus erzeugt. Es ist keine Ergebnisprüfung. Es hält fest, welche
+Bedingungen zur Strategie gehören, welche nur aus der Quelle als Anwendungshinweis
+stammen, welche vermutet werden und welche unbekannt bleiben. Der Inspector ist
+`scripts/inspect_strategy_concept_audit.py`.
+
+Ein `condition_inquiry` ist ein Plan oder Ergebnis einer klar abgegrenzten
+quantitativen Bedingungsfrage. Es darf Messinstrumente beurteilen oder neue
+Bedingungshypothesen erzeugen, schreibt datenbasierte Funde aber nicht in die
+Quellenstrategie zurück. Der Inspector ist
+`scripts/inspect_condition_inquiry.py`.
 
 ## 2.3 Schema- und Integritätsregel
 

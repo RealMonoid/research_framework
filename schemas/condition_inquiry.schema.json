@@ -1,0 +1,234 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:research-framework:schema:condition-inquiry:1.0.0",
+  "title": "Quantitative Condition Inquiry",
+  "description": "Plan or result record for measurement assessment, construction diagnostics, operationalization sensitivity, condition discovery and stability analysis. It generates condition hypotheses without silently rewriting the source strategy.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "inquiry_id",
+    "created_at",
+    "updated_at",
+    "agent_contract_version",
+    "research_id",
+    "input_artifact_refs",
+    "purpose",
+    "base_claim",
+    "measurement_assessment",
+    "candidate_conditions",
+    "method_plan",
+    "interpretation_contract",
+    "inquiry_status",
+    "overall_note"
+  ],
+  "properties": {
+    "schema_version": {"const": "1.0.0"},
+    "inquiry_id": {"$ref": "#/$defs/stableId"},
+    "created_at": {"$ref": "#/$defs/timestamp"},
+    "updated_at": {"$ref": "#/$defs/timestamp"},
+    "agent_contract_version": {"const": "1.0.0"},
+    "research_id": {"$ref": "#/$defs/stableId"},
+    "input_artifact_refs": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"$ref": "#/$defs/stableId"}},
+    "purpose": {
+      "type": "string",
+      "enum": [
+        "MEASUREMENT_ASSESSMENT",
+        "CONSTRUCTION_DIAGNOSIS",
+        "OPERATIONALIZATION_SENSITIVITY",
+        "PERFORMANCE_MODIFIER_DISCOVERY",
+        "TEMPORAL_STABILITY",
+        "CROSS_ENVIRONMENT_STABILITY",
+        "NECESSITY_EXPLORATION"
+      ]
+    },
+    "base_claim": {"$ref": "#/$defs/baseClaim"},
+    "measurement_assessment": {
+      "oneOf": [
+        {"$ref": "#/$defs/measurementAssessment"},
+        {"type": "null"}
+      ]
+    },
+    "candidate_conditions": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/candidateCondition"}
+    },
+    "method_plan": {
+      "type": "array",
+      "minItems": 1,
+      "items": {"$ref": "#/$defs/methodPlan"}
+    },
+    "interpretation_contract": {"$ref": "#/$defs/interpretationContract"},
+    "inquiry_status": {
+      "type": "string",
+      "enum": ["PLAN", "EXPLORATORY_RESULTS", "INDEPENDENT_RESULTS", "BLOCKED"]
+    },
+    "overall_note": {"$ref": "#/$defs/text"}
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {"purpose": {"const": "MEASUREMENT_ASSESSMENT"}},
+        "required": ["purpose"]
+      },
+      "then": {
+        "properties": {
+          "measurement_assessment": {"$ref": "#/$defs/measurementAssessment"}
+        }
+      }
+    }
+  ],
+  "$defs": {
+    "stableId": {"type": "string", "pattern": "^[A-Za-z][A-Za-z0-9._:-]{2,199}$"},
+    "timestamp": {"type": "string", "format": "date-time"},
+    "text": {"type": "string", "minLength": 1, "maxLength": 8000},
+    "shortText": {"type": "string", "minLength": 1, "maxLength": 2000},
+    "baseClaim": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["claim_ref", "statement", "relationship_to_source_strategy"],
+      "properties": {
+        "claim_ref": {"$ref": "#/$defs/stableId"},
+        "statement": {"$ref": "#/$defs/shortText"},
+        "relationship_to_source_strategy": {
+          "type": "string",
+          "enum": ["SOURCE_STRATEGY", "MEASUREMENT_QUESTION", "NEW_CONDITION_HYPOTHESIS"]
+        }
+      }
+    },
+    "measurementAssessment": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "instrument_ref",
+        "stated_purpose",
+        "construction_inputs",
+        "future_discrimination_targets",
+        "targets_reused_in_construction",
+        "label_share",
+        "incremental_baseline",
+        "conclusion",
+        "failure_scope",
+        "label_share_alone_validates_instrument",
+        "predictive_separation_establishes_real_state",
+        "predictive_separation_establishes_cause",
+        "note"
+      ],
+      "properties": {
+        "instrument_ref": {"$ref": "#/$defs/stableId"},
+        "stated_purpose": {"$ref": "#/$defs/shortText"},
+        "construction_inputs": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 1, "maxLength": 1000}},
+        "future_discrimination_targets": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 1, "maxLength": 1000}},
+        "targets_reused_in_construction": {"const": false},
+        "label_share": {"type": ["number", "null"], "minimum": 0, "maximum": 1},
+        "incremental_baseline": {"$ref": "#/$defs/shortText"},
+        "conclusion": {
+          "type": "string",
+          "enum": ["NOT_YET_ASSESSED", "INFORMATIVE_FOR_STATED_PURPOSE", "NOT_INFORMATIVE_FOR_STATED_PURPOSE", "UNRESOLVED"]
+        },
+        "failure_scope": {
+          "type": "string",
+          "enum": ["CONDITIONED_CLAIM_ONLY", "UNCONDITIONED_EVENT_CLAIM_MAY_REMAIN_OPEN", "ENTIRE_BASE_CLAIM", "UNRESOLVED"]
+        },
+        "label_share_alone_validates_instrument": {"const": false},
+        "predictive_separation_establishes_real_state": {"const": false},
+        "predictive_separation_establishes_cause": {"const": false},
+        "note": {"$ref": "#/$defs/text"}
+      }
+    },
+    "candidateCondition": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "condition_id",
+        "statement",
+        "origin",
+        "relationship_to_strategy",
+        "known_at_decision_time",
+        "status",
+        "new_hypothesis_required",
+        "evidence_refs",
+        "note"
+      ],
+      "properties": {
+        "condition_id": {"$ref": "#/$defs/stableId"},
+        "statement": {"$ref": "#/$defs/shortText"},
+        "origin": {
+          "type": "string",
+          "enum": ["SOURCE_STATED", "CONCEPT_AUDIT", "DOMAIN_THEORY", "DATA_DISCOVERED", "UNKNOWN"]
+        },
+        "relationship_to_strategy": {
+          "type": "string",
+          "enum": ["DEFINES_STRATEGY", "APPLICATION_CONDITION", "PERFORMANCE_MODIFIER", "UNKNOWN"]
+        },
+        "known_at_decision_time": {"type": "string", "enum": ["YES", "NO", "UNKNOWN"]},
+        "status": {"type": "string", "enum": ["UNEXAMINED", "EXPLORATORY", "RECURRING", "NOT_RECURRING", "UNRESOLVED"]},
+        "new_hypothesis_required": {"type": "boolean"},
+        "evidence_refs": {"type": "array", "uniqueItems": true, "items": {"$ref": "#/$defs/stableId"}},
+        "note": {"$ref": "#/$defs/shortText"}
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {"origin": {"const": "DATA_DISCOVERED"}},
+            "required": ["origin"]
+          },
+          "then": {
+            "properties": {
+              "relationship_to_strategy": {"const": "PERFORMANCE_MODIFIER"},
+              "new_hypothesis_required": {"const": true}
+            }
+          }
+        }
+      ]
+    },
+    "methodPlan": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["method_id", "method_type", "stage", "question", "outputs", "interpretation_limit"],
+      "properties": {
+        "method_id": {"$ref": "#/$defs/stableId"},
+        "method_type": {
+          "type": "string",
+          "enum": [
+            "STRUCTURAL_DEPENDENCY_MAP",
+            "NULL_PROCESS_SIMULATION",
+            "SPECIFICATION_CURVE",
+            "MULTIVERSE_ANALYSIS",
+            "MODEL_BASED_RECURSIVE_PARTITIONING",
+            "CONDITIONAL_INFERENCE_TREE",
+            "CONDITIONAL_PREDICTIVE_ABILITY",
+            "PERFORMANCE_FLUCTUATION_TEST",
+            "INVARIANCE_ANALYSIS",
+            "NEGATIVE_CONTROL",
+            "NECESSARY_CONDITION_ANALYSIS"
+          ]
+        },
+        "stage": {"type": "string", "enum": ["STRUCTURAL_PRE_DATA", "DISCOVERY", "INDEPENDENT_EVALUATION"]},
+        "question": {"$ref": "#/$defs/shortText"},
+        "outputs": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 1, "maxLength": 1000}},
+        "interpretation_limit": {"$ref": "#/$defs/text"}
+      }
+    },
+    "interpretationContract": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "unknown_conditions_remain_unknown",
+        "data_discovered_conditions_are_new_hypotheses",
+        "association_is_not_causal_evidence",
+        "predictive_separation_is_not_real_state_proof",
+        "source_claim_not_silently_replaced",
+        "note"
+      ],
+      "properties": {
+        "unknown_conditions_remain_unknown": {"const": true},
+        "data_discovered_conditions_are_new_hypotheses": {"const": true},
+        "association_is_not_causal_evidence": {"const": true},
+        "predictive_separation_is_not_real_state_proof": {"const": true},
+        "source_claim_not_silently_replaced": {"const": true},
+        "note": {"$ref": "#/$defs/text"}
+      }
+    }
+  }
+}

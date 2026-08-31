@@ -1,6 +1,6 @@
 # ADR-009: Wissenschaftsphilosophische Prüfung von Fehlerzurechnung und Fortsetzung
 
-**Status:** Accepted
+**Status:** Accepted; pre-operationalization scope amended by ADR-010
 **Date:** 2026-08-31
 **Deciders:** Projektverantwortlicher und Maintainer des Research-Frameworks
 
@@ -51,9 +51,10 @@ neuen Gehalt besitzt.
   keine neue Vorhersage.
 - **Kuhn als Rechtfertigung zum Ignorieren der Anomalie:** verworfen; die
   Programmebene ändert den Befund des Einzeltests nicht.
-- **Wissenschaftsphilosophie als weiterer Pre-Research-Pflichtblock:**
-  verworfen. Die Bündelkarte ist vor Freeze optional und wird erst bei einer
-  tatsächlichen Fortsetzungsfrage verpflichtend.
+- **Wissenschaftsphilosophie als Pflichtblock für jede Rohidee:** verworfen.
+  ADR-010 verlangt die frühe Begriffsprüfung gezielt bei unvollständig
+  definierten Quellenstrategien; gewöhnliche Rohideen werden damit nicht
+  belastet.
 
 ## Consequences
 

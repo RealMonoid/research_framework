@@ -121,6 +121,8 @@ def replace_noise_screen_with_invalid_waiver(document: dict[str, Any]) -> None:
 POSITIVES = [
     ("generation/mechanism_catalog.v1.json", "schemas/mechanism_catalog.schema.json"),
     ("examples/strategy_reconstruction.vwap_wave_price_discovery.json", "schemas/strategy_reconstruction.schema.json"),
+    ("examples/strategy_concept_audit.synthetic.json", "schemas/strategy_concept_audit.schema.json"),
+    ("examples/condition_inquiry.synthetic_measurement.json", "schemas/condition_inquiry.schema.json"),
     ("examples/scientific_philosophy_review.synthetic_failed_reconstruction.json", "schemas/scientific_philosophy_review.schema.json"),
     ("examples/generated-run/generation-run.json", "schemas/generation_run.schema.json"),
     ("examples/generated-run/candidates/mechanism-futures-cash-price-discovery-phase-transmission.json", "schemas/hypothesis_candidate.schema.json"),
@@ -142,6 +144,10 @@ POSITIVES = [
 NEGATIVES: list[tuple[str, str, str, Mutation]] = [
     ("mechanism catalog rejects additional property", "generation/mechanism_catalog.v1.json", "schemas/mechanism_catalog.schema.json", set_value(("confidence_score",), 0.8)),
     ("strategy reconstruction rejects additional property", "examples/strategy_reconstruction.vwap_wave_price_discovery.json", "schemas/strategy_reconstruction.schema.json", set_value(("backtest_result",), "invented")),
+    ("unknown success condition cannot be smuggled into strategy", "examples/strategy_concept_audit.synthetic.json", "schemas/strategy_concept_audit.schema.json", set_value(("condition_map", 3, "incorporation_status"), "SOURCE_COMPONENT")),
+    ("construction dependency cannot claim causal evidence", "examples/strategy_concept_audit.synthetic.json", "schemas/strategy_concept_audit.schema.json", set_value(("construction_dependencies", 0, "causal_evidence"), True)),
+    ("filter label share alone cannot validate instrument", "examples/condition_inquiry.synthetic_measurement.json", "schemas/condition_inquiry.schema.json", set_value(("measurement_assessment", "label_share_alone_validates_instrument"), True)),
+    ("measurement assessment cannot reuse its construction target", "examples/condition_inquiry.synthetic_measurement.json", "schemas/condition_inquiry.schema.json", set_value(("measurement_assessment", "targets_reused_in_construction"), True)),
     ("philosophy review cannot relabel frozen result", "examples/scientific_philosophy_review.synthetic_failed_reconstruction.json", "schemas/scientific_philosophy_review.schema.json", set_value(("frozen_result", "remains_unchanged"), False)),
     ("progressive revision requires a genuinely new prediction", "examples/scientific_philosophy_review.synthetic_failed_reconstruction.json", "schemas/scientific_philosophy_review.schema.json", set_value(("revision_proposals", 1, "novel_prediction", "relation_to_prior"), "ALREADY_IMPLIED")),
     ("source extraction cannot select an operationalization", "examples/strategy_reconstruction.vwap_wave_price_discovery.json", "schemas/strategy_reconstruction.schema.json", set_value(("constructs", 0, "decision", "status"), "SELECTED")),
@@ -190,6 +196,7 @@ NEGATIVES: list[tuple[str, str, str, Mutation]] = [
     ("PROMOTED candidate requires actor constraint", "examples/hypothesis_candidate.minimal.json", "schemas/hypothesis_candidate.schema.json", delete_value(("actor_constraint",))),
     ("PROMOTED actor constraint rejects UNKNOWN observability", "examples/hypothesis_candidate.minimal.json", "schemas/hypothesis_candidate.schema.json", set_value(("actor_constraint", "observability"), "UNKNOWN")),
     ("actor constraint requires alternative actor hypotheses", "examples/hypothesis_candidate.minimal.json", "schemas/hypothesis_candidate.schema.json", delete_value(("actor_constraint", "alternative_actor_hypotheses"))),
+    ("unspecified actor cannot claim a mechanism", "examples/hypothesis_candidate.minimal.json", "schemas/hypothesis_candidate.schema.json", set_value(("actor_constraint",), {"actor_status": "UNSPECIFIED", "mechanism_claim_status": "CLAIMED", "reason": "No defensible actor is known."})),
     ("hypothesis candidate scope requires an instrument", "examples/hypothesis_candidate.minimal.json", "schemas/hypothesis_candidate.schema.json", set_value(("research_scope", "instruments"), [])),
     ("intraday scope requires explicit timezone", "examples/hypothesis_candidate.minimal.json", "schemas/hypothesis_candidate.schema.json", delete_value(("research_scope", "timezone"))),
     ("FILTER_KNOWN_EVENTS requires named feed coverage", "examples/hypothesis_candidate.minimal.json", "schemas/hypothesis_candidate.schema.json", set_value(("research_scope", "news_event_coverage", "feeds"), [])),
@@ -295,6 +302,25 @@ def main() -> int:
         return 1
     positive_count += 1
     print("PASS positive: data-driven variable-selection provenance")
+
+    actor_unspecified = load("examples/hypothesis_candidate.minimal.json")
+    actor_unspecified["idea_class"] = "PREDICTIVE_PRECEDENCE"
+    actor_unspecified["actor_constraint"] = {
+        "actor_status": "UNSPECIFIED",
+        "mechanism_claim_status": "NOT_CLAIMED",
+        "reason": (
+            "The predictive question does not identify a defensible actor; "
+            "no actor or mechanism is inferred."
+        ),
+    }
+    errors = list(candidate_validator.iter_errors(actor_unspecified))
+    if errors:
+        print("Expected valid actor-unspecified candidate was rejected", file=sys.stderr)
+        for error in errors:
+            print(f"- {error.json_path}: {error.message}", file=sys.stderr)
+        return 1
+    positive_count += 1
+    print("PASS positive: predictive candidate may preserve an unspecified actor")
 
     for name, fixture_path, schema_path, mutation in NEGATIVES:
         document = load(fixture_path)

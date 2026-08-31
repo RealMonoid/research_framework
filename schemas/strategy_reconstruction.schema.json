@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "urn:research-framework:schema:strategy-reconstruction:1.0.0",
+  "$id": "urn:research-framework:schema:strategy-reconstruction:1.1.0",
   "title": "Strategy Reconstruction from Prose",
   "description": "Quellennahe Uebersetzung einer Buch-, Artikel-, Video- oder Kursstrategie in explizite Konstrukte und offene Operationalisierungsentscheidungen. Das Artefakt fuehrt weder Backtests noch automatische Definitionauswahl durch.",
   "type": "object",
@@ -16,13 +16,14 @@
     "source_claims",
     "strategy_identity_claim_refs",
     "constructs",
+    "concept_audit",
     "reconstruction_status",
     "fidelity_label",
     "overall_note"
   ],
   "properties": {
     "schema_version": {
-      "const": "1.0.0"
+      "const": "1.1.0"
     },
     "reconstruction_id": {
       "$ref": "#/$defs/stableId"
@@ -66,6 +67,9 @@
       "items": {
         "$ref": "#/$defs/construct"
       }
+    },
+    "concept_audit": {
+      "$ref": "#/$defs/conceptAuditLink"
     },
     "reconstruction_status": {
       "type": "string",
@@ -131,6 +135,17 @@
                 }
               }
             }
+          },
+          "concept_audit": {
+            "properties": {
+              "status": {
+                "enum": [
+                  "NOT_STARTED",
+                  "IN_PROGRESS",
+                  "BLOCKED"
+                ]
+              }
+            }
           }
         }
       }
@@ -170,6 +185,16 @@
                 }
               }
             }
+          },
+          "concept_audit": {
+            "properties": {
+              "status": {
+                "const": "COMPLETE"
+              },
+              "audit_ref": {
+                "$ref": "#/$defs/stableId"
+              }
+            }
           }
         }
       }
@@ -203,6 +228,62 @@
         },
         {
           "type": "null"
+        }
+      ]
+    },
+    "conceptAuditLink": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "status",
+        "audit_ref",
+        "note"
+      ],
+      "properties": {
+        "status": {
+          "type": "string",
+          "enum": [
+            "NOT_STARTED",
+            "IN_PROGRESS",
+            "COMPLETE",
+            "BLOCKED"
+          ]
+        },
+        "audit_ref": {
+          "$ref": "#/$defs/nullableStableId"
+        },
+        "note": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4000
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "status": {
+                "const": "COMPLETE"
+              }
+            },
+            "required": [
+              "status"
+            ]
+          },
+          "then": {
+            "properties": {
+              "audit_ref": {
+                "$ref": "#/$defs/stableId"
+              }
+            }
+          },
+          "else": {
+            "properties": {
+              "audit_ref": {
+                "type": "null"
+              }
+            }
+          }
         }
       ]
     },

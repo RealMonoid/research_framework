@@ -33,6 +33,18 @@ if ($LASTEXITCODE -ne 0) {
     throw "Strategy-Reconstruction-Tests fehlgeschlagen (Exit $LASTEXITCODE)."
 }
 
+Write-Output '== Strategy concept audit =='
+& $PythonExecutable (Join-Path $repoRoot 'scripts\test_strategy_concept_audit.py')
+if ($LASTEXITCODE -ne 0) {
+    throw "Strategy-Concept-Audit-Tests fehlgeschlagen (Exit $LASTEXITCODE)."
+}
+
+Write-Output '== Condition inquiry =='
+& $PythonExecutable (Join-Path $repoRoot 'scripts\test_condition_inquiry.py')
+if ($LASTEXITCODE -ne 0) {
+    throw "Condition-Inquiry-Tests fehlgeschlagen (Exit $LASTEXITCODE)."
+}
+
 Write-Output '== Scientific-philosophy review =='
 & $PythonExecutable (Join-Path $repoRoot 'scripts\test_scientific_philosophy_review.py')
 if ($LASTEXITCODE -ne 0) {

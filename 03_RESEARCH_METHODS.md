@@ -514,6 +514,127 @@ Bevor Kategorien wie `Trend`, `Range`, `High Vol` festgelegt werden, untersuchen
 
 Nicht nur `E[R|P,S]` ansehen, sondern prüfen, ob `P` über `S` hinaus Information liefert.
 
+## 19.1 Filter als Messinstrument, nicht als Marktbeweis
+
+Ein Regime-, State- oder Kontextfilter operationalisiert eine Einteilung. Er
+beweist nicht, dass der Markt einen buchstäblich realen verborgenen Zustand mit
+dem vergebenen Namen besitzt. Für die Beurteilung werden festgehalten:
+
+- der genaue Zweck des Filters,
+- seine Eingangsdaten und deren Beobachtungszeitpunkt,
+- zukünftige Zielgrößen, die nicht bereits in seiner Berechnung stecken,
+- ein Vergleich mit den kontinuierlichen Eingangsgrößen oder einer einfachen
+  Regel ohne Filter,
+- und der Claim, der bei fehlender Trennleistung tatsächlich betroffen ist.
+
+Der Anteil `Range`, `Trend` oder einer anderen Klasse ist für sich weder ein
+gutes noch ein schlechtes Zeichen. Entscheidend ist, ob die feste Einteilung für
+ihren erklärten Zweck zusätzliche Information über späteres Verhalten liefert.
+Auch dann bleibt der Befund prädiktiv; er identifiziert weder Akteur noch
+Mechanismus.
+
+## 19.2 Konstruktionsabhängigkeiten
+
+Trigger, Filter, Ziel und Outcome werden auf gemeinsame Rohinputs,
+Berechnungsfenster und deterministische Transformationen zurückgeführt.
+Mathematische Kopplung kann Assoziationen erzeugen, wenn zwei Größen gemeinsame
+Bestandteile besitzen. Deterministisch abgeleitete Größen können dafür als
+eigene Knoten in einer DAG dargestellt werden. Die Diagnose beantwortet nur,
+woher ein statistischer Zusammenhang teilweise stammen kann; sie ist weder
+Kausalbeleg noch automatische Widerlegung.
+
+Geeignete Werkzeuge:
+
+- strukturelle Abhängigkeitskarte vor Datenanalyse,
+- neutrale oder strukturtreue Simulation, um den allein durch die Konstruktion
+  erwartbaren Zusammenhang sichtbar zu machen,
+- getrennte Interpretation des verbleibenden empirischen Anteils.
+
+Methodische Anker:
+
+- Archie, *Mathematic coupling of data: a common source of error*,
+  <https://pmc.ncbi.nlm.nih.gov/articles/PMC1345065/>.
+- Tennant et al., *Depicting deterministic variables within directed acyclic
+  graphs*, <https://academic.oup.com/aje/article/194/2/469/7698093>.
+
+## 19.3 Empfindlichkeit gegenüber vertretbaren Definitionen
+
+Wenn mehrere Definitionen **vorab fachlich als zulässig** anerkannt wurden,
+kann eine Spezifikationskurve oder Multiversum-Analyse zeigen, ob die Aussage
+über diese Übersetzungen stabil bleibt. Das Verfahren entdeckt keine wahre
+Definition und keine unbekannte Voraussetzung. Es zeigt, welche
+Operationalisierungsentscheidungen das Ergebnis tragen.
+
+- Simonsohn, Simmons und Nelson, *Specification Curve Analysis*,
+  <https://www.nature.com/articles/s41562-020-0912-z>.
+- Steegen et al., *Increasing Transparency Through a Multiverse Analysis*,
+  <https://stat.columbia.edu/~gelman/research/published/multiverse_published.pdf>.
+
+## 19.4 Interpretierbare Bedingungserzeugung
+
+Sind plausible Statevariablen vorhanden, aber ihre Wechselwirkungen oder
+Schwellen unbekannt, darf Discovery gezielt neue Bedingungshypothesen erzeugen.
+Bevorzugt werden zunächst interpretierbare Verfahren:
+
+- modellbasierte rekursive Aufteilung: prüft, bei welcher Variable ein
+  Modellparameter instabil wird, teilt dort und wiederholt dies innerhalb der
+  entstehenden Gruppen;
+- Conditional-Inference-Trees: reduzieren die bekannte Bevorzugung von
+  Variablen mit vielen möglichen Trennpunkten;
+- Generalized Random Forests nur ergänzend bei vielen Kandidaten und genügend
+  Fällen. Ohne identifiziertes Treatment werden ihre Ergebnisse prädiktiv, nicht
+  kausal bezeichnet.
+
+Ein datenbasiert erzeugter Split oder Schwellenwert ist ein neuer
+`PERFORMANCE_MODIFIER`, keine nachträglich gefundene Quellenregel.
+
+Methodische Anker:
+
+- Zeileis, Hothorn und Hornik, *Model-based Recursive Partitioning*,
+  <https://www.zeileis.org/papers/Zeileis%2BHothorn%2BHornik-2008.pdf>.
+- Hothorn, Hornik und Zeileis, *Unbiased Recursive Partitioning*,
+  <https://www.zeileis.org/papers/Hothorn%2BHornik%2BZeileis-2006.pdf>.
+- Athey, Tibshirani und Wager, *Generalized Random Forests*,
+  <https://www.gsb.stanford.edu/faculty-research/publications/generalized-random-forests>.
+
+## 19.5 Bedingte Prognosefähigkeit und Wiederkehr
+
+Die praktische Frage lautet nicht nur, welche Variante durchschnittlich besser
+war, sondern ob Information, die im Entscheidungszeitpunkt vorlag, erkennen
+ließ, wann sich die Prognoseleistung änderte. Dafür ist ein Test bedingter
+Prognosefähigkeit geeignet. Eine anschließende Fluktuationsanalyse betrachtet
+den gesamten Zeitpfad der relativen Leistung und verhindert, dass ein
+Gesamtdurchschnitt zeitliche Instabilität verdeckt.
+
+- Giacomini und White, *Tests of Conditional Predictive Ability*,
+  <https://onlinelibrary.wiley.com/doi/10.1111/j.1468-0262.2006.00718.x>.
+- Giacomini und Rossi, *Forecast Comparisons in Unstable Environments*,
+  <https://onlinelibrary.wiley.com/doi/10.1002/jae.1177>.
+
+Invarianz über vorab definierte Märkte, Instrumente oder Sessionumgebungen kann
+die Wiederkehr eines Zusammenhangs stützen. Sie wird ohne die jeweils nötigen
+Identifikationsannahmen nicht als universeller Kausalitätstest bezeichnet.
+
+## 19.6 Negativkontrollen und notwendige Bedingungen
+
+Negativkontrollen können eine vermutete oder unerwartete Verzerrungsquelle
+sichtbar machen, wenn Exposition oder Outcome nach dem behaupteten Mechanismus
+nicht reagieren sollten. Sie sind Diagnostik und erzeugen allein keine
+Erfolgsbedingung.
+
+- Lipsitch, Tchetgen Tchetgen und Cohen, *Negative Controls: A Tool for
+  Detecting Confounding and Bias in Observational Studies*,
+  <https://pmc.ncbi.nlm.nih.gov/articles/PMC3053408/>.
+
+Necessary Condition Analysis kann explorativ nach einer Bedingung suchen, ohne
+die ein hohes Outcome nicht auftritt. Weil „ohne X garantiert kein Erfolg“ in
+verrauschten kurzfristigen Märkten eine besonders starke Aussage ist, ist sie
+kein Default. Sie benötigt eine eigene Begründung und wird nicht aus einer
+leeren Ecke im Streudiagramm allein als Marktgesetz ausgegeben.
+
+- Dul, *Necessary Condition Analysis*,
+  <https://repub.eur.nl/pub/90024/>.
+
 ---
 
 # 20. Kostenmodellierung
@@ -1097,6 +1218,12 @@ weder Source Verification noch Version-/Integrity-Prüfung.
 | Pipeline findet Effekte unter Null / möglicher Timing- oder Indexierungsfehler | vollständige Pipeline auf strukturtreuen Null-/Surrogatdaten plus bekannter positiver Sentinel | Pipeline-Integritätsgate |
 | knappe unabhängige Daten | Datenrollen | Holdout oder nested WF |
 | Kosten variieren mit Signal | State prüfen | zustandsabhängiges Kostenmodell |
+| unklarer Nutzen eines Regimefilters | zukünftige, nicht im Filter enthaltene Zielgröße + inkrementeller Vergleich | Measurement Assessment + Conditional Predictive Ability |
+| Trigger und Outcome teilen Inputs oder Fenster | deterministische Herkunftskarte | Structural Dependency Map + optional neutrale Simulation |
+| Ergebnis hängt möglicherweise an vertretbaren Definitionen | vorab begrenzte Definitionsfamilie | Spezifikationskurve / Multiversum |
+| unbekannte beobachtbare Erfolgsmodifikatoren | interpretierbare Discovery, danach getrennte Wiederkehrprüfung | Model-based Recursive Partitioning / Conditional Inference Tree |
+| Bedingung möglicherweise nur zeitweise | gesamter Zeitpfad statt Gesamtdurchschnitt | Performance Fluctuation Test |
+| Bedingung soll marktübergreifend gelten | vorab definierte Umgebungen und begrenzte Interpretation | Invarianzanalyse |
 | kausale Behauptung | Estimand + DAG + Identifikationsannahmen | Identifikationsgate vor Schätzerwahl |
 | Granger-/Discovery-Signal | Informationssatz + Algorithmusannahmen + Äquivalenzklasse | `Tigramite` für PCMCI-artige Zeitreihen-Discovery; als Hypothesengenerator/Predictive Precedence labeln |
 | hochdimensionale Confounder unter gültiger Identifikation | Overlap + Split-/Abhängigkeitsdesign | `EconML` oder `DoubleML` mit zeitlich gültigem Cross-Fitting |

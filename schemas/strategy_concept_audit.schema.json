@@ -1,0 +1,312 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:research-framework:schema:strategy-concept-audit:1.0.0",
+  "title": "Pre-operationalization Strategy Concept Audit",
+  "description": "Pre-operational audit of conditions, construction dependencies, measurement instruments and causal boundaries. It does not select definitions, test a strategy or claim that all success conditions are known.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "audit_id",
+    "created_at",
+    "updated_at",
+    "agent_contract_version",
+    "reconstruction_ref",
+    "source_claim_refs",
+    "construct_refs",
+    "condition_map",
+    "construction_dependencies",
+    "measurement_instruments",
+    "mechanism_boundary",
+    "completeness_boundary",
+    "audit_status",
+    "overall_note"
+  ],
+  "properties": {
+    "schema_version": {"const": "1.0.0"},
+    "audit_id": {"$ref": "#/$defs/stableId"},
+    "created_at": {"$ref": "#/$defs/timestamp"},
+    "updated_at": {"$ref": "#/$defs/timestamp"},
+    "agent_contract_version": {"const": "1.1.0"},
+    "reconstruction_ref": {"$ref": "#/$defs/stableId"},
+    "source_claim_refs": {"$ref": "#/$defs/refList"},
+    "construct_refs": {"$ref": "#/$defs/refList"},
+    "condition_map": {
+      "type": "array",
+      "minItems": 1,
+      "items": {"$ref": "#/$defs/conditionEntry"}
+    },
+    "construction_dependencies": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/constructionDependency"}
+    },
+    "measurement_instruments": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/measurementInstrument"}
+    },
+    "mechanism_boundary": {"$ref": "#/$defs/mechanismBoundary"},
+    "completeness_boundary": {"$ref": "#/$defs/completenessBoundary"},
+    "audit_status": {
+      "type": "string",
+      "enum": ["DRAFT", "COMPLETE", "BLOCKED"]
+    },
+    "overall_note": {"$ref": "#/$defs/text"}
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {"audit_status": {"const": "COMPLETE"}},
+        "required": ["audit_status"]
+      },
+      "then": {
+        "properties": {
+          "completeness_boundary": {
+            "properties": {
+              "unknown_success_conditions_preserved": {"const": true},
+              "claims_complete_knowledge": {"const": false}
+            }
+          }
+        }
+      }
+    }
+  ],
+  "$defs": {
+    "stableId": {
+      "type": "string",
+      "pattern": "^[A-Za-z][A-Za-z0-9._:-]{2,199}$"
+    },
+    "timestamp": {"type": "string", "format": "date-time"},
+    "text": {"type": "string", "minLength": 1, "maxLength": 8000},
+    "shortText": {"type": "string", "minLength": 1, "maxLength": 2000},
+    "refList": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {"$ref": "#/$defs/stableId"}
+    },
+    "conditionEntry": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "condition_id",
+        "statement",
+        "classification",
+        "origin",
+        "epistemic_status",
+        "source_claim_refs",
+        "construct_refs",
+        "incorporation_status",
+        "note"
+      ],
+      "properties": {
+        "condition_id": {"$ref": "#/$defs/stableId"},
+        "statement": {"$ref": "#/$defs/shortText"},
+        "classification": {
+          "type": "string",
+          "enum": [
+            "STRATEGY_DEFINING",
+            "SOURCE_STATED_APPLICATION",
+            "SUSPECTED_PERFORMANCE_MODIFIER",
+            "UNKNOWN_SUCCESS_CONDITION"
+          ]
+        },
+        "origin": {
+          "type": "string",
+          "enum": [
+            "SOURCE_EXPLICIT",
+            "SOURCE_IMPLICIT",
+            "LOGICAL_DEPENDENCY",
+            "EXTERNAL_LITERATURE",
+            "RESEARCHER_INFERENCE",
+            "UNKNOWN"
+          ]
+        },
+        "epistemic_status": {
+          "type": "string",
+          "enum": ["STATED", "INFERRED", "UNKNOWN"]
+        },
+        "source_claim_refs": {"$ref": "#/$defs/refList"},
+        "construct_refs": {"$ref": "#/$defs/refList"},
+        "incorporation_status": {
+          "type": "string",
+          "enum": [
+            "SOURCE_COMPONENT",
+            "CANDIDATE_ONLY",
+            "NOT_INCORPORATED",
+            "UNKNOWN"
+          ]
+        },
+        "note": {"$ref": "#/$defs/shortText"}
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "classification": {"const": "UNKNOWN_SUCCESS_CONDITION"}
+            },
+            "required": ["classification"]
+          },
+          "then": {
+            "properties": {
+              "origin": {"const": "UNKNOWN"},
+              "epistemic_status": {"const": "UNKNOWN"},
+              "incorporation_status": {"const": "NOT_INCORPORATED"}
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "classification": {"const": "SUSPECTED_PERFORMANCE_MODIFIER"}
+            },
+            "required": ["classification"]
+          },
+          "then": {
+            "properties": {
+              "incorporation_status": {
+                "enum": ["CANDIDATE_ONLY", "NOT_INCORPORATED"]
+              }
+            }
+          }
+        }
+      ]
+    },
+    "constructionDependency": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "dependency_id",
+        "from_refs",
+        "to_refs",
+        "dependency_type",
+        "shared_inputs",
+        "statement",
+        "interpretation",
+        "causal_evidence"
+      ],
+      "properties": {
+        "dependency_id": {"$ref": "#/$defs/stableId"},
+        "from_refs": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"$ref": "#/$defs/stableId"}},
+        "to_refs": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"$ref": "#/$defs/stableId"}},
+        "dependency_type": {
+          "type": "string",
+          "enum": [
+            "SHARED_RAW_INPUT",
+            "SHARED_WINDOW",
+            "DETERMINISTIC_TRANSFORMATION",
+            "OVERLAPPING_TRIGGER_AND_OUTCOME",
+            "UNKNOWN"
+          ]
+        },
+        "shared_inputs": {
+          "type": "array",
+          "items": {"type": "string", "minLength": 1, "maxLength": 1000}
+        },
+        "statement": {"$ref": "#/$defs/shortText"},
+        "interpretation": {
+          "type": "string",
+          "enum": [
+            "MAY_INDUCE_ASSOCIATION",
+            "CHANGES_ESTIMAND_WITH_DEFINITION",
+            "REQUIRES_SEPARATE_DIAGNOSIS",
+            "UNKNOWN"
+          ]
+        },
+        "causal_evidence": {"const": false}
+      }
+    },
+    "measurementInstrument": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "instrument_id",
+        "construct_ref",
+        "purpose",
+        "input_summary",
+        "status",
+        "assessment_question",
+        "independent_future_outcomes",
+        "label_prevalence_is_discrimination_evidence",
+        "predictive_separation_establishes_real_state",
+        "predictive_separation_establishes_cause",
+        "failure_scope",
+        "note"
+      ],
+      "properties": {
+        "instrument_id": {"$ref": "#/$defs/stableId"},
+        "construct_ref": {"$ref": "#/$defs/stableId"},
+        "purpose": {"$ref": "#/$defs/shortText"},
+        "input_summary": {"$ref": "#/$defs/shortText"},
+        "status": {
+          "type": "string",
+          "enum": [
+            "PROVISIONAL",
+            "INFORMATIVE_FOR_STATED_PURPOSE",
+            "NOT_INFORMATIVE_FOR_STATED_PURPOSE",
+            "UNRESOLVED"
+          ]
+        },
+        "assessment_question": {"$ref": "#/$defs/shortText"},
+        "independent_future_outcomes": {
+          "type": "array",
+          "items": {"type": "string", "minLength": 1, "maxLength": 1000}
+        },
+        "label_prevalence_is_discrimination_evidence": {"const": false},
+        "predictive_separation_establishes_real_state": {"const": false},
+        "predictive_separation_establishes_cause": {"const": false},
+        "failure_scope": {
+          "type": "string",
+          "enum": [
+            "INSTRUMENT_ONLY",
+            "CONDITIONED_CLAIM_ONLY",
+            "UNCONDITIONED_EVENT_CLAIM_MAY_REMAIN_OPEN",
+            "UNRESOLVED"
+          ]
+        },
+        "note": {"$ref": "#/$defs/shortText"}
+      }
+    },
+    "mechanismBoundary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "actor_status",
+        "mechanism_status",
+        "predictive_claim_may_exist_without_actor",
+        "causal_interpretation_requires_separate_identification",
+        "note"
+      ],
+      "properties": {
+        "actor_status": {
+          "type": "string",
+          "enum": ["SOURCE_STATED", "INFERRED", "ABSENT", "UNKNOWN"]
+        },
+        "mechanism_status": {
+          "type": "string",
+          "enum": ["SOURCE_STATED", "INFERRED", "ABSENT", "UNKNOWN"]
+        },
+        "predictive_claim_may_exist_without_actor": {"const": true},
+        "causal_interpretation_requires_separate_identification": {"const": true},
+        "note": {"$ref": "#/$defs/text"}
+      }
+    },
+    "completenessBoundary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "reviewed_scope",
+        "known_limitations",
+        "unknown_success_conditions_preserved",
+        "claims_complete_knowledge"
+      ],
+      "properties": {
+        "reviewed_scope": {"$ref": "#/$defs/text"},
+        "known_limitations": {
+          "type": "array",
+          "items": {"$ref": "#/$defs/shortText"}
+        },
+        "unknown_success_conditions_preserved": {"type": "boolean"},
+        "claims_complete_knowledge": {"type": "boolean"}
+      }
+    }
+  }
+}

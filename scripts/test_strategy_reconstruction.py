@@ -45,6 +45,8 @@ def main() -> int:
         raise AssertionError("Worked example must remain a source extraction")
     if example["fidelity_label"] != "UNASSESSED":
         raise AssertionError("Worked example must not claim reconstruction fidelity")
+    if example["concept_audit"]["status"] != "NOT_STARTED":
+        raise AssertionError("Worked source extraction must not pretend that concept audit ran")
     if any(item["decision"]["status"] != "UNDECIDED" for item in example["constructs"]):
         raise AssertionError("Worked example silently selected an operationalization")
     if not any(
@@ -81,6 +83,12 @@ def main() -> int:
     false_replication["fidelity_label"] = "REPLICATION"
     assert_semantic_failure(false_replication, "REPLICATION is not permitted")
 
+    fake_complete_audit = copy.deepcopy(example)
+    fake_complete_audit["concept_audit"]["status"] = "COMPLETE"
+    schema_errors = validate(fake_complete_audit, schema)
+    if not any("is not of type 'string'" in error for error in schema_errors):
+        raise AssertionError("Completed concept audit was accepted without an audit reference")
+
     command = [
         sys.executable,
         str(ROOT / "scripts" / "inspect_strategy_reconstruction.py"),
@@ -96,7 +104,7 @@ def main() -> int:
 
     print(
         f"Strategy reconstruction tests passed: {len(example['source_claims'])} source claims, "
-        f"{len(example['constructs'])} constructs, no selected definitions, and 3 semantic negatives."
+        f"{len(example['constructs'])} constructs, no selected definitions, and an explicit concept-audit boundary."
     )
     return 0
 
