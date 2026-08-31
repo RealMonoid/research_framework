@@ -93,6 +93,8 @@ function Set-DataDrivenVariableSelection {
 $positivePairs = @(
     @('generation\mechanism_catalog.v1.json', 'schemas\mechanism_catalog.schema.json'),
     @('examples\strategy_reconstruction.vwap_wave_price_discovery.json', 'schemas\strategy_reconstruction.schema.json'),
+    @('examples\strategy_concept_audit.synthetic.json', 'schemas\strategy_concept_audit.schema.json'),
+    @('examples\condition_inquiry.synthetic_measurement.json', 'schemas\condition_inquiry.schema.json'),
     @('examples\scientific_philosophy_review.synthetic_failed_reconstruction.json', 'schemas\scientific_philosophy_review.schema.json'),
     @('examples\search_space.minimal.json', 'schemas\search_space.schema.json'),
     @('examples\noise_screen.pass.json', 'schemas\noise_screen.schema.json'),
@@ -111,6 +113,22 @@ $positivePairs = @(
 foreach ($pair in $positivePairs) {
     Test-ValidFixture -Example $pair[0] -Schema $pair[1]
 }
+
+$conceptUnknownSmuggled = Read-JsonText -RelativePath 'examples\strategy_concept_audit.synthetic.json' | ConvertFrom-Json -Depth 100
+$conceptUnknownSmuggled.condition_map[3].incorporation_status = 'SOURCE_COMPONENT'
+Test-RejectedFixture -Name 'unknown success condition cannot be smuggled into strategy' -Value $conceptUnknownSmuggled -Schema 'schemas\strategy_concept_audit.schema.json'
+
+$conceptCausalDependency = Read-JsonText -RelativePath 'examples\strategy_concept_audit.synthetic.json' | ConvertFrom-Json -Depth 100
+$conceptCausalDependency.construction_dependencies[0].causal_evidence = $true
+Test-RejectedFixture -Name 'construction dependency cannot claim causal evidence' -Value $conceptCausalDependency -Schema 'schemas\strategy_concept_audit.schema.json'
+
+$conditionLabelShareClaim = Read-JsonText -RelativePath 'examples\condition_inquiry.synthetic_measurement.json' | ConvertFrom-Json -Depth 100
+$conditionLabelShareClaim.measurement_assessment.label_share_alone_validates_instrument = $true
+Test-RejectedFixture -Name 'filter label share alone cannot validate instrument' -Value $conditionLabelShareClaim -Schema 'schemas\condition_inquiry.schema.json'
+
+$conditionCircularTarget = Read-JsonText -RelativePath 'examples\condition_inquiry.synthetic_measurement.json' | ConvertFrom-Json -Depth 100
+$conditionCircularTarget.measurement_assessment.targets_reused_in_construction = $true
+Test-RejectedFixture -Name 'measurement assessment cannot reuse its construction target' -Value $conditionCircularTarget -Schema 'schemas\condition_inquiry.schema.json'
 
 $philosophyRelabelled = Read-JsonText -RelativePath 'examples\scientific_philosophy_review.synthetic_failed_reconstruction.json' | ConvertFrom-Json -Depth 100
 $philosophyRelabelled.frozen_result.remains_unchanged = $false
@@ -136,6 +154,15 @@ Write-Output 'PASS positive: INBOX remains a 12-field actor/noise-free cheap pat
 $candidateDataDriven = Read-JsonText -RelativePath 'examples\hypothesis_candidate.minimal.json' | ConvertFrom-Json -Depth 100
 Set-DataDrivenVariableSelection -Candidate $candidateDataDriven
 Test-ValidValue -Name 'data-driven variable-selection provenance' -Value $candidateDataDriven -Schema 'schemas\hypothesis_candidate.schema.json'
+
+$candidateActorUnspecified = Read-JsonText -RelativePath 'examples\hypothesis_candidate.minimal.json' | ConvertFrom-Json -Depth 100
+$candidateActorUnspecified.idea_class = 'PREDICTIVE_PRECEDENCE'
+$candidateActorUnspecified.actor_constraint = [PSCustomObject]@{
+    actor_status = 'UNSPECIFIED'
+    mechanism_claim_status = 'NOT_CLAIMED'
+    reason = 'The predictive question does not identify a defensible actor; no actor or mechanism is inferred.'
+}
+Test-ValidValue -Name 'predictive candidate may preserve an unspecified actor' -Value $candidateActorUnspecified -Schema 'schemas\hypothesis_candidate.schema.json'
 
 $runUnexpected = Read-JsonText -RelativePath 'examples\run_manifest.minimal.json' | ConvertFrom-Json -Depth 100
 $runUnexpected | Add-Member -NotePropertyName 'unexpected_field' -NotePropertyValue $true
@@ -284,6 +311,14 @@ Test-RejectedFixture -Name 'PROMOTED actor constraint rejects UNKNOWN observabil
 $candidateWithoutAlternativeActor = Read-JsonText -RelativePath 'examples\hypothesis_candidate.minimal.json' | ConvertFrom-Json -Depth 100
 $candidateWithoutAlternativeActor.actor_constraint.PSObject.Properties.Remove('alternative_actor_hypotheses')
 Test-RejectedFixture -Name 'actor constraint requires alternative actor hypotheses' -Value $candidateWithoutAlternativeActor -Schema 'schemas\hypothesis_candidate.schema.json'
+
+$candidateUnspecifiedActorClaimsMechanism = Read-JsonText -RelativePath 'examples\hypothesis_candidate.minimal.json' | ConvertFrom-Json -Depth 100
+$candidateUnspecifiedActorClaimsMechanism.actor_constraint = [PSCustomObject]@{
+    actor_status = 'UNSPECIFIED'
+    mechanism_claim_status = 'CLAIMED'
+    reason = 'No defensible actor is known.'
+}
+Test-RejectedFixture -Name 'unspecified actor cannot claim a mechanism' -Value $candidateUnspecifiedActorClaimsMechanism -Schema 'schemas\hypothesis_candidate.schema.json'
 
 $candidateWithoutInstrument = Read-JsonText -RelativePath 'examples\hypothesis_candidate.minimal.json' | ConvertFrom-Json -Depth 100
 $candidateWithoutInstrument.research_scope.instruments = @()

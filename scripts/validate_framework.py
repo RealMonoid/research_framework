@@ -38,6 +38,8 @@ def main(argv: Sequence[str] | None = None) -> int:
     python = sys.executable
     run("Schema contracts", [python, "scripts/test_schemas.py"])
     run("Strategy reconstruction", [python, "scripts/test_strategy_reconstruction.py"])
+    run("Strategy concept audit", [python, "scripts/test_strategy_concept_audit.py"])
+    run("Condition inquiry", [python, "scripts/test_condition_inquiry.py"])
     run(
         "Scientific-philosophy review",
         [python, "scripts/test_scientific_philosophy_review.py"],

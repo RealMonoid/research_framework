@@ -93,6 +93,31 @@ angelegt. Der Pfad trennt Quellenregel, Empfehlung, Option, Beispiel,
 Discretion und offene Definition. Mögliche Übersetzungen bleiben Kandidaten;
 sie werden weder automatisch gewählt noch getestet.
 
+Vor Abschluss der Rekonstruktion ist der
+[`scientific-philosophy-critic`](agents/scientific-philosophy-critic.md) im
+Pre-Operationalisierungsmodus zu verwenden. Sein
+[`strategy_concept_audit`](schemas/strategy_concept_audit.schema.json) trennt:
+
+- was die Strategie definiert,
+- was die Quelle nur als Anwendungsbedingung nennt,
+- was lediglich als Erfolgsmodifikator vermutet wird,
+- und welche Erfolgsbedingungen unbekannt bleiben.
+
+Es legt außerdem gemeinsame Rechenbestandteile und Fenster offen, ohne sie als
+Kausalbeleg oder automatischen Fehler zu behandeln. Regime- und Zustandsfilter
+bleiben vorläufige Messinstrumente: Gruppenhäufigkeit allein ist keine
+Trennleistung, prognostische Trennung kein Beweis eines realen verborgenen
+Zustands und kein Mechanismusnachweis.
+
+Nach einer vorläufigen Operationalisierung kann eine
+[`condition_inquiry`](schemas/condition_inquiry.schema.json) aktiviert werden.
+Der
+[`condition-inquiry-analyst`](agents/condition-inquiry-analyst.md) kann damit
+Messinstrumente beurteilen, Definitionsabhängigkeit sichtbar machen und neue
+beobachtbare Bedingungshypothesen erzeugen. Datenbasiert gefundene Bedingungen
+bleiben neue Hypothesen; sie werden nicht in die Quellenstrategie
+zurückgeschrieben.
+
 Der Arbeitsablauf steht in
 [`reconstruction/README.md`](reconstruction/README.md). Das ausgefüllte
 [`VWAP-Price-Discovery-Beispiel`](examples/strategy_reconstruction.vwap_wave_price_discovery.json)
@@ -117,8 +142,8 @@ Wird die Idee beim Screening verworfen, genügt der kurze `REJECTED`-Datensatz m
 Begründung; siehe
 [`examples/hypothesis_candidate.rejected.json`](examples/hypothesis_candidate.rejected.json).
 
-Erst `PROMOTED` verlangt vollständigen Scope, einen beobachtbaren
-Akteurs-/Zwangs-Record mit konkurrierender Akteurshypothese, einen bestandenen
+Erst `PROMOTED` verlangt vollständigen Scope, einen ausdrücklich dokumentierten
+Akteursstand, einen bestandenen
 Noise Screen oder einen begründeten theorie-/event-/replikationsbasierten Waiver,
 beobachtbare Footprints, Alternativerklärungen, Datenanforderungen, frühe
 Machbarkeit, die drei getrennten Evidenzstufen und einen Record zur
@@ -128,7 +153,10 @@ Variablenauswahl. Bei
 Rolle, Outcome-Sichtbarkeit, Methode, effektive Kandidatenzahl, Suchraum und
 Kontrollen gegen Auswahlbias. SHAP, Impurity- oder andere
 Feature-Importance-Verfahren sind mögliche Diagnosen, aber weder Pflicht noch
-Kausalitätsnachweis. Promotion bestätigt keine Evidenzstufe.
+Kausalitätsnachweis. Ist für eine rein vorhersagende oder assoziative Frage kein
+Akteur belastbar bekannt, wird `UNSPECIFIED / NOT_CLAIMED` festgehalten. Das ist
+kein Hindernis für diese begrenzte Frage, darf aber nicht als Mechanismusbeleg
+gelesen werden. Promotion bestätigt keine Evidenzstufe.
 
 ## 4. Dokumentrouter nach Promotion
 
@@ -174,6 +202,13 @@ zeigt die Buchstrategie nur als Gedankenfall; es enthält keinen Backtest.
 - Kosten, Latenz, Fills und gegebenenfalls Queue/Borrow werden vor einem Netto-Edge-Claim geprüft.
 - `IDENTIFIED_CAUSAL_LEVER` erfordert ein bestandenes Identifikationsgate und ein Estimand-Artefakt.
 - `IMPLEMENTATION_CONSTRAINT` erfordert ein validiertes Phänomen und bestandene Umsetzbarkeitsprüfung.
+- Unbekannte Erfolgsbedingungen bleiben unbekannt; plausible Bedingungen werden
+  nicht heimlich zu Pflichtfiltern.
+- Konstruktionsabhängigkeit, statistische Abhängigkeit, prognostischer Nutzen
+  und kausaler Mechanismus bleiben getrennte Aussagen.
+- Ein Regimefilter ist ein Messinstrument. Seine Klassenhäufigkeit validiert ihn
+  nicht; prognostische Trennung beweist weder einen realen Zustand noch einen
+  Akteur oder Mechanismus.
 
 Die letzten beiden Regeln sind in
 [`schemas/constraint_assessment.schema.json`](schemas/constraint_assessment.schema.json)

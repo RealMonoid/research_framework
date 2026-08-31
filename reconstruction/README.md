@@ -21,6 +21,58 @@ trennt deshalb:
 5. moegliche Operationalisierungen mit Herkunft,
 6. eine spaetere, ausdrueckliche Entscheidung.
 
+Bevor eine Rekonstruktion abgeschlossen und eine Definition eingefroren wird,
+erstellt der
+[`scientific-philosophy-critic`](../agents/scientific-philosophy-critic.md)
+zusaetzlich ein
+[`strategy_concept_audit`](../schemas/strategy_concept_audit.schema.json). Diese
+fruehe Pruefung ist Teil der Rekonstruktion, kein Backtest und kein weiteres
+Wirksamkeitsgate.
+
+## Vier Arten von Bedingungen
+
+Das Concept Audit trennt zwingend:
+
+1. **Strategiedefinierende Bedingungen:** Ohne sie waere es nicht mehr dieselbe
+   Quellenstrategie.
+2. **Von der Quelle genannte Anwendungsbedingungen:** Die Quelle empfiehlt oder
+   verlangt sie; damit ist noch nicht gezeigt, dass sie den Erfolg verursacht
+   oder notwendig ist.
+3. **Vermutete Erfolgsmodifikatoren:** Literatur, Theorie oder Researcher halten
+   sie fuer plausibel. Sie bleiben Kandidaten und werden nicht heimlich als
+   Filter eingebaut.
+4. **Unbekannte Erfolgsbedingungen:** Das Framework behauptet nicht, alle
+   Voraussetzungen zu kennen. Diese Unwissenheit wird ausdruecklich erhalten.
+
+## Konstruktionsabhaengigkeiten
+
+Trigger, Zustand, Ziel und Ergebnis werden auf ihre Rohdaten, Fenster und
+deterministischen Berechnungen zurueckgefuehrt. Gemeinsame Inputs oder Fenster
+koennen einen statistischen Zusammenhang mit erzeugen oder die beantwortete
+Frage veraendern. Das ist:
+
+- kein Kausalbeleg,
+- nicht automatisch ein Konstruktionsfehler,
+- und kein Grund, das quellennahe Ziel still durch ein anderes zu ersetzen.
+
+Das Audit macht nur sichtbar, welcher Teil der beobachtbaren Beziehung aus der
+eigenen Konstruktion stammen koennte und deshalb gesondert interpretiert werden
+muss.
+
+## Regime- und Zustandsfilter
+
+Ein Filter ist zunaechst ein **vorlaeufiges Messinstrument**. Er beweist weder,
+dass ein buchstaeblich realer verborgener Marktzustand existiert, noch dass ein
+Akteur oder Mechanismus identifiziert wurde. Auch der Anteil der Beobachtungen,
+die ein Filter einer Klasse zuordnet, misst fuer sich allein keine Trennleistung.
+
+Eine spaetere Beurteilung fragt deshalb, ob die feste Einteilung kuenftiges
+Verhalten unterscheidet, das nicht bereits in der Filterberechnung steckt, und
+ob sie ueber ihre kontinuierlichen Eingangsgroessen oder eine einfache
+Vergleichsregel hinaus zusaetzliche Information liefert. Ist der Filter nicht
+informativ, faellt der von ihm abhaengige Zustandsclaim. Ein davon trennbarer
+Ereignisclaim kann offen bleiben.
+
 ## Quellenstatus eines Konstrukts
 
 | Status | Bedeutung |
@@ -73,8 +125,32 @@ Replikation bezeichnet.
 4. Jedes Konstrukt klassifizieren und offene Fragen notieren.
 5. Moegliche Definitionen mit ihrer echten Herkunft erfassen.
 6. Zunaechst `decision.status = UNDECIDED` belassen.
-7. Erst bei einer wirklichen Rekonstruktion Definitionen waehlen oder ein
-   Human-Protocol festlegen und das Fidelity-Label setzen.
+7. Vor der Auswahl das Concept Audit abschliessen: Bedingungen klassifizieren,
+   Konstruktionsabhaengigkeiten erfassen, Messinstrumente abgrenzen und
+   unbekannte Erfolgsbedingungen erhalten.
+8. Erst danach bei einer wirklichen Rekonstruktion Definitionen waehlen oder
+   ein Human-Protocol festlegen und das Fidelity-Label setzen.
+
+## Quantitative Suche nach Bedingungen
+
+Nach einer vorlaeufigen Operationalisierung kann der
+[`condition-inquiry-analyst`](../agents/condition-inquiry-analyst.md) ein
+[`condition_inquiry`](../schemas/condition_inquiry.schema.json) anlegen. Dieses
+Artefakt dient nicht nur der Kontrolle, sondern kann neue, pruefbare
+Bedingungshypothesen erzeugen:
+
+- Konstruktionsabhaengigkeiten und neutrale Simulationen fuer moeglicherweise
+  eingebaute Zusammenhaenge,
+- Multiversum oder Spezifikationskurve fuer die Abhaengigkeit von vertretbaren
+  Messdefinitionen,
+- interpretierbare Aufteilungen und bedingte Prognosepruefung fuer die Frage,
+  unter welchen beim Entscheid bekannten Bedingungen sich das Ergebnis
+  veraendert,
+- Zeit- und Umgebungsstabilitaet fuer die Frage, ob eine Bedingung wiederkehrt.
+
+Eine datenbasiert gefundene Bedingung wird als **neue
+Erfolgsmodifikator-Hypothese** festgehalten. Sie wird nicht nachtraeglich zur
+angeblich schon immer vorhandenen Voraussetzung der Quellenstrategie.
 
 ## Wenn die spaetere Validation scheitert
 
@@ -104,3 +180,15 @@ python scripts/inspect_strategy_reconstruction.py \
 
 Der Inspector prueft Schema, IDs, Referenzen, Auswahlkonsistenz und unzulaessige
 Replikationslabels. Er waehlt nichts aus und testet keine Marktstrategie.
+
+Die beiden zusaetzlichen Vertraege lassen sich getrennt pruefen:
+
+```bash
+python scripts/inspect_strategy_concept_audit.py \
+  examples/strategy_concept_audit.synthetic.json
+
+python scripts/inspect_condition_inquiry.py \
+  examples/condition_inquiry.synthetic_measurement.json
+```
+
+Beide Beispiele sind synthetisch und enthalten kein Marktergebnis.

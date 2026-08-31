@@ -173,6 +173,7 @@ def main(argv: Sequence[str] | None = None) -> int:
     print(
         f"status={document['reconstruction_status']} "
         f"fidelity={document['fidelity_label']} "
+        f"concept_audit={document['concept_audit']['status']} "
         f"claims={len(document['source_claims'])} "
         f"constructs={len(document['constructs'])}"
     )

@@ -69,7 +69,9 @@ Das Register referenziert die maschinenlesbaren Artefakte nach `05_AGENT_OPERATI
 | Forecast Ledger | | | | | `N/A / OPEN / PARTIALLY_RESOLVED / RESOLVED` |
 | Eval-Ergebnis | | | | | `PASS / FAIL / BLOCKED / NOT_RUN` |
 | Hypothesen-Intake | | `1.4.0` | | | `INBOX / SCREENED / MERGED / REJECTED / PROMOTED` |
-| Strategy Reconstruction, falls Quellenstrategie | | `1.0.0` | | | `SOURCE_EXTRACTION / TRANSLATION_DRAFT / RECONSTRUCTION_COMPLETE / DISCRETIONARY_PROTOCOL_COMPLETE / NOT_OPERATIONALIZABLE` |
+| Strategy Reconstruction, falls Quellenstrategie | | `1.1.0` | | | `SOURCE_EXTRACTION / TRANSLATION_DRAFT / RECONSTRUCTION_COMPLETE / DISCRETIONARY_PROTOCOL_COMPLETE / NOT_OPERATIONALIZABLE` |
+| Concept Audit, vor Abschluss einer Quellenrekonstruktion | | `1.0.0` | | | `DRAFT / COMPLETE / BLOCKED` |
+| Condition Inquiry, falls aktiviert | | `1.0.0` | | | `PLAN / EXPLORATORY_RESULTS / INDEPENDENT_RESULTS / BLOCKED` |
 | Wissenschaftsphilosophie-Review, falls Q9 aktiviert | | `1.0.0` | | | `BUNDLE_MAPPED / CONTINUATION_REVIEWED / BLOCKED` |
 | Search-Space-Register | | `1.0.0` | | | `N/A (Zählregister)` |
 | Entry Noise Screen | | `1.0.0` | | | `PASS / FAIL / BLOCKED` oder Intake-Waiver |
@@ -145,7 +147,7 @@ positiver Evidenzbefund.
 | Herkunft / konkrete Quelle | |
 | Ideenklasse | `ASSOCIATIONAL_PATTERN / PREDICTIVE_PRECEDENCE / MECHANISM_CANDIDATE / STRUCTURAL_FLOW_CANDIDATE / RELATIVE_VALUE_CANDIDATE / EVENT_RESPONSE_CANDIDATE / RETURN_DECOMPOSITION_CANDIDATE / OTHER` |
 | Mechanismenfamilie | nicht abschließendes Routerlabel oder `UNCLASSIFIED` |
-| vermuteter Akteur / Zwang / Marktstruktur | |
+| Akteursstand | benannte Hypothese mit Zwang/Handlung/Alternative oder `UNSPECIFIED / NOT_CLAIMED` |
 | beobachtbarer Footprint | |
 | erwartetes Outcome und Horizont | |
 | wichtigste Alternativerklärungen | |
@@ -479,6 +481,24 @@ Welche Begriffe wurden verworfen, geändert oder präzisiert? ...
 
 **Fidelity-Label der Übersetzung:** `REPLICATION / DOCUMENTED_RECONSTRUCTION / SIMPLIFIED_VARIANT / PLAYBOOK_ONLY / N/A`
 
+**Concept-Audit-ID:** ... / `N/A, weil keine unvollständig definierte Quellenstrategie`
+
+**Sind die vier Bedingungsklassen getrennt?**
+
+| Klasse | Einträge/Referenzen | Darf in die Quellenstrategie eingehen? |
+|---|---|---|
+| strategiedefinierend | | ja, quellengetreu |
+| von der Quelle genannte Anwendung | | nur mit echtem Quellenstatus |
+| vermuteter Erfolgsmodifikator | | nein; eigene Bedingungshypothese |
+| unbekannte Erfolgsbedingungen | | nein; bleiben unbekannt |
+
+**Konstruktionsabhängigkeiten zwischen Zustand, Trigger und Outcome:** ...
+
+**Vorläufige Messinstrumente, insbesondere Regime-/Statefilter:** ...
+
+**Welche Aussage würde bei einem nicht informativen Instrument tatsächlich
+wegfallen, und welche könnte getrennt offen bleiben?** ...
+
 | Konzept | Exakte Messdefinition | Einheit | Lookback | Session | Timeframe | Zeitpunkt | kontinuierlich oder diskret? |
 |---|---|---|---|---|---|---|---|
 | | | | | | | | |
@@ -611,6 +631,34 @@ Welche Begriffe wurden verworfen, geändert oder präzisiert? ...
 `JA / NEIN`
 
 Falls NEIN: `FAILED`.
+
+## H4a. Quantitative Bedingungsanfrage
+
+**Aktivierung:** `ANWENDEN / NICHT AKTIVIERT + Begründung`
+
+**Condition-Inquiry-ID:** ...
+
+**Frage:** `Messinstrument / Konstruktionsabhängigkeit / Definitionssensitivität / Erfolgsmodifikator / Zeitstabilität / Umgebungsstabilität / notwendige Bedingung explorativ`
+
+| Kandidatenbedingung | Herkunft | beim Entscheid bekannt? | Rolle | Status | neue Hypothese nötig? |
+|---|---|---|---|---|---|
+| | `Quelle / Concept Audit / Theorie / datenbasiert / unbekannt` | | `definiert Strategie / Anwendung / Erfolgsmodifikator / unbekannt` | | |
+
+Bei einem Messinstrument zusätzlich:
+
+| Frage | Festlegung/Ergebnis |
+|---|---|
+| Zweck des Instruments | |
+| in seiner Berechnung verwendete Größen | |
+| zukünftige Zielgrößen, die nicht darin stecken | |
+| Vergleich mit kontinuierlichen Inputs/einfacher Baseline | |
+| Anteil je Label, nur deskriptiv | |
+| zusätzliche Trenninformation | |
+| betroffener Claim bei fehlender Trennung | |
+
+Eine datenbasiert gefundene Bedingung wird nicht in die Quellenstrategie
+zurückgeschrieben. Prognostische Trennung beweist weder einen realen verborgenen
+State noch einen Akteur, Mechanismus oder Interventionseffekt.
 
 ## H5. Explorative Event- und Reaktionsanalyse
 

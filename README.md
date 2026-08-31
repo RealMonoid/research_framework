@@ -38,6 +38,18 @@ testing them. The committed
 [VWAP example](examples/strategy_reconstruction.vwap_wave_price_discovery.json)
 is a source extraction, not a backtest or profitability claim.
 
+Before such a reconstruction is completed, the scientific-philosophy critic
+produces a
+[pre-operationalization concept audit](schemas/strategy_concept_audit.schema.json).
+It separates strategy-defining conditions, source application advice,
+suspected performance modifiers, and genuinely unknown success conditions. It
+also records shared construction inputs and provisional state filters without
+treating either as causal evidence. After a provisional definition exists, the
+[condition inquiry](schemas/condition_inquiry.schema.json) can assess a
+measurement instrument, definition sensitivity, interpretable performance
+conditions, and their recurrence. A condition found in data remains a new
+hypothesis and never silently rewrites the source strategy.
+
 When a frozen result fails or remains undecidable, the dedicated
 [scientific-philosophy critic](agents/scientific-philosophy-critic.md) maps the
 hypothesis-plus-auxiliaries bundle and reviews proposed continuations. Its

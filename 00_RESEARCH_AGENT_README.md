@@ -42,7 +42,8 @@ Die Dateien erfüllen verschiedene Funktionen:
 | `generation/mechanism_catalog.v1.json` | Literaturgestützte Mechanismen für Intraday- und kurze Swing-Ideen | Wenn Ideen erzeugt oder der Katalog erweitert werden soll |
 | `generation/README.md` | Bedienung und Grenzen des Generators | Bei einem Generatorlauf |
 | `agents/intraday-hypothesis-generator.md` | Optionaler autonomer Generatorvertrag | Bei agentischer Ideenerzeugung |
-| `agents/scientific-philosophy-critic.md` | Duhem-Quine-Buendelkarte und Lakatos-/Kuhn-Fortsetzungspruefung | Vor Freeze optional bei komplexer Quellenrekonstruktion; nach nicht positivem Q8-Ergebnis, sobald eine materielle Revision oder Fortsetzung erwogen wird |
+| `agents/scientific-philosophy-critic.md` | Begriffs-/Voraussetzungspruefung vor Operationalisierung sowie Duhem-Quine-/Lakatos-/Kuhn-Fortsetzungspruefung | Vor Abschluss jeder unvollstaendig definierten Quellenrekonstruktion; nach nicht positivem Q8-Ergebnis bei materieller Revision oder Fortsetzung |
+| `agents/condition-inquiry-analyst.md` | Quantitative Beurteilung von Messinstrumenten und Erzeugung beobachtbarer Bedingungshypothesen | Nach vorlaeufiger Operationalisierung, wenn Messnutzen, Definitionsabhaengigkeit oder unbekannte Erfolgsmodifikatoren untersucht werden |
 | `reconstruction/README.md` | Quellennahe Übersetzung von Buch-/Artikel-/Video-/Kursstrategien | Wenn eine Quellenstrategie nicht vollständig operationalisiert ist |
 | `00_RESEARCH_AGENT_README.md` | Routing, Gate- und Nicht-Überspringen-Regeln | Ab `PROMOTED` |
 | `01_RESEARCH_STANDARD.md` | Normativer Forschungsstandard | Ab `PROMOTED` |
@@ -175,7 +176,36 @@ Wenn ein Gate `FAILED` ist, endet die aktuelle Research-Version. Eine Fortsetzun
 - eine neue Hypothese,
 - oder einen Abbruch.
 
-## 4.1 Wissenschaftsphilosophische Fortsetzungsprüfung
+## 4.1 Begriffs- und Voraussetzungenprüfung vor Operationalisierung
+
+Eine aus unvollständiger Prosa rekonstruierte Strategie darf nicht als
+`RECONSTRUCTION_COMPLETE` oder `DISCRETIONARY_PROTOCOL_COMPLETE` abgeschlossen
+werden, bevor der `scientific-philosophy-critic` ein
+`strategy_concept_audit` nach
+`schemas/strategy_concept_audit.schema.json` erstellt hat.
+
+Das Audit trennt strategiedefinierende Bedingungen, von der Quelle genannte
+Anwendungsbedingungen, vermutete Erfolgsmodifikatoren und unbekannte
+Erfolgsbedingungen. Vermutete oder unbekannte Bedingungen dürfen nicht als
+Pflichtfilter in die Quellenstrategie gelangen.
+
+Trigger, Zustand, Ziel und Outcome werden auf gemeinsame Rohdaten, Fenster und
+deterministische Berechnungen geprüft. Eine solche Konstruktionsabhängigkeit
+kann eine Assoziation mit erzeugen oder die beantwortete Frage verändern. Sie
+ist weder Kausalbeleg noch automatisch ein Fehler.
+
+Regime-, State- und Kontextfilter gelten als vorläufige Messinstrumente. Ihre
+Klassenhäufigkeit misst keine Trennleistung. Auch eine spätere prognostische
+Trennung beweist keinen buchstäblich realen verborgenen Zustand, Akteur oder
+Mechanismus.
+
+Nach vorläufiger Operationalisierung kann ein `condition_inquiry` nach
+`schemas/condition_inquiry.schema.json` aktiviert werden. Es kann neue
+Bedingungshypothesen erzeugen. Datenbasiert gefundene Bedingungen werden als
+neue Erfolgsmodifikator-Hypothesen geführt und nicht rückwirkend als Bestandteil
+der Quellenstrategie ausgegeben.
+
+## 4.2 Wissenschaftsphilosophische Fortsetzungsprüfung
 
 `FALSIFIED`, `PRECISE_NULL`, `INCONCLUSIVE` und `INVALID_TEST` bleiben Ergebnisse
 der eingefrorenen Research-ID. Sie werden nicht dadurch umetikettiert, dass nach
@@ -283,10 +313,12 @@ Kandidatenzahl, Suchraum und Auswahlbias-Kontrollen protokolliert. Jede dabei
 verwendete Information wird zugleich in `consumed_data_refs` erfasst; unabhängige
 Validation oder Holdout-Daten dürfen die Auswahl nicht beeinflussen.
 
-Zusätzlich ist bei `PROMOTED` ein `actor_constraint` mit Akteur, Zwang,
-erwarteter Handlung, beobachtbarem Bezug und mindestens einer konkurrierenden
-Akteurshypothese Pflicht. Diese Plausibilitätsgeschichte ist kein
-Mechanismusnachweis.
+Zusätzlich ist bei `PROMOTED` ein `actor_constraint` Pflicht. Er enthält
+entweder Akteur, Zwang, erwartete Handlung, beobachtbaren Bezug und mindestens
+eine konkurrierende Akteurshypothese oder dokumentiert ausdrücklich
+`UNSPECIFIED / NOT_CLAIMED`. Der zweite Zustand ist für begrenzte
+assoziative/prädiktive Fragen zulässig und verhindert, dass ein Akteur erfunden
+wird; er liefert keinerlei Mechanismusnachweis.
 
 Der Agent führt getrennt:
 

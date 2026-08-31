@@ -1019,6 +1019,17 @@
       "description": "Provenienz der Variablen- und Konstruktauswahl. PREDEFINED benoetigt nur einen knappen, nachvollziehbaren Record; DATA_DRIVEN und HYBRID muessen Kandidatenuniversum, Datenrolle, Suchraum und Auswahlbias-Kontrollen offenlegen."
     },
     "actorConstraint": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/namedActorConstraint"
+        },
+        {
+          "$ref": "#/$defs/unspecifiedActorConstraint"
+        }
+      ],
+      "description": "Dokumentiert entweder eine benannte Akteurshypothese oder ausdrücklich, dass fuer die vorliegende praediktive/assoziative Frage kein Akteur behauptet wird. Der zweite Fall darf nicht stillschweigend als Mechanismusevidenz gelesen werden."
+    },
+    "namedActorConstraint": {
       "type": "object",
       "additionalProperties": false,
       "required": [
@@ -1064,6 +1075,29 @@
           }
         }
       }
+    },
+    "unspecifiedActorConstraint": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "actor_status",
+        "mechanism_claim_status",
+        "reason"
+      ],
+      "properties": {
+        "actor_status": {
+          "const": "UNSPECIFIED"
+        },
+        "mechanism_claim_status": {
+          "const": "NOT_CLAIMED"
+        },
+        "reason": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 2000
+        }
+      },
+      "description": "Zulaessiger ehrlicher Zustand fuer eine praediktive oder assoziative Frage, wenn weder Quelle noch Rekonstruktion einen belastbaren Akteur liefern."
     },
     "noiseScreenWaiver": {
       "type": "object",

@@ -293,8 +293,11 @@ Erst `PROMOTED` protokolliert zusätzlich mindestens:
   STRUCTURAL_FLOW_CANDIDATE / RELATIVE_VALUE_CANDIDATE /
   EVENT_RESPONSE_CANDIDATE / RETURN_DECOMPOSITION_CANDIDATE / OTHER`),
 - Markt, Instrument, Venue, Handelsphase, Zeitzone/Kalender und Prognosehorizont,
-- einen benannten Akteur, Zwang, erwartete Handlung, beobachtbaren Bezug und
-  mindestens eine konkurrierende Akteurshypothese,
+- den Akteursstand: entweder eine benannte Akteurshypothese mit Zwang,
+  erwarteter Handlung, beobachtbarem Bezug und konkurrierender
+  Akteurshypothese oder ausdrücklich `UNSPECIFIED / NOT_CLAIMED`, wenn die
+  Frage rein assoziativ oder prädiktiv ist und kein Akteur belastbar bekannt
+  ist,
 - einen verknüpften Noise Screen oder begründeten zulässigen Waiver,
 - den beobachtbaren Footprint, der die Geschichte von bloßer Prosa unterscheidbar
   machen soll,
@@ -307,11 +310,14 @@ Erst `PROMOTED` protokolliert zusätzlich mindestens:
 - den Modus und die Provenienz der Variablen- und Konstruktauswahl,
 - die Promotion-Entscheidung und nächste Research-ID.
 
-Typische Intraday-Kandidaten für den Akteurszwang sind Market Maker unter
+Typische Intraday-Kandidaten für eine Akteurshypothese sind Market Maker unter
 Inventarrisiko, Options-Desks beim Hedging, zeitgebundene
 Ausführungsalgorithmen, Rebalancing- und Margin-Prozesse sowie Stop-Cluster an
 technischen Marken. Die Nennung bleibt eine Plausibilitätsprüfung und ist kein
-Mechanismusnachweis.
+Mechanismusnachweis. Fehlt eine belastbare Akteurshypothese, darf sie nicht
+erfunden werden. Der ausdrücklich unbekannte Akteursstand lässt eine
+assoziative oder prädiktive Untersuchung zu, trägt aber keinerlei kausale oder
+mechanistische Deutung.
 
 `PROMOTED` bedeutet ausschließlich, dass eine Idee präzise und grundsätzlich
 testbar genug für Phase 0 ist. Es bestätigt weder den Mechanismus noch eine
@@ -364,6 +370,33 @@ kann das Ergebnis eine `SIMPLIFIED_VARIANT`, aber keine stillschweigende
 Replikation sein. `REPLICATION` ist nur zulässig, wenn die Quelle alle
 wesentlichen Konstrukte reproduzierbar festlegt. Details und Beispiel stehen in
 `reconstruction/README.md`.
+
+Vor `RECONSTRUCTION_COMPLETE` oder `DISCRETIONARY_PROTOCOL_COMPLETE` ist ein
+`strategy_concept_audit` nach
+`schemas/strategy_concept_audit.schema.json` Pflicht. Der
+`scientific-philosophy-critic` trennt darin:
+
+- strategiedefinierende Bedingungen,
+- von der Quelle genannte Anwendungsbedingungen,
+- lediglich vermutete Erfolgsmodifikatoren,
+- und unbekannte Erfolgsbedingungen.
+
+Vermutete Modifikatoren bleiben Kandidaten. Unbekannte Bedingungen werden nicht
+durch plausible Prosa ersetzt und weder Kategorie darf heimlich als
+Pflichtfilter in die Rekonstruktion gelangen.
+
+Das Audit führt Trigger, Zustand, Ziel und Outcome auf gemeinsame Inputs,
+Fenster und deterministische Berechnungen zurück. Solche
+Konstruktionsabhängigkeiten können Assoziationen mit erzeugen oder das Estimand
+mit der Definition verändern. Sie sind kein Kausalbeleg und nicht automatisch
+ein Fehler. Eine quellennahe Zielgröße wird nicht still durch eine methodisch
+bequemere andere Frage ersetzt.
+
+Regime-, State- und Kontextfilter sind zunächst vorläufige Messinstrumente. Der
+Anteil ihrer Klassen ist kein Maß der Trennleistung. Prognostisch verschiedene
+Gruppen können praktischen Informationswert besitzen, beweisen aber weder einen
+buchstäblich realen verborgenen Zustand noch einen Akteur oder kausalen
+Mechanismus.
 
 ## 4.2 Verbindlicher Research Scope
 
@@ -609,6 +642,27 @@ wird vor dieser Phase die Quellenrekonstruktion aus §4.1b referenziert. Abschni
 6 dokumentiert anschließend die tatsächlich gewählte Spezifikation; er darf
 nicht rückwirkend verschleiern, welche Definition aus der Quelle stammt und
 welche erst bei der Rekonstruktion ergänzt wurde.
+
+Nach einer vorläufigen Operationalisierung kann ein `condition_inquiry` nach
+`schemas/condition_inquiry.schema.json` aktiviert werden. Es beantwortet eine
+von fünf getrennten Fragen:
+
+1. Trennt ein Messinstrument zweckgemäß zukünftiges Verhalten, das nicht schon
+   in seiner Berechnung steckt?
+2. Welcher Zusammenhang kann durch gemeinsame Inputs, Fenster oder
+   deterministische Konstruktion mit entstehen?
+3. Wie abhängig ist der Befund von zuvor als vertretbar anerkannten
+   Operationalisierungen?
+4. Unter welchen zum Entscheidungszeitpunkt bekannten Bedingungen verändert
+   sich die Prognose oder Effektgröße?
+5. Wiederholt sich eine gefundene Bedingung über Zeit, Märkte oder andere
+   vorab definierte Umgebungen?
+
+Die quantitative Bedingungssuche ist ein Hypothesengenerator, kein verdeckter
+Umbau der Quellenstrategie. Eine datenbasiert gefundene Bedingung erhält eine
+eigene Bedingungshypothese. Sie wird erst nach unabhängiger Wiederholung als
+wiederkehrend bezeichnet und bleibt von Kausal- oder Realzustandsbehauptungen
+getrennt.
 
 Begriffe wie:
 
@@ -1346,7 +1400,9 @@ Ein falsifiziertes Vorzeichen kann eine neue Hypothese erzeugen. Es wandelt den 
 11. Unerwartetes Vorzeichen erzeugt höchstens eine neue Hypothese.
 12. State-Variablen zunächst möglichst kontinuierlich untersuchen.
 13. Gewinner und Verlierer gemeinsam analysieren.
-14. Ein Regimefilter muss zusätzlichen Informationswert liefern.
+14. Ein Regimefilter ist ein Messinstrument: Seine Klassenhäufigkeit validiert
+    ihn nicht; sein zusätzlicher Informationswert wird an zukünftigem Verhalten
+    beurteilt, das nicht bereits in seiner Konstruktion steckt.
 15. Multiple Testing umfasst die gesamte Research-Pipeline.
 16. Einflussdiagnostik wird vor Validation festgelegt.
 17. Heavy-Tail-Behandlung wird vor Validation festgelegt.
@@ -1381,6 +1437,15 @@ Ein falsifiziertes Vorzeichen kann eine neue Hypothese erzeugen. Es wandelt den 
 46. „Newsfrei“ wird nie pauschal behauptet, sondern nur als dokumentierte News-/Makro-Policy mit bekannten Coverage-Grenzen operationalisiert.
 47. Mechanismenfamilien und Intraday-Router sind nicht abschließend und erzeugen keine Edge durch Klassifikation.
 48. Ein Generation-Run erzeugt nur `INBOX`-Kandidaten; Mechanismenkatalog, Operator oder Literaturquelle bestätigen weder Hypothese noch Edge.
+49. Vor Abschluss einer unvollständig definierten Quellenrekonstruktion werden
+    strategiedefinierende, quellengenannte, vermutete und unbekannte Bedingungen
+    in einem Concept Audit getrennt.
+50. Konstruktionsabhängigkeit, statistische Abhängigkeit, prognostischer Nutzen
+    und kausaler Mechanismus sind vier verschiedene Aussagen.
+51. Eine datenbasiert gefundene Erfolgsbedingung ist eine neue Hypothese und
+    keine nachträglich entdeckte Quellenregel.
+52. Prognostische Trennung durch einen Statefilter beweist weder einen realen
+    verborgenen Zustand noch einen Akteur oder Mechanismus.
 
 ---
 
@@ -1389,11 +1454,13 @@ Ein falsifiziertes Vorzeichen kann eine neue Hypothese erzeugen. Es wandelt den 
 ```text
 G. OPTIONALE IDEENGENERATION AUS MECHANISMENKATALOG → INBOX
 0. HYPOTHESEN-INTAKE + SCOPE + SCREENING
+0a. FALLS QUELLENSTRATEGIE: REKONSTRUKTION + CONCEPT AUDIT
 1. Vorläufige Beobachtung / Outcome-Skala
 2. PHASE-0-VORPRÜFUNG
 3. Discovery / Fallkatalog + optionale Effect-Cause-Effect-Map
 4. Claim-Level + explizites Identifikationsmodell + Beobachtbarkeit + Tooling-Router
 5. Operationalisierung
+5a. OPTIONAL: QUANTITATIVE BEDINGUNGSANFRAGE
 6. Zielvariable + Nullmodell + gegebenenfalls Surprise-Faktoren/Shock-Response-Map
 7. Effektgröße + Unsicherheit
 8. Abhängigkeit + effektives N
