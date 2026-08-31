@@ -50,6 +50,18 @@ Der Name in `Signatur` muss mit dem in `Agent` übereinstimmen, und das Datum in
 
 <!-- EINTRAEGE -->
 
+## 2026-08-31 — Datensnapshot-Zweig auf die Begriffs- und Leitungsschicht gesetzt
+
+- **Agent:** Claude Opus 5 (Claude Code)
+- **Commit:** ausstehend
+- **Was:** Den noch offenen Datensnapshot-Zweig auf den aktuellen Hauptstand gesetzt. Die eigene Architekturentscheidung von ADR-010 auf ADR-012 umnummeriert, weil 010 und 011 inzwischen für Begriffsprüfung und Forschungsleitung vergeben sind. Den README-Konflikt so aufgelöst, dass beide Absätze erhalten bleiben.
+- **Warum:** Codex hat Begriffsprüfung, Bedingungsanfrage und eine zentrale Forschungsleitung ergänzt. Der offene Zweig kollidierte dadurch in der Nummerierung und im README. Ohne Auflösung wäre entweder fremde oder eigene Arbeit verlorengegangen.
+- **Berührt:** `decisions/ADR-012-data-snapshot-contract-and-ingest-adapters.md`, `README.md`, `CHANGELOG.md`, `scripts/validate_framework.py`, `scripts/validate_framework.ps1`
+- **Nicht getan:** Keine fremde Datei inhaltlich verändert. Die neuen Prüfstufen von Codex wurden unberührt übernommen und laufen zusammen mit den eigenen; die gesamte Prüfung ist grün.
+- **Signatur:** Claude Opus 5 — 2026-08-31
+
+---
+
 ## 2026-08-31 — Änderungsprotokoll und Signaturpflicht für Agenten
 
 - **Agent:** Claude Opus 5 (Claude Code)
@@ -66,10 +78,10 @@ Der Name in `Signatur` muss mit dem in `Agent` übereinstimmen, und das Datum in
 
 - **Agent:** Claude Opus 5 (Claude Code)
 - **Commit:** 9581145
-- **Was:** Schema `data_snapshot` (1.0.0) mit Vertragstests eingeführt, dazu einen nicht-normativen Ingest-Adapter für das öffentliche Binance-Archiv in `ingest/` samt Offline-Tests. Entscheidung in ADR-010 festgehalten. Beide Validierungspfade um zwei Stufen erweitert.
+- **Was:** Schema `data_snapshot` (1.0.0) mit Vertragstests eingeführt, dazu einen nicht-normativen Ingest-Adapter für das öffentliche Binance-Archiv in `ingest/` samt Offline-Tests. Entscheidung in ADR-012 festgehalten. Beide Validierungspfade um zwei Stufen erweitert.
 - **Warum:** Zwischen `data_requirements` (welche Daten nötig sind) und `consumed_data_refs` (welche verbraucht wurden) fehlte jeder Vertrag. Eine Referenz wie `csv:SYMBOL:60:2024..2026` war weder auflösbar noch prüfbar, wodurch ein eingefrorener Suchraum wertlos wird, sobald der Datenstand darunter unbemerkt wechselt. Anlass war eine reale Machbarkeitsprüfung, die an Exportgrenzen und lückenhaften Indikatorspalten eines Chart-Werkzeugs scheiterte.
-- **Berührt:** `schemas/data_snapshot.schema.json`, `scripts/test_data_snapshot.py`, `examples/data_snapshot.binance_klines.json`, `ingest/`, `decisions/ADR-010-data-snapshot-contract-and-ingest-adapters.md`, `README.md`, `.gitattributes`, `scripts/validate_framework.{py,ps1}`
-- **Nicht getan:** QUICKSTART und die Normdokumente `00`–`05` blieben unverändert. Dass `consumed_data_refs` künftig auf `snapshot:`-Bezeichner zeigen soll, steht bisher nur in ADR-010 und README, nicht im verbindlichen Kurzpfad. Ebenso ist die Abdeckungsanalyse des Adapters nur für `klines` implementiert, nicht für `aggTrades`, `trades` oder `fundingRate`.
+- **Berührt:** `schemas/data_snapshot.schema.json`, `scripts/test_data_snapshot.py`, `examples/data_snapshot.binance_klines.json`, `ingest/`, `decisions/ADR-012-data-snapshot-contract-and-ingest-adapters.md`, `README.md`, `.gitattributes`, `scripts/validate_framework.{py,ps1}`
+- **Nicht getan:** QUICKSTART und die Normdokumente `00`–`05` blieben unverändert. Dass `consumed_data_refs` künftig auf `snapshot:`-Bezeichner zeigen soll, steht bisher nur in ADR-012 und README, nicht im verbindlichen Kurzpfad. Ebenso ist die Abdeckungsanalyse des Adapters nur für `klines` implementiert, nicht für `aggTrades`, `trades` oder `fundingRate`.
 - **Signatur:** Claude Opus 5 — 2026-08-31
 
 ---
