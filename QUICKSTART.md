@@ -62,6 +62,8 @@ nächsten Pflichtschritt. Dadurch gelten insbesondere diese Reihenfolgen:
   Bedingungsanalyse;
 - Revision oder Fortsetzung nach einem nicht positiven eingefrorenen Ergebnis:
   wissenschaftsphilosophische Fortsetzungsprüfung vor neuer Empirie;
+- beabsichtigte Interventions- oder Kontrafaktualaussage:
+  Kausalitätsprüfung vor Effektschätzung oder kausaler Formulierung;
 - neue Ideen nur auf wirklichen Ideenwunsch; eine vorhandene Idee geht in den
   Intake und nicht zurück zum Generator.
 
@@ -161,6 +163,34 @@ Der Arbeitsablauf steht in
 [`VWAP-Price-Discovery-Beispiel`](examples/strategy_reconstruction.vwap_wave_price_discovery.json)
 endet bewusst als `SOURCE_EXTRACTION` mit lauter offenen Entscheidungen. Es ist
 kein Backtest und keine Behauptung, die Quelle sei profitabel.
+
+## 2b. Nur bei einer echten Kausalitätsfrage
+
+Eine Tradingstrategie kann vollständig als Prognose untersucht werden, ohne zu
+behaupten, dass ein Signal den Markt verursacht. In diesem Normalfall entsteht
+kein zusätzlicher Kausalitätsaufwand.
+
+Sobald dagegen eine Intervention, ein struktureller Schock oder ein
+Kontrafaktual behauptet werden soll, muss vor der Schätzung der
+[`causal-identification-critic`](agents/causal-identification-critic.md) prüfen,
+ob der Vergleich diese Bedeutung überhaupt trägt. Sein
+[`causal_identification_assessment`](schemas/causal_identification_assessment.schema.json)
+benennt Zielwirkung, Quelle der identifizierenden Variation, ökonomisches
+Modell, Annahmen, Finanzmarktrisiken, Gegenproben, Sensitivität und die stärkste
+zulässige Aussage.
+
+Ein Modell oder Schätzer ersetzt diese Prüfung nicht. Das gilt ausdrücklich für
+DML, Causal Forests, Local Projections, VARs, Event-Study-Regressionen,
+Granger-Verfahren und Causal Discovery. Finanzielle Event Studies müssen unter
+anderem das gegenfaktische Renditemodell, Event-Timing, Volatilität und andere
+Nachrichten behandeln; High-Frequency-Designs zusätzlich Leakage,
+Zeitstempel, Überraschungskonstruktion und Informationsschocks. Die verbindliche
+Forschungsbasis steht in
+[`references/CAUSAL_IDENTIFICATION_FOR_FINANCE.md`](references/CAUSAL_IDENTIFICATION_FOR_FINANCE.md).
+
+Ein bestandenes Identifikationsgate erlaubt nur die benannte kausale Schätzung
+unter ihren Annahmen. Mechanismus, Vorhersage und handelbare Netto-Edge bleiben
+eigene Fragen.
 
 ## 3. Günstiger Intake
 

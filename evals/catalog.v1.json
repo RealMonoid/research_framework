@@ -1,7 +1,7 @@
 {
   "schema_version": "eval-catalog.v1",
   "catalog_id": "research-agent-core",
-  "catalog_version": "1.8.0",
+  "catalog_version": "1.9.0",
   "created_at": "2026-08-30T00:00:00+02:00",
   "description": "Deterministic core evals for evidence handling, hypothesis intake, thesis governance, and research orchestration.",
   "cases": [
@@ -1409,6 +1409,206 @@
             "path": "routing.user_explanation",
             "operator": "exists",
             "expected": true,
+            "critical": true,
+            "weight": 2
+          }
+        ]
+      }
+    },
+    {
+      "case_id": "route_causal_claim_to_identification_critic",
+      "capability": "research_orchestration",
+      "description": "Route an interventional market claim to the dedicated identification critic before estimation.",
+      "input": {
+        "task": "I want to claim that a scheduled policy surprise caused the futures-price response. No causal-identification assessment exists. Return the next route; do not estimate the effect.",
+        "as_of": "2026-08-31T19:00:00Z",
+        "sources": [
+          {
+            "source_id": "synthetic_causal_route_state",
+            "title": "Synthetic Causal Route State",
+            "published_at": "2026-08-31T18:55:00Z",
+            "accessed_at": "2026-08-31T18:59:00Z",
+            "authoritative": true,
+            "content": "Requested claim level INTERVENTIONAL; intent ASSESS_CAUSAL_CLAIM; causal identification assessment MISSING."
+          }
+        ]
+      },
+      "expected": {
+        "assertions": [
+          {
+            "assertion_id": "route_to_causal_identification",
+            "metric": "research_orchestration_accuracy",
+            "path": "routing.route",
+            "operator": "equals",
+            "expected": "CAUSAL_IDENTIFICATION_REVIEW",
+            "critical": true,
+            "weight": 3
+          },
+          {
+            "assertion_id": "select_causal_identification_critic",
+            "metric": "research_orchestration_accuracy",
+            "path": "routing.selected_agent",
+            "operator": "equals",
+            "expected": "causal-identification-critic",
+            "critical": true,
+            "weight": 2
+          },
+          {
+            "assertion_id": "do_not_estimate_before_identification",
+            "metric": "causal_identification_accuracy",
+            "path": "routing.causal_estimation_authorized",
+            "operator": "equals",
+            "expected": false,
+            "critical": true,
+            "weight": 3
+          }
+        ]
+      }
+    },
+    {
+      "case_id": "dml_is_not_identification",
+      "capability": "causal_identification",
+      "description": "Reject Double Machine Learning as a substitute for exogenous variation in an endogenous order-flow question.",
+      "input": {
+        "task": "Use DML on trades and price changes to prove that order flow causes prices. No instrument, random shock, structural restriction, or complete pre-treatment adjustment set has been supplied.",
+        "as_of": "2026-08-31T19:05:00Z",
+        "sources": [
+          {
+            "source_id": "synthetic_dml_only_design",
+            "title": "Synthetic DML-Only Design",
+            "published_at": "2026-08-31T19:01:00Z",
+            "accessed_at": "2026-08-31T19:04:00Z",
+            "authoritative": true,
+            "content": "Treatment is signed order flow and outcome is the simultaneous price change. DML is the only proposed justification. Common information, reverse causality, and simultaneity are unaddressed."
+          }
+        ]
+      },
+      "expected": {
+        "assertions": [
+          {
+            "assertion_id": "block_estimator_only_identification",
+            "metric": "causal_identification_accuracy",
+            "path": "causal_identification.identification_status",
+            "operator": "equals",
+            "expected": "BLOCKED",
+            "critical": true,
+            "weight": 3
+          },
+          {
+            "assertion_id": "keep_dml_as_estimator_only",
+            "metric": "causal_identification_accuracy",
+            "path": "causal_identification.dml_role",
+            "operator": "equals",
+            "expected": "ESTIMATION_AFTER_IDENTIFICATION",
+            "critical": true,
+            "weight": 3
+          },
+          {
+            "assertion_id": "name_order_flow_endogeneity",
+            "metric": "causal_identification_accuracy",
+            "path": "causal_identification.blockers",
+            "operator": "set_equals",
+            "expected": [
+              "COMMON_INFORMATION",
+              "REVERSE_CAUSALITY",
+              "SIMULTANEITY"
+            ],
+            "critical": true,
+            "weight": 2
+          }
+        ]
+      }
+    },
+    {
+      "case_id": "financial_event_study_requires_counterfactual",
+      "capability": "causal_identification",
+      "description": "Block a causal financial event-study claim when event timing and the counterfactual return model can manufacture the result.",
+      "input": {
+        "task": "A long-window abnormal-return event study around volatility-timed interventions is significant. Call the return causal. The factor model, matched pre-event benchmark, concurrent news, and event-selection process were not checked.",
+        "as_of": "2026-08-31T19:10:00Z",
+        "sources": [
+          {
+            "source_id": "synthetic_misspecified_event_study",
+            "title": "Synthetic Misspecified Financial Event Study",
+            "published_at": "2026-08-31T19:06:00Z",
+            "accessed_at": "2026-08-31T19:09:00Z",
+            "authoritative": true,
+            "content": "Events occur preferentially in volatile markets; the horizon is long; abnormal returns use one unvalidated factor model; no matched pre-event relation, concurrent-news audit, or timing-selection model exists."
+          }
+        ]
+      },
+      "expected": {
+        "assertions": [
+          {
+            "assertion_id": "block_misspecified_financial_event_study",
+            "metric": "causal_identification_accuracy",
+            "path": "causal_identification.identification_status",
+            "operator": "equals",
+            "expected": "BLOCKED",
+            "critical": true,
+            "weight": 3
+          },
+          {
+            "assertion_id": "require_finance_specific_checks",
+            "metric": "causal_identification_accuracy",
+            "path": "causal_identification.blockers",
+            "operator": "set_equals",
+            "expected": [
+              "CONCURRENT_EVENTS",
+              "COUNTERFACTUAL_RETURN_MODEL",
+              "EVENT_TIMING_SELECTION",
+              "PRE_EVENT_BENCHMARK"
+            ],
+            "critical": true,
+            "weight": 3
+          },
+          {
+            "assertion_id": "forbid_causal_language",
+            "metric": "causal_identification_accuracy",
+            "path": "causal_identification.causal_language_authorized",
+            "operator": "equals",
+            "expected": false,
+            "critical": true,
+            "weight": 2
+          }
+        ]
+      }
+    },
+    {
+      "case_id": "predictive_question_bypasses_causal_gate",
+      "capability": "research_orchestration",
+      "description": "Do not impose causal bureaucracy on an explicitly predictive signal question.",
+      "input": {
+        "task": "I only want to know whether this frozen signal predicts the next return out of sample. I am not making a causal or mechanism claim. Return the next route.",
+        "as_of": "2026-08-31T19:15:00Z",
+        "sources": [
+          {
+            "source_id": "synthetic_predictive_route_state",
+            "title": "Synthetic Predictive Route State",
+            "published_at": "2026-08-31T19:11:00Z",
+            "accessed_at": "2026-08-31T19:14:00Z",
+            "authoritative": true,
+            "content": "Requested claim level ASSOCIATIONAL_PREDICTIVE; the relevant non-causal research prerequisites are complete."
+          }
+        ]
+      },
+      "expected": {
+        "assertions": [
+          {
+            "assertion_id": "predictive_route_stays_with_conductor",
+            "metric": "research_orchestration_accuracy",
+            "path": "routing.route",
+            "operator": "equals",
+            "expected": "CONDUCT_RESEARCH",
+            "critical": true,
+            "weight": 3
+          },
+          {
+            "assertion_id": "no_causal_specialist_for_predictive_question",
+            "metric": "research_orchestration_accuracy",
+            "path": "routing.selected_agent",
+            "operator": "equals",
+            "expected": null,
             "critical": true,
             "weight": 2
           }

@@ -72,6 +72,7 @@ Das Register referenziert die maschinenlesbaren Artefakte nach `05_AGENT_OPERATI
 | Strategy Reconstruction, falls Quellenstrategie | | `1.1.0` | | | `SOURCE_EXTRACTION / TRANSLATION_DRAFT / RECONSTRUCTION_COMPLETE / DISCRETIONARY_PROTOCOL_COMPLETE / NOT_OPERATIONALIZABLE` |
 | Concept Audit, vor Abschluss einer Quellenrekonstruktion | | `1.0.0` | | | `DRAFT / COMPLETE / BLOCKED` |
 | Condition Inquiry, falls aktiviert | | `1.0.0` | | | `PLAN / EXPLORATORY_RESULTS / INDEPENDENT_RESULTS / BLOCKED` |
+| Causal-Identification-Assessment, bei kausalem Claim | | `1.0.0` | | | `PASS / FAIL / BLOCKED / NOT_REQUIRED_PREDICTIVE` |
 | Wissenschaftsphilosophie-Review, falls Q9 aktiviert | | `1.0.0` | | | `BUNDLE_MAPPED / CONTINUATION_REVIEWED / BLOCKED` |
 | Search-Space-Register | | `1.0.0` | | | `N/A (Zählregister)` |
 | Entry Noise Screen | | `1.0.0` | | | `PASS / FAIL / BLOCKED` oder Intake-Waiver |
@@ -431,6 +432,13 @@ Welche Begriffe wurden verworfen, geändert oder präzisiert? ...
 ### E7-Gate – Kausalität/Identifikation
 
 `PASS / FAIL / BLOCKED / NOT_REQUIRED_PREDICTIVE`
+
+**Causal-Identification-Assessment-ID:** ... / `N/A bei NOT_REQUIRED_PREDICTIVE`
+
+Bei `INTERVENTIONAL` oder `COUNTERFACTUAL` darf E7 nur aus einem validierten
+`causal_identification_assessment` übernommen werden. Ein selbst gesetztes
+`PASS`, ein Schätzerlauf, ein enges Eventfenster oder ein Discovery-Ergebnis
+genügt nicht.
 
 - `PASS`: Nur für den eingefrorenen kausalen Claim und unter den dokumentierten Annahmen.
 - `NOT_REQUIRED_PREDICTIVE`: Research darf fortfahren, aber nur mit prädiktiver/assoziativer Sprache.
@@ -989,6 +997,7 @@ Jeder Punkt muss `YES` sein. `N/A + Begründung` ist nur dort zulässig, wo die 
 | kausales Estimand fest oder `N/A: ASSOCIATIONAL_PREDICTIVE` | |
 | Identifikationsstrategie/-annahmen fest oder `NOT_REQUIRED_PREDICTIVE` | |
 | E7-Identifikationsgate bestanden oder `NOT_REQUIRED_PREDICTIVE` | |
+| Bei kausalem Claim validiertes `causal_identification_assessment` vorhanden | |
 | Strukturmodell-/Identifikationsdesign-Version fest oder `NOT_REQUIRED_PREDICTIVE` | |
 | E9-Tooling-Gate bestanden oder `NOT_REQUIRED` | |
 | primäre Bibliothek je kausaler Aufgabe und Haupt-API fest oder `TOOLING_NOT_REQUIRED + Begründung` | |
@@ -1506,6 +1515,7 @@ Der Agent darf den jeweils aktivierten Teil des Research-Artefakts nicht als vol
 
 - [ ] Wurde vor jedem materiellen Research-Übergang ein valider Orchestration State gespeichert und eine valide Routing Decision erzeugt?
 - [ ] Wurden zwingende Fachagenten nur mit begrenztem Arbeitsauftrag aufgerufen, ihre Ergebnisse vor Übernahme geprüft und danach erneut geroutet?
+- [ ] Liegt bei jedem interventionalen oder kontrafaktischen Claim vor Schätzung und kausaler Sprache ein validiertes Causal-Identification-Assessment vor?
 - [ ] Besitzt jede persistierte Rohidee ein valides, versioniertes Hypothesen-Intake-Artefakt?
 - [ ] Besitzt jeder tatsächliche LLM-/Agentenlauf eine eindeutige Run-ID und ein valides Run-Manifest?
 - [ ] Sind Modell/Snapshot, Prompts, Parameter, Tools, Datenstände, Quellenstände und Output-Hashes je Run reproduzierbar referenziert?

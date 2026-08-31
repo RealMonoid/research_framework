@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "urn:research-framework:schema:orchestration-state:1.1.0",
+  "$id": "urn:research-framework:schema:orchestration-state:1.2.0",
   "title": "Research Orchestration State",
   "description": "Persistent checkpoint used by the research conductor before every material research step.",
   "type": "object",
@@ -21,10 +21,10 @@
     "routing_history"
   ],
   "properties": {
-    "schema_version": {"const": "1.1.0"},
+    "schema_version": {"const": "1.2.0"},
     "orchestration_id": {"$ref": "#/$defs/stableId"},
     "updated_at": {"$ref": "#/$defs/timestamp"},
-    "conductor_version": {"const": "1.1.0"},
+    "conductor_version": {"const": "1.2.0"},
     "next_decision_sequence": {"type": "integer", "minimum": 1},
     "request": {"$ref": "#/$defs/request"},
     "research_context": {"$ref": "#/$defs/researchContext"},
@@ -231,6 +231,7 @@
         "intent",
         "intent_origin",
         "intent_confidence",
+        "requested_claim_level",
         "material_user_choice"
       ],
       "properties": {
@@ -245,6 +246,8 @@
             "ASSESS_MEASUREMENT",
             "DISCOVER_CONDITIONS",
             "CHECK_DEFINITION_SENSITIVITY",
+            "ASSESS_CAUSAL_CLAIM",
+            "ESTIMATE_CAUSAL_EFFECT",
             "INTERPRET_RESULT",
             "ATTRIBUTE_RESULT",
             "REVISE_AFTER_RESULT",
@@ -260,6 +263,14 @@
         "intent_confidence": {
           "type": "string",
           "enum": ["HIGH", "MEDIUM", "LOW"]
+        },
+        "requested_claim_level": {
+          "type": "string",
+          "enum": [
+            "ASSOCIATIONAL_PREDICTIVE",
+            "INTERVENTIONAL",
+            "COUNTERFACTUAL"
+          ]
         },
         "material_user_choice": {"$ref": "#/$defs/materialUserChoice"}
       }
@@ -417,12 +428,14 @@
         "strategy_reconstruction",
         "strategy_concept_audit",
         "condition_inquiry",
+        "causal_identification_assessment",
         "scientific_philosophy_review"
       ],
       "properties": {
         "strategy_reconstruction": {"$ref": "#/$defs/artifactStatus"},
         "strategy_concept_audit": {"$ref": "#/$defs/artifactStatus"},
         "condition_inquiry": {"$ref": "#/$defs/artifactStatus"},
+        "causal_identification_assessment": {"$ref": "#/$defs/artifactStatus"},
         "scientific_philosophy_review": {"$ref": "#/$defs/artifactStatus"}
       }
     },

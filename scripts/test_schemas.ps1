@@ -95,6 +95,7 @@ $positivePairs = @(
     @('examples\strategy_reconstruction.vwap_wave_price_discovery.json', 'schemas\strategy_reconstruction.schema.json'),
     @('examples\strategy_concept_audit.synthetic.json', 'schemas\strategy_concept_audit.schema.json'),
     @('examples\condition_inquiry.synthetic_measurement.json', 'schemas\condition_inquiry.schema.json'),
+    @('examples\causal_identification_assessment.hfi_pass.json', 'schemas\causal_identification_assessment.schema.json'),
     @('examples\scientific_philosophy_review.synthetic_failed_reconstruction.json', 'schemas\scientific_philosophy_review.schema.json'),
     @('examples\orchestration_state.prose_strategy.json', 'schemas\orchestration_state.schema.json'),
     @('examples\routing_decision.pre_operationalization.json', 'schemas\routing_decision.schema.json'),
@@ -132,6 +133,22 @@ Test-RejectedFixture -Name 'filter label share alone cannot validate instrument'
 $conditionCircularTarget = Read-JsonText -RelativePath 'examples\condition_inquiry.synthetic_measurement.json' | ConvertFrom-Json -Depth 100
 $conditionCircularTarget.measurement_assessment.targets_reused_in_construction = $true
 Test-RejectedFixture -Name 'measurement assessment cannot reuse its construction target' -Value $conditionCircularTarget -Schema 'schemas\condition_inquiry.schema.json'
+
+$predictiveCausalPass = Read-JsonText -RelativePath 'examples\causal_identification_assessment.hfi_pass.json' | ConvertFrom-Json -Depth 100
+$predictiveCausalPass.requested_claim_level = 'ASSOCIATIONAL_PREDICTIVE'
+Test-RejectedFixture -Name 'predictive claim cannot carry a causal identification pass' -Value $predictiveCausalPass -Schema 'schemas\causal_identification_assessment.schema.json'
+
+$discoveryCausalPass = Read-JsonText -RelativePath 'examples\causal_identification_assessment.hfi_pass.json' | ConvertFrom-Json -Depth 100
+$discoveryCausalPass.design.design_family = 'CAUSAL_DISCOVERY_ONLY'
+Test-RejectedFixture -Name 'causal discovery alone cannot receive identification pass' -Value $discoveryCausalPass -Schema 'schemas\causal_identification_assessment.schema.json'
+
+$causalPassWithoutFalsification = Read-JsonText -RelativePath 'examples\causal_identification_assessment.hfi_pass.json' | ConvertFrom-Json -Depth 100
+$causalPassWithoutFalsification.diagnostics.falsification_or_negative_controls = @()
+Test-RejectedFixture -Name 'causal pass requires a falsification or negative control' -Value $causalPassWithoutFalsification -Schema 'schemas\causal_identification_assessment.schema.json'
+
+$postTreatmentAdjustment = Read-JsonText -RelativePath 'examples\causal_identification_assessment.hfi_pass.json' | ConvertFrom-Json -Depth 100
+$postTreatmentAdjustment.post_treatment_variables[0].role = 'ADJUSTMENT_CONTROL'
+Test-RejectedFixture -Name 'post-treatment variables cannot be ordinary controls' -Value $postTreatmentAdjustment -Schema 'schemas\causal_identification_assessment.schema.json'
 
 $philosophyRelabelled = Read-JsonText -RelativePath 'examples\scientific_philosophy_review.synthetic_failed_reconstruction.json' | ConvertFrom-Json -Depth 100
 $philosophyRelabelled.frozen_result.remains_unchanged = $false

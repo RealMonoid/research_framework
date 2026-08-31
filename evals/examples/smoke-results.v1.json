@@ -1,7 +1,7 @@
 {
   "schema_version": "eval-results.v2",
   "catalog_id": "research-agent-core",
-  "catalog_version": "1.8.0",
+  "catalog_version": "1.9.0",
   "run_id": "smoke-reference-v1",
   "created_at": "2026-08-30T00:00:00+02:00",
   "run_kind": "PROTOCOL_SMOKE",
@@ -450,6 +450,48 @@
         "changed_output_accepted": false,
         "original_identity_remains_effective": true,
         "user_explanation": "Der Fachbeitrag hat das Ziel verändert: Statt einer Bewegung um zwei vorher gemessene Schwankungseinheiten wird nun die gegenüberliegende Spannenbegrenzung verwendet. Diese Fassung wird nicht übernommen. Du kannst beim ursprünglichen Ziel bleiben oder die Änderung ausdrücklich als neue Research-Version freigeben."
+      }
+    },
+    "route_causal_claim_to_identification_critic": {
+      "claims": {},
+      "routing": {
+        "route": "CAUSAL_IDENTIFICATION_REVIEW",
+        "selected_agent": "causal-identification-critic",
+        "causal_estimation_authorized": false
+      }
+    },
+    "dml_is_not_identification": {
+      "claims": {},
+      "causal_identification": {
+        "identification_status": "BLOCKED",
+        "dml_role": "ESTIMATION_AFTER_IDENTIFICATION",
+        "blockers": [
+          "COMMON_INFORMATION",
+          "REVERSE_CAUSALITY",
+          "SIMULTANEITY"
+        ],
+        "causal_language_authorized": false
+      }
+    },
+    "financial_event_study_requires_counterfactual": {
+      "claims": {},
+      "causal_identification": {
+        "identification_status": "BLOCKED",
+        "blockers": [
+          "CONCURRENT_EVENTS",
+          "COUNTERFACTUAL_RETURN_MODEL",
+          "EVENT_TIMING_SELECTION",
+          "PRE_EVENT_BENCHMARK"
+        ],
+        "causal_language_authorized": false
+      }
+    },
+    "predictive_question_bypasses_causal_gate": {
+      "claims": {},
+      "routing": {
+        "route": "CONDUCT_RESEARCH",
+        "selected_agent": null,
+        "causal_estimation_authorized": false
       }
     }
   }

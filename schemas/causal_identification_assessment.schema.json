@@ -1,0 +1,333 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:research-framework:schema:causal-identification-assessment:1.0.0",
+  "title": "Causal Identification Assessment",
+  "description": "Independent identification review required before interventional or counterfactual claims in financial research.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "assessment_id",
+    "research_id",
+    "created_at",
+    "requested_claim_level",
+    "estimand",
+    "design",
+    "economic_model",
+    "identifying_assumptions",
+    "finance_risk_checks",
+    "post_treatment_variables",
+    "diagnostics",
+    "literature_basis",
+    "judgment"
+  ],
+  "properties": {
+    "schema_version": {"const": "1.0.0"},
+    "assessment_id": {"$ref": "#/$defs/stableId"},
+    "research_id": {"$ref": "#/$defs/stableId"},
+    "created_at": {"type": "string", "format": "date-time"},
+    "requested_claim_level": {"$ref": "#/$defs/claimLevel"},
+    "estimand": {
+      "oneOf": [
+        {"$ref": "#/$defs/estimand"},
+        {"type": "null"}
+      ]
+    },
+    "design": {"$ref": "#/$defs/design"},
+    "economic_model": {
+      "oneOf": [
+        {"$ref": "#/$defs/economicModel"},
+        {"type": "null"}
+      ]
+    },
+    "identifying_assumptions": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/assumption"}
+    },
+    "finance_risk_checks": {"$ref": "#/$defs/financeRiskChecks"},
+    "post_treatment_variables": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/postTreatmentVariable"}
+    },
+    "diagnostics": {"$ref": "#/$defs/diagnostics"},
+    "literature_basis": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/literatureSource"}
+    },
+    "judgment": {"$ref": "#/$defs/judgment"}
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {"requested_claim_level": {"const": "ASSOCIATIONAL_PREDICTIVE"}},
+        "required": ["requested_claim_level"]
+      },
+      "then": {
+        "properties": {
+          "estimand": {"type": "null"},
+          "economic_model": {"type": "null"},
+          "identifying_assumptions": {"maxItems": 0},
+          "design": {
+            "properties": {
+              "design_family": {"const": "NOT_REQUIRED_PREDICTIVE"},
+              "variation_type": {"const": "NONE"},
+              "estimation_methods": {"maxItems": 0}
+            }
+          },
+          "judgment": {
+            "properties": {
+              "identification_status": {"const": "NOT_REQUIRED_PREDICTIVE"},
+              "strongest_allowed_claim": {"const": "ASSOCIATIONAL_PREDICTIVE"},
+              "causal_estimation_authorized": {"const": false},
+              "causal_language_authorized": {"const": false}
+            }
+          }
+        }
+      },
+      "else": {
+        "properties": {
+          "estimand": {"$ref": "#/$defs/estimand"},
+          "economic_model": {"$ref": "#/$defs/economicModel"},
+          "identifying_assumptions": {"minItems": 1},
+          "literature_basis": {"minItems": 2},
+          "design": {
+            "properties": {
+              "design_family": {"not": {"const": "NOT_REQUIRED_PREDICTIVE"}},
+              "variation_type": {"not": {"const": "NONE"}}
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "judgment": {
+            "properties": {"identification_status": {"const": "PASS"}},
+            "required": ["identification_status"]
+          }
+        },
+        "required": ["judgment"]
+      },
+      "then": {
+        "properties": {
+          "diagnostics": {
+            "properties": {
+              "falsification_or_negative_controls": {"minItems": 1},
+              "sensitivity_or_partial_identification": {"minItems": 1},
+              "dependency_aware_inference": {"minLength": 1}
+            }
+          },
+          "judgment": {
+            "properties": {
+              "causal_estimation_authorized": {"const": true},
+              "causal_language_authorized": {"const": true}
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "design": {
+            "properties": {"design_family": {"const": "CAUSAL_DISCOVERY_ONLY"}},
+            "required": ["design_family"]
+          }
+        },
+        "required": ["design"]
+      },
+      "then": {
+        "properties": {
+          "judgment": {
+            "properties": {
+              "identification_status": {"enum": ["BLOCKED", "FAIL"]},
+              "strongest_allowed_claim": {"const": "CAUSAL_HYPOTHESIS"},
+              "causal_estimation_authorized": {"const": false},
+              "causal_language_authorized": {"const": false}
+            }
+          }
+        }
+      }
+    }
+  ],
+  "$defs": {
+    "stableId": {"type": "string", "pattern": "^[A-Za-z][A-Za-z0-9._:-]{2,199}$"},
+    "text": {"type": "string", "minLength": 1, "maxLength": 4000},
+    "claimLevel": {
+      "type": "string",
+      "enum": ["ASSOCIATIONAL_PREDICTIVE", "INTERVENTIONAL", "COUNTERFACTUAL"]
+    },
+    "estimand": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["treatment_or_shock", "outcome", "population_or_units", "horizon", "contrast", "effect_type", "interference_and_exposure_mapping"],
+      "properties": {
+        "treatment_or_shock": {"$ref": "#/$defs/text"},
+        "outcome": {"$ref": "#/$defs/text"},
+        "population_or_units": {"$ref": "#/$defs/text"},
+        "horizon": {"$ref": "#/$defs/text"},
+        "contrast": {"$ref": "#/$defs/text"},
+        "effect_type": {"type": "string", "enum": ["TOTAL", "DIRECT", "INDIRECT", "LOCAL", "POLICY"]},
+        "interference_and_exposure_mapping": {"$ref": "#/$defs/text"}
+      }
+    },
+    "design": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["design_family", "variation_type", "assignment_or_variation_source", "why_it_targets_the_estimand", "estimation_methods"],
+      "properties": {
+        "design_family": {
+          "type": "string",
+          "enum": [
+            "RANDOMIZED", "NATURAL_EXPERIMENT", "HIGH_FREQUENCY_EVENT",
+            "FINANCIAL_EVENT_STUDY", "INSTRUMENTAL_VARIABLES",
+            "REGRESSION_DISCONTINUITY", "DID_EVENT_STUDY",
+            "SYNTHETIC_CONTROL", "BACKDOOR_OBSERVATIONAL",
+            "STRUCTURAL_MODEL", "CAUSAL_DISCOVERY_ONLY",
+            "NOT_REQUIRED_PREDICTIVE", "OTHER"
+          ]
+        },
+        "variation_type": {
+          "type": "string",
+          "enum": [
+            "RANDOM_ASSIGNMENT", "AS_IF_RANDOM_SHOCK", "VALID_INSTRUMENT",
+            "DISCONTINUITY_ASSIGNMENT", "PARALLEL_TRENDS_COMPARISON",
+            "CONSTRUCTED_COUNTERFACTUAL", "ASSUMPTION_BASED_ADJUSTMENT",
+            "STRUCTURAL_RESTRICTIONS", "NONE"
+          ]
+        },
+        "assignment_or_variation_source": {"$ref": "#/$defs/text"},
+        "why_it_targets_the_estimand": {"$ref": "#/$defs/text"},
+        "estimation_methods": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "enum": [
+              "DIFFERENCE_IN_MEANS", "REGRESSION_ADJUSTMENT", "EVENT_STUDY_REGRESSION",
+              "LOCAL_PROJECTIONS", "VAR", "TWO_STAGE_LEAST_SQUARES", "DML",
+              "CAUSAL_FOREST", "MATCHING_WEIGHTING", "SYNTHETIC_CONTROL_ESTIMATOR",
+              "STRUCTURAL_ESTIMATION", "OTHER"
+            ]
+          }
+        }
+      }
+    },
+    "economicModel": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["statement", "competing_mechanisms", "source_refs"],
+      "properties": {
+        "statement": {"$ref": "#/$defs/text"},
+        "competing_mechanisms": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/text"}},
+        "source_refs": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/stableId"}}
+      }
+    },
+    "assumption": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["assumption_id", "type", "statement", "empirically_testable", "supporting_evidence_refs", "failure_consequence"],
+      "properties": {
+        "assumption_id": {"$ref": "#/$defs/stableId"},
+        "type": {
+          "type": "string",
+          "enum": [
+            "EXCHANGEABILITY", "EXCLUSION_RESTRICTION", "INSTRUMENT_RELEVANCE",
+            "MONOTONICITY", "PARALLEL_TRENDS", "CONTINUITY", "NO_ANTICIPATION",
+            "NO_INTERFERENCE", "OVERLAP_POSITIVITY", "CONSISTENCY",
+            "CORRECT_COUNTERFACTUAL_MODEL", "STRUCTURAL_RESTRICTION",
+            "MEASUREMENT_TIMING", "STABILITY_TRANSPORTABILITY", "OTHER"
+          ]
+        },
+        "statement": {"$ref": "#/$defs/text"},
+        "empirically_testable": {"type": "string", "enum": ["FULLY", "PARTLY", "NO"]},
+        "supporting_evidence_refs": {"type": "array", "items": {"$ref": "#/$defs/stableId"}},
+        "failure_consequence": {"$ref": "#/$defs/text"}
+      }
+    },
+    "riskCheck": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status", "note", "evidence_refs"],
+      "properties": {
+        "status": {"type": "string", "enum": ["ADDRESSED", "BLOCKING", "NOT_APPLICABLE"]},
+        "note": {"$ref": "#/$defs/text"},
+        "evidence_refs": {"type": "array", "items": {"$ref": "#/$defs/stableId"}}
+      }
+    },
+    "financeRiskChecks": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "anticipation_and_leakage", "concurrent_events", "counterfactual_or_factor_model",
+        "simultaneity_reverse_causality_and_information_shocks", "adaptive_timing_and_selection",
+        "shock_dominance_and_separability",
+        "interference_spillovers_and_equilibrium", "nonstationarity_and_regime_change",
+        "market_microstructure_and_timestamps", "shared_construction_and_deterministic_coupling",
+        "post_treatment_adjustment", "temporal_and_cross_sectional_dependence"
+      ],
+      "properties": {
+        "anticipation_and_leakage": {"$ref": "#/$defs/riskCheck"},
+        "concurrent_events": {"$ref": "#/$defs/riskCheck"},
+        "counterfactual_or_factor_model": {"$ref": "#/$defs/riskCheck"},
+        "simultaneity_reverse_causality_and_information_shocks": {"$ref": "#/$defs/riskCheck"},
+        "adaptive_timing_and_selection": {"$ref": "#/$defs/riskCheck"},
+        "shock_dominance_and_separability": {"$ref": "#/$defs/riskCheck"},
+        "interference_spillovers_and_equilibrium": {"$ref": "#/$defs/riskCheck"},
+        "nonstationarity_and_regime_change": {"$ref": "#/$defs/riskCheck"},
+        "market_microstructure_and_timestamps": {"$ref": "#/$defs/riskCheck"},
+        "shared_construction_and_deterministic_coupling": {"$ref": "#/$defs/riskCheck"},
+        "post_treatment_adjustment": {"$ref": "#/$defs/riskCheck"},
+        "temporal_and_cross_sectional_dependence": {"$ref": "#/$defs/riskCheck"}
+      }
+    },
+    "postTreatmentVariable": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["variable", "timing", "role"],
+      "properties": {
+        "variable": {"$ref": "#/$defs/text"},
+        "timing": {"$ref": "#/$defs/text"},
+        "role": {"type": "string", "enum": ["EXCLUDED_FROM_ADJUSTMENT", "MEDIATOR_SEPARATE_ESTIMAND", "BASELINE_ONLY"]}
+      }
+    },
+    "diagnostics": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["falsification_or_negative_controls", "sensitivity_or_partial_identification", "overlap_relevance_or_pre_fit", "pre_event_or_pre_treatment_benchmark", "dependency_aware_inference"],
+      "properties": {
+        "falsification_or_negative_controls": {"type": "array", "items": {"$ref": "#/$defs/text"}},
+        "sensitivity_or_partial_identification": {"type": "array", "items": {"$ref": "#/$defs/text"}},
+        "overlap_relevance_or_pre_fit": {"type": "array", "items": {"$ref": "#/$defs/text"}},
+        "pre_event_or_pre_treatment_benchmark": {"type": "array", "items": {"$ref": "#/$defs/text"}},
+        "dependency_aware_inference": {"$ref": "#/$defs/text"}
+      }
+    },
+    "literatureSource": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["source_id", "uri", "publication_status", "applied_lesson"],
+      "properties": {
+        "source_id": {"$ref": "#/$defs/stableId"},
+        "uri": {"type": "string", "format": "uri"},
+        "publication_status": {"type": "string", "enum": ["PEER_REVIEWED", "WORKING_PAPER", "PREPRINT", "OFFICIAL_DOCUMENTATION"]},
+        "applied_lesson": {"$ref": "#/$defs/text"}
+      }
+    },
+    "judgment": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["identification_status", "strongest_allowed_claim", "causal_estimation_authorized", "causal_language_authorized", "plain_language_reason", "unresolved_blockers", "forbidden_claims"],
+      "properties": {
+        "identification_status": {"type": "string", "enum": ["PASS", "BLOCKED", "FAIL", "NOT_REQUIRED_PREDICTIVE"]},
+        "strongest_allowed_claim": {"type": "string", "enum": ["ASSOCIATIONAL_PREDICTIVE", "CAUSAL_HYPOTHESIS", "INTERVENTIONAL", "COUNTERFACTUAL"]},
+        "causal_estimation_authorized": {"type": "boolean"},
+        "causal_language_authorized": {"type": "boolean"},
+        "plain_language_reason": {"$ref": "#/$defs/text"},
+        "unresolved_blockers": {"type": "array", "items": {"$ref": "#/$defs/text"}},
+        "forbidden_claims": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/text"}}
+      }
+    }
+  }
+}

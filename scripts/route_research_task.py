@@ -32,6 +32,7 @@ CONDITION_INTENTS = {
     "DISCOVER_CONDITIONS",
     "CHECK_DEFINITION_SENSITIVITY",
 }
+CAUSAL_CLAIM_LEVELS = {"INTERVENTIONAL", "COUNTERFACTUAL"}
 IDENTITY_DIMENSIONS = [
     "research_question",
     "strategy",
@@ -151,7 +152,7 @@ def _decision(
         raise ValueError("next_decision_sequence must be a positive integer")
     if not isinstance(updated_at, str):
         raise ValueError("updated_at must be a timestamp string")
-    if conductor_version != "1.1.0":
+    if conductor_version != "1.2.0":
         raise ValueError("unsupported conductor_version")
 
     identity_guard = _identity_guard(state, execution_mode, route)
@@ -169,7 +170,7 @@ def _decision(
         )
 
     return {
-        "schema_version": "1.1.0",
+        "schema_version": "1.2.0",
         "decision_id": f"routing:{orchestration_id}:{sequence}",
         "created_at": updated_at,
         "orchestration_ref": orchestration_id,
@@ -397,6 +398,8 @@ def route_state(state: Mapping[str, Any]) -> dict[str, Any]:
             "ASSESS_MEASUREMENT",
             "DISCOVER_CONDITIONS",
             "CHECK_DEFINITION_SENSITIVITY",
+            "ASSESS_CAUSAL_CLAIM",
+            "ESTIMATE_CAUSAL_EFFECT",
             "START_OR_CONTINUE_RESEARCH",
         }
     )
@@ -488,6 +491,41 @@ def route_state(state: Mapping[str, Any]) -> dict[str, Any]:
                 ["Do not silently alter the source strategy.", "Do not interpret predictive separation as causal proof.", "Do not claim all success conditions are known."],
                 ["The inquiry passes its schema and semantic inspector.", "Discovery and independent recurrence are kept separate."],
                 "Stop after producing the inquiry plan or the requested bounded interpretation.",
+            ),
+        )
+
+    requested_claim_level = request.get("requested_claim_level")
+    causal_assessment_status = _artifact_status(
+        state, "causal_identification_assessment"
+    )
+    if (
+        requested_claim_level in CAUSAL_CLAIM_LEVELS
+        and causal_assessment_status != "COMPLETE"
+    ):
+        return _decision(
+            state,
+            route="CAUSAL_IDENTIFICATION_REVIEW",
+            execution_mode="SPECIALIST_AS_TOOL",
+            selected_agent="causal-identification-critic",
+            specialist_mode="PRE_ESTIMATION",
+            decision_basis=[
+                "The requested conclusion is causal, but no accepted identification assessment exists for this research version."
+            ],
+            work_order=_work_order(
+                "Determine whether the requested causal contrast is identified before any causal estimate or causal wording is accepted.",
+                "causal_identification_assessment",
+                _input_refs(state),
+                [
+                    "Do not estimate the causal effect or run a backtest.",
+                    "Do not treat DML, local projections, event-study regression, Granger precedence, or causal discovery as the identification argument.",
+                    "Do not infer predictive value, mechanism proof, or trading profitability from identification.",
+                ],
+                [
+                    "The assessment passes its schema and finance-specific semantic inspector.",
+                    "The estimand, source of identifying variation, economic model, assumptions, diagnostics, and forbidden claims are explicit.",
+                    "Event, order-flow, panel, and time-series risks relevant to the chosen design are addressed or reported as blockers.",
+                ],
+                "Stop after PASS, BLOCKED, FAIL, or NOT_REQUIRED_PREDICTIVE is recorded; do not begin estimation.",
             ),
         )
 

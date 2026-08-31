@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "urn:research-framework:schema:routing-decision:1.1.0",
+  "$id": "urn:research-framework:schema:routing-decision:1.2.0",
   "title": "Research Routing Decision",
   "description": "Deterministic routing decision and bounded work order owned by the research conductor.",
   "type": "object",
@@ -24,11 +24,11 @@
     "control"
   ],
   "properties": {
-    "schema_version": {"const": "1.1.0"},
+    "schema_version": {"const": "1.2.0"},
     "decision_id": {"$ref": "#/$defs/stableId"},
     "created_at": {"$ref": "#/$defs/timestamp"},
     "orchestration_ref": {"$ref": "#/$defs/stableId"},
-    "conductor_version": {"const": "1.1.0"},
+    "conductor_version": {"const": "1.2.0"},
     "route": {"$ref": "#/$defs/route"},
     "execution_mode": {
       "type": "string",
@@ -90,6 +90,19 @@
         "properties": {
           "execution_mode": {"const": "SPECIALIST_AS_TOOL"},
           "selected_agent": {"const": "condition-inquiry-analyst"},
+          "identity_guard": {
+            "properties": {"mode": {"const": "PRESERVE_EXISTING"}}
+          }
+        }
+      }
+    },
+    {
+      "if": {"properties": {"route": {"const": "CAUSAL_IDENTIFICATION_REVIEW"}}, "required": ["route"]},
+      "then": {
+        "properties": {
+          "execution_mode": {"const": "SPECIALIST_AS_TOOL"},
+          "selected_agent": {"const": "causal-identification-critic"},
+          "specialist_mode": {"const": "PRE_ESTIMATION"},
           "identity_guard": {
             "properties": {"mode": {"const": "PRESERVE_EXISTING"}}
           }
@@ -322,6 +335,7 @@
         "SCIENTIFIC_PHILOSOPHY_PRE_OPERATIONALIZATION",
         "OPERATIONALIZE_SOURCE_STRATEGY",
         "CONDITION_INQUIRY",
+        "CAUSAL_IDENTIFICATION_REVIEW",
         "SCIENTIFIC_PHILOSOPHY_POST_RESULT",
         "RESEARCH_INTAKE",
         "CONDUCT_RESEARCH"
@@ -334,7 +348,8 @@
           "enum": [
             "intraday-hypothesis-generator",
             "scientific-philosophy-critic",
-            "condition-inquiry-analyst"
+            "condition-inquiry-analyst",
+            "causal-identification-critic"
           ]
         },
         {"type": "null"}

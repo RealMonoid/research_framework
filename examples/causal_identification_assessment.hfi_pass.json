@@ -1,0 +1,203 @@
+{
+  "schema_version": "1.0.0",
+  "assessment_id": "causal-assessment:synthetic-hfi:v1",
+  "research_id": "research:synthetic-hfi",
+  "created_at": "2026-08-31T19:00:00+02:00",
+  "requested_claim_level": "INTERVENTIONAL",
+  "estimand": {
+    "treatment_or_shock": "A one-standard-deviation monetary-policy target surprise released at the scheduled announcement time.",
+    "outcome": "Change in the front Treasury-futures price from immediately before to immediately after the announcement.",
+    "population_or_units": "Scheduled policy announcements in the frozen sample and the named Treasury-futures contract.",
+    "horizon": "The frozen narrow announcement window.",
+    "contrast": "The potential price change under the observed surprise versus a zero target surprise, holding the separately measured path factor fixed.",
+    "effect_type": "LOCAL",
+    "interference_and_exposure_mapping": "Each announcement is one treatment unit; overlapping announcements or material releases inside the window are excluded, and market-wide spillovers are part of the defined total price response rather than independent units."
+  },
+  "design": {
+    "design_family": "HIGH_FREQUENCY_EVENT",
+    "variation_type": "AS_IF_RANDOM_SHOCK",
+    "assignment_or_variation_source": "The pre-specified difference between the released policy decision and the market expectation measured before the timestamp, orthogonalized to the frozen pre-event information set.",
+    "why_it_targets_the_estimand": "Within the narrow window, the surprise changes at the scheduled release while the exclusion and contamination rules remove known simultaneous releases; the economic model maps target and path surprises to the defined local price response.",
+    "estimation_methods": [
+      "EVENT_STUDY_REGRESSION",
+      "LOCAL_PROJECTIONS"
+    ]
+  },
+  "economic_model": {
+    "statement": "Unexpected policy target and path news reprices the discounted short-rate path and term premia; the target-surprise coefficient is interpreted only conditional on the separately measured path and information components.",
+    "competing_mechanisms": [
+      "The announcement reveals central-bank information about the economy rather than only a policy intervention.",
+      "Concurrent macro or political news moves the futures price inside the event window."
+    ],
+    "source_refs": [
+      "source:cochrane-piazzesi-2002",
+      "source:bauer-swanson-2023",
+      "source:bianchi-ludvigson-ma-2026",
+      "source:casini-mccloskey-2025"
+    ]
+  },
+  "identifying_assumptions": [
+    {
+      "assumption_id": "assumption:synthetic-hfi:as-if-random",
+      "type": "EXCHANGEABILITY",
+      "statement": "After the frozen pre-event orthogonalization and contamination exclusions, the remaining target surprise is unrelated to other determinants of the price change in the event window.",
+      "empirically_testable": "PARTLY",
+      "supporting_evidence_refs": [
+        "source:bauer-swanson-2023"
+      ],
+      "failure_consequence": "The coefficient mixes the policy surprise with predictable macro-financial information or other news and is not the requested causal effect."
+    },
+    {
+      "assumption_id": "assumption:synthetic-hfi:no-leakage",
+      "type": "NO_ANTICIPATION",
+      "statement": "The measured price window begins before the public release but after expectations are frozen, and no material part of the surprise leaks before that window.",
+      "empirically_testable": "PARTLY",
+      "supporting_evidence_refs": [
+        "diagnostic:pre-event-price-path"
+      ],
+      "failure_consequence": "The event-window response omits an anticipatory response and can misstate both timing and size."
+    },
+    {
+      "assumption_id": "assumption:synthetic-hfi:measurement",
+      "type": "MEASUREMENT_TIMING",
+      "statement": "Announcement, expectation and transaction timestamps share a documented clock convention and resolution fine enough to order the release and price response.",
+      "empirically_testable": "PARTLY",
+      "supporting_evidence_refs": [
+        "diagnostic:timestamp-audit"
+      ],
+      "failure_consequence": "Price changes can be assigned to the wrong information event or include pre-release trading."
+    }
+  ],
+  "finance_risk_checks": {
+    "anticipation_and_leakage": {
+      "status": "ADDRESSED",
+      "note": "Freeze expectations before release and inspect price and volume in multiple pre-event windows for early movement.",
+      "evidence_refs": ["diagnostic:pre-event-price-path"]
+    },
+    "concurrent_events": {
+      "status": "ADDRESSED",
+      "note": "Use a frozen calendar and exclude announcements with overlapping material macro, policy, or emergency releases.",
+      "evidence_refs": ["diagnostic:concurrent-event-audit"]
+    },
+    "counterfactual_or_factor_model": {
+      "status": "ADDRESSED",
+      "note": "The narrow-window local price change is the outcome; wider-horizon results require a separately validated counterfactual return model and are not covered by this pass.",
+      "evidence_refs": ["source:goldsmith-pinkham-lyu-2025"]
+    },
+    "simultaneity_reverse_causality_and_information_shocks": {
+      "status": "ADDRESSED",
+      "note": "Target, path and information components are separated under the frozen structural interpretation; price movement itself is not used to define the target surprise.",
+      "evidence_refs": ["source:bianchi-ludvigson-ma-2026"]
+    },
+    "adaptive_timing_and_selection": {
+      "status": "ADDRESSED",
+      "note": "Only the pre-listed scheduled announcement universe is used; events are not selected because their market response was large.",
+      "evidence_refs": ["design:scheduled-event-universe"]
+    },
+    "shock_dominance_and_separability": {
+      "status": "ADDRESSED",
+      "note": "The pass assumes that the target-surprise effect is separable from other shocks in the window and uses sensitivity analysis to assess whether the policy surprise dominates remaining event-window shocks. A narrow window alone is not accepted as identification.",
+      "evidence_refs": ["source:casini-mccloskey-2025"]
+    },
+    "interference_spillovers_and_equilibrium": {
+      "status": "ADDRESSED",
+      "note": "Cross-asset repricing is part of the market-wide response, while inference clusters by announcement rather than treating asset observations as independent events.",
+      "evidence_refs": ["design:event-clustering"]
+    },
+    "nonstationarity_and_regime_change": {
+      "status": "ADDRESSED",
+      "note": "Estimate pre-specified subsamples and report transport limits rather than pooling materially different policy regimes without a check.",
+      "evidence_refs": ["diagnostic:regime-sensitivity"]
+    },
+    "market_microstructure_and_timestamps": {
+      "status": "ADDRESSED",
+      "note": "Audit exchange timestamps, clock synchronization, stale quotes, trading halts and bid-ask effects around every event.",
+      "evidence_refs": ["diagnostic:timestamp-audit"]
+    },
+    "shared_construction_and_deterministic_coupling": {
+      "status": "ADDRESSED",
+      "note": "The shock is built from the release and a pre-release expectation, while the outcome is an independently measured price change; common scaling choices are frozen and tested for mechanical coupling.",
+      "evidence_refs": ["design:variable-timing-map"]
+    },
+    "post_treatment_adjustment": {
+      "status": "ADDRESSED",
+      "note": "No variable first observed after the release is used as an ordinary control; any information component is defined from the frozen announcement measurement protocol.",
+      "evidence_refs": ["design:variable-timing-map"]
+    },
+    "temporal_and_cross_sectional_dependence": {
+      "status": "ADDRESSED",
+      "note": "Uncertainty is clustered by announcement and preserves cross-asset dependence; horizon-wise inference is adjusted for repeated outcomes and multiplicity.",
+      "evidence_refs": ["design:event-clustering"]
+    }
+  },
+  "post_treatment_variables": [
+    {
+      "variable": "Market liquidity measured after the announcement",
+      "timing": "First observed after treatment",
+      "role": "EXCLUDED_FROM_ADJUSTMENT"
+    }
+  ],
+  "diagnostics": {
+    "falsification_or_negative_controls": [
+      "Repeat the frozen event relation on matched pre-event pseudo-times and on dates without a scheduled decision.",
+      "Check outcomes that the target shock should not move inside the narrow window under the structural model."
+    ],
+    "sensitivity_or_partial_identification": [
+      "Vary the permitted correlation with the pre-event information set and report the resulting identified interval.",
+      "Repeat under the alternative admissible target/path decomposition fixed before outcome inspection."
+    ],
+    "overlap_relevance_or_pre_fit": [
+      "Report surprise dispersion, influential events and first-stage strength for each frozen component."
+    ],
+    "pre_event_or_pre_treatment_benchmark": [
+      "Benchmark the event relation against identical windows before the announcement and inspect pre-release drift."
+    ],
+    "dependency_aware_inference": "Cluster by announcement, retain cross-asset dependence within an event, and use horizon-family multiplicity control for local projections."
+  },
+  "literature_basis": [
+    {
+      "source_id": "source:cochrane-piazzesi-2002",
+      "uri": "https://www.nber.org/papers/w8839",
+      "publication_status": "PEER_REVIEWED",
+      "applied_lesson": "Use a pre-specified high-frequency surprise design tied to the scheduled release."
+    },
+    {
+      "source_id": "source:bauer-swanson-2023",
+      "uri": "https://www.nber.org/papers/w29939",
+      "publication_status": "PEER_REVIEWED",
+      "applied_lesson": "Test predictability from pre-event information and orthogonalize the surprise rather than assuming all measured news is exogenous."
+    },
+    {
+      "source_id": "source:bianchi-ludvigson-ma-2026",
+      "uri": "https://www.nber.org/papers/w30072",
+      "publication_status": "WORKING_PAPER",
+      "applied_lesson": "Interpret the surprise inside an explicit structural economic model and separate information effects."
+    },
+    {
+      "source_id": "source:goldsmith-pinkham-lyu-2025",
+      "uri": "https://arxiv.org/abs/2511.15123",
+      "publication_status": "PREPRINT",
+      "applied_lesson": "Do not transport the narrow-window pass to long-horizon abnormal returns without validating the counterfactual model."
+    },
+    {
+      "source_id": "source:casini-mccloskey-2025",
+      "uri": "https://arxiv.org/abs/2406.15667",
+      "publication_status": "PREPRINT",
+      "applied_lesson": "A narrow event window is insufficient by itself; assess separability and whether the policy surprise dominates other shocks in the window."
+    }
+  ],
+  "judgment": {
+    "identification_status": "PASS",
+    "strongest_allowed_claim": "INTERVENTIONAL",
+    "causal_estimation_authorized": true,
+    "causal_language_authorized": true,
+    "plain_language_reason": "The plan supplies a defined shock, a narrow and audited timing comparison, an economic interpretation, explicit assumptions, contamination checks and sensitivity analyses. The pass applies only to the stated local announcement effect, not to its mechanism, long-run effect, forecast value or trading profitability.",
+    "unresolved_blockers": [],
+    "forbidden_claims": [
+      "The coefficient proves which economic mechanism transmitted the surprise.",
+      "The result automatically predicts future announcements.",
+      "The identified response is automatically a tradeable net edge.",
+      "The same causal interpretation holds at longer horizons without a new counterfactual design."
+    ]
+  }
+}

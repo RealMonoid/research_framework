@@ -20,6 +20,11 @@
 - If a required specialist cannot be invoked, stop at that prerequisite instead
   of simulating its contribution.
 - Reconstructing or operationalizing a strategy does not authorize a backtest.
+- Route every requested interventional or counterfactual claim to the
+  `causal-identification-critic` before estimation or causal wording. Do not
+  trigger it for a question that remains explicitly predictive. DML, local
+  projections, event-study coefficients, Granger precedence, and causal
+  discovery do not count as identification by themselves.
 
 ## Collaboration preferences
 

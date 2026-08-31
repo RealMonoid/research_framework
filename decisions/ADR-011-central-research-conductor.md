@@ -61,6 +61,14 @@ festgeschriebenen Ergebnis.
     Beitrags. Eine Abweichung bleibt unwirksam, wird dem Nutzer verständlich
     erklärt und benötigt für eine Übernahme eine ausdrücklich neue
     Research-Version.
+13. Ein beabsichtigter `INTERVENTIONAL`- oder `COUNTERFACTUAL`-Claim wird vor
+    Schätzung und kausaler Sprache zwingend an den
+    `causal-identification-critic` geroutet. Rein prädiktive Fragen lösen diesen
+    Schritt nicht aus.
+14. Der Kausalitätsprüfer liefert ein eigenes maschinen- und semantisch
+    geprüftes Identifikationsartefakt. Schätzverfahren, Eventfenster,
+    Zeitreihenreihenfolge oder Causal Discovery dürfen den Identifikationsgrund
+    nicht ersetzen.
 
 ## Rejected Alternatives
 
@@ -83,6 +91,9 @@ festgeschriebenen Ergebnis.
 - Der Wissenschaftsphilosoph wird an den beiden kritischen Übergängen
   automatisch verpflichtend, statt nur als mögliche Rolle dokumentiert zu
   sein.
+- Kausale Sprache wird nur nach einer eigenständigen, finanzmarktspezifischen
+  Identifikationsprüfung freigegeben. Das erhöht nicht automatisch Mechanismus-,
+  Prognose- oder Tradingstatus.
 - Der Nutzer erhält eine zusammengeführte, allgemeinverständliche Antwort vom
   Forschungsleiter und muss die interne Agentenarbeit nicht koordinieren.
 - Wiederaufnahme, Fehleranalyse und Zusammenarbeit mit mehreren
@@ -108,6 +119,8 @@ festgeschriebenen Ergebnis.
    aufnehmen.
 6. [x] Sechs-Punkte-Driftkontrolle vor Annahme jedes bestehenden
    Research-Handoffs ergänzen.
-7. [ ] Das Verhalten eines tatsächlich angeschlossenen Hauptagenten in einem
+7. [x] Kausalitätsprüfer, Pflichtartefakt und Router-Gate für kausale Claims
+   ergänzen.
+8. [ ] Das Verhalten eines tatsächlich angeschlossenen Hauptagenten in einem
    `LIVE_AGENT`-Lauf prüfen, bevor eine Modell- oder Promptfreigabe behauptet
    wird.

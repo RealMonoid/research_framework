@@ -791,6 +791,21 @@ Ein Research-Projekt darf zwei getrennte Zielgrößen führen, beispielsweise ei
 5. Testbare Implikationen, Negativkontrollen, Placebos und Sensitivitäten festlegen.
 6. Erst danach einen geeigneten Schätzer wählen.
 
+Diese Reihenfolge wird nicht nur dokumentiert, sondern durch einen eigenen
+Prüfschritt erzwungen. Vor Effektschätzung oder kausaler Formulierung erstellt
+der `causal-identification-critic` ein
+`causal_identification_assessment`. Der Hauptagent darf `E7 PASS` nur aus einem
+schema- und semantisch geprüften Assessment übernehmen. Für eine ausdrücklich
+prädiktive Frage lautet das Ergebnis `NOT_REQUIRED_PREDICTIVE`; sie wird nicht
+in eine Kausalitätsprüfung umgedeutet.
+
+Die finanzmarktspezifische Prüfbasis ist versioniert in
+`references/CAUSAL_IDENTIFICATION_FOR_FINANCE.md`. Sie ergänzt den allgemeinen
+Methodenstandard insbesondere um Faktormodell-Fehlspezifikation und
+systematisches Event-Timing bei Financial Event Studies, Vorabinformation und
+Informationsschocks bei High-Frequency-Identifikation, simultane Preis-/Order-
+Flow-Bestimmung sowie Feedback, Spillover und zeitabhängige Behandlung.
+
 Für eine tatsächlich benötigte Graph- und Adjustierungsprüfung werden primär
 `pgmpy` oder `DoWhy` verwendet. Ein DAG ist nicht zusätzlich Pflicht, wenn ein
 Potential-Outcomes- oder anderes explizites Design das Estimand unter vollständig
