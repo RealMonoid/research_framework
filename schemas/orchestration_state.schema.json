@@ -1,0 +1,280 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:research-framework:schema:orchestration-state:1.0.0",
+  "title": "Research Orchestration State",
+  "description": "Persistent checkpoint used by the research conductor before every material research step.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "orchestration_id",
+    "updated_at",
+    "conductor_version",
+    "next_decision_sequence",
+    "request",
+    "research_context",
+    "artifacts",
+    "blocking_issues",
+    "completed_steps",
+    "routing_history"
+  ],
+  "properties": {
+    "schema_version": {"const": "1.0.0"},
+    "orchestration_id": {"$ref": "#/$defs/stableId"},
+    "updated_at": {"$ref": "#/$defs/timestamp"},
+    "conductor_version": {"const": "1.0.0"},
+    "next_decision_sequence": {"type": "integer", "minimum": 1},
+    "request": {"$ref": "#/$defs/request"},
+    "research_context": {"$ref": "#/$defs/researchContext"},
+    "artifacts": {"$ref": "#/$defs/artifacts"},
+    "blocking_issues": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/blockingIssue"}
+    },
+    "completed_steps": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {"$ref": "#/$defs/stableId"}
+    },
+    "routing_history": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {"$ref": "#/$defs/stableId"}
+    }
+  },
+  "$defs": {
+    "stableId": {
+      "type": "string",
+      "pattern": "^[A-Za-z][A-Za-z0-9._:-]{2,199}$"
+    },
+    "timestamp": {"type": "string", "format": "date-time"},
+    "shortText": {"type": "string", "minLength": 1, "maxLength": 2000},
+    "nullableText": {
+      "oneOf": [
+        {"$ref": "#/$defs/shortText"},
+        {"type": "null"}
+      ]
+    },
+    "nullableStableId": {
+      "oneOf": [
+        {"$ref": "#/$defs/stableId"},
+        {"type": "null"}
+      ]
+    },
+    "request": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "request_id",
+        "summary",
+        "intent",
+        "intent_origin",
+        "intent_confidence",
+        "material_user_choice"
+      ],
+      "properties": {
+        "request_id": {"$ref": "#/$defs/stableId"},
+        "summary": {"$ref": "#/$defs/shortText"},
+        "intent": {
+          "type": "string",
+          "enum": [
+            "GENERATE_IDEAS",
+            "RECONSTRUCT_SOURCE_STRATEGY",
+            "OPERATIONALIZE_SOURCE_STRATEGY",
+            "ASSESS_MEASUREMENT",
+            "DISCOVER_CONDITIONS",
+            "CHECK_DEFINITION_SENSITIVITY",
+            "INTERPRET_RESULT",
+            "ATTRIBUTE_RESULT",
+            "REVISE_AFTER_RESULT",
+            "CONTINUE_AFTER_RESULT",
+            "START_OR_CONTINUE_RESEARCH",
+            "UNKNOWN"
+          ]
+        },
+        "intent_origin": {
+          "type": "string",
+          "enum": ["USER_EXPLICIT", "CONDUCTOR_INTERPRETED", "UNKNOWN"]
+        },
+        "intent_confidence": {
+          "type": "string",
+          "enum": ["HIGH", "MEDIUM", "LOW"]
+        },
+        "material_user_choice": {"$ref": "#/$defs/materialUserChoice"}
+      }
+    },
+    "materialUserChoice": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status", "question", "options", "recommendation"],
+      "properties": {
+        "status": {"type": "string", "enum": ["NONE", "REQUIRED"]},
+        "question": {"$ref": "#/$defs/nullableText"},
+        "options": {
+          "type": "array",
+          "items": {"$ref": "#/$defs/shortText"}
+        },
+        "recommendation": {"$ref": "#/$defs/nullableText"}
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {"status": {"const": "REQUIRED"}},
+            "required": ["status"]
+          },
+          "then": {
+            "properties": {
+              "question": {"$ref": "#/$defs/shortText"},
+              "options": {"minItems": 2},
+              "recommendation": {"$ref": "#/$defs/shortText"}
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {"status": {"const": "NONE"}},
+            "required": ["status"]
+          },
+          "then": {
+            "properties": {
+              "question": {"type": "null"},
+              "options": {"maxItems": 0},
+              "recommendation": {"type": "null"}
+            }
+          }
+        }
+      ]
+    },
+    "researchContext": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "research_id",
+        "research_version",
+        "source_kind",
+        "source_completeness",
+        "stage",
+        "concept_audit_required",
+        "operationalization_status",
+        "frozen_result_status"
+      ],
+      "properties": {
+        "research_id": {"$ref": "#/$defs/nullableStableId"},
+        "research_version": {
+          "oneOf": [
+            {"type": "integer", "minimum": 1},
+            {"type": "null"}
+          ]
+        },
+        "source_kind": {
+          "type": "string",
+          "enum": [
+            "PROSE_STRATEGY",
+            "FORMAL_STRATEGY",
+            "RAW_IDEA",
+            "EXISTING_RESEARCH",
+            "NONE",
+            "UNKNOWN"
+          ]
+        },
+        "source_completeness": {
+          "type": "string",
+          "enum": ["COMPLETE", "INCOMPLETE", "UNKNOWN", "NOT_APPLICABLE"]
+        },
+        "stage": {
+          "type": "string",
+          "enum": [
+            "NO_IDEA",
+            "INBOX",
+            "RECONSTRUCTION",
+            "PRE_OPERATIONALIZATION",
+            "OPERATIONALIZATION",
+            "CONDITION_INQUIRY",
+            "RESEARCH_CASE",
+            "FROZEN_TEST",
+            "POST_RESULT",
+            "UNKNOWN"
+          ]
+        },
+        "concept_audit_required": {
+          "type": "string",
+          "enum": ["YES", "NO", "UNDECIDED"]
+        },
+        "operationalization_status": {
+          "type": "string",
+          "enum": ["NONE", "DRAFT", "PROVISIONAL", "FROZEN", "NOT_APPLICABLE"]
+        },
+        "frozen_result_status": {
+          "type": "string",
+          "enum": [
+            "NONE",
+            "VALIDATED",
+            "FALSIFIED",
+            "PRECISE_NULL",
+            "INCONCLUSIVE",
+            "INVALID_TEST"
+          ]
+        }
+      }
+    },
+    "artifactStatus": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status", "artifact_ref"],
+      "properties": {
+        "status": {
+          "type": "string",
+          "enum": ["MISSING", "DRAFT", "COMPLETE", "BLOCKED", "INVALID", "NOT_APPLICABLE"]
+        },
+        "artifact_ref": {"$ref": "#/$defs/nullableStableId"}
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {"status": {"const": "COMPLETE"}},
+            "required": ["status"]
+          },
+          "then": {
+            "properties": {"artifact_ref": {"$ref": "#/$defs/stableId"}}
+          }
+        },
+        {
+          "if": {
+            "properties": {"status": {"enum": ["MISSING", "NOT_APPLICABLE"]}},
+            "required": ["status"]
+          },
+          "then": {
+            "properties": {"artifact_ref": {"type": "null"}}
+          }
+        }
+      ]
+    },
+    "artifacts": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "strategy_reconstruction",
+        "strategy_concept_audit",
+        "condition_inquiry",
+        "scientific_philosophy_review"
+      ],
+      "properties": {
+        "strategy_reconstruction": {"$ref": "#/$defs/artifactStatus"},
+        "strategy_concept_audit": {"$ref": "#/$defs/artifactStatus"},
+        "condition_inquiry": {"$ref": "#/$defs/artifactStatus"},
+        "scientific_philosophy_review": {"$ref": "#/$defs/artifactStatus"}
+      }
+    },
+    "blockingIssue": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["issue_id", "statement", "affected_next_action", "user_action_required"],
+      "properties": {
+        "issue_id": {"$ref": "#/$defs/stableId"},
+        "statement": {"$ref": "#/$defs/shortText"},
+        "affected_next_action": {"$ref": "#/$defs/shortText"},
+        "user_action_required": {"type": "boolean"}
+      }
+    }
+  }
+}

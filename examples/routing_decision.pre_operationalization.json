@@ -1,0 +1,49 @@
+{
+  "schema_version": "1.0.0",
+  "decision_id": "routing:orchestration:synthetic-prose-strategy:v1:2",
+  "created_at": "2026-08-31T18:00:00+02:00",
+  "orchestration_ref": "orchestration:synthetic-prose-strategy:v1",
+  "conductor_version": "1.0.0",
+  "route": "SCIENTIFIC_PHILOSOPHY_PRE_OPERATIONALIZATION",
+  "execution_mode": "SPECIALIST_AS_TOOL",
+  "selected_agent": "scientific-philosophy-critic",
+  "specialist_mode": "PRE_OPERATIONALIZATION",
+  "decision_basis": [
+    "The prose strategy is incomplete or contains implicit conditions, and its mandatory concept audit is not complete."
+  ],
+  "input_artifact_refs": [
+    "reconstruction:synthetic-prose-strategy:v1"
+  ],
+  "work_order": {
+    "objective": "Separate source conditions, source advice, suspected modifiers, and unknown success conditions before any definition is chosen.",
+    "allowed_inputs": [
+      "reconstruction:synthetic-prose-strategy:v1"
+    ],
+    "excluded_actions": [
+      "Do not choose an operationalization.",
+      "Do not turn suspected or unknown conditions into strategy rules.",
+      "Do not run a market test or backtest."
+    ],
+    "required_output_type": "strategy_concept_audit",
+    "acceptance_checks": [
+      "The audit passes its schema and semantic inspector.",
+      "Unknown success conditions remain explicitly unknown."
+    ],
+    "stop_condition": "Stop when the concept audit is complete or a missing source fact makes it blocked.",
+    "max_attempts": 1
+  },
+  "next_required_route": "OPERATIONALIZE_SOURCE_STRATEGY",
+  "user_interaction": {
+    "status": "NOT_REQUIRED",
+    "question": null,
+    "options": [],
+    "recommendation": null
+  },
+  "control": {
+    "coordinator_retains_control": true,
+    "specialist_may_address_user": false,
+    "sequential_execution": true,
+    "checkpoint_required": true,
+    "specialist_output_requires_validation": true
+  }
+}

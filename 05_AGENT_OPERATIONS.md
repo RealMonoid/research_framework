@@ -1,6 +1,6 @@
 # 05_AGENT_OPERATIONS.md
 
-**Version:** 1.7
+**Version:** 1.8
 **Stand:** 2026-08-31
 **Status:** ENTWURF ZUR ÜBERNAHME  
 **Zweck:** Normative operative Kontrollschicht für reproduzierbare, überprüfbare und revisionssichere Läufe eines AI-Research-Agenten.
@@ -97,6 +97,8 @@ IDs sind opake Schlüssel. Sie werden nicht nachträglich wiederverwendet oder a
 | Strategy Concept Audit | vor Abschluss jeder unvollständig definierten Quellenrekonstruktion | **schemas/strategy_concept_audit.schema.json** plus semantischer Inspector |
 | Condition Inquiry | nach vorläufiger Operationalisierung, sobald Messnutzen, Definitionsabhängigkeit oder unbekannte Erfolgsmodifikatoren quantitativ untersucht werden | **schemas/condition_inquiry.schema.json** plus semantischer Inspector |
 | Wissenschaftsphilosophie-Review | nach `FALSIFIED / PRECISE_NULL / INCONCLUSIVE / INVALID_TEST`, sobald eine materielle Revision oder empirische Fortsetzung erwogen wird | **schemas/scientific_philosophy_review.schema.json** plus semantischer Inspector |
+| Orchestration State | vor jedem materiellen Research-Übergang und nach jedem akzeptierten Fachbeitrag, Blocker oder Nutzerentscheid | **schemas/orchestration_state.schema.json** plus deterministischer Routertest |
+| Routing Decision | für jeden aus einem Orchestration State abgeleiteten nächsten Arbeitsauftrag | **schemas/routing_decision.schema.json** plus **scripts/route_research_task.py** |
 | Trace | bei jedem Modell-, Tool-, Retrieval- und Validierungsschritt | Regeln in §6 |
 | Error Log | sobald Warnung oder Fehler auftritt | Regeln in §7 |
 | Delta Report | wenn ein Baseline-Lauf oder eine freigegebene Vorgängerversion existiert | Regeln in §9 |
@@ -1016,6 +1018,7 @@ Ein Agent darf sich nicht direkt selbst modifizieren, Evals entfernen, Schwellen
 | academic_source_governance_accuracy | 1,00 |
 | hypothesis_intake_accuracy | 1,00 |
 | scientific_philosophy_accuracy | 1,00 |
+| research_orchestration_accuracy | 1,00 |
 
 Zusätzlich gilt:
 
@@ -1068,6 +1071,39 @@ Ein Rollback löscht keine fehlgeschlagenen Läufe oder Deltas.
 ---
 
 # 12. Multi-Agent-Gate
+
+## 12.0 Forschungsleiter und Router
+
+Sobald die Aufgabe einen Research-Artefaktübergang enthält, besitzt der
+Coordinator den Vertrag `agents/research-conductor.md`. Vor einer Delegation
+muss seine aktuelle `routing_decision` den Fachagenten, den Modus und den
+begrenzten Arbeitsauftrag nennen. Ein Child-Agent wird nicht dadurch zulässig,
+dass er thematisch passen könnte.
+
+Der Coordinator übergibt nur die im Arbeitsauftrag erlaubten Inputs. Der
+Child-Agent spricht nicht direkt mit dem Nutzer, verändert nicht den
+Gesamtauftrag und gibt das Ergebnis an den Coordinator zurück. Erst nach
+Schema- und Semantikprüfung darf dieses Ergebnis in den nächsten
+`orchestration_state` eingehen. Danach wird erneut geroutet; der Child-Agent
+darf keine selbst gewählte Delegationskette beginnen.
+
+Zwingende Fachrouten sind insbesondere:
+
+- `scientific-philosophy-critic / PRE_OPERATIONALIZATION` nach der
+  Rekonstruktion einer unvollständigen Prosastrategie und vor ihrer
+  Operationalisierung,
+- `condition-inquiry-analyst` bei Messnutzen, Definitionssensitivität oder
+  unbekannten beobachtbaren Erfolgsmodifikatoren nach einer vorläufigen
+  Operationalisierung,
+- `scientific-philosophy-critic / POST_RESULT` bei Attribution, Revision oder
+  Fortsetzung nach einem eingefrorenen nicht positiven Ergebnis,
+- `intraday-hypothesis-generator` nur bei tatsächlicher Suche nach neuen
+  kurzfristigen Ideen.
+
+Eine bloße Erklärung eines vorhandenen Ergebnisses ist keine automatische
+Fachroute. Kann ein zwingender Child-Agent nicht aufgerufen werden, ist der
+Schritt `BLOCKED`; der Coordinator darf dessen Beitrag weder vortäuschen noch
+als eigene unabhängige Prüfung ausgeben.
 
 ## 12.1 Default
 

@@ -1,6 +1,6 @@
 # 02_RESEARCH_CASE_TEMPLATE.md
 
-**Template-Version:** 2.0
+**Template-Version:** 2.1
 **ANWEISUNG:** Diese Datei pro Research-Projekt kopieren. Kein Pflichtfeld löschen. Nicht anwendbare Felder mit `N/A + Begründung` ausfüllen. Unbekannte Pflichtfelder mit `BLOCKED + fehlende Information` markieren.
 
 **BEDINGTE AKTIVIERUNG:** Die Abschnitte `U–Y` werden erst geöffnet, wenn Abschnitt `T` mit `VALIDATED_PHENOMENON` abgeschlossen **und** Strategy Engineering ausdrücklich als nächster Schritt beschlossen wurde. Bei validiertem, aber nicht fortgesetztem Phänomen erhält der Block `DEFERRED_AFTER_VALIDATION`; ohne validiertes Phänomen erhält er `NOT_ACTIVATED_BY_T_GATE`. In beiden Fällen wird er nicht feldweise mit `N/A` befüllt. Abschnitt `Z` bleibt während des gesamten Projekts aktiv.
@@ -1504,6 +1504,8 @@ Der Agent darf den jeweils aktivierten Teil des Research-Artefakts nicht als vol
 
 ## Operative Agentenartefakte
 
+- [ ] Wurde vor jedem materiellen Research-Übergang ein valider Orchestration State gespeichert und eine valide Routing Decision erzeugt?
+- [ ] Wurden zwingende Fachagenten nur mit begrenztem Arbeitsauftrag aufgerufen, ihre Ergebnisse vor Übernahme geprüft und danach erneut geroutet?
 - [ ] Besitzt jede persistierte Rohidee ein valides, versioniertes Hypothesen-Intake-Artefakt?
 - [ ] Besitzt jeder tatsächliche LLM-/Agentenlauf eine eindeutige Run-ID und ein valides Run-Manifest?
 - [ ] Sind Modell/Snapshot, Prompts, Parameter, Tools, Datenstände, Quellenstände und Output-Hashes je Run reproduzierbar referenziert?

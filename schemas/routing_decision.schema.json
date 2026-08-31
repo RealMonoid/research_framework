@@ -1,0 +1,278 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:research-framework:schema:routing-decision:1.0.0",
+  "title": "Research Routing Decision",
+  "description": "Deterministic routing decision and bounded work order owned by the research conductor.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "decision_id",
+    "created_at",
+    "orchestration_ref",
+    "conductor_version",
+    "route",
+    "execution_mode",
+    "selected_agent",
+    "specialist_mode",
+    "decision_basis",
+    "input_artifact_refs",
+    "work_order",
+    "next_required_route",
+    "user_interaction",
+    "control"
+  ],
+  "properties": {
+    "schema_version": {"const": "1.0.0"},
+    "decision_id": {"$ref": "#/$defs/stableId"},
+    "created_at": {"$ref": "#/$defs/timestamp"},
+    "orchestration_ref": {"$ref": "#/$defs/stableId"},
+    "conductor_version": {"const": "1.0.0"},
+    "route": {"$ref": "#/$defs/route"},
+    "execution_mode": {
+      "type": "string",
+      "enum": ["CONDUCTOR_ONLY", "SPECIALIST_AS_TOOL", "PAUSE_FOR_USER", "BLOCKED"]
+    },
+    "selected_agent": {"$ref": "#/$defs/nullableAgent"},
+    "specialist_mode": {"$ref": "#/$defs/nullableText"},
+    "decision_basis": {
+      "type": "array",
+      "minItems": 1,
+      "items": {"$ref": "#/$defs/shortText"}
+    },
+    "input_artifact_refs": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {"$ref": "#/$defs/stableId"}
+    },
+    "work_order": {"$ref": "#/$defs/workOrder"},
+    "next_required_route": {
+      "oneOf": [
+        {"$ref": "#/$defs/route"},
+        {"type": "null"}
+      ]
+    },
+    "user_interaction": {"$ref": "#/$defs/userInteraction"},
+    "control": {"$ref": "#/$defs/control"}
+  },
+  "allOf": [
+    {
+      "if": {"properties": {"route": {"const": "SCIENTIFIC_PHILOSOPHY_PRE_OPERATIONALIZATION"}}, "required": ["route"]},
+      "then": {
+        "properties": {
+          "execution_mode": {"const": "SPECIALIST_AS_TOOL"},
+          "selected_agent": {"const": "scientific-philosophy-critic"},
+          "specialist_mode": {"const": "PRE_OPERATIONALIZATION"}
+        }
+      }
+    },
+    {
+      "if": {"properties": {"route": {"const": "SCIENTIFIC_PHILOSOPHY_POST_RESULT"}}, "required": ["route"]},
+      "then": {
+        "properties": {
+          "execution_mode": {"const": "SPECIALIST_AS_TOOL"},
+          "selected_agent": {"const": "scientific-philosophy-critic"},
+          "specialist_mode": {"const": "POST_RESULT"}
+        }
+      }
+    },
+    {
+      "if": {"properties": {"route": {"const": "CONDITION_INQUIRY"}}, "required": ["route"]},
+      "then": {
+        "properties": {
+          "execution_mode": {"const": "SPECIALIST_AS_TOOL"},
+          "selected_agent": {"const": "condition-inquiry-analyst"}
+        }
+      }
+    },
+    {
+      "if": {"properties": {"route": {"const": "GENERATE_INTRADAY_IDEAS"}}, "required": ["route"]},
+      "then": {
+        "properties": {
+          "execution_mode": {"const": "SPECIALIST_AS_TOOL"},
+          "selected_agent": {"const": "intraday-hypothesis-generator"}
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "route": {
+            "enum": [
+              "RECONSTRUCT_SOURCE_STRATEGY",
+              "OPERATIONALIZE_SOURCE_STRATEGY",
+              "RESEARCH_INTAKE",
+              "CONDUCT_RESEARCH"
+            ]
+          }
+        },
+        "required": ["route"]
+      },
+      "then": {
+        "properties": {
+          "execution_mode": {"const": "CONDUCTOR_ONLY"},
+          "selected_agent": {"type": "null"},
+          "specialist_mode": {"type": "null"}
+        }
+      }
+    },
+    {
+      "if": {"properties": {"route": {"const": "USER_DECISION_REQUIRED"}}, "required": ["route"]},
+      "then": {
+        "properties": {
+          "execution_mode": {"const": "PAUSE_FOR_USER"},
+          "selected_agent": {"type": "null"},
+          "specialist_mode": {"type": "null"},
+          "user_interaction": {
+            "properties": {"status": {"const": "REQUIRED"}}
+          }
+        }
+      }
+    },
+    {
+      "if": {"properties": {"route": {"const": "BLOCKED"}}, "required": ["route"]},
+      "then": {
+        "properties": {
+          "execution_mode": {"const": "BLOCKED"},
+          "selected_agent": {"type": "null"},
+          "specialist_mode": {"type": "null"}
+        }
+      }
+    }
+  ],
+  "$defs": {
+    "stableId": {
+      "type": "string",
+      "pattern": "^[A-Za-z][A-Za-z0-9._:-]{2,199}$"
+    },
+    "timestamp": {"type": "string", "format": "date-time"},
+    "shortText": {"type": "string", "minLength": 1, "maxLength": 2000},
+    "nullableText": {
+      "oneOf": [
+        {"$ref": "#/$defs/shortText"},
+        {"type": "null"}
+      ]
+    },
+    "route": {
+      "type": "string",
+      "enum": [
+        "USER_DECISION_REQUIRED",
+        "BLOCKED",
+        "GENERATE_INTRADAY_IDEAS",
+        "RECONSTRUCT_SOURCE_STRATEGY",
+        "SCIENTIFIC_PHILOSOPHY_PRE_OPERATIONALIZATION",
+        "OPERATIONALIZE_SOURCE_STRATEGY",
+        "CONDITION_INQUIRY",
+        "SCIENTIFIC_PHILOSOPHY_POST_RESULT",
+        "RESEARCH_INTAKE",
+        "CONDUCT_RESEARCH"
+      ]
+    },
+    "nullableAgent": {
+      "oneOf": [
+        {
+          "type": "string",
+          "enum": [
+            "intraday-hypothesis-generator",
+            "scientific-philosophy-critic",
+            "condition-inquiry-analyst"
+          ]
+        },
+        {"type": "null"}
+      ]
+    },
+    "workOrder": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "objective",
+        "allowed_inputs",
+        "excluded_actions",
+        "required_output_type",
+        "acceptance_checks",
+        "stop_condition",
+        "max_attempts"
+      ],
+      "properties": {
+        "objective": {"$ref": "#/$defs/shortText"},
+        "allowed_inputs": {
+          "type": "array",
+          "items": {"$ref": "#/$defs/shortText"}
+        },
+        "excluded_actions": {
+          "type": "array",
+          "minItems": 1,
+          "items": {"$ref": "#/$defs/shortText"}
+        },
+        "required_output_type": {"$ref": "#/$defs/shortText"},
+        "acceptance_checks": {
+          "type": "array",
+          "minItems": 1,
+          "items": {"$ref": "#/$defs/shortText"}
+        },
+        "stop_condition": {"$ref": "#/$defs/shortText"},
+        "max_attempts": {"const": 1}
+      }
+    },
+    "userInteraction": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status", "question", "options", "recommendation"],
+      "properties": {
+        "status": {"type": "string", "enum": ["NOT_REQUIRED", "REQUIRED"]},
+        "question": {"$ref": "#/$defs/nullableText"},
+        "options": {
+          "type": "array",
+          "items": {"$ref": "#/$defs/shortText"}
+        },
+        "recommendation": {"$ref": "#/$defs/nullableText"}
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {"status": {"const": "REQUIRED"}},
+            "required": ["status"]
+          },
+          "then": {
+            "properties": {
+              "question": {"$ref": "#/$defs/shortText"},
+              "options": {"minItems": 2},
+              "recommendation": {"$ref": "#/$defs/shortText"}
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {"status": {"const": "NOT_REQUIRED"}},
+            "required": ["status"]
+          },
+          "then": {
+            "properties": {
+              "question": {"type": "null"},
+              "options": {"maxItems": 0},
+              "recommendation": {"type": "null"}
+            }
+          }
+        }
+      ]
+    },
+    "control": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "coordinator_retains_control",
+        "specialist_may_address_user",
+        "sequential_execution",
+        "checkpoint_required",
+        "specialist_output_requires_validation"
+      ],
+      "properties": {
+        "coordinator_retains_control": {"const": true},
+        "specialist_may_address_user": {"const": false},
+        "sequential_execution": {"const": true},
+        "checkpoint_required": {"const": true},
+        "specialist_output_requires_validation": {"const": true}
+      }
+    }
+  }
+}

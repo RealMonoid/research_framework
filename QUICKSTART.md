@@ -41,6 +41,36 @@ vollständig erhalten. Diese Kommunikationsregel verändert keine Forschungsrege
 sie trennt lediglich die interne Dokumentation von der verständlichen Antwort an
 den Nutzer.
 
+## Verbindlicher Forschungsleiter
+
+Jede Research-Aufgabe wird durch genau einen
+[`research-conductor`](agents/research-conductor.md) geführt. Er bleibt der
+Ansprechpartner des Nutzers, hält den aktuellen Stand fest und ruft Fachagenten
+nur über einen abgegrenzten Arbeitsauftrag auf. Fachagenten übernehmen weder das
+Gespräch noch die Gesamtentscheidung.
+
+Vor jedem sachlich wichtigen Übergang wird der Arbeitsstand als
+[`orchestration_state`](schemas/orchestration_state.schema.json) gespeichert.
+Der ausführbare Router
+[`route_research_task.py`](scripts/route_research_task.py) bestimmt daraus den
+nächsten Pflichtschritt. Dadurch gelten insbesondere diese Reihenfolgen:
+
+- unvollständige Prosastrategie: Quellenrekonstruktion → Begriffs- und
+  Voraussetzungenprüfung → erst danach Operationalisierung;
+- Frage nach Messnutzen oder unbekannten beobachtbaren Bedingungen:
+  abgeschlossene Begriffsprüfung → vorläufige Operationalisierung →
+  Bedingungsanalyse;
+- Revision oder Fortsetzung nach einem nicht positiven eingefrorenen Ergebnis:
+  wissenschaftsphilosophische Fortsetzungsprüfung vor neuer Empirie;
+- neue Ideen nur auf wirklichen Ideenwunsch; eine vorhandene Idee geht in den
+  Intake und nicht zurück zum Generator.
+
+Eine einfache Ergebniserklärung löst nicht automatisch einen Fachagenten aus.
+Eine erforderliche Nutzerentscheidung wird nur dann erfragt, wenn sie die
+Forschungsfrage, die Identität der Quellenstrategie oder den zulässigen Claim
+materiell verändert. Nach jedem angenommenen Fachbeitrag wird dessen Artefakt
+geprüft, der Arbeitsstand aktualisiert und erneut geroutet.
+
 ## 1. Was technisch erzwungen wird – und was nicht
 
 | Ebene | Bedeutung |

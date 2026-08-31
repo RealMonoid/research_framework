@@ -1,6 +1,6 @@
 # 00_RESEARCH_AGENT_README.md
 
-**Version:** 2.2
+**Version:** 2.3
 **Stand:** 2026-08-31
 **Status:** ENTWURF ZUR ÜBERNAHME  
 **Zweck:** Verbindliche Lese- und Ausführungsanweisung für AI-Agenten, die Trading-Research-Projekte bearbeiten.
@@ -98,6 +98,44 @@ belasten.
 Diese Regel gilt auch für statistische, kausale und wissenschaftsphilosophische
 Fachsprache. Die präzise Bezeichnung darf intern bestehen bleiben; nach außen
 muss zuerst erklärt werden, was sie im konkreten Fall bedeutet.
+
+## 1.3 Verbindlicher Forschungsleiter und ausführbares Routing
+
+Jede nutzerseitige Research-Aufgabe hat genau einen verantwortlichen
+Forschungsleiter nach `agents/research-conductor.md`. Er bleibt die einzige
+Stimme zum Nutzer, hält den aktuellen Arbeitsstand fest und entscheidet nicht
+frei darüber, ob eine vorgeschriebene Fachprüfung stattfindet.
+
+Vor jedem materiellen Übergang wird ein `orchestration_state` nach
+`schemas/orchestration_state.schema.json` gespeichert und durch
+`scripts/route_research_task.py` in genau einen nächsten Arbeitsauftrag
+überführt. Die erzeugte `routing_decision` nach
+`schemas/routing_decision.schema.json` hält mindestens fest:
+
+- weshalb dieser Schritt jetzt zulässig oder erforderlich ist,
+- welcher Fachagent gegebenenfalls zwingend gebraucht wird,
+- welche Unterlagen er sehen darf,
+- was er nicht verändern oder untersuchen darf,
+- welches Ergebnis erwartet wird und wann er stoppen muss,
+- welcher Schritt danach zwingend folgt.
+
+Der feste Router entscheidet über objektive Voraussetzungen. Der
+Forschungsleiter bleibt für die inhaltliche Einordnung der Nutzerabsicht und des
+Quellenstands verantwortlich. Unsichere Einordnung wird als solche gespeichert;
+eine materielle Nutzerentscheidung darf nicht vom Router erfunden werden.
+
+Fachagenten arbeiten als begrenzte Werkzeuge des Forschungsleiters. Sie führen
+kein eigenes Nutzergespräch, bestimmen nicht den Gesamtstatus und dürfen den
+Forschungsauftrag nicht erweitern. Nach jedem Fachbeitrag prüft der
+Forschungsleiter das geforderte Artefakt, aktualisiert den Arbeitsstand und
+routet erneut. Ist ein zwingender Fachagent technisch nicht verfügbar, bleibt
+der Schritt `BLOCKED`; der Forschungsleiter darf dessen Beitrag nicht selbst
+simulieren und zugleich als erfolgt ausgeben.
+
+Insbesondere wird bei einer unvollständigen Prosastrategie zuerst die Quelle
+rekonstruiert, danach zwingend die Begriffs- und Voraussetzungenprüfung durch den
+`scientific-philosophy-critic` durchgeführt und erst anschließend
+operationalisiert. Dieser Ablauf autorisiert keinen Backtest.
 
 ---
 

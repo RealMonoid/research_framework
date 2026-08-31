@@ -33,6 +33,7 @@ class EvalHarnessTests(unittest.TestCase):
         self.assertEqual(report["metrics"]["critical_assertion_pass_rate"], 1.0)
         self.assertEqual(report["metrics"]["hypothesis_intake_accuracy"], 1.0)
         self.assertEqual(report["metrics"]["scientific_philosophy_accuracy"], 1.0)
+        self.assertEqual(report["metrics"]["research_orchestration_accuracy"], 1.0)
         self.assertFalse(report["gate_failures"])
         self.assertFalse(report["regression_failures"])
 
@@ -48,6 +49,23 @@ class EvalHarnessTests(unittest.TestCase):
         self.assertLess(report["metrics"]["hypothesis_intake_accuracy"], 1.0)
         self.assertFalse(
             report["cases"]["ofi_contemporaneous_not_forward_edge"]["passed"]
+        )
+        self.assertTrue(report["regression_failures"])
+
+    def test_missing_mandatory_philosophy_route_is_a_regression(self) -> None:
+        regressed = copy.deepcopy(self.results)
+        regressed["run_id"] = "orchestration-route-regression"
+        regressed["cases"]["route_incomplete_prose_before_operationalization"][
+            "routing"
+        ]["route"] = "OPERATIONALIZE_SOURCE_STRATEGY"
+
+        report = run_evals.score_results(self.catalog, regressed, self.baseline)
+        self.assertFalse(report["passed"])
+        self.assertLess(report["metrics"]["research_orchestration_accuracy"], 1.0)
+        self.assertFalse(
+            report["cases"]["route_incomplete_prose_before_operationalization"][
+                "passed"
+            ]
         )
         self.assertTrue(report["regression_failures"])
 

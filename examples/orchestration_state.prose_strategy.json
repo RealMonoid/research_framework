@@ -1,0 +1,51 @@
+{
+  "schema_version": "1.0.0",
+  "orchestration_id": "orchestration:synthetic-prose-strategy:v1",
+  "updated_at": "2026-08-31T18:00:00+02:00",
+  "conductor_version": "1.0.0",
+  "next_decision_sequence": 2,
+  "request": {
+    "request_id": "request:operationalize-synthetic-prose-strategy",
+    "summary": "Turn an incompletely specified prose strategy into a documented provisional definition.",
+    "intent": "OPERATIONALIZE_SOURCE_STRATEGY",
+    "intent_origin": "USER_EXPLICIT",
+    "intent_confidence": "HIGH",
+    "material_user_choice": {
+      "status": "NONE",
+      "question": null,
+      "options": [],
+      "recommendation": null
+    }
+  },
+  "research_context": {
+    "research_id": "research:synthetic-prose-strategy",
+    "research_version": 1,
+    "source_kind": "PROSE_STRATEGY",
+    "source_completeness": "INCOMPLETE",
+    "stage": "PRE_OPERATIONALIZATION",
+    "concept_audit_required": "YES",
+    "operationalization_status": "NONE",
+    "frozen_result_status": "NONE"
+  },
+  "artifacts": {
+    "strategy_reconstruction": {
+      "status": "COMPLETE",
+      "artifact_ref": "reconstruction:synthetic-prose-strategy:v1"
+    },
+    "strategy_concept_audit": {
+      "status": "MISSING",
+      "artifact_ref": null
+    },
+    "condition_inquiry": {
+      "status": "NOT_APPLICABLE",
+      "artifact_ref": null
+    },
+    "scientific_philosophy_review": {
+      "status": "NOT_APPLICABLE",
+      "artifact_ref": null
+    }
+  },
+  "blocking_issues": [],
+  "completed_steps": ["step:source-reconstruction"],
+  "routing_history": ["routing:orchestration:synthetic-prose-strategy:v1:1"]
+}

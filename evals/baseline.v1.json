@@ -1,8 +1,8 @@
 {
   "schema_version": "eval-baseline.v1",
   "catalog_id": "research-agent-core",
-  "catalog_version": "1.6.0",
-  "baseline_id": "protocol-reference-1-6-0",
+  "catalog_version": "1.7.0",
+  "baseline_id": "protocol-reference-1-7-0",
   "recorded_at": "2026-08-31T00:00:00+02:00",
   "minimums": {
     "overall_score": 0.95,
@@ -16,7 +16,8 @@
     "thesis_governance_accuracy": 1.0,
     "academic_source_governance_accuracy": 1.0,
     "hypothesis_intake_accuracy": 1.0,
-    "scientific_philosophy_accuracy": 1.0
+    "scientific_philosophy_accuracy": 1.0,
+    "research_orchestration_accuracy": 1.0
   },
   "metrics": {
     "overall_score": 1.0,
@@ -30,7 +31,8 @@
     "thesis_governance_accuracy": 1.0,
     "academic_source_governance_accuracy": 1.0,
     "hypothesis_intake_accuracy": 1.0,
-    "scientific_philosophy_accuracy": 1.0
+    "scientific_philosophy_accuracy": 1.0,
+    "research_orchestration_accuracy": 1.0
   },
   "case_scores": {
     "source_attribution_primary": 1.0,
@@ -48,7 +50,11 @@
     "identified_effect_not_automatic_net_edge": 1.0,
     "noise_screen_not_evidence": 1.0,
     "actor_constraint_not_mechanism": 1.0,
-    "failed_bundle_progressive_vs_degenerative": 1.0
+    "failed_bundle_progressive_vs_degenerative": 1.0,
+    "route_incomplete_prose_before_operationalization": 1.0,
+    "route_measurement_question_after_provisional_definition": 1.0,
+    "route_non_positive_revision_to_philosophy": 1.0,
+    "route_plain_result_explanation_without_specialist": 1.0
   },
   "regression_policy": {
     "max_metric_drop": 0.0,

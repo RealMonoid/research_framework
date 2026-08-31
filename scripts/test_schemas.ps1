@@ -96,6 +96,8 @@ $positivePairs = @(
     @('examples\strategy_concept_audit.synthetic.json', 'schemas\strategy_concept_audit.schema.json'),
     @('examples\condition_inquiry.synthetic_measurement.json', 'schemas\condition_inquiry.schema.json'),
     @('examples\scientific_philosophy_review.synthetic_failed_reconstruction.json', 'schemas\scientific_philosophy_review.schema.json'),
+    @('examples\orchestration_state.prose_strategy.json', 'schemas\orchestration_state.schema.json'),
+    @('examples\routing_decision.pre_operationalization.json', 'schemas\routing_decision.schema.json'),
     @('examples\search_space.minimal.json', 'schemas\search_space.schema.json'),
     @('examples\noise_screen.pass.json', 'schemas\noise_screen.schema.json'),
     @('examples\noise_screen.fail.json', 'schemas\noise_screen.schema.json'),
@@ -137,6 +139,26 @@ Test-RejectedFixture -Name 'philosophy review cannot relabel frozen result' -Val
 $philosophyFakeProgress = Read-JsonText -RelativePath 'examples\scientific_philosophy_review.synthetic_failed_reconstruction.json' | ConvertFrom-Json -Depth 100
 $philosophyFakeProgress.revision_proposals[1].novel_prediction.relation_to_prior = 'ALREADY_IMPLIED'
 Test-RejectedFixture -Name 'progressive revision requires a genuinely new prediction' -Value $philosophyFakeProgress -Schema 'schemas\scientific_philosophy_review.schema.json'
+
+$orchestrationChoiceWithoutQuestion = Read-JsonText -RelativePath 'examples\orchestration_state.prose_strategy.json' | ConvertFrom-Json -Depth 100
+$orchestrationChoiceWithoutQuestion.request.material_user_choice.status = 'REQUIRED'
+Test-RejectedFixture -Name 'required user choice needs an actual question' -Value $orchestrationChoiceWithoutQuestion -Schema 'schemas\orchestration_state.schema.json'
+
+$orchestrationCompleteWithoutRef = Read-JsonText -RelativePath 'examples\orchestration_state.prose_strategy.json' | ConvertFrom-Json -Depth 100
+$orchestrationCompleteWithoutRef.artifacts.strategy_concept_audit.status = 'COMPLETE'
+Test-RejectedFixture -Name 'complete orchestration artifact requires a reference' -Value $orchestrationCompleteWithoutRef -Schema 'schemas\orchestration_state.schema.json'
+
+$routingSpecialistAddressesUser = Read-JsonText -RelativePath 'examples\routing_decision.pre_operationalization.json' | ConvertFrom-Json -Depth 100
+$routingSpecialistAddressesUser.control.specialist_may_address_user = $true
+Test-RejectedFixture -Name 'routing decision keeps specialist away from user conversation' -Value $routingSpecialistAddressesUser -Schema 'schemas\routing_decision.schema.json'
+
+$routingWrongPhilosophyAgent = Read-JsonText -RelativePath 'examples\routing_decision.pre_operationalization.json' | ConvertFrom-Json -Depth 100
+$routingWrongPhilosophyAgent.selected_agent = 'condition-inquiry-analyst'
+Test-RejectedFixture -Name 'philosophy route requires philosophy specialist' -Value $routingWrongPhilosophyAgent -Schema 'schemas\routing_decision.schema.json'
+
+$routingRepeatedAttempts = Read-JsonText -RelativePath 'examples\routing_decision.pre_operationalization.json' | ConvertFrom-Json -Depth 100
+$routingRepeatedAttempts.work_order.max_attempts = 2
+Test-RejectedFixture -Name 'routing work order permits only one attempt' -Value $routingRepeatedAttempts -Schema 'schemas\routing_decision.schema.json'
 
 $candidateSchema = Read-JsonText -RelativePath 'schemas\hypothesis_candidate.schema.json' | ConvertFrom-Json -Depth 100
 $candidateInbox = Read-JsonText -RelativePath 'examples\hypothesis_candidate.inbox.json' | ConvertFrom-Json -Depth 100

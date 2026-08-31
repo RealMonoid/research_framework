@@ -118,6 +118,11 @@ Replikation bezeichnet.
 
 ## Arbeitsablauf
 
+Der Forschungsleiter speichert vor Beginn einen Orchestrierungsstand und folgt
+der Entscheidung aus `scripts/route_research_task.py`. Der Fachagent spricht
+nicht direkt mit dem Nutzer; sein geprueftes Audit geht an den Forschungsleiter
+zurueck, der danach erneut routet.
+
 1. Nur die tatsaechlich gelesenen Abschnitte in `locators_reviewed` erfassen.
 2. Aussagen paraphrasieren und Regel, Empfehlung, Option und Beispiel trennen.
 3. `strategy_identity_claim_refs` festhalten: Was darf nicht verschwinden, ohne
