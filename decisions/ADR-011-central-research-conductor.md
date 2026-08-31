@@ -55,6 +55,12 @@ festgeschriebenen Ergebnis.
     und die dafür geltenden Voraussetzungen.
 11. Für Codex und kompatible Agenten ist `AGENTS.md`, für Claude zusätzlich
     `CLAUDE.md` der verbindliche Einstieg in diese Steuerung.
+12. Vor und nach jeder Fachagenten-Übergabe auf einem bestehenden Fall werden
+    Forschungsfrage, Strategie, Markt, Zeithorizont, Auslöser und Ziel
+    verglichen. Nur ein unveränderter Vergleich erlaubt die Annahme des
+    Beitrags. Eine Abweichung bleibt unwirksam, wird dem Nutzer verständlich
+    erklärt und benötigt für eine Übernahme eine ausdrücklich neue
+    Research-Version.
 
 ## Rejected Alternatives
 
@@ -100,6 +106,8 @@ festgeschriebenen Ergebnis.
 4. [x] Einstieg für Codex und Claude verbindlich dokumentieren.
 5. [x] Positive und negative Routingfälle in Vertrags- und Regressionstests
    aufnehmen.
-6. [ ] Das Verhalten eines tatsächlich angeschlossenen Hauptagenten in einem
+6. [x] Sechs-Punkte-Driftkontrolle vor Annahme jedes bestehenden
+   Research-Handoffs ergänzen.
+7. [ ] Das Verhalten eines tatsächlich angeschlossenen Hauptagenten in einem
    `LIVE_AGENT`-Lauf prüfen, bevor eine Modell- oder Promptfreigabe behauptet
    wird.

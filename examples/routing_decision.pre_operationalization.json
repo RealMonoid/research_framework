@@ -1,9 +1,9 @@
 {
-  "schema_version": "1.0.0",
+  "schema_version": "1.1.0",
   "decision_id": "routing:orchestration:synthetic-prose-strategy:v1:2",
   "created_at": "2026-08-31T18:00:00+02:00",
   "orchestration_ref": "orchestration:synthetic-prose-strategy:v1",
-  "conductor_version": "1.0.0",
+  "conductor_version": "1.1.0",
   "route": "SCIENTIFIC_PHILOSOPHY_PRE_OPERATIONALIZATION",
   "execution_mode": "SPECIALIST_AS_TOOL",
   "selected_agent": "scientific-philosophy-critic",
@@ -22,15 +22,55 @@
     "excluded_actions": [
       "Do not choose an operationalization.",
       "Do not turn suspected or unknown conditions into strategy rules.",
-      "Do not run a market test or backtest."
+      "Do not run a market test or backtest.",
+      "Do not silently change the research question, strategy, market, time horizon, trigger, or target; record any proposed change separately."
     ],
     "required_output_type": "strategy_concept_audit",
     "acceptance_checks": [
       "The audit passes its schema and semantic inspector.",
-      "Unknown success conditions remain explicitly unknown."
+      "Unknown success conditions remain explicitly unknown.",
+      "Before acceptance, the deterministic handoff check reports that the six-part research identity is unchanged."
     ],
     "stop_condition": "Stop when the concept audit is complete or a missing source fact makes it blocked.",
     "max_attempts": 1
+  },
+  "identity_guard": {
+    "mode": "PRESERVE_EXISTING",
+    "baseline_identity": {
+      "research_question": {
+        "status": "DEFINED",
+        "statement": "Can the source strategy be reconstructed and operationalized without silently adding conditions?"
+      },
+      "strategy": {
+        "status": "DEFINED",
+        "statement": "VWAP Wave price-discovery breakout reconstructed from the supplied prose."
+      },
+      "market": {
+        "status": "DEFINED",
+        "statement": "U.S. equity-index futures during the regular trading session."
+      },
+      "time_horizon": {
+        "status": "DEFINED",
+        "statement": "Intraday; entry and outcome occur within the same regular session."
+      },
+      "trigger": {
+        "status": "UNRESOLVED",
+        "statement": "The source requires a clear range break beyond the one-sigma VWAP band with strong volume but does not define every threshold."
+      },
+      "target": {
+        "status": "UNRESOLVED",
+        "statement": "The source offers the two-sigma band, a prior-range projection, fixed reward-risk, and trailing management without selecting one primary outcome."
+      }
+    },
+    "compared_dimensions": [
+      "research_question",
+      "strategy",
+      "market",
+      "time_horizon",
+      "trigger",
+      "target"
+    ],
+    "difference_disposition": "PAUSE_FOR_USER"
   },
   "next_required_route": "OPERATIONALIZE_SOURCE_STRATEGY",
   "user_interaction": {
@@ -44,6 +84,7 @@
     "specialist_may_address_user": false,
     "sequential_execution": true,
     "checkpoint_required": true,
-    "specialist_output_requires_validation": true
+    "specialist_output_requires_validation": true,
+    "identity_check_required_before_acceptance": true
   }
 }

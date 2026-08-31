@@ -71,6 +71,14 @@ Forschungsfrage, die Identität der Quellenstrategie oder den zulässigen Claim
 materiell verändert. Nach jedem angenommenen Fachbeitrag wird dessen Artefakt
 geprüft, der Arbeitsstand aktualisiert und erneut geroutet.
 
+Vor und nach jeder Fachagenten-Übergabe auf einem bestehenden Research-Fall
+werden sechs Punkte verglichen: Forschungsfrage, Strategie, Markt,
+Zeithorizont, Auslöser und Ziel. Der Beitrag wird nur angenommen, wenn
+[`check_research_identity.py`](scripts/check_research_identity.py) keine
+Abweichung findet. Andernfalls bleibt der alte Stand bestehen und der Nutzer
+entscheidet nach einer verständlichen Erklärung zwischen Beibehaltung und einer
+ausdrücklich neuen Research-Version.
+
 ## 1. Was technisch erzwungen wird – und was nicht
 
 | Ebene | Bedeutung |

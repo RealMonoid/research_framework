@@ -32,6 +32,14 @@ CONDITION_INTENTS = {
     "DISCOVER_CONDITIONS",
     "CHECK_DEFINITION_SENSITIVITY",
 }
+IDENTITY_DIMENSIONS = [
+    "research_question",
+    "strategy",
+    "market",
+    "time_horizon",
+    "trigger",
+    "target",
+]
 
 
 def _mapping(value: Any, label: str) -> Mapping[str, Any]:
@@ -95,6 +103,32 @@ def _no_user_interaction() -> dict[str, Any]:
     }
 
 
+def _identity_guard(
+    state: Mapping[str, Any], execution_mode: str, route: str
+) -> dict[str, Any]:
+    if execution_mode != "SPECIALIST_AS_TOOL":
+        return {
+            "mode": "NOT_APPLICABLE",
+            "baseline_identity": None,
+            "compared_dimensions": [],
+            "difference_disposition": "NOT_APPLICABLE",
+        }
+    if route == "GENERATE_INTRADAY_IDEAS":
+        return {
+            "mode": "NEW_IDENTITY_CREATION",
+            "baseline_identity": None,
+            "compared_dimensions": [],
+            "difference_disposition": "RECORD_NEW_IDENTITY",
+        }
+    identity = _mapping(state.get("research_identity"), "research_identity")
+    return {
+        "mode": "PRESERVE_EXISTING",
+        "baseline_identity": dict(identity),
+        "compared_dimensions": list(IDENTITY_DIMENSIONS),
+        "difference_disposition": "PAUSE_FOR_USER",
+    }
+
+
 def _decision(
     state: Mapping[str, Any],
     *,
@@ -117,11 +151,25 @@ def _decision(
         raise ValueError("next_decision_sequence must be a positive integer")
     if not isinstance(updated_at, str):
         raise ValueError("updated_at must be a timestamp string")
-    if conductor_version != "1.0.0":
+    if conductor_version != "1.1.0":
         raise ValueError("unsupported conductor_version")
 
+    identity_guard = _identity_guard(state, execution_mode, route)
+    guarded_work_order = {
+        **work_order,
+        "excluded_actions": list(work_order["excluded_actions"]),
+        "acceptance_checks": list(work_order["acceptance_checks"]),
+    }
+    if identity_guard["mode"] == "PRESERVE_EXISTING":
+        guarded_work_order["excluded_actions"].append(
+            "Do not silently change the research question, strategy, market, time horizon, trigger, or target; record any proposed change separately."
+        )
+        guarded_work_order["acceptance_checks"].append(
+            "Before acceptance, the deterministic handoff check reports that the six-part research identity is unchanged."
+        )
+
     return {
-        "schema_version": "1.0.0",
+        "schema_version": "1.1.0",
         "decision_id": f"routing:{orchestration_id}:{sequence}",
         "created_at": updated_at,
         "orchestration_ref": orchestration_id,
@@ -132,7 +180,8 @@ def _decision(
         "specialist_mode": specialist_mode,
         "decision_basis": decision_basis,
         "input_artifact_refs": _input_refs(state),
-        "work_order": work_order,
+        "work_order": guarded_work_order,
+        "identity_guard": identity_guard,
         "next_required_route": next_required_route,
         "user_interaction": user_interaction or _no_user_interaction(),
         "control": {
@@ -141,6 +190,7 @@ def _decision(
             "sequential_execution": True,
             "checkpoint_required": True,
             "specialist_output_requires_validation": True,
+            "identity_check_required_before_acceptance": True,
         },
     }
 
@@ -153,6 +203,80 @@ def route_state(state: Mapping[str, Any]) -> dict[str, Any]:
     intent = request.get("intent")
     if not isinstance(intent, str):
         raise ValueError("request.intent must be a string")
+
+    handoff_control = _mapping(state.get("handoff_control"), "handoff_control")
+    handoff_status = handoff_control.get("status")
+    if handoff_status == "AWAITING_SPECIALIST":
+        return _decision(
+            state,
+            route="BLOCKED",
+            execution_mode="BLOCKED",
+            selected_agent=None,
+            specialist_mode=None,
+            decision_basis=[
+                "A specialist handoff is still awaiting its required six-part research-identity comparison."
+            ],
+            work_order=_work_order(
+                "Complete the before-and-after identity check before accepting or routing the specialist output.",
+                "research_identity_check",
+                [
+                    str(handoff_control.get("routing_decision_ref")),
+                    "candidate post-handoff orchestration state",
+                ],
+                [
+                    "Do not accept the specialist artifact yet.",
+                    "Do not infer that silence means the research identity was preserved.",
+                ],
+                [
+                    "All six identity dimensions have an explicit comparison result."
+                ],
+                "Stop until the identity check is recorded.",
+            ),
+        )
+    if handoff_status == "DRIFT_DETECTED":
+        changed = handoff_control.get("changed_dimensions")
+        if not isinstance(changed, list) or not changed:
+            raise ValueError("DRIFT_DETECTED requires changed_dimensions")
+        readable = ", ".join(str(item).replace("_", " ") for item in changed)
+        summary = handoff_control.get("plain_language_summary")
+        if not isinstance(summary, str):
+            raise ValueError("DRIFT_DETECTED requires a plain-language summary")
+        return _decision(
+            state,
+            route="USER_DECISION_REQUIRED",
+            execution_mode="PAUSE_FOR_USER",
+            selected_agent=None,
+            specialist_mode=None,
+            decision_basis=[summary],
+            work_order=_work_order(
+                "Explain the detected research drift in ordinary language and ask whether the original identity should remain in force.",
+                "plain-language research-drift decision",
+                [str(handoff_control.get("report_ref"))],
+                [
+                    "Do not accept the changed specialist output before the decision.",
+                    "Do not describe the change as a harmless wording edit without evidence.",
+                ],
+                [
+                    "The changed dimensions and their practical consequences are stated.",
+                    "The original research identity remains the default recommendation.",
+                ],
+                "Stop after asking the one material question.",
+            ),
+            user_interaction={
+                "status": "REQUIRED",
+                "question": (
+                    f"The specialist handoff changed {readable}. Should the original research remain unchanged, "
+                    "or should this become an intentional new research version?"
+                ),
+                "options": [
+                    "Keep the original research identity and reject the changed output.",
+                    "Create an explicitly new research version with the proposed change.",
+                ],
+                "recommendation": (
+                    "Keep the original identity unless the change answers a question you now explicitly want to study."
+                ),
+            },
+        )
 
     material_choice = _mapping(
         request.get("material_user_choice"), "request.material_user_choice"

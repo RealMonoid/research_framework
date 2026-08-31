@@ -1,8 +1,8 @@
 {
-  "schema_version": "1.0.0",
+  "schema_version": "1.1.0",
   "orchestration_id": "orchestration:synthetic-prose-strategy:v1",
   "updated_at": "2026-08-31T18:00:00+02:00",
-  "conductor_version": "1.0.0",
+  "conductor_version": "1.1.0",
   "next_decision_sequence": 2,
   "request": {
     "request_id": "request:operationalize-synthetic-prose-strategy",
@@ -26,6 +26,39 @@
     "concept_audit_required": "YES",
     "operationalization_status": "NONE",
     "frozen_result_status": "NONE"
+  },
+  "research_identity": {
+    "research_question": {
+      "status": "DEFINED",
+      "statement": "Can the source strategy be reconstructed and operationalized without silently adding conditions?"
+    },
+    "strategy": {
+      "status": "DEFINED",
+      "statement": "VWAP Wave price-discovery breakout reconstructed from the supplied prose."
+    },
+    "market": {
+      "status": "DEFINED",
+      "statement": "U.S. equity-index futures during the regular trading session."
+    },
+    "time_horizon": {
+      "status": "DEFINED",
+      "statement": "Intraday; entry and outcome occur within the same regular session."
+    },
+    "trigger": {
+      "status": "UNRESOLVED",
+      "statement": "The source requires a clear range break beyond the one-sigma VWAP band with strong volume but does not define every threshold."
+    },
+    "target": {
+      "status": "UNRESOLVED",
+      "statement": "The source offers the two-sigma band, a prior-range projection, fixed reward-risk, and trailing management without selecting one primary outcome."
+    }
+  },
+  "handoff_control": {
+    "status": "IDLE",
+    "routing_decision_ref": null,
+    "report_ref": null,
+    "changed_dimensions": [],
+    "plain_language_summary": null
   },
   "artifacts": {
     "strategy_reconstruction": {

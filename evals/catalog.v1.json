@@ -1,7 +1,7 @@
 {
   "schema_version": "eval-catalog.v1",
   "catalog_id": "research-agent-core",
-  "catalog_version": "1.7.0",
+  "catalog_version": "1.8.0",
   "created_at": "2026-08-30T00:00:00+02:00",
   "description": "Deterministic core evals for evidence handling, hypothesis intake, thesis governance, and research orchestration.",
   "cases": [
@@ -1339,6 +1339,76 @@
             "path": "routing.selected_agent",
             "operator": "equals",
             "expected": null,
+            "critical": true,
+            "weight": 2
+          }
+        ]
+      }
+    },
+    {
+      "case_id": "route_detected_handoff_drift_to_user",
+      "capability": "research_orchestration",
+      "description": "Reject a specialist handoff that silently changes the target and require an understandable user decision while preserving the original research identity.",
+      "input": {
+        "task": "A specialist was asked to assess a same-session move of two pre-event volatility units after a failed range break. The returned work instead uses the opposite edge of the range as the target. Compare the handoff and decide what happens next; do not run a backtest.",
+        "as_of": "2026-08-31T18:20:00Z",
+        "sources": [
+          {
+            "source_id": "synthetic_handoff_drift_state",
+            "title": "Synthetic Handoff Drift State",
+            "published_at": "2026-08-31T18:16:00Z",
+            "accessed_at": "2026-08-31T18:19:00Z",
+            "authoritative": true,
+            "content": "Research question, strategy, market, time horizon, and trigger are unchanged. The target changed from a same-session move of two pre-event volatility units to the opposite edge of the range. The user did not authorize this change."
+          }
+        ]
+      },
+      "expected": {
+        "assertions": [
+          {
+            "assertion_id": "route_detected_drift_to_user",
+            "metric": "research_orchestration_accuracy",
+            "path": "routing.route",
+            "operator": "equals",
+            "expected": "USER_DECISION_REQUIRED",
+            "critical": true,
+            "weight": 3
+          },
+          {
+            "assertion_id": "identify_changed_target_only",
+            "metric": "research_orchestration_accuracy",
+            "path": "routing.changed_dimensions",
+            "operator": "set_equals",
+            "expected": [
+              "target"
+            ],
+            "critical": true,
+            "weight": 3
+          },
+          {
+            "assertion_id": "do_not_accept_changed_output",
+            "metric": "research_orchestration_accuracy",
+            "path": "routing.changed_output_accepted",
+            "operator": "equals",
+            "expected": false,
+            "critical": true,
+            "weight": 3
+          },
+          {
+            "assertion_id": "preserve_original_identity_by_default",
+            "metric": "research_orchestration_accuracy",
+            "path": "routing.original_identity_remains_effective",
+            "operator": "equals",
+            "expected": true,
+            "critical": true,
+            "weight": 3
+          },
+          {
+            "assertion_id": "explain_drift_to_user",
+            "metric": "research_orchestration_accuracy",
+            "path": "routing.user_explanation",
+            "operator": "exists",
+            "expected": true,
             "critical": true,
             "weight": 2
           }

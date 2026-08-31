@@ -1,6 +1,6 @@
 # 05_AGENT_OPERATIONS.md
 
-**Version:** 1.8
+**Version:** 1.9
 **Stand:** 2026-08-31
 **Status:** ENTWURF ZUR ÜBERNAHME  
 **Zweck:** Normative operative Kontrollschicht für reproduzierbare, überprüfbare und revisionssichere Läufe eines AI-Research-Agenten.
@@ -99,6 +99,7 @@ IDs sind opake Schlüssel. Sie werden nicht nachträglich wiederverwendet oder a
 | Wissenschaftsphilosophie-Review | nach `FALSIFIED / PRECISE_NULL / INCONCLUSIVE / INVALID_TEST`, sobald eine materielle Revision oder empirische Fortsetzung erwogen wird | **schemas/scientific_philosophy_review.schema.json** plus semantischer Inspector |
 | Orchestration State | vor jedem materiellen Research-Übergang und nach jedem akzeptierten Fachbeitrag, Blocker oder Nutzerentscheid | **schemas/orchestration_state.schema.json** plus deterministischer Routertest |
 | Routing Decision | für jeden aus einem Orchestration State abgeleiteten nächsten Arbeitsauftrag | **schemas/routing_decision.schema.json** plus **scripts/route_research_task.py** |
+| Research Identity Check | nach jeder Fachagenten-Rückgabe auf einem bestehenden Research-Fall und vor ihrer Annahme | **schemas/research_identity_check.schema.json** plus **scripts/check_research_identity.py** |
 | Trace | bei jedem Modell-, Tool-, Retrieval- und Validierungsschritt | Regeln in §6 |
 | Error Log | sobald Warnung oder Fehler auftritt | Regeln in §7 |
 | Delta Report | wenn ein Baseline-Lauf oder eine freigegebene Vorgängerversion existiert | Regeln in §9 |
@@ -1086,6 +1087,18 @@ Gesamtauftrag und gibt das Ergebnis an den Coordinator zurück. Erst nach
 Schema- und Semantikprüfung darf dieses Ergebnis in den nächsten
 `orchestration_state` eingehen. Danach wird erneut geroutet; der Child-Agent
 darf keine selbst gewählte Delegationskette beginnen.
+
+Jede Übergabe eines bestehenden Research-Falls trägt eine unveränderte
+Sechs-Punkte-Baseline aus Forschungsfrage, Strategie, Markt, Zeithorizont,
+Auslöser und Ziel. Vor der Annahme des Child-Outputs erzeugt
+`scripts/check_research_identity.py` einen
+`research_identity_check`. Nur `UNCHANGED` erlaubt die Annahme. Bei
+`DRIFT_DETECTED` bleiben Baseline und bisheriger Research-Stand wirksam, das
+Child-Artefakt bleibt unangenommen und der Coordinator legt dem Nutzer die
+inhaltliche Abweichung in Alltagssprache vor. Eine beabsichtigte Änderung wird
+als neue Research-Version geführt. Ideengenerierung ohne bestehende Identität
+erhält transparent `NOT_COMPARABLE_NEW_IDENTITY` und legt die Identität erst im
+Intake je Kandidat an.
 
 Zwingende Fachrouten sind insbesondere:
 

@@ -1,7 +1,7 @@
 {
   "schema_version": "eval-results.v2",
   "catalog_id": "research-agent-core",
-  "catalog_version": "1.7.0",
+  "catalog_version": "1.8.0",
   "run_id": "smoke-reference-v1",
   "created_at": "2026-08-30T00:00:00+02:00",
   "run_kind": "PROTOCOL_SMOKE",
@@ -437,6 +437,19 @@
         "selected_agent": null,
         "empirical_test_authorized": false,
         "original_result_may_change": false
+      }
+    },
+    "route_detected_handoff_drift_to_user": {
+      "claims": {},
+      "routing": {
+        "route": "USER_DECISION_REQUIRED",
+        "identity_check_status": "DRIFT_DETECTED",
+        "changed_dimensions": [
+          "target"
+        ],
+        "changed_output_accepted": false,
+        "original_identity_remains_effective": true,
+        "user_explanation": "Der Fachbeitrag hat das Ziel verändert: Statt einer Bewegung um zwei vorher gemessene Schwankungseinheiten wird nun die gegenüberliegende Spannenbegrenzung verwendet. Diese Fassung wird nicht übernommen. Du kannst beim ursprünglichen Ziel bleiben oder die Änderung ausdrücklich als neue Research-Version freigeben."
       }
     }
   }

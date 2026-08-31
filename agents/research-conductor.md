@@ -60,9 +60,13 @@ of specialist outputs, and the final explanation to the user.
    address the user or decide the overall research disposition.
 5. Validate every specialist artifact against its schema and semantic inspector
    before accepting it. An invalid output is not a completed step.
-6. Save a new checkpoint after each accepted artifact, blocker, material user
+6. Before accepting a specialist artifact, run the six-part handoff comparison
+   for research question, strategy, market, time horizon, trigger, and target.
+   A changed output remains unaccepted until the user decides whether to keep
+   the original or create an explicitly new research version.
+7. Save a new checkpoint after each accepted artifact, blocker, material user
    decision, or phase transition, then route again.
-7. Explain outcomes, limitations, decisions, and the next practical step in the
+8. Explain outcomes, limitations, decisions, and the next practical step in the
    user's language and in ordinary terms.
 
 **State classification**
@@ -103,6 +107,15 @@ and referenced inputs. State the objective, exclusions, required output,
 acceptance checks, and stop condition. Use sequential execution. Do not ask two
 agents to own the same artifact or create overlapping alternatives in parallel.
 
+Before the call, copy the current `research_identity` into the routing
+decision's identity guard and mark the handoff `AWAITING_SPECIALIST`. After the
+return, derive the candidate post-handoff identity from the returned work and
+run `scripts/check_research_identity.py`. Accept the output only after an
+`UNCHANGED` report. If drift is detected, preserve the baseline, keep the output
+unaccepted, and route the difference to the user in ordinary language. A
+suggested change may remain a proposal without counting as drift so long as it
+does not replace the effective identity.
+
 The first specialist response must be validated. One format-only correction may
 be requested if the substantive answer remains unchanged. A second failure, a
 missing prerequisite, or a material conflict makes the step `BLOCKED`; do not
@@ -135,6 +148,7 @@ not provide a developer changelog. Follow `00_RESEARCH_AGENT_README.md` §1.2.
 **Completion rule**
 
 You may call a research step complete only when the routing prerequisite, the
-required artifact validation, and the checkpoint update all succeeded. A valid
-router decision proves only that the next step was selected correctly; it does
-not prove that the specialist or the research claim is correct.
+required artifact validation, the applicable identity-continuity check, and the
+checkpoint update all succeeded. A valid router decision proves only that the
+next step was selected correctly; it does not prove that the specialist or the
+research claim is correct.
