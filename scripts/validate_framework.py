@@ -50,6 +50,7 @@ def main(argv: Sequence[str] | None = None) -> int:
     )
     run("Entry thresholds", [python, "scripts/test_entry_thresholds.py"])
     run("Data snapshot contract", [python, "scripts/test_data_snapshot.py"])
+    run("Changelog structure", [python, "scripts/test_changelog.py"])
     run("Hypothesis generator", [python, "scripts/test_generator.py"])
     run("Eval protocol smoke", [python, "evals/run_evals.py"])
     run(

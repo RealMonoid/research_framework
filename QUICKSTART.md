@@ -282,6 +282,23 @@ python scripts/validate_framework.py \
 Ohne produziertes `LIVE_AGENT`-Artefakt ist nur die Framework-Integrität geprüft,
 nicht die Qualität einer Modell- oder Promptänderung.
 
+## 7a. Änderungen am Repository protokollieren
+
+Wer an diesem Repository etwas ändert, trägt vor Abschluss einen Eintrag in
+[`CHANGELOG.md`](CHANGELOG.md) ein und unterzeichnet ihn mit seinem Namen:
+`Agent`, `Commit`, `Was`, `Warum`, `Berührt`, empfohlen `Nicht getan`, und
+`Signatur`. Neueste Einträge stehen oben.
+
+Das gilt für Agenten wie für Menschen. Am Repository wird parallel und mit
+getrennten Arbeitskopien gearbeitet; `git log` zeigt, was passiert ist, aber
+nicht die Absicht. Vor der Änderung einer Datei sind die Einträge zu lesen, die
+diese Datei berühren. Die verbindliche Fassung der Regel steht in
+[`00_RESEARCH_AGENT_README.md`](00_RESEARCH_AGENT_README.md) §16b.
+
+`scripts/test_changelog.py` prüft Struktur, Signaturzuordnung und Datumsordnung.
+Der Wahrheitsgehalt eines Eintrags wird nicht geprüft und bleibt
+Selbstdeklaration nach Abschnitt 1.
+
 ## 8. Bekannte offene Validierungslücke
 
 Das Repository enthält derzeit keinen vollständig durchgearbeiteten realen

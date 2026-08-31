@@ -69,6 +69,12 @@ if ($LASTEXITCODE -ne 0) {
     throw "Data-Snapshot-Vertragstests fehlgeschlagen (Exit $LASTEXITCODE)."
 }
 
+Write-Output '== Changelog structure =='
+& $PythonExecutable (Join-Path $repoRoot 'scripts\test_changelog.py')
+if ($LASTEXITCODE -ne 0) {
+    throw "Changelog-Strukturpruefung fehlgeschlagen (Exit $LASTEXITCODE)."
+}
+
 Write-Output '== Hypothesis generator =='
 & $PythonExecutable (Join-Path $repoRoot 'scripts\test_generator.py')
 if ($LASTEXITCODE -ne 0) {

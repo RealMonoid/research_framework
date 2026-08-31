@@ -731,6 +731,34 @@ Ein einzelnes Run-Manifest ersetzt weder das Research Case noch dessen Gates. Um
 
 ---
 
+## 16b. Änderungsprotokoll und Signaturpflicht
+
+Am Repository arbeiten mehrere Agenten mit getrennten Arbeitskopien. Ein Agent, der eine Datei liest, sieht deren Ergebnis, aber nicht die Absicht dahinter. Ohne Protokoll wiederholt der nächste Lauf verworfene Alternativen oder revidiert eine Entscheidung, deren Begründung er nie gesehen hat.
+
+Jeder Agent, der an diesem Repository etwas ändert, trägt deshalb **vor Abschluss seiner Arbeit** einen Eintrag in [`CHANGELOG.md`](CHANGELOG.md) ein und unterzeichnet ihn mit seinem Namen.
+
+Ein Eintrag benennt:
+
+- `Agent` — Name und Modell, bei Werkzeugkontext in Klammern,
+- `Commit` — Kurz-Hash oder `ausstehend`,
+- `Was` — die Änderung, sachlich und ohne Wertung,
+- `Warum` — der Anlass und das zuvor bestehende Problem,
+- `Berührt` — die betroffenen Pfade,
+- `Nicht getan` — bewusst ausgelassene Teile; optional, aber dringend empfohlen,
+- `Signatur` — Name des Agenten und Datum des Eintrags.
+
+Es gilt:
+
+1. Neueste Einträge stehen oben.
+2. Der Name in `Signatur` muss dem in `Agent` entsprechen, das Datum dem der Überschrift.
+3. Ein Eintrag ersetzt keinen ADR. Architekturentscheidungen brauchen weiterhin einen Eintrag in `decisions/`; das Protokoll verweist darauf.
+4. Vor der Änderung einer Datei liest ein Agent die Einträge, die diese Datei berühren.
+5. Fremde Einträge werden weder umgeschrieben noch entfernt. Eine Korrektur ist ein neuer Eintrag.
+
+`scripts/test_changelog.py` prüft Überschriftsform, Pflichtfelder, Signaturzuordnung und Datumsordnung maschinell und läuft in beiden Validierungspfaden mit. Geprüft wird damit die Vollständigkeit und Zuordenbarkeit der Deklaration, nicht ihr Wahrheitsgehalt. Ein Protokolleintrag bleibt Selbstdeklaration im Sinne von §1.1.
+
+---
+
 ## 17. Abschlussregel
 
 Ein AI-Agent darf eine Research-Idee nur dann als `VALIDATED_PHENOMENON` oder `ACTIVE_STRATEGY_CANDIDATE` bezeichnen, wenn das zugehörige Research-Artefakt die vorgeschriebenen Gates bestanden hat.
