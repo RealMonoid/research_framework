@@ -1,7 +1,7 @@
 {
   "schema_version": "eval-results.v2",
   "catalog_id": "research-agent-core",
-  "catalog_version": "1.4.0",
+  "catalog_version": "1.5.0",
   "run_id": "smoke-reference-v1",
   "created_at": "2026-08-30T00:00:00+02:00",
   "run_kind": "PROTOCOL_SMOKE",
@@ -317,6 +317,62 @@
           }
         },
         "release_decision": "ECONOMICALLY_UNTRADEABLE"
+      }
+    },
+    "noise_screen_not_evidence": {
+      "claims": {
+        "effect_exists": {
+          "statement_class": "INFERENCE",
+          "evidence_status": "UNKNOWN",
+          "source_ids": [],
+          "value": null
+        }
+      },
+      "hypothesis_intake": {
+        "noise_screen_status": "PASS",
+        "phase_zero_authorized": true,
+        "epistemic_stage_status": {
+          "mechanism_supported": {
+            "status": "UNKNOWN",
+            "evidence_refs": [],
+            "rationale": "A discovery screen does not identify a transmission mechanism.",
+            "assessed_at": "2026-08-31T14:00:00Z"
+          },
+          "forward_predictive_oos": {
+            "status": "UNKNOWN",
+            "evidence_refs": [],
+            "rationale": "No frozen out-of-sample prediction was tested.",
+            "assessed_at": "2026-08-31T14:00:00Z"
+          },
+          "executable_net_edge": {
+            "status": "UNKNOWN",
+            "evidence_refs": [],
+            "rationale": "No executable-price or after-cost evaluation was run.",
+            "assessed_at": "2026-08-31T14:00:00Z"
+          }
+        }
+      }
+    },
+    "actor_constraint_not_mechanism": {
+      "claims": {
+        "proposed_actor_mechanism": {
+          "statement_class": "INFERENCE",
+          "evidence_status": "UNKNOWN",
+          "source_ids": [],
+          "value": null
+        }
+      },
+      "hypothesis_intake": {
+        "actor_constraint_status": "PLAUSIBLE_NOT_IDENTIFIED",
+        "epistemic_stage_status": {
+          "mechanism_supported": {
+            "status": "UNKNOWN",
+            "evidence_refs": [],
+            "rationale": "The actor story is plausible, but the available proxy does not identify the actor or mechanism against alternatives.",
+            "assessed_at": "2026-08-31T14:10:00Z"
+          }
+        },
+        "required_next_gate": "MECHANISM_IDENTIFICATION"
       }
     }
   }

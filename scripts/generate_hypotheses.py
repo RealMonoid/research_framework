@@ -327,7 +327,7 @@ def build_candidate(
     idea_id = f"idea:{proposal['key']}"
     file_name = f"{proposal['key']}.json"
     candidate = {
-        "schema_version": "1.3.0",
+        "schema_version": "1.4.0",
         "candidate_id": candidate_id,
         "candidate_version": "1.0.0",
         "inbox_id": inbox_id,

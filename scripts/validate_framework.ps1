@@ -27,6 +27,12 @@ if (-not $PythonExecutable -or -not (Test-Path -LiteralPath $PythonExecutable)) 
 Write-Output '== Schema contracts =='
 & (Join-Path $PSScriptRoot 'test_schemas.ps1')
 
+Write-Output '== Entry thresholds =='
+& $PythonExecutable (Join-Path $repoRoot 'scripts\test_entry_thresholds.py')
+if ($LASTEXITCODE -ne 0) {
+    throw "Entry-Threshold-Tests fehlgeschlagen (Exit $LASTEXITCODE)."
+}
+
 Write-Output '== Hypothesis generator =='
 & $PythonExecutable (Join-Path $repoRoot 'scripts\test_generator.py')
 if ($LASTEXITCODE -ne 0) {

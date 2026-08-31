@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "urn:research-framework:schema:mechanism-catalog:1.0.0",
+  "$id": "urn:research-framework:schema:mechanism-catalog:1.1.0",
   "title": "Short-Horizon Market Mechanism Catalog",
   "description": "Versionierter Quellenkatalog fuer die Erzeugung von Intraday- und kurzen Swing-Hypothesen. Der Katalog ist ein Ideengenerator, kein Screening- oder Evidenzgate.",
   "type": "object",
@@ -15,7 +15,7 @@
   ],
   "properties": {
     "schema_version": {
-      "const": "1.0.0"
+      "const": "1.1.0"
     },
     "catalog_id": {
       "$ref": "#/$defs/stableId"
@@ -129,6 +129,7 @@
       "required": [
         "mechanism_id",
         "mechanism_version",
+        "entry_origin",
         "title",
         "generation_modes",
         "mechanism_family",
@@ -151,6 +152,9 @@
         },
         "mechanism_version": {
           "$ref": "#/$defs/semanticVersion"
+        },
+        "entry_origin": {
+          "$ref": "#/$defs/entryOrigin"
         },
         "title": {
           "type": "string",
@@ -266,6 +270,46 @@
           "items": {
             "$ref": "#/$defs/literatureSource"
           }
+        }
+      }
+    },
+    "entryOrigin": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "origin_kind",
+        "origin_refs",
+        "origin_summary",
+        "captured_at"
+      ],
+      "properties": {
+        "origin_kind": {
+          "type": "string",
+          "enum": [
+            "LITERATURE_SYNTHESIS",
+            "MARKET_RULE",
+            "INTERNAL_OBSERVATION",
+            "EXTERNAL_OBSERVATION",
+            "HYBRID"
+          ]
+        },
+        "origin_refs": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/$defs/stableId"
+          },
+          "description": "Paper-, Regel-, Beobachtungs- oder Journalreferenzen, aus denen der Katalogeintrag entstand."
+        },
+        "origin_summary": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 2000
+        },
+        "captured_at": {
+          "type": "string",
+          "format": "date-time"
         }
       }
     },

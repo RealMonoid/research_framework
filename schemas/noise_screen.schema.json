@@ -1,0 +1,207 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:research-framework:schema:noise-screen:1.0.0",
+  "title": "Candidate Entry Noise Screen",
+  "description": "Frueher Surrogat-Screen fuer beobachtungsgetriebene Rohideen. PASS erlaubt Aufwand fuer Phase 0, ist aber kein Evidenznachweis.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "screen_id",
+    "candidate_ref",
+    "created_at",
+    "test_statistic",
+    "observed_value",
+    "surrogate_method",
+    "preserved_structure",
+    "surrogate_count",
+    "threshold_percentile",
+    "threshold_set_at",
+    "surrogate_exceedance_count",
+    "screen_result",
+    "data_role",
+    "screen_index",
+    "search_space_ref"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "1.0.0"
+    },
+    "screen_id": {
+      "$ref": "#/$defs/stableId"
+    },
+    "candidate_ref": {
+      "$ref": "#/$defs/stableId"
+    },
+    "created_at": {
+      "$ref": "#/$defs/timestamp"
+    },
+    "test_statistic": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "name",
+        "definition"
+      ],
+      "properties": {
+        "name": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 300
+        },
+        "definition": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4000
+        }
+      }
+    },
+    "observed_value": {
+      "type": "number"
+    },
+    "surrogate_method": {
+      "type": "string",
+      "enum": [
+        "BLOCK_BOOTSTRAP",
+        "STATIONARY_BOOTSTRAP",
+        "SESSION_PRESERVING_SHUFFLE",
+        "PHASE_RANDOMIZATION",
+        "SYNTHETIC_MODEL",
+        "OTHER"
+      ]
+    },
+    "other_method_description": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 2000
+    },
+    "preserved_structure": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "enum": [
+          "AUTOCORRELATION",
+          "VOLATILITY_CLUSTERING",
+          "SESSION_PROFILE",
+          "WEEKDAY_PATTERN",
+          "EVENT_CALENDAR",
+          "CROSS_ASSET_CORRELATION",
+          "OTHER"
+        ]
+      }
+    },
+    "surrogate_count": {
+      "type": "integer",
+      "minimum": 200
+    },
+    "threshold_percentile": {
+      "type": "number",
+      "exclusiveMinimum": 0,
+      "maximum": 100
+    },
+    "threshold_set_at": {
+      "$ref": "#/$defs/timestamp"
+    },
+    "surrogate_exceedance_count": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "screen_result": {
+      "type": "string",
+      "enum": [
+        "PASS",
+        "FAIL",
+        "BLOCKED"
+      ]
+    },
+    "blocking_reason": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 4000
+    },
+    "data_role": {
+      "type": "string",
+      "enum": [
+        "DISCOVERY",
+        "SYNTHETIC"
+      ]
+    },
+    "screen_index": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "search_space_ref": {
+      "$ref": "#/$defs/stableId"
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "surrogate_method": {
+            "enum": [
+              "SESSION_PRESERVING_SHUFFLE",
+              "PHASE_RANDOMIZATION"
+            ]
+          }
+        },
+        "required": [
+          "surrogate_method"
+        ]
+      },
+      "then": {
+        "properties": {
+          "preserved_structure": {
+            "minItems": 2
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "surrogate_method": {
+            "const": "OTHER"
+          }
+        },
+        "required": [
+          "surrogate_method"
+        ]
+      },
+      "then": {
+        "required": [
+          "other_method_description"
+        ]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "screen_result": {
+            "const": "BLOCKED"
+          }
+        },
+        "required": [
+          "screen_result"
+        ]
+      },
+      "then": {
+        "required": [
+          "blocking_reason"
+        ]
+      }
+    }
+  ],
+  "$defs": {
+    "stableId": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"
+    },
+    "timestamp": {
+      "type": "string",
+      "format": "date-time"
+    }
+  }
+}

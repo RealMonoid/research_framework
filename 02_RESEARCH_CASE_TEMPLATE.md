@@ -68,7 +68,9 @@ Das Register referenziert die maschinenlesbaren Artefakte nach `05_AGENT_OPERATI
 | Review Ledger | | | | | `NO_REVIEW / OPEN / ACCEPTED / REJECTED / SUPERSEDED` |
 | Forecast Ledger | | | | | `N/A / OPEN / PARTIALLY_RESOLVED / RESOLVED` |
 | Eval-Ergebnis | | | | | `PASS / FAIL / BLOCKED / NOT_RUN` |
-| Hypothesen-Intake | | `1.3.0` | | | `INBOX / SCREENED / MERGED / REJECTED / PROMOTED` |
+| Hypothesen-Intake | | `1.4.0` | | | `INBOX / SCREENED / MERGED / REJECTED / PROMOTED` |
+| Search-Space-Register | | `1.0.0` | | | `N/A (Zählregister)` |
+| Entry Noise Screen | | `1.0.0` | | | `PASS / FAIL / BLOCKED` oder Intake-Waiver |
 
 ## A3. Academic-Source-Protokoll
 

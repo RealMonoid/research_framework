@@ -1,6 +1,6 @@
 # 00_RESEARCH_AGENT_README.md
 
-**Version:** 2.0
+**Version:** 2.1
 **Stand:** 2026-08-31
 **Status:** ENTWURF ZUR ÜBERNAHME  
 **Zweck:** Verbindliche Lese- und Ausführungsanweisung für AI-Agenten, die Trading-Research-Projekte bearbeiten.
@@ -202,6 +202,17 @@ Footprint, Alternativerklärungen, Datenanforderungen und frühe
 Ausführbarkeitshürden werden schrittweise ergänzt und sind erst für `PROMOTED`
 vollständig Pflicht.
 
+Vor `PROMOTED` benötigt eine beobachtungsgetriebene Idee einen verknüpften
+Noise Screen mit Status `PASS / FAIL / BLOCKED`. Dessen Search-Space-Register
+fixiert Kandidatenuniversum,
+Familiengröße, Alpha und Korrekturmethode vor dem ersten Ergebnis. Ein Waiver ist
+nur für theoriegetriebene, terminierte Event- oder publizierte
+Replikationsideen mit Begründung zulässig. `PASS` erlaubt Phase-0-Aufwand und ist
+keine Evidenz. Schema plus `scripts/validate_entry_thresholds.py` erzwingen
+Zeitreihenfolge, Quotient, Registerabgleich und Multiplikität. Bei mehr als
+einem geplanten Screen ist eine Korrektur zwingend; `NONE_JUSTIFIED` ist nur
+für eine Ein-Test-Familie zulässig.
+
 Für promovierte Intraday-Ideen sind Markt/Instrument, Venue/Feed, Handelsphase,
 Kalender/Zeitzone/DST, Clock- oder Event-Time-Horizont und Ereignisklasse Pflicht.
 Die News-/Makro-Policy wird als `INCLUDED_AS_SIGNAL`, `NOT_USED_AS_SIGNAL`,
@@ -216,6 +227,11 @@ deren Datenrolle, Outcome-Sichtbarkeit, Auswahlmethoden, effektive
 Kandidatenzahl, Suchraum und Auswahlbias-Kontrollen protokolliert. Jede dabei
 verwendete Information wird zugleich in `consumed_data_refs` erfasst; unabhängige
 Validation oder Holdout-Daten dürfen die Auswahl nicht beeinflussen.
+
+Zusätzlich ist bei `PROMOTED` ein `actor_constraint` mit Akteur, Zwang,
+erwarteter Handlung, beobachtbarem Bezug und mindestens einer konkurrierenden
+Akteurshypothese Pflicht. Diese Plausibilitätsgeschichte ist kein
+Mechanismusnachweis.
 
 Der Agent führt getrennt:
 

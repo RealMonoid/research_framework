@@ -39,6 +39,14 @@ Er führt kein Screening, Backtesting, Evidence Grading, Ranking oder Promotion
 durch. Details und Filteroptionen stehen in
 [`generation/README.md`](generation/README.md).
 
+Der Generation-Run dokumentiert den erzeugten Kandidatenraum. Werden etwa alle
+96 Kandidaten datenbasiert gescreent, wird vor dem ersten Ergebnis eine Familie
+mit `planned_screen_count = 96` in
+[`schemas/search_space.schema.json`](schemas/search_space.schema.json)
+fixiert. Die Schwelle jedes
+[`noise_screen`](schemas/noise_screen.schema.json) muss der dort hinterlegten
+Multiplikitätskorrektur entsprechen.
+
 ## 3. Günstiger Intake
 
 Eine neue Idee beginnt als `INBOX` nach
@@ -57,9 +65,12 @@ Wird die Idee beim Screening verworfen, genügt der kurze `REJECTED`-Datensatz m
 Begründung; siehe
 [`examples/hypothesis_candidate.rejected.json`](examples/hypothesis_candidate.rejected.json).
 
-Erst `PROMOTED` verlangt vollständigen Scope, beobachtbare Footprints,
-Alternativerklärungen, Datenanforderungen, frühe Machbarkeit, die drei
-getrennten Evidenzstufen und einen Record zur Variablenauswahl. Bei
+Erst `PROMOTED` verlangt vollständigen Scope, einen beobachtbaren
+Akteurs-/Zwangs-Record mit konkurrierender Akteurshypothese, einen bestandenen
+Noise Screen oder einen begründeten theorie-/event-/replikationsbasierten Waiver,
+beobachtbare Footprints, Alternativerklärungen, Datenanforderungen, frühe
+Machbarkeit, die drei getrennten Evidenzstufen und einen Record zur
+Variablenauswahl. Bei
 `PREDEFINED` genügen Begründung und beibehaltene Konstrukte. `DATA_DRIVEN` und
 `HYBRID` verlangen zusätzlich Kandidatenuniversum, Selektionsdaten und deren
 Rolle, Outcome-Sichtbarkeit, Methode, effektive Kandidatenzahl, Suchraum und
@@ -87,6 +98,7 @@ aktivierte optionale Methoden erzeugen keine Serien begründeter `N/A`-Einträge
 - Claim-Level (`ASSOCIATIONAL_PREDICTIVE / INTERVENTIONAL / COUNTERFACTUAL`) und Validierungs-/Handelsstatus (`mechanism_supported / forward_predictive_oos / executable_net_edge`) sind unabhängige Achsen. Keine Achse stuft die andere automatisch hoch.
 - Kausale Identifikation darf als SCM/DAG, Potential-Outcomes-Design, strukturell-ökonometrisches oder anderes explizites Identifikationsmodell formuliert werden. Die Notation entscheidet nicht über den Claim-Level.
 - Bereits betrachtete Daten werden im Informationsbudget erfasst.
+- Erzeugte und tatsächlich gescreente Kandidaten werden vollständig im Search-Space-Register gezählt; ein Noise-Screen-`PASS` ist keine Evidenz.
 - Prädiktoren müssen zum Entscheidungszeitpunkt tatsächlich verfügbar sein.
 - Materielle Regeln werden vor unabhängiger Evaluation eingefroren.
 - Kosten, Latenz, Fills und gegebenenfalls Queue/Borrow werden vor einem Netto-Edge-Claim geprüft.

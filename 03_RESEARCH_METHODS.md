@@ -1,6 +1,6 @@
 # 03_RESEARCH_METHODS.md
 
-**Version:** 1.8
+**Version:** 1.9
 **Stand:** 2026-08-31
 **Status:** ENTWURF ZUR ÜBERNAHME  
 **Zweck:** Methodenauswahl für AI-Agenten. Dieses Dokument sagt nicht, dass jede Methode immer angewendet werden muss. Es verhindert, dass notwendige Methoden vergessen oder dekorativ genannt werden.
@@ -928,7 +928,9 @@ Der ausführbare Producer unter `scripts/generate_hypotheses.py` liest
 `generation/mechanism_catalog.v1.json`. Jeder Katalogeintrag enthält
 Mechanismusgeschichte, mögliche Akteure oder Regeln, erwartete Handlungen,
 beobachtbare Signaturen, natürliche Phasen, alternative Observablen,
-Widerspruchshypothesen, Verbindungstags und Primärquellen.
+Widerspruchshypothesen, Verbindungstags, Primärquellen und einen expliziten
+`entry_origin`. Interne Beobachtungen dürfen den Katalog nur über stabile
+Beobachtungs- oder Journalreferenzen erweitern.
 
 Die Grundgrammatik lautet:
 
@@ -958,6 +960,11 @@ Nicht Bestandteil dieser Methode sind Portfolioallokation, langfristige
 Faktorideen, Premortem, Validity-Labels, Ablehnungsstatistik, Noise Screen,
 Backtest, Ranking oder Promotion. Diese Trennung ist in
 `decisions/ADR-006-mechanism-first-hypothesis-generator.md` festgehalten.
+
+Der Generatorlauf ist jedoch die Kandidatenuniversums-Referenz für spätere
+Screens. Der nachgelagerte Entry Screen zählt jede tatsächlich datenbasiert
+geprüfte Idee und verwendet die vorab fixierte Korrektur aus dem
+Search-Space-Register; das macht den Screen nicht zu einem Generatoroperator.
 
 ---
 

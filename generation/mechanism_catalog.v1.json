@@ -1,7 +1,7 @@
 {
-  "schema_version": "1.0.0",
+  "schema_version": "1.1.0",
   "catalog_id": "catalog:short-horizon-market-mechanisms",
-  "catalog_version": "1.0.0",
+  "catalog_version": "1.1.0",
   "title": "Literature-backed mechanisms for intraday and short swing idea generation",
   "scope": {
     "holding_horizons": [
@@ -23,6 +23,15 @@
     {
       "mechanism_id": "mechanism:order-flow-imbalance",
       "mechanism_version": "1.0.0",
+      "entry_origin": {
+        "origin_kind": "LITERATURE_SYNTHESIS",
+        "origin_refs": [
+          "source:cont-kukanov-stoikov-2014",
+          "source:gould-bonart-2016"
+        ],
+        "origin_summary": "Seeded from primary short-horizon order-book research before any internal observation was admitted.",
+        "captured_at": "2026-08-31T00:00:00Z"
+      },
       "title": "Order-flow imbalance relative to displayed depth",
       "generation_modes": [
         "MICROSTRUCTURE_STATE",
@@ -117,6 +126,14 @@
     {
       "mechanism_id": "mechanism:metaorder-splitting",
       "mechanism_version": "1.0.0",
+      "entry_origin": {
+        "origin_kind": "LITERATURE_SYNTHESIS",
+        "origin_refs": [
+          "source:moro-et-al-2009"
+        ],
+        "origin_summary": "Seeded from empirical research on hidden-order execution profiles.",
+        "captured_at": "2026-08-31T00:00:00Z"
+      },
       "title": "Incremental execution of large hidden orders",
       "generation_modes": [
         "CONSTRAINT_FIRST",
@@ -205,6 +222,14 @@
     {
       "mechanism_id": "mechanism:intermediary-inventory-pressure",
       "mechanism_version": "1.0.0",
+      "entry_origin": {
+        "origin_kind": "LITERATURE_SYNTHESIS",
+        "origin_refs": [
+          "source:hendershott-menkveld-2014"
+        ],
+        "origin_summary": "Seeded from primary research on intermediary inventory and price pressure.",
+        "captured_at": "2026-08-31T00:00:00Z"
+      },
       "title": "Intermediary inventory pressure and mean reversion",
       "generation_modes": [
         "CONSTRAINT_FIRST",
@@ -287,6 +312,14 @@
     {
       "mechanism_id": "mechanism:stop-order-clustering",
       "mechanism_version": "1.0.0",
+      "entry_origin": {
+        "origin_kind": "LITERATURE_SYNTHESIS",
+        "origin_refs": [
+          "source:osler-2003"
+        ],
+        "origin_summary": "Seeded from primary evidence on clustered currency orders and price dynamics.",
+        "captured_at": "2026-08-31T00:00:00Z"
+      },
       "title": "Stop-loss and take-profit clustering around salient levels",
       "generation_modes": [
         "MICROSTRUCTURE_STATE",
@@ -374,6 +407,14 @@
     {
       "mechanism_id": "mechanism:gamma-hedging",
       "mechanism_version": "1.0.0",
+      "entry_origin": {
+        "origin_kind": "LITERATURE_SYNTHESIS",
+        "origin_refs": [
+          "source:baltussen-et-al-2021"
+        ],
+        "origin_summary": "Seeded from primary intraday evidence linking hedging demand to late-session momentum.",
+        "captured_at": "2026-08-31T00:00:00Z"
+      },
       "title": "Delta hedging under short or long gamma exposure",
       "generation_modes": [
         "CONSTRAINT_FIRST",
@@ -466,6 +507,14 @@
     {
       "mechanism_id": "mechanism:option-expiration-strike",
       "mechanism_version": "1.0.0",
+      "entry_origin": {
+        "origin_kind": "LITERATURE_SYNTHESIS",
+        "origin_refs": [
+          "source:ni-pearson-poteshman-2005"
+        ],
+        "origin_summary": "Seeded from primary research on underlying-price clustering at option expiration.",
+        "captured_at": "2026-08-31T00:00:00Z"
+      },
       "title": "Underlying-price pressure near option strikes at expiration",
       "generation_modes": [
         "CONSTRAINT_FIRST",
@@ -547,6 +596,14 @@
     {
       "mechanism_id": "mechanism:predictable-futures-roll",
       "mechanism_version": "1.0.0",
+      "entry_origin": {
+        "origin_kind": "LITERATURE_SYNTHESIS",
+        "origin_refs": [
+          "source:bessembinder-et-al-2016"
+        ],
+        "origin_summary": "Seeded from primary evidence on liquidity around predictable commodity-futures roll trades.",
+        "captured_at": "2026-08-31T00:00:00Z"
+      },
       "title": "Predictable futures-roll flow and strategic liquidity provision",
       "generation_modes": [
         "CONSTRAINT_FIRST",
@@ -635,6 +692,14 @@
     {
       "mechanism_id": "mechanism:closing-auction-imbalance",
       "mechanism_version": "1.0.0",
+      "entry_origin": {
+        "origin_kind": "LITERATURE_SYNTHESIS",
+        "origin_refs": [
+          "source:wu-jegadeesh-2022"
+        ],
+        "origin_summary": "Seeded from primary research on closing-auction imbalance, impact and resiliency.",
+        "captured_at": "2026-08-31T00:00:00Z"
+      },
       "title": "Closing-auction imbalance, absorption and reversal",
       "generation_modes": [
         "CONSTRAINT_FIRST",
@@ -724,6 +789,14 @@
     {
       "mechanism_id": "mechanism:futures-cash-price-discovery",
       "mechanism_version": "1.0.0",
+      "entry_origin": {
+        "origin_kind": "LITERATURE_SYNTHESIS",
+        "origin_refs": [
+          "source:chan-1992"
+        ],
+        "origin_summary": "Seeded from primary research on cash-futures lead-lag price discovery.",
+        "captured_at": "2026-08-31T00:00:00Z"
+      },
       "title": "Lead-lag price discovery between futures and cash instruments",
       "generation_modes": [
         "LINKAGE_OR_IDENTITY",
@@ -806,6 +879,14 @@
     {
       "mechanism_id": "mechanism:intraday-clock-recurrence",
       "mechanism_version": "1.0.0",
+      "entry_origin": {
+        "origin_kind": "LITERATURE_SYNTHESIS",
+        "origin_refs": [
+          "source:heston-korajczyk-sadka-2010"
+        ],
+        "origin_summary": "Seeded from primary research on recurring intraday clock-time patterns.",
+        "captured_at": "2026-08-31T00:00:00Z"
+      },
       "title": "Recurring intraday return and liquidity patterns at clock time",
       "generation_modes": [
         "LITERATURE_REPLICATION",
@@ -881,6 +962,15 @@
     {
       "mechanism_id": "mechanism:index-rebalance",
       "mechanism_version": "1.0.0",
+      "entry_origin": {
+        "origin_kind": "LITERATURE_SYNTHESIS",
+        "origin_refs": [
+          "source:pavlova-sikorskaya-2023",
+          "source:greenwood-sammon-2025"
+        ],
+        "origin_summary": "Seeded from primary research on benchmark-driven demand and the changing index effect.",
+        "captured_at": "2026-08-31T00:00:00Z"
+      },
       "title": "Benchmark-driven index rebalancing",
       "generation_modes": [
         "CONSTRAINT_FIRST",
@@ -975,6 +1065,15 @@
     {
       "mechanism_id": "mechanism:perpetual-funding-liquidation",
       "mechanism_version": "1.0.0",
+      "entry_origin": {
+        "origin_kind": "LITERATURE_SYNTHESIS",
+        "origin_refs": [
+          "source:cheng-deng-wang-yu-2021",
+          "source:he-et-al-2022"
+        ],
+        "origin_summary": "Seeded from q-fin research on perpetual-futures funding and forced liquidations.",
+        "captured_at": "2026-08-31T00:00:00Z"
+      },
       "title": "Perpetual-futures funding and forced liquidation feedback",
       "generation_modes": [
         "CONSTRAINT_FIRST",

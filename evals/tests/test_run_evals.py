@@ -117,6 +117,56 @@ class EvalHarnessTests(unittest.TestCase):
         )
         self.assertTrue(report["regression_failures"])
 
+    def test_noise_screen_pass_cannot_be_promoted_to_evidence(self) -> None:
+        for path in (
+            ("claims", "effect_exists", "evidence_status"),
+            (
+                "hypothesis_intake",
+                "epistemic_stage_status",
+                "mechanism_supported",
+                "status",
+            ),
+            (
+                "hypothesis_intake",
+                "epistemic_stage_status",
+                "forward_predictive_oos",
+                "status",
+            ),
+            (
+                "hypothesis_intake",
+                "epistemic_stage_status",
+                "executable_net_edge",
+                "status",
+            ),
+        ):
+            with self.subTest(path=path):
+                regressed = copy.deepcopy(self.results)
+                regressed["run_id"] = "noise-screen-evidence-regression"
+                target = regressed["cases"]["noise_screen_not_evidence"]
+                for component in path[:-1]:
+                    target = target[component]
+                target[path[-1]] = "SUPPORTED"
+
+                report = run_evals.score_results(self.catalog, regressed, self.baseline)
+                self.assertFalse(report["passed"])
+                self.assertFalse(report["cases"]["noise_screen_not_evidence"]["passed"])
+                self.assertTrue(report["regression_failures"])
+
+    def test_actor_constraint_cannot_be_promoted_to_mechanism_evidence(self) -> None:
+        regressed = copy.deepcopy(self.results)
+        regressed["run_id"] = "actor-constraint-mechanism-regression"
+        regressed["cases"]["actor_constraint_not_mechanism"]["claims"][
+            "proposed_actor_mechanism"
+        ]["evidence_status"] = "SUPPORTED"
+        regressed["cases"]["actor_constraint_not_mechanism"]["hypothesis_intake"][
+            "epistemic_stage_status"
+        ]["mechanism_supported"]["status"] = "SUPPORTED"
+
+        report = run_evals.score_results(self.catalog, regressed, self.baseline)
+        self.assertFalse(report["passed"])
+        self.assertFalse(report["cases"]["actor_constraint_not_mechanism"]["passed"])
+        self.assertTrue(report["regression_failures"])
+
     def test_cli_smoke_run_returns_zero(self) -> None:
         with redirect_stdout(io.StringIO()), redirect_stderr(io.StringIO()):
             return_code = run_evals.main([])
