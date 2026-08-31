@@ -53,7 +53,7 @@ Der Name in `Signatur` muss mit dem in `Agent` übereinstimmen, und das Datum in
 ## 2026-08-31 — Änderungsprotokoll und Signaturpflicht für Agenten
 
 - **Agent:** Claude Opus 5 (Claude Code)
-- **Commit:** c121c83
+- **Commit:** 966a029
 - **Was:** Dieses Protokoll eingeführt, die Pflicht zu Eintrag und Signatur als §16b in den Agentenanweisungen verankert, in QUICKSTART verlinkt und mit `scripts/test_changelog.py` strukturell prüfbar gemacht.
 - **Warum:** Am Repository arbeiten mehrere Agenten mit getrennten Arbeitskopien. `git log` zeigt, was passiert ist, aber nicht die Absicht; ADRs decken nur Architekturentscheidungen ab. Dazwischen fehlte eine Spur, die ein nachfolgender Agent lesen kann, bevor er dieselbe Stelle anfasst.
 - **Berührt:** `CHANGELOG.md`, `scripts/test_changelog.py`, `00_RESEARCH_AGENT_README.md`, `QUICKSTART.md`, `scripts/validate_framework.py`, `scripts/validate_framework.ps1`
