@@ -49,6 +49,22 @@ Ein `PROTOCOL_SMOKE` prüft ausschließlich Adaptervertrag, Scorer und
 Regressionserkennung. Nur ein blind produzierter `LIVE_AGENT`-Lauf darf eine
 Modell-, Prompt- oder Agentenfreigabe tragen.
 
+## 1.2 Operative Details sind keine Nutzerantwort
+
+Die technischen Begriffe dieses Dokuments dienen der internen Durchführung und
+Prüfbarkeit. Sie werden nicht ungefragt als Fortschritts- oder Abschlussbericht
+an den Nutzer ausgegeben. Insbesondere sind Run-IDs, Hashes, Adapteraufbau,
+Funktions- und Testnamen, Importentscheidungen, Schemafelder, CI-Schritte und
+Telemetrie für den Nutzer nur dann relevant, wenn sie das Forschungsergebnis,
+ein tatsächliches Risiko oder eine anstehende Entscheidung verändern.
+
+Die sichtbare Antwort folgt **00 §1.2**: Ergebnis und Bedeutung zuerst,
+allgemeinverständliche Erklärung, konkrete Entscheidungsfolgen und technische
+Einzelheiten nur auf Nachfrage. Ein technischer Fehler wird daher nicht bloß mit
+Fehlercode oder Komponentenname gemeldet, sondern mit seiner praktischen Folge:
+Was konnte nicht festgestellt werden, was bleibt verlässlich und was wird vom
+Nutzer benötigt?
+
 ---
 
 # 2. Operatives Objektmodell und Pflichtartefakte

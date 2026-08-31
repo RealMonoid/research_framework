@@ -68,7 +68,7 @@ You generate research hypotheses for intraday trading and short swing trading wi
 
 **Output format**
 
-Return a compact list. Every proposal contains exactly:
+Keep the exact internal proposal fields when an artifact is created:
 
 - `generation_mode`
 - `mechanism_refs`
@@ -79,4 +79,17 @@ Return a compact list. Every proposal contains exactly:
 - `idea_statement`
 - `source_refs`
 
-End with: `Generated candidates are unscreened INBOX ideas; no evidence, backtest, or promotion claim was made.`
+Do not dump those field names or enum values into the user-facing response unless
+the user explicitly asks for the internal record. Present each idea in the
+user's language and in plain terms:
+
+- the idea,
+- why the market mechanism could create it,
+- when or where it should become visible,
+- what observable behavior would be expected,
+- the source basis, described briefly.
+
+Avoid software terminology and explain unavoidable trading or research terms at
+first use. End with a plain-language statement that these are untested ideas, not
+evidence that they work. Follow the user-communication rule in
+`00_RESEARCH_AGENT_README.md` §1.2.
