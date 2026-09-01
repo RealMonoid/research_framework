@@ -210,6 +210,93 @@ maintenance task resumes from the checkpoint, detects a deliberately stale
 Git reference, does not repeat a recorded external side effect, and completes
 without loading unrelated normative documents.
 
+## Empirical research-desk validation and correction ledger
+
+**Status:** planned, not implemented
+
+The framework has extensive normative and deterministic controls, but it still
+lacks a fully worked real research case. A review of the public
+[Edge Hunting research series](https://blue-grass-0beb37910.7.azurestaticapps.net/substack/index.html)
+showed both the value of a fast falsification desk and the danger of treating a
+documented gate as a validated instrument. In particular, that project later
+found that a central null test could not fail by construction, measured the
+power limits of its corrected tester, replayed a source strategy against the
+author's demonstrated trade, and published corrections and retractions in
+place.
+
+This feature must turn those practical lessons into executable evidence for
+this framework without weakening its existing research controls.
+
+### Planned capabilities
+
+1. **One complete real research line.** Run at least one genuine trading-
+   research case from intake through its honest terminal state. Preserve the
+   full search history, data roles, decisions, costs, failures, corrections,
+   and any rejected continuation. A negative, inconclusive, or invalid result
+   is an acceptable outcome; a convenient positive result is not an activation
+   criterion.
+2. **Tester-validity and power suite.** Exercise the complete research pipeline
+   on known-garbage inputs and on synthetic inputs with planted effects across
+   a predeclared effect-size range. Report the false-positive rate, power curve,
+   seed sensitivity, Monte Carlo uncertainty, and the smallest effect size the
+   apparatus can distinguish with the required reliability. Include
+   structure-preserving nulls, matched strategy and control exits, and injected
+   timing, sign, indexing, and leakage faults. A gate that cannot vary or cannot
+   detect its positive sentinel must fail closed.
+3. **Source-demonstration replay.** When an external strategy source contains a
+   sufficiently precise worked example, optionally require the implementation
+   to reproduce that example's trigger, direction, entry, exit, and relevant
+   timestamps before the general strategy is adjudicated. Successful replay
+   establishes implementation fidelity only; it is not evidence that the
+   strategy generalises or has an edge. A material mismatch blocks any
+   replication claim or must be recorded as a distinct reconstructed variant.
+4. **Human-readable graveyard and correction ledger.** Generate a concise view
+   of rejected, blocked, invalidated, corrected, retracted, paper-only, and
+   active research states from immutable source artifacts. Keep the original
+   verdict visible, show the reason and evidence for every correction, and
+   derive all published summaries from one canonical versioned state so that
+   landing pages, counts, and detailed records cannot drift silently. Raw
+   evidence that is unavailable or access-restricted must be labelled as such.
+   External publication remains an explicit human-reviewed action.
+5. **Discovery-to-forward firewall.** Detect when a specification, threshold,
+   stop, target, component, universe, or mechanism story was selected after
+   seeing outcomes. Such a salvage or recombination becomes a new candidate or
+   research version, inherits the complete search lineage and information debt,
+   and cannot reuse the affected data as independent validation. A historical
+   in-sample/out-of-sample split is not independent if both periods influenced
+   the final specification. Paper trading counts as `FORWARD_OOS` only after
+   the full strategy is frozen and its warning, suspension, and rejection rules
+   are predeclared.
+6. **Low-cost triage and program observability.** Before expensive research,
+   support cheap data-model checks, input-distribution diagnostics, matched-
+   exposure benchmarks, and explicit questions about the relevant trading
+   window, plausible constrained actor, and expected firing rate. These are
+   prioritisation heuristics, not universal evidence gates: a predictive or
+   associational candidate may still proceed with an explicitly unknown actor.
+   Track time, compute and data cost, hypotheses rejected, and reason for
+   rejection so the program can optimise time-to-reliable-falsification rather
+   than the number of backtests completed.
+
+### Activation criteria
+
+The feature may be described as implemented only when:
+
+- the real end-to-end case and every effective artifact validate under the
+  existing framework contracts;
+- the tester-validity suite meets predeclared false-positive and power-precision
+  requirements and reliably rejects the injected faults;
+- a replay fixture proves that a source-example mismatch blocks a replication
+  claim while a faithful replay does not upgrade evidence;
+- an adaptive post-result rewrite is mechanically prevented from retaining an
+  independent validation or holdout role;
+- an unfrozen strategy cannot enter paper operation and a frozen one records
+  its forward monitoring rules before activation;
+- the graveyard and correction view is generated from canonical immutable
+  records, detects a deliberately stale summary, and preserves the original
+  verdict after a correction or retraction; and
+- the program-level cost and rejection metrics are derived from run artifacts,
+  not manually reconstructed narratives.
+
 ## Research-control hardening backlog
 
 **Status:** planned, not implemented
