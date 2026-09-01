@@ -134,16 +134,22 @@ routet erneut. Ist ein zwingender Fachagent technisch nicht verfügbar, bleibt
 der Schritt `BLOCKED`; der Forschungsleiter darf dessen Beitrag nicht selbst
 simulieren und zugleich als erfolgt ausgeben.
 
-Vor jeder Fachagenten-Übergabe wird außerdem die wirksame Forschungsidentität
-aus sechs Punkten festgehalten: Forschungsfrage, Strategie, Markt,
-Zeithorizont, Auslöser und Ziel. Nach der Rückgabe vergleicht
-`scripts/check_research_identity.py` dieselben sechs Punkte. Nur `UNCHANGED`
-erlaubt die Annahme des Fachbeitrags. Bei `DRIFT_DETECTED` bleibt der ursprüngliche
-Stand wirksam; die Abweichung und ihre praktische Folge werden dem Nutzer
-verständlich erklärt. Erst eine ausdrückliche Entscheidung darf daraus eine
-neue Research-Version machen. Ein bloßer Änderungsvorschlag des Fachagenten
-darf getrennt dokumentiert werden, ersetzt aber nicht stillschweigend den
-wirksamen Stand.
+Vor jedem materiellen Forschungsschritt wird der vollständige wirksame
+Forschungsfingerabdruck festgehalten. Er umfasst nicht nur Forschungsfrage,
+Strategie, Markt, Zeithorizont, Auslöser und Ziel, sondern auch
+Operationalisierungen, Parameter, Lookbacks, Filter, Ausschlüsse, Datenrollen,
+Auswertungsregeln, Kosten- und Ausführungsannahmen, eingefrorene Ergebnisse und
+die Prüfsummen der wirksamen Unterlagen. Nach dem Arbeitsschritt vergleicht
+`scripts/check_research_fingerprint.py` den gesamten Stand. Nur `UNCHANGED`
+erlaubt die Annahme.
+
+Bei jeder Abweichung bleibt der ursprüngliche Stand wirksam. Die Änderung wird
+mit ihren exakten Pfaden als `CHANGE_PROPOSED` sichtbar gespeichert und dem
+Nutzer mit ihrer praktischen Folge verständlich erklärt. Erst eine
+ausdrückliche Entscheidung darf daraus eine neue Research-ID oder
+Research-Version machen. Ein bestehender Stand wird niemals still
+überschrieben. Diese Regel gilt auch für materielle Arbeit des
+Forschungsleiters selbst.
 
 Insbesondere wird bei einer unvollständigen Prosastrategie zuerst die Quelle
 rekonstruiert, danach zwingend die Begriffs- und Voraussetzungenprüfung durch den

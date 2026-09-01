@@ -1,0 +1,130 @@
+{
+  "schema_version": "1.0.0",
+  "fingerprint_id": "fingerprint:synthetic-prose-strategy:v1",
+  "created_at": "2026-08-31T18:00:00+02:00",
+  "research_id": "research:synthetic-prose-strategy",
+  "research_version": 1,
+  "material_specification": {
+    "research_question": {
+      "status": "DEFINED",
+      "content": {
+        "question": "Can the source strategy be reconstructed and operationalized without silently adding conditions?",
+        "claim_level": "ASSOCIATIONAL_PREDICTIVE"
+      },
+      "source_refs": ["request:operationalize-synthetic-prose-strategy"]
+    },
+    "source_strategy": {
+      "status": "DEFINED",
+      "content": {
+        "name": "VWAP Wave price-discovery breakout",
+        "source_kind": "PROSE_STRATEGY",
+        "source_completeness": "INCOMPLETE"
+      },
+      "source_refs": ["reconstruction:synthetic-prose-strategy:v1"]
+    },
+    "market_and_instruments": {
+      "status": "DEFINED",
+      "content": {
+        "market": "U.S. equity-index futures",
+        "session": "regular trading session",
+        "symbols": []
+      },
+      "source_refs": ["reconstruction:synthetic-prose-strategy:v1"]
+    },
+    "time_scope": {
+      "status": "DEFINED",
+      "content": {
+        "horizon": "intraday",
+        "entry_and_outcome": "same regular session",
+        "lookbacks": ["initial balance: first 60 minutes"]
+      },
+      "source_refs": ["reconstruction:synthetic-prose-strategy:v1"]
+    },
+    "constructs_and_operationalizations": {
+      "status": "UNRESOLVED",
+      "content": {
+        "defined": ["session VWAP", "one-sigma and two-sigma VWAP bands"],
+        "open": ["clear range", "strong volume", "VWAP slope", "minor pullback", "holds"]
+      },
+      "source_refs": ["reconstruction:synthetic-prose-strategy:v1"]
+    },
+    "trigger_entry_and_position": {
+      "status": "UNRESOLVED",
+      "content": {
+        "source_trigger": "clear range break beyond the one-sigma VWAP band with strong volume",
+        "entry_variants": ["first minor pullback", "first strong close outside range"],
+        "position_sizing": "not specified"
+      },
+      "source_refs": ["reconstruction:synthetic-prose-strategy:v1"]
+    },
+    "outcomes_targets_and_exits": {
+      "status": "UNRESOLVED",
+      "content": {
+        "target_variants": ["two-sigma band", "prior-range projection", "fixed reward-risk"],
+        "management_variants": ["scale out", "trail by VWAP or one-sigma band"]
+      },
+      "source_refs": ["reconstruction:synthetic-prose-strategy:v1"]
+    },
+    "conditions_filters_and_exclusions": {
+      "status": "UNRESOLVED",
+      "content": {
+        "source_conditions": ["time of day", "volume confirmation", "nearby support or resistance"],
+        "suspected_success_conditions": [],
+        "exclusions": []
+      },
+      "source_refs": ["reconstruction:synthetic-prose-strategy:v1"]
+    },
+    "data_sampling_and_observability": {
+      "status": "UNRESOLVED",
+      "content": {
+        "data_sources": [],
+        "sampling_frequency": "not selected",
+        "point_in_time_rules": "not selected"
+      },
+      "source_refs": []
+    },
+    "analysis_and_inference": {
+      "status": "UNRESOLVED",
+      "content": {
+        "primary_estimand": "not selected",
+        "comparison": "not selected",
+        "multiplicity_control": "not selected"
+      },
+      "source_refs": []
+    },
+    "costs_execution_and_risk": {
+      "status": "UNRESOLVED",
+      "content": {
+        "cost_model": "not selected",
+        "latency_model": "not selected",
+        "risk_rule": "not selected"
+      },
+      "source_refs": []
+    },
+    "results_and_continuation": {
+      "status": "DEFINED",
+      "content": {
+        "frozen_result_status": "NONE",
+        "continuation_decisions": []
+      },
+      "source_refs": []
+    }
+  },
+  "additional_material_commitments": [],
+  "protected_artifacts": [
+    {
+      "artifact_ref": "reconstruction:synthetic-prose-strategy:v1",
+      "role": "RECONSTRUCTION",
+      "content_sha256": "1d9705d409d320a721546f8f57cf2d62ea55719f31b9903f66205d792ac8821e"
+    }
+  ],
+  "completeness": {
+    "all_material_commitments_recorded": true,
+    "all_effective_material_artifacts_protected": true,
+    "known_gaps": [
+      "Open source terms have not yet been operationalized.",
+      "Data, inference, cost, execution, and risk choices have not yet been made."
+    ]
+  },
+  "fingerprint_sha256": "79c2266d2a0016047ab70f1cb9782028f3bfd196a4940e5f6daf09215fbf64a5"
+}

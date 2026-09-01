@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "urn:research-framework:schema:orchestration-state:1.2.0",
+  "$id": "urn:research-framework:schema:orchestration-state:1.3.0",
   "title": "Research Orchestration State",
   "description": "Persistent checkpoint used by the research conductor before every material research step.",
   "type": "object",
@@ -13,23 +13,23 @@
     "next_decision_sequence",
     "request",
     "research_context",
-    "research_identity",
-    "handoff_control",
+    "effective_research_fingerprint",
+    "change_control",
     "artifacts",
     "blocking_issues",
     "completed_steps",
     "routing_history"
   ],
   "properties": {
-    "schema_version": {"const": "1.2.0"},
+    "schema_version": {"const": "1.3.0"},
     "orchestration_id": {"$ref": "#/$defs/stableId"},
     "updated_at": {"$ref": "#/$defs/timestamp"},
-    "conductor_version": {"const": "1.2.0"},
+    "conductor_version": {"const": "1.3.0"},
     "next_decision_sequence": {"type": "integer", "minimum": 1},
     "request": {"$ref": "#/$defs/request"},
     "research_context": {"$ref": "#/$defs/researchContext"},
-    "research_identity": {"$ref": "#/$defs/researchIdentity"},
-    "handoff_control": {"$ref": "#/$defs/handoffControl"},
+    "effective_research_fingerprint": {"$ref": "#/$defs/fingerprintRecord"},
+    "change_control": {"$ref": "#/$defs/changeControl"},
     "artifacts": {"$ref": "#/$defs/artifacts"},
     "blocking_issues": {
       "type": "array",
@@ -65,78 +65,40 @@
         {"type": "null"}
       ]
     },
-    "dimension": {
+    "sha256": {
       "type": "string",
-      "enum": [
-        "research_question",
-        "strategy",
-        "market",
-        "time_horizon",
-        "trigger",
-        "target"
-      ]
+      "pattern": "^[a-f0-9]{64}$"
     },
-    "identityComponent": {
+    "fingerprintRecord": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["status", "statement"],
+      "required": ["fingerprint_ref", "fingerprint_sha256"],
       "properties": {
-        "status": {
-          "type": "string",
-          "enum": ["DEFINED", "UNRESOLVED", "NOT_APPLICABLE"]
-        },
-        "statement": {
-          "oneOf": [
-            {"$ref": "#/$defs/shortText"},
-            {"type": "null"}
-          ]
+        "fingerprint_ref": {"$ref": "#/$defs/nullableStableId"},
+        "fingerprint_sha256": {
+          "oneOf": [{"$ref": "#/$defs/sha256"}, {"type": "null"}]
         }
       },
       "allOf": [
         {
-          "if": {
-            "properties": {"status": {"enum": ["DEFINED", "UNRESOLVED"]}},
-            "required": ["status"]
-          },
-          "then": {"properties": {"statement": {"$ref": "#/$defs/shortText"}}}
+          "if": {"properties": {"fingerprint_ref": {"type": "null"}}, "required": ["fingerprint_ref"]},
+          "then": {"properties": {"fingerprint_sha256": {"type": "null"}}}
         },
         {
-          "if": {
-            "properties": {"status": {"const": "NOT_APPLICABLE"}},
-            "required": ["status"]
-          },
-          "then": {"properties": {"statement": {"type": "null"}}}
+          "if": {"properties": {"fingerprint_ref": {"$ref": "#/$defs/stableId"}}, "required": ["fingerprint_ref"]},
+          "then": {"properties": {"fingerprint_sha256": {"$ref": "#/$defs/sha256"}}}
         }
       ]
     },
-    "researchIdentity": {
-      "type": "object",
-      "additionalProperties": false,
-      "required": [
-        "research_question",
-        "strategy",
-        "market",
-        "time_horizon",
-        "trigger",
-        "target"
-      ],
-      "properties": {
-        "research_question": {"$ref": "#/$defs/identityComponent"},
-        "strategy": {"$ref": "#/$defs/identityComponent"},
-        "market": {"$ref": "#/$defs/identityComponent"},
-        "time_horizon": {"$ref": "#/$defs/identityComponent"},
-        "trigger": {"$ref": "#/$defs/identityComponent"},
-        "target": {"$ref": "#/$defs/identityComponent"}
-      }
-    },
-    "handoffControl": {
+    "changeControl": {
       "type": "object",
       "additionalProperties": false,
       "required": [
         "status",
         "routing_decision_ref",
-        "report_ref",
-        "changed_dimensions",
+        "check_ref",
+        "proposal_ref",
+        "changed_paths",
         "plain_language_summary"
       ],
       "properties": {
@@ -144,18 +106,19 @@
           "type": "string",
           "enum": [
             "IDLE",
-            "AWAITING_SPECIALIST",
+            "AWAITING_COMPARISON",
             "UNCHANGED",
-            "DRIFT_DETECTED",
-            "NOT_COMPARABLE_NEW_IDENTITY"
+            "CHANGE_PROPOSED",
+            "NOT_COMPARABLE_NEW_RESEARCH"
           ]
         },
         "routing_decision_ref": {"$ref": "#/$defs/nullableStableId"},
-        "report_ref": {"$ref": "#/$defs/nullableStableId"},
-        "changed_dimensions": {
+        "check_ref": {"$ref": "#/$defs/nullableStableId"},
+        "proposal_ref": {"$ref": "#/$defs/nullableStableId"},
+        "changed_paths": {
           "type": "array",
           "uniqueItems": true,
-          "items": {"$ref": "#/$defs/dimension"}
+          "items": {"type": "string", "pattern": "^/"}
         },
         "plain_language_summary": {"$ref": "#/$defs/nullableText"}
       },
@@ -168,22 +131,24 @@
           "then": {
             "properties": {
               "routing_decision_ref": {"type": "null"},
-              "report_ref": {"type": "null"},
-              "changed_dimensions": {"maxItems": 0},
+              "check_ref": {"type": "null"},
+              "proposal_ref": {"type": "null"},
+              "changed_paths": {"maxItems": 0},
               "plain_language_summary": {"type": "null"}
             }
           }
         },
         {
           "if": {
-            "properties": {"status": {"const": "AWAITING_SPECIALIST"}},
+            "properties": {"status": {"const": "AWAITING_COMPARISON"}},
             "required": ["status"]
           },
           "then": {
             "properties": {
               "routing_decision_ref": {"$ref": "#/$defs/stableId"},
-              "report_ref": {"type": "null"},
-              "changed_dimensions": {"maxItems": 0},
+              "check_ref": {"type": "null"},
+              "proposal_ref": {"type": "null"},
+              "changed_paths": {"maxItems": 0},
               "plain_language_summary": {"type": "null"}
             }
           }
@@ -192,7 +157,7 @@
           "if": {
             "properties": {
               "status": {
-                "enum": ["UNCHANGED", "NOT_COMPARABLE_NEW_IDENTITY"]
+                "enum": ["UNCHANGED", "NOT_COMPARABLE_NEW_RESEARCH"]
               }
             },
             "required": ["status"]
@@ -200,22 +165,24 @@
           "then": {
             "properties": {
               "routing_decision_ref": {"$ref": "#/$defs/stableId"},
-              "report_ref": {"$ref": "#/$defs/stableId"},
-              "changed_dimensions": {"maxItems": 0},
+              "check_ref": {"$ref": "#/$defs/stableId"},
+              "proposal_ref": {"type": "null"},
+              "changed_paths": {"maxItems": 0},
               "plain_language_summary": {"$ref": "#/$defs/shortText"}
             }
           }
         },
         {
           "if": {
-            "properties": {"status": {"const": "DRIFT_DETECTED"}},
+            "properties": {"status": {"const": "CHANGE_PROPOSED"}},
             "required": ["status"]
           },
           "then": {
             "properties": {
               "routing_decision_ref": {"$ref": "#/$defs/stableId"},
-              "report_ref": {"$ref": "#/$defs/stableId"},
-              "changed_dimensions": {"minItems": 1},
+              "check_ref": {"$ref": "#/$defs/stableId"},
+              "proposal_ref": {"$ref": "#/$defs/stableId"},
+              "changed_paths": {"minItems": 1},
               "plain_language_summary": {"$ref": "#/$defs/shortText"}
             }
           }

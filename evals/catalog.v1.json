@@ -1348,9 +1348,9 @@
     {
       "case_id": "route_detected_handoff_drift_to_user",
       "capability": "research_orchestration",
-      "description": "Reject a specialist handoff that silently changes the target and require an understandable user decision while preserving the original research identity.",
+      "description": "Detect a hidden exclusion even when the old six summary fields remain unchanged, keep the effective fingerprint, and require a visible user decision.",
       "input": {
-        "task": "A specialist was asked to assess a same-session move of two pre-event volatility units after a failed range break. The returned work instead uses the opposite edge of the range as the target. Compare the handoff and decide what happens next; do not run a backtest.",
+        "task": "A specialist returns work with the same research question, strategy, market, time horizon, trigger, and target, but has newly excluded crisis months. Compare the complete research state and decide what happens next; do not run a backtest.",
         "as_of": "2026-08-31T18:20:00Z",
         "sources": [
           {
@@ -1359,7 +1359,7 @@
             "published_at": "2026-08-31T18:16:00Z",
             "accessed_at": "2026-08-31T18:19:00Z",
             "authoritative": true,
-            "content": "Research question, strategy, market, time horizon, and trigger are unchanged. The target changed from a same-session move of two pre-event volatility units to the opposite edge of the range. The user did not authorize this change."
+            "content": "All six former identity fields are unchanged. The returned work silently added an exclusion for crisis months. The user did not authorize this change."
           }
         ]
       },
@@ -1375,12 +1375,12 @@
             "weight": 3
           },
           {
-            "assertion_id": "identify_changed_target_only",
+            "assertion_id": "identify_hidden_exclusion_path",
             "metric": "research_orchestration_accuracy",
-            "path": "routing.changed_dimensions",
+            "path": "routing.changed_paths",
             "operator": "set_equals",
             "expected": [
-              "target"
+              "/material_specification/conditions_filters_and_exclusions/content/exclusions"
             ],
             "critical": true,
             "weight": 3
@@ -1395,9 +1395,18 @@
             "weight": 3
           },
           {
-            "assertion_id": "preserve_original_identity_by_default",
+            "assertion_id": "preserve_effective_fingerprint_by_default",
             "metric": "research_orchestration_accuracy",
-            "path": "routing.original_identity_remains_effective",
+            "path": "routing.effective_fingerprint_remains_effective",
+            "operator": "equals",
+            "expected": true,
+            "critical": true,
+            "weight": 3
+          },
+          {
+            "assertion_id": "make_change_proposal_visible",
+            "metric": "research_orchestration_accuracy",
+            "path": "routing.change_proposal_visible",
             "operator": "equals",
             "expected": true,
             "critical": true,

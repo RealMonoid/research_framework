@@ -118,7 +118,8 @@ festgeschriebenen Ergebnis.
 5. [x] Positive und negative Routingfälle in Vertrags- und Regressionstests
    aufnehmen.
 6. [x] Sechs-Punkte-Driftkontrolle vor Annahme jedes bestehenden
-   Research-Handoffs ergänzen.
+   Research-Handoffs ergänzen. Diese erste Fassung wurde durch den vollständigen
+   Forschungsfingerabdruck in ADR-013 abgelöst.
 7. [x] Kausalitätsprüfer, Pflichtartefakt und Router-Gate für kausale Claims
    ergänzen.
 8. [ ] Das Verhalten eines tatsächlich angeschlossenen Hauptagenten in einem

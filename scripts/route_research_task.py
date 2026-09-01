@@ -33,14 +33,6 @@ CONDITION_INTENTS = {
     "CHECK_DEFINITION_SENSITIVITY",
 }
 CAUSAL_CLAIM_LEVELS = {"INTERVENTIONAL", "COUNTERFACTUAL"}
-IDENTITY_DIMENSIONS = [
-    "research_question",
-    "strategy",
-    "market",
-    "time_horizon",
-    "trigger",
-    "target",
-]
 
 
 def _mapping(value: Any, label: str) -> Mapping[str, Any]:
@@ -104,29 +96,39 @@ def _no_user_interaction() -> dict[str, Any]:
     }
 
 
-def _identity_guard(
+def _fingerprint_guard(
     state: Mapping[str, Any], execution_mode: str, route: str
 ) -> dict[str, Any]:
-    if execution_mode != "SPECIALIST_AS_TOOL":
+    if execution_mode in {"PAUSE_FOR_USER", "BLOCKED"}:
         return {
             "mode": "NOT_APPLICABLE",
-            "baseline_identity": None,
-            "compared_dimensions": [],
+            "baseline_fingerprint_ref": None,
+            "baseline_fingerprint_sha256": None,
+            "comparison_scope": "NONE",
             "difference_disposition": "NOT_APPLICABLE",
         }
     if route == "GENERATE_INTRADAY_IDEAS":
         return {
-            "mode": "NEW_IDENTITY_CREATION",
-            "baseline_identity": None,
-            "compared_dimensions": [],
-            "difference_disposition": "RECORD_NEW_IDENTITY",
+            "mode": "NEW_RESEARCH_CREATION",
+            "baseline_fingerprint_ref": None,
+            "baseline_fingerprint_sha256": None,
+            "comparison_scope": "NONE",
+            "difference_disposition": "RECORD_NEW_FINGERPRINT",
         }
-    identity = _mapping(state.get("research_identity"), "research_identity")
+    fingerprint = _mapping(
+        state.get("effective_research_fingerprint"),
+        "effective_research_fingerprint",
+    )
+    fingerprint_ref = fingerprint.get("fingerprint_ref")
+    fingerprint_hash = fingerprint.get("fingerprint_sha256")
+    if not isinstance(fingerprint_ref, str) or not isinstance(fingerprint_hash, str):
+        raise ValueError("an effective research fingerprint is required for this route")
     return {
-        "mode": "PRESERVE_EXISTING",
-        "baseline_identity": dict(identity),
-        "compared_dimensions": list(IDENTITY_DIMENSIONS),
-        "difference_disposition": "PAUSE_FOR_USER",
+        "mode": "PRESERVE_EFFECTIVE",
+        "baseline_fingerprint_ref": fingerprint_ref,
+        "baseline_fingerprint_sha256": fingerprint_hash,
+        "comparison_scope": "FULL_MATERIAL_RESEARCH_STATE",
+        "difference_disposition": "CREATE_VISIBLE_PROPOSAL_AND_PAUSE",
     }
 
 
@@ -152,25 +154,25 @@ def _decision(
         raise ValueError("next_decision_sequence must be a positive integer")
     if not isinstance(updated_at, str):
         raise ValueError("updated_at must be a timestamp string")
-    if conductor_version != "1.2.0":
+    if conductor_version != "1.3.0":
         raise ValueError("unsupported conductor_version")
 
-    identity_guard = _identity_guard(state, execution_mode, route)
+    fingerprint_guard = _fingerprint_guard(state, execution_mode, route)
     guarded_work_order = {
         **work_order,
         "excluded_actions": list(work_order["excluded_actions"]),
         "acceptance_checks": list(work_order["acceptance_checks"]),
     }
-    if identity_guard["mode"] == "PRESERVE_EXISTING":
+    if fingerprint_guard["mode"] == "PRESERVE_EFFECTIVE":
         guarded_work_order["excluded_actions"].append(
-            "Do not silently change the research question, strategy, market, time horizon, trigger, or target; record any proposed change separately."
+            "Do not silently replace any effective research commitment, definition, parameter, filter, data choice, inference rule, execution assumption, result, or protected artifact."
         )
         guarded_work_order["acceptance_checks"].append(
-            "Before acceptance, the deterministic handoff check reports that the six-part research identity is unchanged."
+            "Before acceptance, the deterministic full-fingerprint check reports UNCHANGED; every difference remains a visible proposal and the baseline stays effective."
         )
 
     return {
-        "schema_version": "1.2.0",
+        "schema_version": "1.3.0",
         "decision_id": f"routing:{orchestration_id}:{sequence}",
         "created_at": updated_at,
         "orchestration_ref": orchestration_id,
@@ -182,7 +184,7 @@ def _decision(
         "decision_basis": decision_basis,
         "input_artifact_refs": _input_refs(state),
         "work_order": guarded_work_order,
-        "identity_guard": identity_guard,
+        "fingerprint_guard": fingerprint_guard,
         "next_required_route": next_required_route,
         "user_interaction": user_interaction or _no_user_interaction(),
         "control": {
@@ -191,7 +193,7 @@ def _decision(
             "sequential_execution": True,
             "checkpoint_required": True,
             "specialist_output_requires_validation": True,
-            "identity_check_required_before_acceptance": True,
+            "fingerprint_check_required_before_acceptance": True,
         },
     }
 
@@ -205,9 +207,9 @@ def route_state(state: Mapping[str, Any]) -> dict[str, Any]:
     if not isinstance(intent, str):
         raise ValueError("request.intent must be a string")
 
-    handoff_control = _mapping(state.get("handoff_control"), "handoff_control")
-    handoff_status = handoff_control.get("status")
-    if handoff_status == "AWAITING_SPECIALIST":
+    change_control = _mapping(state.get("change_control"), "change_control")
+    change_status = change_control.get("status")
+    if change_status == "AWAITING_COMPARISON":
         return _decision(
             state,
             route="BLOCKED",
@@ -215,33 +217,33 @@ def route_state(state: Mapping[str, Any]) -> dict[str, Any]:
             selected_agent=None,
             specialist_mode=None,
             decision_basis=[
-                "A specialist handoff is still awaiting its required six-part research-identity comparison."
+                "Returned work is still awaiting comparison with the full effective research fingerprint."
             ],
             work_order=_work_order(
-                "Complete the before-and-after identity check before accepting or routing the specialist output.",
-                "research_identity_check",
+                "Complete the full fingerprint comparison before accepting or routing the returned work.",
+                "research_fingerprint_check",
                 [
-                    str(handoff_control.get("routing_decision_ref")),
-                    "candidate post-handoff orchestration state",
+                    str(change_control.get("routing_decision_ref")),
+                    "effective baseline fingerprint",
+                    "candidate fingerprint derived from the returned work",
                 ],
                 [
-                    "Do not accept the specialist artifact yet.",
-                    "Do not infer that silence means the research identity was preserved.",
+                    "Do not accept the returned artifact yet.",
+                    "Do not infer that unchanged wording means the material research state was preserved.",
                 ],
                 [
-                    "All six identity dimensions have an explicit comparison result."
+                    "Every canonical field and protected artifact hash has been compared."
                 ],
-                "Stop until the identity check is recorded.",
+                "Stop until the fingerprint check is recorded.",
             ),
         )
-    if handoff_status == "DRIFT_DETECTED":
-        changed = handoff_control.get("changed_dimensions")
+    if change_status == "CHANGE_PROPOSED":
+        changed = change_control.get("changed_paths")
         if not isinstance(changed, list) or not changed:
-            raise ValueError("DRIFT_DETECTED requires changed_dimensions")
-        readable = ", ".join(str(item).replace("_", " ") for item in changed)
-        summary = handoff_control.get("plain_language_summary")
+            raise ValueError("CHANGE_PROPOSED requires changed_paths")
+        summary = change_control.get("plain_language_summary")
         if not isinstance(summary, str):
-            raise ValueError("DRIFT_DETECTED requires a plain-language summary")
+            raise ValueError("CHANGE_PROPOSED requires a plain-language summary")
         return _decision(
             state,
             route="USER_DECISION_REQUIRED",
@@ -250,31 +252,31 @@ def route_state(state: Mapping[str, Any]) -> dict[str, Any]:
             specialist_mode=None,
             decision_basis=[summary],
             work_order=_work_order(
-                "Explain the detected research drift in ordinary language and ask whether the original identity should remain in force.",
-                "plain-language research-drift decision",
-                [str(handoff_control.get("report_ref"))],
+                "Explain the proposed research changes in ordinary language and ask whether they should be rejected or become an explicitly new research version.",
+                "plain-language research-change decision",
+                [str(change_control.get("check_ref")), str(change_control.get("proposal_ref"))],
                 [
-                    "Do not accept the changed specialist output before the decision.",
-                    "Do not describe the change as a harmless wording edit without evidence.",
+                    "Do not replace the effective fingerprint before the decision.",
+                    "Do not hide, merge, or paraphrase away any changed path.",
                 ],
                 [
-                    "The changed dimensions and their practical consequences are stated.",
-                    "The original research identity remains the default recommendation.",
+                    "The changed research parts and their practical consequences are stated.",
+                    "The existing fingerprint is still shown as effective.",
                 ],
                 "Stop after asking the one material question.",
             ),
             user_interaction={
                 "status": "REQUIRED",
                 "question": (
-                    f"The specialist handoff changed {readable}. Should the original research remain unchanged, "
-                    "or should this become an intentional new research version?"
+                    "The returned work proposes material changes to the research. Should the existing version remain unchanged, "
+                    "or should the proposal create an intentional new research version?"
                 ),
                 "options": [
-                    "Keep the original research identity and reject the changed output.",
+                    "Keep the existing research fingerprint and reject the proposed replacement.",
                     "Create an explicitly new research version with the proposed change.",
                 ],
                 "recommendation": (
-                    "Keep the original identity unless the change answers a question you now explicitly want to study."
+                    "Keep the existing version unless the proposal answers a question you now explicitly want to study."
                 ),
             },
         )

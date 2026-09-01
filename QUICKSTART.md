@@ -73,19 +73,24 @@ Forschungsfrage, die Identität der Quellenstrategie oder den zulässigen Claim
 materiell verändert. Nach jedem angenommenen Fachbeitrag wird dessen Artefakt
 geprüft, der Arbeitsstand aktualisiert und erneut geroutet.
 
-Vor und nach jeder Fachagenten-Übergabe auf einem bestehenden Research-Fall
-werden sechs Punkte verglichen: Forschungsfrage, Strategie, Markt,
-Zeithorizont, Auslöser und Ziel. Der Beitrag wird nur angenommen, wenn
-[`check_research_identity.py`](scripts/check_research_identity.py) keine
-Abweichung findet. Andernfalls bleibt der alte Stand bestehen und der Nutzer
-entscheidet nach einer verständlichen Erklärung zwischen Beibehaltung und einer
-ausdrücklich neuen Research-Version.
+Vor und nach jedem materiellen Forschungsschritt wird der vollständige
+Forschungsfingerabdruck verglichen. Er enthält neben Forschungsfrage,
+Quellstrategie, Markt und Zeithorizont auch Messdefinitionen, Parameter,
+Lookbacks, Filter und Ausschlüsse, Daten- und Stichprobenentscheidungen,
+Auswertungsregeln, Kosten- und Ausführungsannahmen, eingefrorene Ergebnisse und
+die Prüfsummen aller wirksamen Forschungsunterlagen.
+
+Ein Beitrag wird nur angenommen, wenn
+[`check_research_fingerprint.py`](scripts/check_research_fingerprint.py) den
+gesamten Stand als `UNCHANGED` meldet. Jede Abweichung bleibt ein sichtbarer
+Änderungsvorschlag. Der alte Stand wird niemals still überschrieben; nur eine
+ausdrückliche Nutzerentscheidung darf daraus eine neue Research-Version machen.
 
 ## 1. Was technisch erzwungen wird – und was nicht
 
 | Ebene | Bedeutung |
 |---|---|
-| Maschinengeprüft | JSON-Schemas, Schema-Vertragstests, Eval-Scorer, Producer-Protokoll und CI-Checks können objektiv bestehen oder scheitern. |
+| Maschinengeprüft | JSON-Schemas, vollständige Forschungsfingerabdrücke, Schema-Vertragstests, Eval-Scorer, Producer-Protokoll und CI-Checks können objektiv bestehen oder scheitern. |
 | Evidenzgeprüft | Ein Status wie `SUPPORTED`, `PASS` oder `COMPLETE` ist nur belastbar, wenn das vorgeschriebene Evidenz-/Run-Artefakt existiert und die zugehörige Maschinenprüfung besteht. |
 | Selbstdeklaration | Prosa, Checklistenhaken und ein vom ausführenden Agenten selbst gesetztes `COMPLETE` sind zunächst Behauptungen. Ohne Artefaktprüfung oder unabhängiges Review beweisen sie keine korrekte Durchführung. |
 

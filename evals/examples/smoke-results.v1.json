@@ -443,13 +443,14 @@
       "claims": {},
       "routing": {
         "route": "USER_DECISION_REQUIRED",
-        "identity_check_status": "DRIFT_DETECTED",
-        "changed_dimensions": [
-          "target"
+        "fingerprint_check_status": "CHANGE_PROPOSED",
+        "changed_paths": [
+          "/material_specification/conditions_filters_and_exclusions/content/exclusions"
         ],
         "changed_output_accepted": false,
-        "original_identity_remains_effective": true,
-        "user_explanation": "Der Fachbeitrag hat das Ziel verändert: Statt einer Bewegung um zwei vorher gemessene Schwankungseinheiten wird nun die gegenüberliegende Spannenbegrenzung verwendet. Diese Fassung wird nicht übernommen. Du kannst beim ursprünglichen Ziel bleiben oder die Änderung ausdrücklich als neue Research-Version freigeben."
+        "effective_fingerprint_remains_effective": true,
+        "change_proposal_visible": true,
+        "user_explanation": "Der Fachbeitrag hat Krisenmonate neu ausgeschlossen, obwohl die bisherige Kurzbeschreibung gleich blieb. Diese Änderung wird nicht übernommen. Der bisherige Forschungsstand bleibt wirksam; du kannst den Vorschlag ablehnen oder ausdrücklich als neue Research-Version freigeben."
       }
     },
     "route_causal_claim_to_identification_critic": {
