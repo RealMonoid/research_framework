@@ -4,6 +4,23 @@ Dieser Kurzpfad ist der einzige verpflichtende Einstieg für jede neue Idee. Die
 langen Normdokumente werden erst nach Status und Aufgabe geroutet; sie müssen
 nicht mehr vollständig vorab in den Kontext geladen werden.
 
+## Scope and restraint
+
+This is a private decision-support framework for one research owner working
+with AI agents. It is not an academic-publication workflow or a system for
+making private strategies legible to an external audience. Retain a rule when
+it protects a research or capital decision, or when it demonstrably makes such
+a protection more reliable for the agents. Do not add process merely for
+publication, external persuasion, or hypothetical team onboarding. When the
+protective value of an existing rule is uncertain, keep it until the hard-gate
+inventory, a real Research Case, or behavioural evaluation provides evidence
+for removal.
+
+Never place proprietary strategies, private data, real Research Cases, or
+empirical results in the public repository. Use a separate private location or
+the ignored `private_research/` path. Existing examples require a separate
+privacy review before removal; uncertainty is not permission to delete them.
+
 ## Verbindliche Kommunikation mit dem Nutzer
 
 Das Framework ist ein Werkzeug für Research und Trading-Entscheidungen, kein

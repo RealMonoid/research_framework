@@ -10,16 +10,39 @@
   documentation, agent instructions, schema text, examples, framework-facing
   messages, code comments, and commit messages.
 - Do not translate otherwise unchanged German content during unrelated work.
-  A separate migration will translate the existing material and document the
-  English terminology when the user explicitly requests it.
+  A separate migration may translate the existing material only when the user
+  explicitly requests it and a measured agent-reliability or actual
+  maintenance need justifies it.
 - This rule applies to repository content, not to the conversation: continue
   speaking with the user in the language they use.
-- During the future translation migration, use translation-only commits that
+- If a translation migration begins, use translation-only commits that
   preserve the source meaning, requirements, structure, and examples. Put any
   shortening, deduplication, change of emphasis, or substantive clarification
   in a second commit and validate it separately. Never combine translation and
   semantic revision in one commit; changes in agent behaviour must remain
   attributable to one type of change.
+
+## Scope and restraint
+
+- Treat this as a private decision-support framework for one research owner
+  working with AI agents, not as an academic-publication, external-review, or
+  human-team onboarding project.
+- Add or retain process when it protects a research or capital decision, or
+  when it demonstrably improves agents' delivery of an existing protection.
+  Do not add work solely for public presentation, external persuasion,
+  hypothetical contributors, or stylistic completeness.
+- A full migration of legacy German material is conditional on measured agent
+  reliability or maintenance value; it is not justified by an assumed public
+  audience.
+- Prune conservatively. If the protective value of an existing rule is
+  uncertain, keep it until the hard-gate inventory, a real Research Case, or
+  behavioural agent evaluation supports removal. Make each removal explicit
+  and independently reviewable.
+- Never commit proprietary strategies, private data, real Research Cases, or
+  empirical results to this public repository. Use an external private
+  location or the ignored `private_research/` path. Preserve existing examples
+  until the user authorizes a separate privacy review and any resulting
+  removal.
 
 ## Mandatory research coordination
 

@@ -1,5 +1,36 @@
 # Research Framework
 
+## Purpose and operating boundary
+
+This framework is a private decision-support tool for one research owner who
+works with AI agents. It uses scientific discipline because its conclusions may
+eventually influence decisions involving real capital. It is not being built
+for academic publication, external peer review, team onboarding, or public
+presentation of the owner's strategies and results.
+
+The repository therefore serves only two necessary readers:
+
+- the owner, who must be able to understand and revisit a decision months or
+  years later; and
+- the agents, which must receive the correct rules and apply them consistently
+  despite having limited context and no durable memory of earlier sessions.
+
+A rule, artifact, or planned feature belongs in the framework only when it
+protects a research or capital decision, or when it makes an existing
+decision-protecting control demonstrably more reliable for the agents. Work
+that serves only publication, external persuasion, or hypothetical human-team
+maintenance is out of scope until that need actually exists. If the value of an
+existing safeguard is uncertain, retain it until the hard-gate inventory, a
+real Research Case, or behavioural agent evaluation supplies evidence for a
+safe decision.
+
+This public repository is intended to contain framework material, not the
+owner's private research. Proprietary strategies, private data, Research Cases,
+and empirical results must remain outside the tracked repository or under the
+ignored `private_research/` path. Existing tracked examples have not all been
+classified under this policy; do not treat that uncertainty as permission to
+delete them. They require a separate, explicit privacy review.
+
 Market strategies are often described in language that sounds precise but is
 not precise enough to test. A book may say that a market is "in balance," that
 volume is "strong," or that a breakout has "failed" without defining how any
@@ -87,8 +118,9 @@ idea does not authorize a backtest.
 
 Many of the existing normative documents are still written in German. New and
 changed repository content is written in English. Translation of the existing
-material and a consolidated terminology guide are planned as a separate
-migration.
+material is conditional on a measured agent-reliability or actual maintenance
+need. If it becomes necessary, translation and substantive editing remain
+separate changes.
 
 ## Technical reference
 
