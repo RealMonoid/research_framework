@@ -214,6 +214,27 @@ have been viewed. See
 [`06_OUTCOME_EVIDENCE_CONTRACT.md`](06_OUTCOME_EVIDENCE_CONTRACT.md) for the
 plain-language rule and the worked example.
 
+## 2d. Test the research pipeline before validation
+
+After the outcome contract is complete and before a validation test is frozen,
+create and assess a
+[`pipeline_integrity_assessment`](schemas/pipeline_integrity_assessment.schema.json).
+Run the unchanged complete pipeline on repeated structure-appropriate negative
+controls and on a synthetic known-effect sentinel with fixed sign and timing.
+
+The assessment records the exact pipeline fingerprint, simulation or surrogate
+design, parameter source, seed policy, preserved and missing market structure,
+repeat counts, uncertainty, and rules locked before the first run. One random
+walk cannot be the only required negative control. A pass permits only the next
+freeze step and supplies no evidence for the strategy, prediction, mechanism,
+or after-cost edge.
+
+The router stops if this assessment is missing, failed, or blocked. Validate it
+with
+[`validate_pipeline_integrity_assessment.py`](scripts/validate_pipeline_integrity_assessment.py).
+The practical explanation is in
+[`07_PIPELINE_INTEGRITY_CONTROLS.md`](07_PIPELINE_INTEGRITY_CONTROLS.md).
+
 ## 3. Günstiger Intake
 
 Eine neue Idee beginnt als `INBOX` nach

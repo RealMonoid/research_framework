@@ -49,6 +49,16 @@
   reconstruct it after viewing results. Apply its decision rules separately:
   predictive success does not preserve a mechanism whose required diagnostics
   were contradicted, non-discriminating, or invalid.
+- After the outcome contract and before validation is frozen, require a passing
+  pipeline-integrity assessment. Run the unchanged complete pipeline on
+  repeated structure-appropriate negative controls and a known-effect
+  sentinel. Record the exact pipeline fingerprint, model and parameter source,
+  seed policy, preserved and missing relevant structure, repeat counts,
+  uncertainty, and rules locked before the first run. One random walk cannot be
+  the only required negative control. A pass authorizes only the freeze path;
+  it is not evidence for a market effect, prediction, mechanism, causal effect,
+  or trading edge. Do not import Q-Fin or another model implementation merely
+  because it carries a recognized model name.
 
 ## Collaboration preferences
 

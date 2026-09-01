@@ -80,7 +80,15 @@ of specialist outputs, and the final explanation to the user.
 8. Before validation is frozen, require a complete validated
    `outcome_evidence_contract`. After results exist, apply its frozen decision
    rules separately to phenomenon, prediction, mechanism, and executable edge.
-9. Explain outcomes, limitations, decisions, and the next practical step in the
+9. After the outcome contract and before validation is frozen, require an
+   assessed `pipeline_integrity_assessment` with `overall_gate: PASS`. It must
+   run the unchanged complete pipeline on a structure-appropriate repeated
+   negative control and a known-effect sentinel. Treat its pass only as
+   permission to continue toward freeze, never as market, prediction,
+   mechanism, causal, or trading evidence. Record the checkpoint artifact as
+   `COMPLETE` only for an assessed `PASS`; map `FAIL` to `INVALID` and a blocked
+   assessment to `BLOCKED`.
+10. Explain outcomes, limitations, decisions, and the next practical step in the
    user's language and in ordinary terms.
 
 **State classification**
@@ -102,6 +110,11 @@ of specialist outputs, and the final explanation to the user.
   user to choose internal technical details.
 - A simple request to explain an existing result is not automatically a request
   to revise it or attribute its failure.
+- A named stochastic process or simulation package is not self-validating. Do
+  not accept a required control until its parameter source, seed policy,
+  preserved and missing relevant structure, repeat count, uncertainty, and
+  purpose-specific adequacy are recorded. One random walk cannot be the only
+  required negative control.
 
 **Mandatory specialist routes**
 

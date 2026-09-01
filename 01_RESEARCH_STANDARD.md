@@ -1124,6 +1124,15 @@ Zusätzlich werden Kontrollbasis und Datenrolle protokolliert. Pipeline-Tests, d
 
 Ein einzelner permutierter Lauf oder ein einzelner Random Walk ist keine ausreichende Kalibrierung. Naive Permutation ist unzulässig, wenn sie die unter dem Nullmodell relevante Abhängigkeit zerstört. Das Pipeline-Integritätsgate lautet `PASS / FAIL / BLOCKED`; ohne `PASS` darf der Test Freeze nicht bestätigt werden.
 
+Machine enforcement uses a versioned
+`pipeline_integrity_assessment`. It binds the controls to the exact complete
+pipeline fingerprint and records model specification, parameter provenance,
+seed policy, preserved and missing relevant structure, planned and actual
+repeats, Monte-Carlo uncertainty, and the rule locked before the first run. A
+passed control authorizes only the freeze path; it cannot support a market
+effect, forward prediction, mechanism, or executable edge. The artifact must
+pass `scripts/validate_pipeline_integrity_assessment.py`.
+
 ---
 
 # 14. Test Freeze

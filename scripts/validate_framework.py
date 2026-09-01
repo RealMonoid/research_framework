@@ -53,6 +53,10 @@ def main(argv: Sequence[str] | None = None) -> int:
         [python, "scripts/test_outcome_evidence_contract.py"],
     )
     run(
+        "Pipeline integrity assessment",
+        [python, "scripts/test_pipeline_integrity_assessment.py"],
+    )
+    run(
         "Research orchestration",
         [python, "scripts/test_research_orchestration.py"],
     )

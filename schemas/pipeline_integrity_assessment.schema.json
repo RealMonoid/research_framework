@@ -1,0 +1,377 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:research-framework:schema:pipeline-integrity-assessment:1.0.0",
+  "title": "Pipeline Integrity Assessment",
+  "description": "Pre-freeze controls that test whether the complete research pipeline invents effects, misses known effects, or depends on an inadequate synthetic reference world.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "assessment_id",
+    "research_id",
+    "research_version",
+    "created_at",
+    "updated_at",
+    "status",
+    "plan_locked_at",
+    "first_run_at",
+    "outcome_contract_ref",
+    "pipeline_fingerprint_ref",
+    "pipeline_fingerprint_sha256",
+    "complete_pipeline_rerun",
+    "causal_tooling_required",
+    "validation_data_unseen",
+    "controls",
+    "claim_limits",
+    "overall_gate",
+    "plain_language_conclusion"
+  ],
+  "properties": {
+    "schema_version": {"const": "1.0.0"},
+    "assessment_id": {"$ref": "#/$defs/stableId"},
+    "research_id": {"$ref": "#/$defs/stableId"},
+    "research_version": {"type": "string", "minLength": 1, "maxLength": 100},
+    "created_at": {"$ref": "#/$defs/timestamp"},
+    "updated_at": {"$ref": "#/$defs/timestamp"},
+    "status": {"type": "string", "enum": ["PLANNED", "ASSESSED"]},
+    "plan_locked_at": {"$ref": "#/$defs/timestamp"},
+    "first_run_at": {
+      "oneOf": [
+        {"$ref": "#/$defs/timestamp"},
+        {"type": "null"}
+      ]
+    },
+    "outcome_contract_ref": {"$ref": "#/$defs/stableId"},
+    "pipeline_fingerprint_ref": {"$ref": "#/$defs/stableId"},
+    "pipeline_fingerprint_sha256": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "complete_pipeline_rerun": {"const": true},
+    "causal_tooling_required": {"type": "boolean"},
+    "validation_data_unseen": {"const": true},
+    "controls": {
+      "type": "array",
+      "minItems": 2,
+      "items": {"$ref": "#/$defs/control"}
+    },
+    "claim_limits": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "supports_market_effect",
+        "supports_forward_prediction",
+        "supports_mechanism",
+        "supports_executable_edge"
+      ],
+      "properties": {
+        "supports_market_effect": {"const": false},
+        "supports_forward_prediction": {"const": false},
+        "supports_mechanism": {"const": false},
+        "supports_executable_edge": {"const": false}
+      }
+    },
+    "overall_gate": {
+      "type": "string",
+      "enum": ["NOT_ASSESSED", "PASS", "FAIL", "BLOCKED"]
+    },
+    "plain_language_conclusion": {"$ref": "#/$defs/longText"}
+  },
+  "allOf": [
+    {
+      "if": {"properties": {"status": {"const": "PLANNED"}}, "required": ["status"]},
+      "then": {
+        "properties": {
+          "first_run_at": {"type": "null"},
+          "overall_gate": {"const": "NOT_ASSESSED"},
+          "controls": {
+            "items": {
+              "properties": {
+                "actual_runs": {"const": 0},
+                "result": {
+                  "properties": {"status": {"const": "NOT_ASSESSED"}}
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {"properties": {"status": {"const": "ASSESSED"}}, "required": ["status"]},
+      "then": {
+        "properties": {
+          "first_run_at": {"$ref": "#/$defs/timestamp"},
+          "overall_gate": {"enum": ["PASS", "FAIL", "BLOCKED"]},
+          "controls": {
+            "items": {
+              "properties": {
+                "actual_runs": {"minimum": 1},
+                "result": {
+                  "properties": {
+                    "status": {"enum": ["PASS", "FAIL", "BLOCKED"]}
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  ],
+  "$defs": {
+    "stableId": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"
+    },
+    "timestamp": {"type": "string", "format": "date-time"},
+    "shortText": {"type": "string", "minLength": 1, "maxLength": 1000},
+    "longText": {"type": "string", "minLength": 1, "maxLength": 6000},
+    "nullableStableId": {
+      "oneOf": [
+        {"$ref": "#/$defs/stableId"},
+        {"type": "null"}
+      ]
+    },
+    "modelSpecification": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "family",
+        "specification",
+        "parameter_provenance",
+        "code_or_method_ref",
+        "random_seed_policy",
+        "preserved_structure",
+        "unpreserved_relevant_structure",
+        "structure_adequacy"
+      ],
+      "properties": {
+        "family": {
+          "type": "string",
+          "enum": [
+            "BLOCK_BOOTSTRAP",
+            "STATIONARY_BOOTSTRAP",
+            "SESSION_PRESERVING_SHUFFLE",
+            "PHASE_RANDOMIZATION",
+            "RANDOM_WALK",
+            "STOCHASTIC_VOLATILITY",
+            "REGIME_SWITCHING",
+            "CUSTOM"
+          ]
+        },
+        "specification": {"$ref": "#/$defs/longText"},
+        "parameter_provenance": {"$ref": "#/$defs/longText"},
+        "code_or_method_ref": {"$ref": "#/$defs/stableId"},
+        "random_seed_policy": {"$ref": "#/$defs/shortText"},
+        "preserved_structure": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {"$ref": "#/$defs/structureProperty"}
+        },
+        "unpreserved_relevant_structure": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {"$ref": "#/$defs/structureProperty"}
+        },
+        "structure_adequacy": {
+          "type": "string",
+          "enum": ["ADEQUATE_FOR_PURPOSE", "INADEQUATE", "UNKNOWN"]
+        }
+      }
+    },
+    "structureProperty": {
+      "type": "string",
+      "enum": [
+        "AUTOCORRELATION",
+        "VOLATILITY_CLUSTERING",
+        "SESSION_PROFILE",
+        "WEEKDAY_PATTERN",
+        "EVENT_CALENDAR",
+        "JUMPS_AND_GAPS",
+        "CROSS_ASSET_CORRELATION",
+        "LIQUIDITY_AND_SPREAD",
+        "REGIME_PERSISTENCE",
+        "OTHER"
+      ]
+    },
+    "expectedTruth": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["effect_state", "direction", "timing_rule", "construction_basis"],
+      "properties": {
+        "effect_state": {
+          "type": "string",
+          "enum": ["NO_EFFECT", "KNOWN_EFFECT", "CHALLENGE_ONLY"]
+        },
+        "direction": {
+          "type": "string",
+          "enum": ["NONE", "POSITIVE", "NEGATIVE"]
+        },
+        "timing_rule": {"$ref": "#/$defs/shortText"},
+        "construction_basis": {"$ref": "#/$defs/longText"}
+      }
+    },
+    "acceptanceRule": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "locked_before_first_run",
+        "decision_rule",
+        "target_precision",
+        "minimum_runs"
+      ],
+      "properties": {
+        "locked_before_first_run": {"const": true},
+        "decision_rule": {"$ref": "#/$defs/longText"},
+        "target_precision": {"$ref": "#/$defs/shortText"},
+        "minimum_runs": {"type": "integer", "minimum": 200}
+      }
+    },
+    "controlResult": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "status",
+        "evidence_refs",
+        "monte_carlo_uncertainty",
+        "plain_language_interpretation"
+      ],
+      "properties": {
+        "status": {
+          "type": "string",
+          "enum": ["NOT_ASSESSED", "PASS", "FAIL", "BLOCKED"]
+        },
+        "evidence_refs": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {"$ref": "#/$defs/stableId"}
+        },
+        "monte_carlo_uncertainty": {"$ref": "#/$defs/longText"},
+        "plain_language_interpretation": {"$ref": "#/$defs/longText"}
+      }
+    },
+    "control": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "control_id",
+        "purpose",
+        "related_research_element_ref",
+        "required_for_gate",
+        "basis",
+        "empirical_data_role",
+        "empirical_dataset_ref",
+        "model",
+        "expected_truth",
+        "planned_runs",
+        "actual_runs",
+        "acceptance_rule",
+        "result",
+        "permitted_consequence"
+      ],
+      "properties": {
+        "control_id": {"$ref": "#/$defs/stableId"},
+        "related_research_element_ref": {"$ref": "#/$defs/nullableStableId"},
+        "purpose": {
+          "type": "string",
+          "enum": [
+            "NULL_NEGATIVE_CONTROL",
+            "POSITIVE_SENTINEL",
+            "CAUSAL_TOOL_SENTINEL",
+            "STRUCTURAL_DEPENDENCY_DIAGNOSTIC",
+            "ROBUSTNESS_CHALLENGE"
+          ]
+        },
+        "required_for_gate": {"type": "boolean"},
+        "basis": {
+          "type": "string",
+          "enum": ["EMPIRICAL_SURROGATE", "SYNTHETIC_MODEL"]
+        },
+        "empirical_data_role": {
+          "type": "string",
+          "enum": ["DEVELOPMENT", "NOT_APPLICABLE"]
+        },
+        "empirical_dataset_ref": {"$ref": "#/$defs/nullableStableId"},
+        "model": {"$ref": "#/$defs/modelSpecification"},
+        "expected_truth": {"$ref": "#/$defs/expectedTruth"},
+        "planned_runs": {"type": "integer", "minimum": 200},
+        "actual_runs": {"type": "integer", "minimum": 0},
+        "acceptance_rule": {"$ref": "#/$defs/acceptanceRule"},
+        "result": {"$ref": "#/$defs/controlResult"},
+        "permitted_consequence": {
+          "type": "string",
+          "enum": [
+            "PIPELINE_GATE_ONLY",
+            "CHALLENGE_ONLY",
+            "NO_STATUS_CHANGE"
+          ]
+        }
+      },
+      "allOf": [
+        {
+          "if": {"properties": {"basis": {"const": "SYNTHETIC_MODEL"}}, "required": ["basis"]},
+          "then": {
+            "properties": {
+              "empirical_data_role": {"const": "NOT_APPLICABLE"},
+              "empirical_dataset_ref": {"type": "null"}
+            }
+          }
+        },
+        {
+          "if": {"properties": {"basis": {"const": "EMPIRICAL_SURROGATE"}}, "required": ["basis"]},
+          "then": {
+            "properties": {
+              "empirical_data_role": {"const": "DEVELOPMENT"},
+              "empirical_dataset_ref": {"$ref": "#/$defs/stableId"}
+            }
+          }
+        },
+        {
+          "if": {"properties": {"purpose": {"const": "NULL_NEGATIVE_CONTROL"}}, "required": ["purpose"]},
+          "then": {
+            "properties": {
+              "required_for_gate": {"const": true},
+              "related_research_element_ref": {"type": "null"},
+              "permitted_consequence": {"const": "PIPELINE_GATE_ONLY"},
+              "expected_truth": {
+                "properties": {
+                  "effect_state": {"const": "NO_EFFECT"},
+                  "direction": {"const": "NONE"}
+                }
+              }
+            }
+          }
+        },
+        {
+          "if": {"properties": {"purpose": {"enum": ["POSITIVE_SENTINEL", "CAUSAL_TOOL_SENTINEL"]}}, "required": ["purpose"]},
+          "then": {
+            "properties": {
+              "required_for_gate": {"const": true},
+              "basis": {"const": "SYNTHETIC_MODEL"},
+              "related_research_element_ref": {"type": "null"},
+              "permitted_consequence": {"const": "PIPELINE_GATE_ONLY"},
+              "expected_truth": {
+                "properties": {
+                  "effect_state": {"const": "KNOWN_EFFECT"},
+                  "direction": {"enum": ["POSITIVE", "NEGATIVE"]}
+                }
+              }
+            }
+          }
+        },
+        {
+          "if": {"properties": {"purpose": {"enum": ["STRUCTURAL_DEPENDENCY_DIAGNOSTIC", "ROBUSTNESS_CHALLENGE"]}}, "required": ["purpose"]},
+          "then": {
+            "properties": {
+              "required_for_gate": {"const": false},
+              "related_research_element_ref": {"$ref": "#/$defs/stableId"},
+              "permitted_consequence": {"enum": ["CHALLENGE_ONLY", "NO_STATUS_CHANGE"]}
+            }
+          }
+        }
+      ]
+    }
+  }
+}

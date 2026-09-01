@@ -153,6 +153,20 @@ mechanism story. Prediction, mechanism, phenomenon, and executable after-cost
 edge remain separate conclusions. A frozen test cannot proceed without a
 complete validated contract.
 
+### Controls against invented results
+
+Before real validation, the unchanged full pipeline must pass the
+[pipeline integrity controls](07_PIPELINE_INTEGRITY_CONTROLS.md). Repeated
+negative controls check whether the process invents effects where none were
+constructed. A known-effect sentinel checks whether it recovers a deliberately
+inserted effect with the correct sign and timing.
+
+The reference world must preserve the market structure relevant to the method;
+one simple random walk cannot be the only required negative control. A passed
+synthetic or surrogate control authorizes only the next freeze step. It is not
+evidence for a market effect, a forward prediction, a causal mechanism, or an
+after-cost trading edge.
+
 ### Causal claims
 
 An interventional or counterfactual claim has an additional mandatory stop. The

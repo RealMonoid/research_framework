@@ -154,7 +154,7 @@ def _decision(
         raise ValueError("next_decision_sequence must be a positive integer")
     if not isinstance(updated_at, str):
         raise ValueError("updated_at must be a timestamp string")
-    if conductor_version != "1.4.0":
+    if conductor_version != "1.5.0":
         raise ValueError("unsupported conductor_version")
 
     fingerprint_guard = _fingerprint_guard(state, execution_mode, route)
@@ -172,7 +172,7 @@ def _decision(
         )
 
     return {
-        "schema_version": "1.4.0",
+        "schema_version": "1.5.0",
         "decision_id": f"routing:{orchestration_id}:{sequence}",
         "created_at": updated_at,
         "orchestration_ref": orchestration_id,
@@ -593,6 +593,35 @@ def route_state(state: Mapping[str, Any]) -> dict[str, Any]:
             ),
         )
 
+    pipeline_integrity_status = _artifact_status(
+        state, "pipeline_integrity_assessment"
+    )
+    if context.get("stage") == "FROZEN_TEST" and pipeline_integrity_status != "COMPLETE":
+        return _decision(
+            state,
+            route="BLOCKED",
+            execution_mode="BLOCKED",
+            selected_agent=None,
+            specialist_mode=None,
+            decision_basis=[
+                "The test is marked as frozen, but the complete pipeline has not passed its required pre-freeze controls."
+            ],
+            work_order=_work_order(
+                "Return to the research-case stage and assess the unchanged complete pipeline on locked null controls and positive sentinels.",
+                "plain-language blocker report",
+                _input_refs(state),
+                [
+                    "Do not reconstruct the controls after viewing validation results.",
+                    "Do not use validation or final-holdout data to design the controls.",
+                    "Do not treat synthetic-control success as evidence for the market claim, prediction, mechanism, or executable edge.",
+                ],
+                [
+                    "The missing pre-freeze pipeline check is explicit and no validation result has been used to fill it."
+                ],
+                "Stop before empirical validation.",
+            ),
+        )
+
     if (
         context.get("stage") == "RESEARCH_CASE"
         and intent == "START_OR_CONTINUE_RESEARCH"
@@ -622,6 +651,71 @@ def route_state(state: Mapping[str, Any]) -> dict[str, Any]:
                     "The contract passes schema and semantic validation.",
                 ],
                 "Stop after the contract is frozen and before empirical testing.",
+            ),
+        )
+
+    if (
+        context.get("stage") == "RESEARCH_CASE"
+        and intent == "START_OR_CONTINUE_RESEARCH"
+        and pipeline_integrity_status in {"INVALID", "BLOCKED"}
+    ):
+        return _decision(
+            state,
+            route="BLOCKED",
+            execution_mode="BLOCKED",
+            selected_agent=None,
+            specialist_mode=None,
+            decision_basis=[
+                "The required pipeline-integrity gate did not pass."
+            ],
+            work_order=_work_order(
+                "Explain which pipeline control failed or could not be constructed and what practical research step is prevented.",
+                "plain-language blocker report",
+                _input_refs(state),
+                [
+                    "Do not proceed to validation.",
+                    "Do not weaken the locked control after seeing its result.",
+                    "Do not present a synthetic result as market evidence.",
+                ],
+                [
+                    "The failed or blocked control and its consequence are stated without changing the research claim."
+                ],
+                "Stop until a visible new research version or a valid control design is authorized.",
+            ),
+        )
+
+    if (
+        context.get("stage") == "RESEARCH_CASE"
+        and intent == "START_OR_CONTINUE_RESEARCH"
+        and outcome_contract_status == "COMPLETE"
+        and pipeline_integrity_status != "COMPLETE"
+    ):
+        return _decision(
+            state,
+            route="ASSESS_PIPELINE_INTEGRITY",
+            execution_mode="CONDUCTOR_ONLY",
+            selected_agent=None,
+            specialist_mode=None,
+            decision_basis=[
+                "The outcome contract is complete, but the unchanged full pipeline has not yet passed its locked pre-freeze controls."
+            ],
+            work_order=_work_order(
+                "Lock and assess the complete research pipeline on structure-appropriate negative controls and a known-effect positive sentinel.",
+                "pipeline_integrity_assessment",
+                _input_refs(state),
+                [
+                    "Do not inspect validation or final-holdout outcomes.",
+                    "Do not use one random walk as the only negative control.",
+                    "Do not omit a relevant dependency merely because a simpler synthetic model is available.",
+                    "Do not promote a passed synthetic or surrogate control into evidence for the market claim, prediction, mechanism, or executable edge.",
+                    "Do not import Q-Fin or other unvalidated model code merely because it implements a named stochastic process.",
+                ],
+                [
+                    "The exact pipeline fingerprint, model specification, parameter provenance, random-seed policy, preserved and missing structures, repeat counts, uncertainty, and locked acceptance rule are recorded.",
+                    "At least one required negative control and one required known-effect sentinel have assessed results.",
+                    "The artifact passes schema and semantic validation, and only an overall PASS permits the freeze path.",
+                ],
+                "Stop after PASS, FAIL, or BLOCKED is recorded and before real validation.",
             ),
         )
 

@@ -98,6 +98,7 @@ $positivePairs = @(
     @('examples\causal_identification_assessment.hfi_pass.json', 'schemas\causal_identification_assessment.schema.json'),
     @('examples\scientific_philosophy_review.synthetic_failed_reconstruction.json', 'schemas\scientific_philosophy_review.schema.json'),
     @('examples\outcome_evidence_contract.predictor_without_mechanism.json', 'schemas\outcome_evidence_contract.schema.json'),
+    @('examples\pipeline_integrity_assessment.synthetic_controls.json', 'schemas\pipeline_integrity_assessment.schema.json'),
     @('examples\orchestration_state.prose_strategy.json', 'schemas\orchestration_state.schema.json'),
     @('examples\routing_decision.pre_operationalization.json', 'schemas\routing_decision.schema.json'),
     @('examples\research_fingerprint.prose_strategy.json', 'schemas\research_fingerprint.schema.json'),
