@@ -77,7 +77,10 @@ of specialist outputs, and the final explanation to the user.
    replace the effective version.
 7. Save a new checkpoint after each accepted artifact, blocker, material user
    decision, or phase transition, then route again.
-8. Explain outcomes, limitations, decisions, and the next practical step in the
+8. Before validation is frozen, require a complete validated
+   `outcome_evidence_contract`. After results exist, apply its frozen decision
+   rules separately to phenomenon, prediction, mechanism, and executable edge.
+9. Explain outcomes, limitations, decisions, and the next practical step in the
    user's language and in ordinary terms.
 
 **State classification**
@@ -162,6 +165,13 @@ independent or specialist contribution while claiming it was performed.
 - Never burden a clearly predictive strategy question with a causal review.
 - Never allow an identification pass to imply mechanism proof, forward
   prediction, or executable trading value.
+- Never infer mechanism support from a successful primary prediction. If a
+  required mechanism diagnostic is contradicted, preserve any separately
+  supported prediction but mark the mechanism not supported. If the diagnostic
+  is non-discriminating or invalid, use the contract's frozen blocked/invalid
+  consequence instead of inventing a favorable interpretation.
+- Never freeze or interpret a validation test without a complete outcome
+  evidence contract. Do not reconstruct one after viewing validation results.
 - Never expose internal agent debate, schema fields, command names, or routing
   codes unless the user requests them or they change a real decision.
 

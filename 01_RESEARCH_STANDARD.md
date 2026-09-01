@@ -1023,6 +1023,24 @@ Frage:
 
 Eine gute Hypothese muss mehr leisten als die Discovery-Daten nachzuerzählen.
 
+## 12.1a Outcome evidence contract
+
+Before validation is frozen, every planned outcome is recorded in a validated
+`outcome_evidence_contract`. The contract assigns each outcome a fixed role,
+evidence target, measurement rule, falsifier, multiplicity family, and result
+consequence. It also records mechanical coupling and a separate
+transportability expectation for every material evidence target.
+
+Prediction, mechanism, phenomenon, and executable net edge remain separate
+conclusions. A supported primary prediction may coexist with a contradicted
+mechanism diagnostic. In that case the prediction may remain supported, but
+the mechanism conclusion must follow the frozen not-supported rule. A
+non-discriminating test and an invalid test remain distinct outcomes.
+
+If the research state has reached `FROZEN_TEST` without a complete contract,
+validation is blocked. The contract must not be reconstructed after validation
+results have been viewed.
+
 ## 12.2 Pre-Mortem
 
 Annahme:

@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "urn:research-framework:schema:orchestration-state:1.3.0",
+  "$id": "urn:research-framework:schema:orchestration-state:1.4.0",
   "title": "Research Orchestration State",
   "description": "Persistent checkpoint used by the research conductor before every material research step.",
   "type": "object",
@@ -21,10 +21,10 @@
     "routing_history"
   ],
   "properties": {
-    "schema_version": {"const": "1.3.0"},
+    "schema_version": {"const": "1.4.0"},
     "orchestration_id": {"$ref": "#/$defs/stableId"},
     "updated_at": {"$ref": "#/$defs/timestamp"},
-    "conductor_version": {"const": "1.3.0"},
+    "conductor_version": {"const": "1.4.0"},
     "next_decision_sequence": {"type": "integer", "minimum": 1},
     "request": {"$ref": "#/$defs/request"},
     "research_context": {"$ref": "#/$defs/researchContext"},
@@ -396,6 +396,7 @@
         "strategy_concept_audit",
         "condition_inquiry",
         "causal_identification_assessment",
+        "outcome_evidence_contract",
         "scientific_philosophy_review"
       ],
       "properties": {
@@ -403,6 +404,7 @@
         "strategy_concept_audit": {"$ref": "#/$defs/artifactStatus"},
         "condition_inquiry": {"$ref": "#/$defs/artifactStatus"},
         "causal_identification_assessment": {"$ref": "#/$defs/artifactStatus"},
+        "outcome_evidence_contract": {"$ref": "#/$defs/artifactStatus"},
         "scientific_philosophy_review": {"$ref": "#/$defs/artifactStatus"}
       }
     },

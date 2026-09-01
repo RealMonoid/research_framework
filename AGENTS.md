@@ -47,6 +47,18 @@ does not trigger this review. An estimator, event window, temporal ordering, or
 causal-discovery result is never a substitute for the required identification
 assessment.
 
+Before any validation test is frozen, create and validate an
+`outcome_evidence_contract` using
+`schemas/outcome_evidence_contract.schema.json` and
+`scripts/validate_outcome_evidence_contract.py`. Every outcome must have a
+fixed role, evidence target, decision consequence, multiplicity family, and
+mechanical-coupling assessment. Stability is recorded separately for each
+material target. If a test is already marked frozen without this contract,
+stop; never reconstruct it after viewing validation results. A successful
+prediction may remain supported when a required mechanism diagnostic fails,
+but the mechanism itself must then follow the frozen not-supported or blocked
+decision rule.
+
 The fingerprint covers the full material research state, including the
 research question, source strategy, market and time scope, constructs and
 operationalizations, trigger and outcome rules, parameters, conditions,

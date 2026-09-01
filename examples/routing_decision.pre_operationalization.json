@@ -1,9 +1,9 @@
 {
-  "schema_version": "1.3.0",
+  "schema_version": "1.4.0",
   "decision_id": "routing:orchestration:synthetic-prose-strategy:v1:2",
   "created_at": "2026-08-31T18:00:00+02:00",
   "orchestration_ref": "orchestration:synthetic-prose-strategy:v1",
-  "conductor_version": "1.3.0",
+  "conductor_version": "1.4.0",
   "route": "SCIENTIFIC_PHILOSOPHY_PRE_OPERATIONALIZATION",
   "execution_mode": "SPECIALIST_AS_TOOL",
   "selected_agent": "scientific-philosophy-critic",

@@ -139,6 +139,20 @@ material state is unchanged. Every difference becomes a visible change
 proposal. The existing version remains effective unless the user explicitly
 authorizes a new Research-ID or research version.
 
+### Outcome roles and contradiction handling
+
+Before a validation test is frozen, the conductor creates an
+[outcome evidence contract](06_OUTCOME_EVIDENCE_CONTRACT.md). It states which
+measurement is primary, which measurements test the proposed mechanism, which
+are robustness checks, and which are exploratory only. It also records shared
+construction inputs, multiplicity families, result consequences, and
+target-specific stability expectations.
+
+This prevents a successful prediction from being used to preserve a failed
+mechanism story. Prediction, mechanism, phenomenon, and executable after-cost
+edge remain separate conclusions. A frozen test cannot proceed without a
+complete validated contract.
+
 ### Causal claims
 
 An interventional or counterfactual claim has an additional mandatory stop. The

@@ -1,0 +1,143 @@
+{
+  "schema_version": "1.0.0",
+  "contract_id": "outcome-contract:ofi-reversion:v1",
+  "research_id": "research:ofi-reversion",
+  "research_version": 1,
+  "status": "ASSESSED",
+  "created_at": "2026-09-01T09:00:00Z",
+  "updated_at": "2026-09-01T12:00:00Z",
+  "outcomes": [
+    {
+      "outcome_id": "outcome:forward-return-30m",
+      "role": "PRIMARY",
+      "requirement_level": "REQUIRED",
+      "target": "FORWARD_PREDICTIVE_OOS",
+      "observable": "The signed return during the 30 minutes after the frozen trigger.",
+      "measurement_rule": "Use executable timestamps and the frozen 30-minute horizon; do not measure return relative to the trigger's reference model.",
+      "reference_model_refs": [],
+      "mechanical_coupling": {
+        "status": "INDEPENDENT",
+        "related_element_refs": [],
+        "plain_language_risk": "The outcome is a direct future return, so the trigger's reference model cannot mechanically create a measured return toward itself."
+      },
+      "expected_pattern": "The state-adjusted out-of-sample return is negative by at least the frozen economically relevant threshold.",
+      "falsifier": "The frozen interval decision rule does not support a negative economically relevant return.",
+      "timing_relative_to_trigger": "Measured strictly after the trigger over the next 30 minutes.",
+      "rival_hypothesis_refs": [
+        "hypothesis:generic-short-horizon-reversal"
+      ],
+      "discriminating_assumptions": [
+        "The holdout period was not used to choose the trigger, horizon, or threshold."
+      ],
+      "multiplicity_family_ref": "family:primary-prediction",
+      "decision_rule": {
+        "support_effect": "MAY_SUPPORT_TARGET",
+        "contradiction_effect": "TARGET_NOT_SUPPORTED",
+        "non_discriminating_effect": "TARGET_BLOCKED",
+        "invalid_test_effect": "TARGET_BLOCKED"
+      },
+      "assessment": {
+        "result": "SUPPORTED",
+        "evidence_refs": [
+          "evidence:oos-forward-return-v1"
+        ],
+        "plain_language_interpretation": "The frozen signal predicted the future return in the tested holdout period."
+      }
+    },
+    {
+      "outcome_id": "outcome:spread-normalization",
+      "role": "MECHANISM_DIAGNOSTIC",
+      "requirement_level": "REQUIRED",
+      "target": "MECHANISM_SUPPORTED",
+      "observable": "Quoted spread normalization after the trigger.",
+      "measurement_rule": "Compare the median quoted spread in minutes 10 to 30 after the trigger with the median spread in the final minute before the trigger.",
+      "reference_model_refs": [
+        "measurement:quoted-spread"
+      ],
+      "mechanical_coupling": {
+        "status": "INDEPENDENT",
+        "related_element_refs": [],
+        "plain_language_risk": "The spread diagnostic does not reuse the return outcome or the price reference used to define the trigger."
+      },
+      "expected_pattern": "The spread narrows materially as temporary liquidity pressure subsides.",
+      "falsifier": "The frozen interval rule supports no narrowing or a material widening of the spread.",
+      "timing_relative_to_trigger": "Measured after the trigger and before the end of the 30-minute return horizon.",
+      "rival_hypothesis_refs": [
+        "hypothesis:information-revaluation",
+        "hypothesis:generic-short-horizon-reversal"
+      ],
+      "discriminating_assumptions": [
+        "Quoted spread is a relevant observable implication of the claimed temporary-liquidity mechanism in this market.",
+        "The feed captures the relevant best quotes without systematic event-time gaps."
+      ],
+      "multiplicity_family_ref": "family:mechanism-diagnostics",
+      "decision_rule": {
+        "support_effect": "MAY_SUPPORT_TARGET",
+        "contradiction_effect": "TARGET_NOT_SUPPORTED",
+        "non_discriminating_effect": "TARGET_BLOCKED",
+        "invalid_test_effect": "TARGET_BLOCKED"
+      },
+      "assessment": {
+        "result": "CONTRADICTED",
+        "evidence_refs": [
+          "evidence:oos-spread-diagnostic-v1"
+        ],
+        "plain_language_interpretation": "The return prediction worked, but the spread behavior required by the liquidity explanation did not occur."
+      }
+    }
+  ],
+  "transportability_by_target": [
+    {
+      "target": "FORWARD_PREDICTIVE_OOS",
+      "tested_environments": [
+        "Two non-overlapping holdout periods with different volatility levels"
+      ],
+      "expected_stability": "The sign remains negative and the effect remains above the frozen relevance threshold in both periods.",
+      "allowed_drift": "The point estimate may differ, but neither period may reverse sign or fall below the frozen relevance boundary.",
+      "status": "SUPPORTED",
+      "evidence_refs": [
+        "evidence:oos-forward-return-v1"
+      ],
+      "plain_language_scope": "Predictive support is limited to the tested market, horizon, and two holdout periods."
+    },
+    {
+      "target": "MECHANISM_SUPPORTED",
+      "tested_environments": [
+        "The same two holdout periods used for the frozen spread diagnostic"
+      ],
+      "expected_stability": "Spread normalization appears in both periods if the proposed liquidity mechanism explains the prediction.",
+      "allowed_drift": "The speed may differ, but the direction may not reverse.",
+      "status": "NOT_SUPPORTED",
+      "evidence_refs": [
+        "evidence:oos-spread-diagnostic-v1"
+      ],
+      "plain_language_scope": "The claimed liquidity explanation is not supported in the tested environments."
+    }
+  ],
+  "stage_conclusions": {
+    "phenomenon": {
+      "status": "UNKNOWN",
+      "evidence_refs": [],
+      "rationale": "This contract evaluates the frozen forward prediction rather than a separate phenomenon claim."
+    },
+    "mechanism_supported": {
+      "status": "NOT_SUPPORTED",
+      "evidence_refs": [
+        "evidence:oos-spread-diagnostic-v1"
+      ],
+      "rationale": "A required mechanism diagnostic contradicted the pre-specified liquidity explanation."
+    },
+    "forward_predictive_oos": {
+      "status": "SUPPORTED",
+      "evidence_refs": [
+        "evidence:oos-forward-return-v1"
+      ],
+      "rationale": "The primary frozen prediction was supported on unseen data."
+    },
+    "executable_net_edge": {
+      "status": "UNKNOWN",
+      "evidence_refs": [],
+      "rationale": "No executable-price, cost, fill, or capacity assessment was part of this contract."
+    }
+  }
+}

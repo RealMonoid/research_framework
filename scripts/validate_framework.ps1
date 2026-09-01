@@ -51,6 +51,12 @@ if ($LASTEXITCODE -ne 0) {
     throw "Wissenschaftsphilosophie-Review-Tests fehlgeschlagen (Exit $LASTEXITCODE)."
 }
 
+Write-Output '== Outcome evidence contract =='
+& $PythonExecutable (Join-Path $repoRoot 'scripts\test_outcome_evidence_contract.py')
+if ($LASTEXITCODE -ne 0) {
+    throw "Outcome evidence contract tests failed (exit $LASTEXITCODE)."
+}
+
 Write-Output '== Causal-identification review =='
 & $PythonExecutable (Join-Path $repoRoot 'scripts\test_causal_identification.py')
 if ($LASTEXITCODE -ne 0) {
