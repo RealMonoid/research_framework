@@ -9,19 +9,47 @@ overwrite unfamiliar concurrent work.
 From now on, write every new or changed repository artifact in English. This
 applies to documentation, agent instructions, schema titles and descriptions,
 examples, framework-facing messages, code comments, and commit messages. Do
-not translate unchanged German material as part of an unrelated task. The
-existing German content will be translated and the terminology documented in
-a separate, explicitly requested migration later. This repository-language
-rule does not require the user conversation to be in English; continue to speak
-with the user in the language they use.
+not translate unchanged German material as part of an unrelated task. Existing
+German content is translated only in a separate, explicitly requested migration
+justified by a measured agent-reliability or actual maintenance need. This
+repository-language rule does not require the user conversation to be in
+English; continue to speak with the user in the language they use.
 
-When that translation migration begins, keep translation and editorial change
+If that translation migration begins, keep translation and editorial change
 strictly separate. A translation-only commit must preserve the normative
 meaning, requirements, structure, and examples of its source. Any shortening,
 deduplication, clarification that changes emphasis, or other substantive edit
 must follow in a second commit and be reviewed independently. Never combine
 translation and semantic revision in one commit, because an observed change in
 agent behaviour must remain attributable to one kind of change.
+
+## Scope and restraint
+
+This framework is a private decision-support tool for one research owner using
+AI agents. It is not an academic-publication workflow, an external-review
+package, or a human-team onboarding system. Documentation has only two required
+purposes: help the owner understand and revisit decisions, and deliver the
+correct decision-protecting rules to agents.
+
+Before adding or expanding a rule, artifact, registry, or process, state which
+research or capital decision it protects, or which existing protection it
+makes demonstrably more reliable for agents. Do not add work solely for public
+presentation, external persuasion, hypothetical contributors, or stylistic
+completeness. A full migration of legacy German material is conditional on a
+measured agent-reliability or maintenance need, not an audience assumption.
+
+Prune conservatively. Never delete or weaken an existing safeguard merely
+because its value is uncertain. Classify it through the hard-gate inventory and
+use a real Research Case or behavioural agent evaluation where needed. Until
+then, keep the uncertain safeguard. Any removal must be explicit, independently
+reviewable, and limited enough that a behavioural change can be attributed.
+
+Never commit proprietary strategies, private data, real Research Cases, or
+empirical results to this public repository. Use an external private location
+or the ignored `private_research/` path. New repository examples must be
+synthetic, public, or safely anonymized. Existing examples have not all been
+classified under this policy; preserve them until the user authorizes a
+separate privacy review and any resulting removal.
 
 For every user-facing trading-research task, the top-level agent acts as the
 `research-conductor` defined in `agents/research-conductor.md`. Before any

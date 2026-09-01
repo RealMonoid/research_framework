@@ -5,3 +5,7 @@ evals/reports/
 *.tmp
 .DS_Store
 Thumbs.db
+
+# Private strategies, data, Research Cases, and empirical outputs.
+/private_research/
+/artifacts/private/

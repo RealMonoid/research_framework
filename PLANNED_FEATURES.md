@@ -14,6 +14,41 @@ Priority follows two questions: how strongly an item reduces the risk of
 believing in a nonexistent edge, and which earlier result is needed before the
 item can work.
 
+### Scope and conservative pruning rule
+
+The framework supports private research and capital decisions made by one
+owner working with AI agents. It is not being developed for academic
+publication, external persuasion, public strategy disclosure, or hypothetical
+human-team onboarding.
+
+Classify existing and proposed work as follows:
+
+- **KEEP — decision protection:** directly changes or constrains a research,
+  activation, continuation, sizing, suspension, or retirement decision.
+- **KEEP — agent enforcement:** demonstrably makes an existing
+  decision-protecting rule more likely to reach the agent and be applied
+  correctly.
+- **CONDITIONAL:** has a plausible protective role, but that role has not yet
+  been observed or measured. Retain it while the hard-gate inventory, real
+  Research Case, or behavioural evaluation tests the need.
+- **REMOVE CANDIDATE:** serves only publication, external persuasion, public
+  presentation, or unsupported assumptions about future human collaborators.
+- **UNKNOWN:** retain until its effect and dependencies are understood.
+
+Uncertainty is not permission to delete. Removal candidates must identify the
+decision they do not protect, the enforcement path they do not support, and any
+remaining dependency. Remove one independently reviewable unit at a time only
+after relevant behavioural reference cases exist. Compare behaviour before and
+after; restore or investigate any unexplained material change. Translation,
+editorial simplification, and semantic removal remain separate changes.
+
+The public repository is intended to contain framework code and safe examples
+only. Real strategies, private data, real Research Cases, and empirical results
+remain in an external private location or the ignored `private_research/` path.
+Existing examples have not all been classified under this policy. Keep them
+until a separate, user-authorized privacy review determines whether any require
+removal or history remediation.
+
 No new control layer should be added merely because it sounds prudent. Existing
 controls must first show their value and their failure modes in executable
 checks, live-agent evaluations, or a real Research Case.
@@ -28,7 +63,11 @@ checks, live-agent evaluations, or a real Research Case.
    invoke it, and failure must stop acceptance or continuation. Include the
    already implemented research-fingerprint, scientific-philosophy, causal,
    outcome-contract, and pipeline-integrity controls. This inventory is a
-   diagnosis; its findings may change the priorities below.
+   diagnosis; its findings may change the priorities below. Also mark the
+   trust boundary explicitly: the framework cannot discover experiments,
+   viewed data, or discarded variants that occurred outside its recorded
+   workflow. A control may reduce that exposure but must not claim to eliminate
+   undisclosed external search.
 
 2. **One real Research Case.** Run one deliberately unexciting end-to-end case
    with public data and a predeclared expectation that no useful effect will be
@@ -72,13 +111,15 @@ checks, live-agent evaluations, or a real Research Case.
    Missing, stale, ambiguous, or incomplete references must never degrade into
    a reduced but apparently valid run.
 
-6. **Canonical concept registry.** Map each governed concept to one canonical
-   term, a concise definition, its legacy terms, and its exact machine anchors
-   where such anchors genuinely exist. Use results from priority 3 to identify
-   which semantic ambiguities cause real agent failures, while treating the
-   current German-prose/English-machine split as an existing correctness risk.
-   The registry is required before isolated normative sections can be trusted;
-   it is not itself the English migration.
+6. **Canonical concept registry.** Limit the registry to concepts that carry a
+   decision-protecting rule or whose ambiguity can disable an agent gate. Map
+   each such concept to one canonical term, a concise definition, its legacy
+   terms, and exact machine anchors where those anchors genuinely exist. Use
+   results from priority 3 to identify which semantic ambiguities cause real
+   failures, while treating the current German-prose/English-machine split as
+   an existing but still measurable correctness risk. The registry is required
+   before isolated normative sections can be trusted; it is not a general
+   terminology or documentation project.
 
 7. **Severity-aware change control.** Separate semantic research changes,
    evidence-integrity changes, and demonstrably non-material editorial changes.
@@ -93,11 +134,14 @@ checks, live-agent evaluations, or a real Research Case.
    before-change context measurements exist. Measure savings and behavioural
    changes; do not assume that shorter prompts preserve gate behaviour.
 
-9. **English migration.** Migrate the remaining German corpus only when the
-   audience or maintenance need justifies it. Priority 6 supplies the necessary
-   semantic mappings. Translation-only commits must remain separate from
-   shortening, deduplication, or substantive revision so that changes in agent
-   behaviour remain attributable.
+9. **Conditional legacy-language migration.** Do not migrate the remaining
+   German corpus merely for publication, an international audience, or
+   stylistic consistency. Proceed only if priority 3 measures a material agent
+   reliability problem that narrower concept mappings cannot solve, or if an
+   actual maintenance need emerges. Priority 6 supplies the necessary semantic
+   mappings. Translation-only commits must remain separate from shortening,
+   deduplication, or substantive revision so that changes in agent behaviour
+   remain attributable.
 
 The synthetic pipeline-integrity control, outcome evidence contract, complete
 research fingerprint, central conductor, and specialist routing are completed
@@ -304,9 +348,10 @@ numbers here identify details rather than execution order:
    history, upgrade claim levels, skip required specialists, or satisfy schemas
    with scientifically empty content. Measure repeated catch rates rather than
    treating contract validity as evidence of agent reliability.
-6. **Priorities 6 and 9 — Terminology control and English migration:** Establish the canonical
-   concept registry described above before selective loading or translation.
-   Use it to map the legacy German corpus to canonical English terms and exact
-   machine anchors. Translation must be performed in translation-only commits;
-   redundancy removal, shortening, and substantive rewriting must follow in
-   separate commits with separate validation.
+6. **Priorities 6 and 9 — Narrow terminology control and conditional language
+   migration:** Establish only the decision-relevant concept mappings described
+   above before selective loading. Migrate the legacy German corpus only after
+   a measured agent-reliability or actual maintenance need. Translation must be
+   performed in translation-only commits; redundancy removal, shortening, and
+   substantive rewriting must follow in separate commits with separate
+   validation.
