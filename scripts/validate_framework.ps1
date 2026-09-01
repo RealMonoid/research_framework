@@ -57,6 +57,12 @@ if ($LASTEXITCODE -ne 0) {
     throw "Outcome evidence contract tests failed (exit $LASTEXITCODE)."
 }
 
+Write-Output '== Pipeline integrity assessment =='
+& $PythonExecutable (Join-Path $repoRoot 'scripts\test_pipeline_integrity_assessment.py')
+if ($LASTEXITCODE -ne 0) {
+    throw "Pipeline integrity assessment tests failed (exit $LASTEXITCODE)."
+}
+
 Write-Output '== Causal-identification review =='
 & $PythonExecutable (Join-Path $repoRoot 'scripts\test_causal_identification.py')
 if ($LASTEXITCODE -ne 0) {

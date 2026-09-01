@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "urn:research-framework:schema:routing-decision:1.4.0",
+  "$id": "urn:research-framework:schema:routing-decision:1.5.0",
   "title": "Research Routing Decision",
   "description": "Deterministic routing decision and bounded work order owned by the research conductor.",
   "type": "object",
@@ -24,11 +24,11 @@
     "control"
   ],
   "properties": {
-    "schema_version": {"const": "1.4.0"},
+    "schema_version": {"const": "1.5.0"},
     "decision_id": {"$ref": "#/$defs/stableId"},
     "created_at": {"$ref": "#/$defs/timestamp"},
     "orchestration_ref": {"$ref": "#/$defs/stableId"},
-    "conductor_version": {"const": "1.4.0"},
+    "conductor_version": {"const": "1.5.0"},
     "route": {"$ref": "#/$defs/route"},
     "execution_mode": {
       "type": "string",
@@ -129,6 +129,7 @@
               "RECONSTRUCT_SOURCE_STRATEGY",
               "OPERATIONALIZE_SOURCE_STRATEGY",
               "DEFINE_OUTCOME_EVIDENCE_CONTRACT",
+              "ASSESS_PIPELINE_INTEGRITY",
               "RESEARCH_INTAKE",
               "CONDUCT_RESEARCH"
             ]
@@ -288,6 +289,7 @@
         "SCIENTIFIC_PHILOSOPHY_PRE_OPERATIONALIZATION",
         "OPERATIONALIZE_SOURCE_STRATEGY",
         "DEFINE_OUTCOME_EVIDENCE_CONTRACT",
+        "ASSESS_PIPELINE_INTEGRITY",
         "CONDITION_INQUIRY",
         "CAUSAL_IDENTIFICATION_REVIEW",
         "SCIENTIFIC_PHILOSOPHY_POST_RESULT",

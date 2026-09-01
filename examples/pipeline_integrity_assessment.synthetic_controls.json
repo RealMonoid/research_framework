@@ -1,0 +1,158 @@
+{
+  "schema_version": "1.0.0",
+  "assessment_id": "pipeline-integrity:synthetic-predictor:v1",
+  "research_id": "research:synthetic-predictor",
+  "research_version": "1.0.0",
+  "created_at": "2026-09-01T10:00:00Z",
+  "updated_at": "2026-09-01T12:30:00Z",
+  "status": "ASSESSED",
+  "plan_locked_at": "2026-09-01T10:15:00Z",
+  "first_run_at": "2026-09-01T10:30:00Z",
+  "outcome_contract_ref": "outcome-contract:synthetic-predictor:v1",
+  "pipeline_fingerprint_ref": "fingerprint:synthetic-predictor:v1",
+  "pipeline_fingerprint_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+  "complete_pipeline_rerun": true,
+  "causal_tooling_required": false,
+  "validation_data_unseen": true,
+  "controls": [
+    {
+      "control_id": "control:null-session-surrogates",
+      "purpose": "NULL_NEGATIVE_CONTROL",
+      "related_research_element_ref": null,
+      "required_for_gate": true,
+      "basis": "EMPIRICAL_SURROGATE",
+      "empirical_data_role": "DEVELOPMENT",
+      "empirical_dataset_ref": "dataset:development-session-bars:v1",
+      "model": {
+        "family": "SESSION_PRESERVING_SHUFFLE",
+        "specification": "Shuffle the frozen event labels within volatility-matched session blocks, then rerun feature creation, filtering, event selection, and the primary statistic without changing any rule.",
+        "parameter_provenance": "Block definitions and volatility bins were frozen from the development-data contract before the first control run.",
+        "code_or_method_ref": "method:session-preserving-null:v1",
+        "random_seed_policy": "Record a master seed and derive one deterministic child seed per repeat.",
+        "preserved_structure": [
+          "AUTOCORRELATION",
+          "VOLATILITY_CLUSTERING",
+          "SESSION_PROFILE",
+          "WEEKDAY_PATTERN"
+        ],
+        "unpreserved_relevant_structure": [],
+        "structure_adequacy": "ADEQUATE_FOR_PURPOSE"
+      },
+      "expected_truth": {
+        "effect_state": "NO_EFFECT",
+        "direction": "NONE",
+        "timing_rule": "No systematic forward effect is present at the frozen horizon.",
+        "construction_basis": "The shuffle removes the event-to-future association while retaining the development sample's relevant session and volatility structure."
+      },
+      "planned_runs": 1000,
+      "actual_runs": 1000,
+      "acceptance_rule": {
+        "locked_before_first_run": true,
+        "decision_rule": "PASS when the complete pipeline's false-positive rate is at most 6 percent and the upper 95 percent binomial bound is at most 7.5 percent; otherwise FAIL, or BLOCKED if the preserved structure proves inadequate.",
+        "target_precision": "The 95 percent interval half-width for the false-positive rate must be no greater than 1.5 percentage points.",
+        "minimum_runs": 1000
+      },
+      "result": {
+        "status": "PASS",
+        "evidence_refs": ["evidence:null-session-surrogates:v1"],
+        "monte_carlo_uncertainty": "Forty-eight of 1000 repeats crossed the frozen threshold; the recorded 95 percent binomial interval was 3.6 to 6.3 percent.",
+        "plain_language_interpretation": "The complete pipeline did not produce excessive false alarms under this specific structure-preserving null control."
+      },
+      "permitted_consequence": "PIPELINE_GATE_ONLY"
+    },
+    {
+      "control_id": "control:known-effect-sentinel",
+      "purpose": "POSITIVE_SENTINEL",
+      "related_research_element_ref": null,
+      "required_for_gate": true,
+      "basis": "SYNTHETIC_MODEL",
+      "empirical_data_role": "NOT_APPLICABLE",
+      "empirical_dataset_ref": null,
+      "model": {
+        "family": "CUSTOM",
+        "specification": "Generate session-shaped synthetic paths and inject a fixed positive response five observations after each independently generated event. Run the unchanged complete pipeline.",
+        "parameter_provenance": "The response size, delay, session shape, and noise scale were fixed in the locked control plan rather than estimated from validation results.",
+        "code_or_method_ref": "method:known-effect-sentinel:v1",
+        "random_seed_policy": "Record a master seed and derive one deterministic child seed per repeat.",
+        "preserved_structure": [
+          "VOLATILITY_CLUSTERING",
+          "SESSION_PROFILE"
+        ],
+        "unpreserved_relevant_structure": [],
+        "structure_adequacy": "ADEQUATE_FOR_PURPOSE"
+      },
+      "expected_truth": {
+        "effect_state": "KNOWN_EFFECT",
+        "direction": "POSITIVE",
+        "timing_rule": "The detected response must begin at the fifth observation and not before it.",
+        "construction_basis": "The data generator inserts a known response with a fixed sign and delay, so the pipeline should recover both without look-ahead."
+      },
+      "planned_runs": 500,
+      "actual_runs": 500,
+      "acceptance_rule": {
+        "locked_before_first_run": true,
+        "decision_rule": "PASS when at least 90 percent of repeats recover the positive sign and the correct timing without an earlier effect; otherwise FAIL.",
+        "target_precision": "The 95 percent interval half-width for the detection rate must be no greater than 3 percentage points.",
+        "minimum_runs": 500
+      },
+      "result": {
+        "status": "PASS",
+        "evidence_refs": ["evidence:known-effect-sentinel:v1"],
+        "monte_carlo_uncertainty": "Four hundred sixty-eight of 500 repeats recovered the frozen sign and timing; the recorded 95 percent interval was 91.1 to 95.4 percent.",
+        "plain_language_interpretation": "The pipeline recovered this deliberately inserted effect with the correct sign and timing. This checks implementation behavior, not the market claim."
+      },
+      "permitted_consequence": "PIPELINE_GATE_ONLY"
+    },
+    {
+      "control_id": "control:stochastic-volatility-challenge",
+      "purpose": "ROBUSTNESS_CHALLENGE",
+      "related_research_element_ref": "outcome:volatility-robustness",
+      "required_for_gate": false,
+      "basis": "SYNTHETIC_MODEL",
+      "empirical_data_role": "NOT_APPLICABLE",
+      "empirical_dataset_ref": null,
+      "model": {
+        "family": "STOCHASTIC_VOLATILITY",
+        "specification": "Generate paths with persistent volatility changes but no predictive event effect, then apply the unchanged event and outcome construction.",
+        "parameter_provenance": "Volatility persistence and scale ranges came from the locked development-data summary and were widened before simulation.",
+        "code_or_method_ref": "method:stochastic-volatility-challenge:v1",
+        "random_seed_policy": "Record a master seed and derive one deterministic child seed per repeat.",
+        "preserved_structure": [
+          "VOLATILITY_CLUSTERING",
+          "REGIME_PERSISTENCE"
+        ],
+        "unpreserved_relevant_structure": ["LIQUIDITY_AND_SPREAD"],
+        "structure_adequacy": "INADEQUATE"
+      },
+      "expected_truth": {
+        "effect_state": "CHALLENGE_ONLY",
+        "direction": "NONE",
+        "timing_rule": "No market-effect conclusion is authorized by this challenge.",
+        "construction_basis": "The model deliberately probes whether volatility dynamics alone can create the measured association."
+      },
+      "planned_runs": 500,
+      "actual_runs": 500,
+      "acceptance_rule": {
+        "locked_before_first_run": true,
+        "decision_rule": "Record sensitivity as a challenge for the relevant construction; never treat a pass as evidence that the market effect exists.",
+        "target_precision": "Report the simulated contrast distribution with a Monte-Carlo interval no wider than the frozen tolerance.",
+        "minimum_runs": 500
+      },
+      "result": {
+        "status": "BLOCKED",
+        "evidence_refs": ["evidence:stochastic-volatility-challenge:v1"],
+        "monte_carlo_uncertainty": "The requested repeat count was reached, but the model omitted liquidity and spread behavior identified as relevant to this challenge.",
+        "plain_language_interpretation": "This challenge cannot answer the intended robustness question. It creates no positive evidence and must be redesigned as a visible later proposal if pursued."
+      },
+      "permitted_consequence": "CHALLENGE_ONLY"
+    }
+  ],
+  "claim_limits": {
+    "supports_market_effect": false,
+    "supports_forward_prediction": false,
+    "supports_mechanism": false,
+    "supports_executable_edge": false
+  },
+  "overall_gate": "PASS",
+  "plain_language_conclusion": "The required controls support only the technical decision that this frozen pipeline may proceed to a real validation step. They do not show that the signal exists, predicts returns, explains a mechanism, or remains profitable after costs."
+}

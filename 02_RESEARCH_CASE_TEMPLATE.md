@@ -975,6 +975,19 @@ diverge from the protected artifact.
 
 **PHASENSTATUS:** `COMPLETE / BLOCKED / FAILED`
 
+| Machine-enforced assessment | Value |
+|---|---|
+| Assessment reference and version | |
+| Exact pipeline fingerprint reference and SHA-256 | |
+| Status | `ASSESSED` |
+| Overall gate | `PASS / FAIL / BLOCKED` |
+| Validation data still unseen? | `YES` |
+
+The referenced artifact must pass
+`scripts/validate_pipeline_integrity_assessment.py`. Only `overall_gate: PASS`
+may produce `PHASENSTATUS: COMPLETE`; a schema-valid artifact is not enough by
+itself.
+
 | Test-ID | Kontrolltyp | Kontrollbasis | Empirisches Dataset + gültige Rolle | Null-/Synthetic-Design | Erhaltene Zeit-/Cluster-/State-/Volatilitätsstruktur | geplantes B | tatsächliches B | Zielpräzision + Monte-Carlo-SE/Intervall | Vorab-Akzeptanzregel | Ergebnis |
 |---|---|---|---|---|---|---:|---:|---|---|---|
 | PI-NULL | wiederholte Null-/Surrogatkontrolle | `empirisch abgeleitet / rein synthetisch` | nur bei empirischer Basis: `DEVELOPMENT` | | | | | | | |

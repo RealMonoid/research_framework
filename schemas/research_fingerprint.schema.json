@@ -132,6 +132,7 @@
             "CONCEPT_AUDIT",
             "OPERATIONALIZATION",
             "OUTCOME_EVIDENCE_CONTRACT",
+            "PIPELINE_INTEGRITY_ASSESSMENT",
             "DATA_CONTRACT",
             "METHOD",
             "FROZEN_RESULT",

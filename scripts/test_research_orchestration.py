@@ -220,7 +220,25 @@ def main() -> int:
         "status": "COMPLETE",
         "artifact_ref": "outcome-contract:synthetic-predictive:v1",
     }
-    assert_route(predictive_ready, "CONDUCT_RESEARCH")
+    decision = assert_route(predictive_ready, "ASSESS_PIPELINE_INTEGRITY")
+    if decision["work_order"]["required_output_type"] != "pipeline_integrity_assessment":
+        raise AssertionError("Pre-freeze routing did not require pipeline controls.")
+    if "Q-Fin" not in " ".join(decision["work_order"]["excluded_actions"]):
+        raise AssertionError("The pipeline-control route did not reject unvalidated model code.")
+
+    pipeline_ready = copy.deepcopy(predictive_ready)
+    pipeline_ready["artifacts"]["pipeline_integrity_assessment"] = {
+        "status": "COMPLETE",
+        "artifact_ref": "pipeline-integrity:synthetic-predictor:v1",
+    }
+    assert_route(pipeline_ready, "CONDUCT_RESEARCH")
+
+    pipeline_invalid = copy.deepcopy(predictive_ready)
+    pipeline_invalid["artifacts"]["pipeline_integrity_assessment"] = {
+        "status": "INVALID",
+        "artifact_ref": "pipeline-integrity:synthetic-predictor:failed",
+    }
+    assert_route(pipeline_invalid, "BLOCKED")
 
     frozen_without_contract = neutral_state()
     frozen_without_contract["request"]["intent"] = "START_OR_CONTINUE_RESEARCH"
@@ -228,6 +246,14 @@ def main() -> int:
     decision = assert_route(frozen_without_contract, "BLOCKED")
     if "Do not reconstruct" not in " ".join(decision["work_order"]["excluded_actions"]):
         raise AssertionError("Missing pre-test contract did not fail closed after freeze.")
+
+    frozen_without_pipeline_controls = copy.deepcopy(predictive_ready)
+    frozen_without_pipeline_controls["research_context"]["stage"] = "FROZEN_TEST"
+    decision = assert_route(frozen_without_pipeline_controls, "BLOCKED")
+    if "synthetic-control success" not in " ".join(
+        decision["work_order"]["excluded_actions"]
+    ):
+        raise AssertionError("Missing pre-freeze pipeline controls did not fail closed.")
 
     identified_request = copy.deepcopy(causal_request)
     identified_request["artifacts"]["causal_identification_assessment"] = {
@@ -322,7 +348,8 @@ def main() -> int:
         "Research-orchestration tests passed: mandatory philosophy handoffs, "
         "causal-identification routing, predictive bypass, full-fingerprint "
         "continuity, visible change proposals, outcome-contract freeze gating, "
-        "prerequisite ordering, user pause, and blocker behavior."
+        "pipeline-integrity freeze gating, prerequisite ordering, user pause, "
+        "and blocker behavior."
     )
     return 0
 

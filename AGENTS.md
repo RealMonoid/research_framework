@@ -59,6 +59,20 @@ prediction may remain supported when a required mechanism diagnostic fails,
 but the mechanism itself must then follow the frozen not-supported or blocked
 decision rule.
 
+After the outcome evidence contract and before validation is frozen, create and
+validate a `pipeline_integrity_assessment` using
+`schemas/pipeline_integrity_assessment.schema.json` and
+`scripts/validate_pipeline_integrity_assessment.py`. It must bind to the exact
+complete pipeline fingerprint, include repeated structure-appropriate negative
+controls and a known-effect sentinel, and record model specification, parameter
+provenance, seed policy, preserved and missing relevant structure, repeat
+counts, uncertainty, and rules locked before the first run. One random walk
+cannot be the only required negative control. Only `overall_gate: PASS` permits
+the freeze path. A passed synthetic or surrogate control is never evidence for
+the market claim, forward prediction, mechanism, causal effect, or executable
+edge. Do not trust or import Q-Fin or any other model implementation merely
+because it carries a recognized model name.
+
 The fingerprint covers the full material research state, including the
 research question, source strategy, market and time scope, constructs and
 operationalizations, trigger and outcome rules, parameters, conditions,
