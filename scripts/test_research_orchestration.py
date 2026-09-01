@@ -18,14 +18,18 @@ except ImportError as exc:  # pragma: no cover - environment failure.
         "Install with: python -m pip install -r requirements-dev.txt"
     ) from exc
 
-from check_research_identity import build_identity_check
+from check_research_fingerprint import (
+    build_fingerprint_check,
+    calculate_fingerprint_sha256,
+)
 from route_research_task import route_state
 
 
 ROOT = Path(__file__).resolve().parents[1]
 STATE_FIXTURE = "examples/orchestration_state.prose_strategy.json"
 DECISION_FIXTURE = "examples/routing_decision.pre_operationalization.json"
-IDENTITY_CHECK_FIXTURE = "examples/research_identity_check.unchanged.json"
+FINGERPRINT_FIXTURE = "examples/research_fingerprint.prose_strategy.json"
+FINGERPRINT_CHECK_FIXTURE = "examples/research_fingerprint_check.unchanged.json"
 
 
 def load(relative_path: str) -> dict[str, Any]:
@@ -44,7 +48,7 @@ def validator(relative_path: str) -> Draft202012Validator:
 
 STATE_VALIDATOR = validator("schemas/orchestration_state.schema.json")
 DECISION_VALIDATOR = validator("schemas/routing_decision.schema.json")
-IDENTITY_CHECK_VALIDATOR = validator("schemas/research_identity_check.schema.json")
+FINGERPRINT_CHECK_VALIDATOR = validator("schemas/research_fingerprint_check.schema.json")
 
 
 def assert_route(state: dict[str, Any], expected: str) -> dict[str, Any]:
@@ -106,60 +110,68 @@ def main() -> int:
     if actual_fixture != expected_fixture:
         raise AssertionError("Committed routing fixture differs from deterministic output")
 
-    unchanged_report = build_identity_check(
+    baseline_fingerprint = load(FINGERPRINT_FIXTURE)
+    unchanged_report = build_fingerprint_check(
         expected_fixture,
-        copy.deepcopy(base),
+        baseline_fingerprint,
+        copy.deepcopy(baseline_fingerprint),
         checked_at="2026-08-31T18:05:00+02:00",
     )
-    report_errors = list(IDENTITY_CHECK_VALIDATOR.iter_errors(unchanged_report))
+    report_errors = list(FINGERPRINT_CHECK_VALIDATOR.iter_errors(unchanged_report))
     if report_errors:
         raise AssertionError(
-            "Identity checker produced an invalid unchanged report:\n- "
+            "Fingerprint checker produced an invalid unchanged report:\n- "
             + "\n- ".join(
                 f"{error.json_path}: {error.message}" for error in report_errors
             )
         )
-    if unchanged_report != load(IDENTITY_CHECK_FIXTURE):
-        raise AssertionError("Committed identity-check fixture differs from deterministic output")
+    if unchanged_report != load(FINGERPRINT_CHECK_FIXTURE):
+        raise AssertionError("Committed fingerprint-check fixture differs from deterministic output")
 
-    changed_target = copy.deepcopy(base)
-    changed_target["research_identity"]["target"] = {
-        "status": "DEFINED",
-        "statement": "Price must reach the opposite edge of the reconstructed range.",
-    }
-    drift_report = build_identity_check(
+    hidden_filter_change = copy.deepcopy(baseline_fingerprint)
+    hidden_filter_change["fingerprint_id"] = "fingerprint:synthetic-prose-strategy:candidate"
+    hidden_filter_change["material_specification"]["conditions_filters_and_exclusions"]["content"]["exclusions"] = [
+        "Exclude crisis months"
+    ]
+    hidden_filter_change["fingerprint_sha256"] = calculate_fingerprint_sha256(hidden_filter_change)
+    change_report = build_fingerprint_check(
         expected_fixture,
-        changed_target,
+        baseline_fingerprint,
+        hidden_filter_change,
         checked_at="2026-08-31T18:06:00+02:00",
     )
-    if drift_report["overall_status"] != "DRIFT_DETECTED":
-        raise AssertionError("A changed target was not classified as research drift")
-    if drift_report["changed_dimensions"] != ["target"]:
-        raise AssertionError("Drift report did not isolate the changed target")
-    if drift_report["handoff_may_be_accepted"]:
-        raise AssertionError("A drifted handoff was incorrectly accepted")
+    if change_report["overall_status"] != "CHANGE_PROPOSED":
+        raise AssertionError("A hidden exclusion was not converted to a visible proposal")
+    if not any("conditions_filters_and_exclusions" in path for path in change_report["proposal"]["changed_paths"]):
+        raise AssertionError("The proposal did not identify the hidden exclusion")
+    if change_report["candidate_may_become_effective"]:
+        raise AssertionError("A changed fingerprint was incorrectly allowed to become effective")
+    if change_report["proposal"]["effect_if_accepted"] != "CREATE_NEW_RESEARCH_VERSION":
+        raise AssertionError("Accepted changes could overwrite the existing research version")
 
     awaiting_check = copy.deepcopy(base)
-    awaiting_check["handoff_control"] = {
-        "status": "AWAITING_SPECIALIST",
+    awaiting_check["change_control"] = {
+        "status": "AWAITING_COMPARISON",
         "routing_decision_ref": expected_fixture["decision_id"],
-        "report_ref": None,
-        "changed_dimensions": [],
+        "check_ref": None,
+        "proposal_ref": None,
+        "changed_paths": [],
         "plain_language_summary": None,
     }
     assert_route(awaiting_check, "BLOCKED")
 
-    drift_detected = copy.deepcopy(base)
-    drift_detected["handoff_control"] = {
-        "status": "DRIFT_DETECTED",
+    change_proposed = copy.deepcopy(base)
+    change_proposed["change_control"] = {
+        "status": "CHANGE_PROPOSED",
         "routing_decision_ref": expected_fixture["decision_id"],
-        "report_ref": drift_report["check_id"],
-        "changed_dimensions": ["target"],
-        "plain_language_summary": drift_report["plain_language_summary"],
+        "check_ref": change_report["check_id"],
+        "proposal_ref": change_report["proposal"]["proposal_id"],
+        "changed_paths": change_report["proposal"]["changed_paths"],
+        "plain_language_summary": change_report["plain_language_summary"],
     }
-    drift_decision = assert_route(drift_detected, "USER_DECISION_REQUIRED")
-    if drift_decision["user_interaction"]["status"] != "REQUIRED":
-        raise AssertionError("Detected drift did not become a user-visible decision")
+    proposal_decision = assert_route(change_proposed, "USER_DECISION_REQUIRED")
+    if proposal_decision["user_interaction"]["status"] != "REQUIRED":
+        raise AssertionError("A research change proposal did not become a user-visible decision")
 
     missing_reconstruction = copy.deepcopy(base)
     missing_reconstruction["artifacts"]["strategy_reconstruction"] = {
@@ -230,8 +242,8 @@ def main() -> int:
         {"source_kind": "NONE", "stage": "NO_IDEA", "research_id": None, "research_version": None}
     )
     decision = assert_route(generation, "GENERATE_INTRADAY_IDEAS")
-    if decision["identity_guard"]["mode"] != "NEW_IDENTITY_CREATION":
-        raise AssertionError("Idea generation did not declare intentional identity creation")
+    if decision["fingerprint_guard"]["mode"] != "NEW_RESEARCH_CREATION":
+        raise AssertionError("Idea generation did not declare intentional research creation")
 
     raw_idea = neutral_state()
     raw_idea["research_context"].update(
@@ -274,8 +286,8 @@ def main() -> int:
         }
     )
     decision = assert_route(formal_strategy, "OPERATIONALIZE_SOURCE_STRATEGY")
-    if decision["identity_guard"]["mode"] != "NOT_APPLICABLE":
-        raise AssertionError("A conductor-only route incorrectly requested a handoff comparison")
+    if decision["fingerprint_guard"]["mode"] != "PRESERVE_EFFECTIVE":
+        raise AssertionError("A conductor-only material route bypassed fingerprint protection")
 
     command = [
         sys.executable,
@@ -292,8 +304,8 @@ def main() -> int:
 
     print(
         "Research-orchestration tests passed: mandatory philosophy handoffs, "
-        "causal-identification routing, predictive bypass, six-part identity "
-        "continuity, drift pause, prerequisite ordering, user pause, and blocker behavior."
+        "causal-identification routing, predictive bypass, full-fingerprint "
+        "continuity, visible change proposals, prerequisite ordering, user pause, and blocker behavior."
     )
     return 0
 

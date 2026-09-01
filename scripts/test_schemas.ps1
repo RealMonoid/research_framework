@@ -99,7 +99,8 @@ $positivePairs = @(
     @('examples\scientific_philosophy_review.synthetic_failed_reconstruction.json', 'schemas\scientific_philosophy_review.schema.json'),
     @('examples\orchestration_state.prose_strategy.json', 'schemas\orchestration_state.schema.json'),
     @('examples\routing_decision.pre_operationalization.json', 'schemas\routing_decision.schema.json'),
-    @('examples\research_identity_check.unchanged.json', 'schemas\research_identity_check.schema.json'),
+    @('examples\research_fingerprint.prose_strategy.json', 'schemas\research_fingerprint.schema.json'),
+    @('examples\research_fingerprint_check.unchanged.json', 'schemas\research_fingerprint_check.schema.json'),
     @('examples\search_space.minimal.json', 'schemas\search_space.schema.json'),
     @('examples\noise_screen.pass.json', 'schemas\noise_screen.schema.json'),
     @('examples\noise_screen.fail.json', 'schemas\noise_screen.schema.json'),
@@ -178,27 +179,21 @@ $routingRepeatedAttempts = Read-JsonText -RelativePath 'examples\routing_decisio
 $routingRepeatedAttempts.work_order.max_attempts = 2
 Test-RejectedFixture -Name 'routing work order permits only one attempt' -Value $routingRepeatedAttempts -Schema 'schemas\routing_decision.schema.json'
 
-$routingMissingIdentityDimension = Read-JsonText -RelativePath 'examples\routing_decision.pre_operationalization.json' | ConvertFrom-Json -Depth 100
-$routingMissingIdentityDimension.identity_guard.compared_dimensions = @(
-    'research_question',
-    'strategy',
-    'market',
-    'time_horizon',
-    'trigger'
-)
-Test-RejectedFixture -Name 'specialist handoff must compare all six identity dimensions' -Value $routingMissingIdentityDimension -Schema 'schemas\routing_decision.schema.json'
+$routingPartialFingerprint = Read-JsonText -RelativePath 'examples\routing_decision.pre_operationalization.json' | ConvertFrom-Json -Depth 100
+$routingPartialFingerprint.fingerprint_guard.comparison_scope = 'NONE'
+Test-RejectedFixture -Name 'protected route must compare the full material research state' -Value $routingPartialFingerprint -Schema 'schemas\routing_decision.schema.json'
 
-$duplicatedIdentityDimension = Read-JsonText -RelativePath 'examples\research_identity_check.unchanged.json' | ConvertFrom-Json -Depth 100
-$duplicatedIdentityDimension.comparisons[5].dimension = 'trigger'
-Test-RejectedFixture -Name 'identity report must contain each dimension exactly once' -Value $duplicatedIdentityDimension -Schema 'schemas\research_identity_check.schema.json'
+$fingerprintUnprotected = Read-JsonText -RelativePath 'examples\research_fingerprint.prose_strategy.json' | ConvertFrom-Json -Depth 100
+$fingerprintUnprotected.completeness.all_effective_material_artifacts_protected = $false
+Test-RejectedFixture -Name 'fingerprint cannot claim unprotected effective artifacts' -Value $fingerprintUnprotected -Schema 'schemas\research_fingerprint.schema.json'
 
-$unchangedIdentityWithChangedTarget = Read-JsonText -RelativePath 'examples\research_identity_check.unchanged.json' | ConvertFrom-Json -Depth 100
-$unchangedIdentityWithChangedTarget.changed_dimensions = @('target')
-Test-RejectedFixture -Name 'unchanged identity report cannot list a changed target' -Value $unchangedIdentityWithChangedTarget -Schema 'schemas\research_identity_check.schema.json'
+$unchangedFingerprintBlocked = Read-JsonText -RelativePath 'examples\research_fingerprint_check.unchanged.json' | ConvertFrom-Json -Depth 100
+$unchangedFingerprintBlocked.candidate_may_become_effective = $false
+Test-RejectedFixture -Name 'unchanged fingerprint check cannot block candidate' -Value $unchangedFingerprintBlocked -Schema 'schemas\research_fingerprint_check.schema.json'
 
-$driftWithoutReport = Read-JsonText -RelativePath 'examples\orchestration_state.prose_strategy.json' | ConvertFrom-Json -Depth 100
-$driftWithoutReport.handoff_control.status = 'DRIFT_DETECTED'
-Test-RejectedFixture -Name 'detected drift requires a report reference' -Value $driftWithoutReport -Schema 'schemas\orchestration_state.schema.json'
+$proposalWithoutRefs = Read-JsonText -RelativePath 'examples\orchestration_state.prose_strategy.json' | ConvertFrom-Json -Depth 100
+$proposalWithoutRefs.change_control.status = 'CHANGE_PROPOSED'
+Test-RejectedFixture -Name 'change proposal requires its check and proposal references' -Value $proposalWithoutRefs -Schema 'schemas\orchestration_state.schema.json'
 
 $candidateSchema = Read-JsonText -RelativePath 'schemas\hypothesis_candidate.schema.json' | ConvertFrom-Json -Depth 100
 $candidateInbox = Read-JsonText -RelativePath 'examples\hypothesis_candidate.inbox.json' | ConvertFrom-Json -Depth 100

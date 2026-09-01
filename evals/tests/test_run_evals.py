@@ -109,7 +109,7 @@ class EvalHarnessTests(unittest.TestCase):
             "routing"
         ]
         routing["changed_output_accepted"] = True
-        routing["original_identity_remains_effective"] = False
+        routing["effective_fingerprint_remains_effective"] = False
 
         report = run_evals.score_results(self.catalog, regressed, self.baseline)
         self.assertFalse(report["passed"])

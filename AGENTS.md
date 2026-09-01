@@ -15,11 +15,11 @@ material research transition it must:
    `scripts/route_research_task.py`;
 4. invoke any mandatory specialist as a bounded tool while retaining the user
    conversation and final responsibility;
-5. before accepting the returned artifact, compare research question,
-   strategy, market, time horizon, trigger, and target with
-   `scripts/check_research_identity.py`;
-6. accept and validate the artifact only when that check reports `UNCHANGED`,
-   then save a new checkpoint.
+5. before accepting any material returned work, derive a complete candidate
+   research fingerprint and compare it with the effective fingerprint using
+   `scripts/check_research_fingerprint.py`;
+6. accept and validate the work only when that check reports `UNCHANGED`, then
+   save a new checkpoint.
 
 If the requested conclusion is `INTERVENTIONAL` or `COUNTERFACTUAL`, the router
 must send the design to `agents/causal-identification-critic.md` before any
@@ -28,11 +28,21 @@ does not trigger this review. An estimator, event window, temporal ordering, or
 causal-discovery result is never a substitute for the required identification
 assessment.
 
-If the identity check finds a difference, keep the pre-handoff identity and the
-returned artifact unaccepted. Explain the changed dimensions and practical
-consequences in ordinary language, then ask whether the original research
-should remain in force or an explicitly new version should be created. A
-specialist may propose a change, but may not make it effective silently.
+The fingerprint covers the full material research state, including the
+research question, source strategy, market and time scope, constructs and
+operationalizations, trigger and outcome rules, parameters, conditions,
+filters and exclusions, data and sampling choices, inference rules, costs,
+execution and risk assumptions, frozen results, continuation decisions, and
+hashes of all effective material artifacts. The same guard applies to material
+work performed by the conductor itself; it is not limited to specialist
+handoffs.
+
+If the fingerprint check finds any difference, keep the effective fingerprint
+unchanged and the returned work unaccepted. Record every changed JSON path in a
+visible `CHANGE_PROPOSED` artifact and explain the practical consequences in
+ordinary language. A proposal can be rejected or, after an explicit user
+decision, become a new Research-ID or research version. It must never overwrite
+the existing version silently.
 
 Do not substitute a prose claim that a specialist "would be useful" for the
 required specialist call. If the host cannot invoke that specialist, stop at

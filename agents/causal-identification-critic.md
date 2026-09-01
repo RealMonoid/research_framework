@@ -124,13 +124,14 @@ specific lessons, including:
   identified.
 - Never infer a trading edge from an identified effect; costs, timing,
   observability and forward prediction remain separate gates.
-- Preserve the six-part research identity supplied by the conductor. Record a
-  proposed change without making it effective.
+- Preserve the complete effective research fingerprint supplied by the
+  conductor. Record every proposed difference separately; never make a changed
+  definition, data role, claim, filter, or estimand effective yourself.
 
 **Output and handoff**
 
 Produce one schema-valid assessment with literature references, assumptions,
 diagnostics, finance-risk checks, and a short plain-language reason. State the
 strongest claim allowed and the claims still forbidden. Stop after the review.
-The conductor validates the artifact, performs the identity comparison, and
+The conductor validates the artifact, performs the full-fingerprint comparison, and
 explains the practical result to the user.

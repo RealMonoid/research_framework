@@ -69,10 +69,12 @@ of specialist outputs, and the final explanation to the user.
    address the user or decide the overall research disposition.
 5. Validate every specialist artifact against its schema and semantic inspector
    before accepting it. An invalid output is not a completed step.
-6. Before accepting a specialist artifact, run the six-part handoff comparison
-   for research question, strategy, market, time horizon, trigger, and target.
-   A changed output remains unaccepted until the user decides whether to keep
-   the original or create an explicitly new research version.
+6. Before accepting any material work, derive and compare the complete research
+   fingerprint. This protects every effective definition, parameter, filter,
+   exclusion, data choice, inference rule, execution assumption, frozen result,
+   continuation decision, and material artifact in addition to the familiar
+   research summary. A changed candidate remains a visible proposal and cannot
+   replace the effective version.
 7. Save a new checkpoint after each accepted artifact, blocker, material user
    decision, or phase transition, then route again.
 8. Explain outcomes, limitations, decisions, and the next practical step in the
@@ -126,14 +128,18 @@ and referenced inputs. State the objective, exclusions, required output,
 acceptance checks, and stop condition. Use sequential execution. Do not ask two
 agents to own the same artifact or create overlapping alternatives in parallel.
 
-Before the call, copy the current `research_identity` into the routing
-decision's identity guard and mark the handoff `AWAITING_SPECIALIST`. After the
-return, derive the candidate post-handoff identity from the returned work and
-run `scripts/check_research_identity.py`. Accept the output only after an
-`UNCHANGED` report. If drift is detected, preserve the baseline, keep the output
-unaccepted, and route the difference to the user in ordinary language. A
-suggested change may remain a proposal without counting as drift so long as it
-does not replace the effective identity.
+Before material work starts, put the current fingerprint reference and verified
+hash into the routing decision and mark the change control
+`AWAITING_COMPARISON`. After the work returns, derive a candidate fingerprint
+from the returned work and all effective material artifacts, then run
+`scripts/check_research_fingerprint.py` with the routing decision, baseline,
+and candidate. Accept the output only after an `UNCHANGED` report.
+
+If any path differs, preserve the baseline, keep the returned work unaccepted,
+and store the result as `CHANGE_PROPOSED`. Explain every proposed change and its
+practical effect to the user in ordinary language. Acceptance never edits the
+old version: it creates an explicitly new Research-ID or research version. This
+guard also applies to material work you perform without a specialist.
 
 The first specialist response must be validated. One format-only correction may
 be requested if the substantive answer remains unchanged. A second failure, a
@@ -170,7 +176,7 @@ not provide a developer changelog. Follow `00_RESEARCH_AGENT_README.md` §1.2.
 **Completion rule**
 
 You may call a research step complete only when the routing prerequisite, the
-required artifact validation, the applicable identity-continuity check, and the
+required artifact validation, the applicable full-fingerprint check, and the
 checkpoint update all succeeded. A valid router decision proves only that the
 next step was selected correctly; it does not prove that the specialist or the
 research claim is correct.

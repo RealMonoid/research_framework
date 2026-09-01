@@ -1,0 +1,163 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:research-framework:schema:research-fingerprint:1.0.0",
+  "title": "Research Fingerprint",
+  "description": "Canonical snapshot of every material commitment currently in force for one research version.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "fingerprint_id",
+    "created_at",
+    "research_id",
+    "research_version",
+    "material_specification",
+    "additional_material_commitments",
+    "protected_artifacts",
+    "completeness",
+    "fingerprint_sha256"
+  ],
+  "properties": {
+    "schema_version": {"const": "1.0.0"},
+    "fingerprint_id": {"$ref": "#/$defs/stableId"},
+    "created_at": {"$ref": "#/$defs/timestamp"},
+    "research_id": {"$ref": "#/$defs/stableId"},
+    "research_version": {"type": "integer", "minimum": 1},
+    "material_specification": {"$ref": "#/$defs/materialSpecification"},
+    "additional_material_commitments": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/additionalCommitment"}
+    },
+    "protected_artifacts": {
+      "type": "array",
+      "minItems": 1,
+      "items": {"$ref": "#/$defs/protectedArtifact"}
+    },
+    "completeness": {"$ref": "#/$defs/completeness"},
+    "fingerprint_sha256": {"$ref": "#/$defs/sha256"}
+  },
+  "$defs": {
+    "stableId": {
+      "type": "string",
+      "pattern": "^[A-Za-z][A-Za-z0-9._:-]{2,199}$"
+    },
+    "timestamp": {"type": "string", "format": "date-time"},
+    "shortText": {"type": "string", "minLength": 1, "maxLength": 4000},
+    "sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+    "recordedSection": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status", "content", "source_refs"],
+      "properties": {
+        "status": {
+          "type": "string",
+          "enum": ["DEFINED", "UNRESOLVED", "NOT_APPLICABLE"]
+        },
+        "content": {},
+        "source_refs": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {"$ref": "#/$defs/stableId"}
+        }
+      },
+      "allOf": [
+        {
+          "if": {"properties": {"status": {"const": "NOT_APPLICABLE"}}, "required": ["status"]},
+          "then": {"properties": {"content": {"type": "null"}}}
+        },
+        {
+          "if": {"properties": {"status": {"enum": ["DEFINED", "UNRESOLVED"]}}, "required": ["status"]},
+          "then": {"properties": {"content": {"not": {"type": "null"}}}}
+        }
+      ]
+    },
+    "materialSpecification": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "research_question",
+        "source_strategy",
+        "market_and_instruments",
+        "time_scope",
+        "constructs_and_operationalizations",
+        "trigger_entry_and_position",
+        "outcomes_targets_and_exits",
+        "conditions_filters_and_exclusions",
+        "data_sampling_and_observability",
+        "analysis_and_inference",
+        "costs_execution_and_risk",
+        "results_and_continuation"
+      ],
+      "properties": {
+        "research_question": {"$ref": "#/$defs/recordedSection"},
+        "source_strategy": {"$ref": "#/$defs/recordedSection"},
+        "market_and_instruments": {"$ref": "#/$defs/recordedSection"},
+        "time_scope": {"$ref": "#/$defs/recordedSection"},
+        "constructs_and_operationalizations": {"$ref": "#/$defs/recordedSection"},
+        "trigger_entry_and_position": {"$ref": "#/$defs/recordedSection"},
+        "outcomes_targets_and_exits": {"$ref": "#/$defs/recordedSection"},
+        "conditions_filters_and_exclusions": {"$ref": "#/$defs/recordedSection"},
+        "data_sampling_and_observability": {"$ref": "#/$defs/recordedSection"},
+        "analysis_and_inference": {"$ref": "#/$defs/recordedSection"},
+        "costs_execution_and_risk": {"$ref": "#/$defs/recordedSection"},
+        "results_and_continuation": {"$ref": "#/$defs/recordedSection"}
+      }
+    },
+    "additionalCommitment": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["commitment_id", "statement", "canonical_value", "source_refs"],
+      "properties": {
+        "commitment_id": {"$ref": "#/$defs/stableId"},
+        "statement": {"$ref": "#/$defs/shortText"},
+        "canonical_value": {},
+        "source_refs": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {"$ref": "#/$defs/stableId"}
+        }
+      }
+    },
+    "protectedArtifact": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["artifact_ref", "role", "content_sha256"],
+      "properties": {
+        "artifact_ref": {"$ref": "#/$defs/stableId"},
+        "role": {
+          "type": "string",
+          "enum": [
+            "SOURCE",
+            "RECONSTRUCTION",
+            "CONCEPT_AUDIT",
+            "OPERATIONALIZATION",
+            "DATA_CONTRACT",
+            "METHOD",
+            "FROZEN_RESULT",
+            "CONTINUATION_DECISION",
+            "OTHER_MATERIAL"
+          ]
+        },
+        "content_sha256": {"$ref": "#/$defs/sha256"}
+      }
+    },
+    "completeness": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "all_material_commitments_recorded",
+        "all_effective_material_artifacts_protected",
+        "known_gaps"
+      ],
+      "properties": {
+        "all_material_commitments_recorded": {"const": true},
+        "all_effective_material_artifacts_protected": {"const": true},
+        "known_gaps": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {"$ref": "#/$defs/shortText"}
+        }
+      }
+    }
+  }
+}

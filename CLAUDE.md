@@ -12,11 +12,13 @@
   run `scripts/route_research_task.py`; follow mandatory specialist routes.
 - Specialists return bounded artifacts to the conductor and do not take over
   the user conversation. Validate their output before advancing.
-- Around every specialist handoff on existing research, preserve and compare
-  the six-part research identity: question, strategy, market, time horizon,
-  trigger, and target. Run `scripts/check_research_identity.py` before accepting
-  the output. If it differs, keep the original in force and explain the change
-  to the user before any new version is created.
+- Around every material research step, preserve and compare the complete
+  effective research fingerprint with `scripts/check_research_fingerprint.py`.
+  It covers all definitions, parameters, filters, exclusions, data choices,
+  inference rules, execution assumptions, frozen results, continuation
+  decisions, and material artifact hashes. Every difference remains a visible
+  proposal; keep the original effective until the user explicitly authorizes a
+  new Research-ID or research version. Never silently overwrite it.
 - If a required specialist cannot be invoked, stop at that prerequisite instead
   of simulating its contribution.
 - Reconstructing or operationalizing a strategy does not authorize a backtest.

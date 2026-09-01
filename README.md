@@ -31,14 +31,19 @@ hard-rule next step from the executable
 [router](scripts/route_research_task.py), and invokes the philosophy, condition,
 causal-identification, or idea specialist only when its prerequisites and
 trigger are present. The
-conductor retains the conversation, validates each returned artifact, and routes
-again; a specialist never silently changes the research question.
+  conductor retains the conversation, validates each returned artifact, and routes
+  again; neither a specialist nor the conductor may silently change the effective
+  research state.
 
-Every specialist handoff on existing research also carries a compact six-part
-identity guard: research question, strategy, market, time horizon, trigger, and
-target. The deterministic [handoff check](scripts/check_research_identity.py)
-must report no change before the returned work can be accepted; otherwise the
-original remains in force and the user receives a plain-language choice.
+Every material research step carries the complete effective
+[research fingerprint](schemas/research_fingerprint.schema.json). It records the
+question and source strategy as well as all definitions, parameters, filters,
+data choices, inference rules, execution assumptions, frozen results, and
+protected artifact hashes. The deterministic
+[fingerprint check](scripts/check_research_fingerprint.py) must report no change
+before returned work can be accepted. Every difference becomes a visible
+proposal; the old version remains effective unless the user explicitly creates
+a new research version.
 
 An interventional or counterfactual claim has an additional mandatory stop. The
 [causal-identification critic](agents/causal-identification-critic.md) must
@@ -117,6 +122,9 @@ This validates JSON Schema contracts, the executable hypothesis generator, the
 producer/scorer protocol, and the regression suite. The bundled score-1.000
 result is explicitly a protocol smoke, not evidence of live-agent quality. A
 release claim requires a produced `LIVE_AGENT` result.
+
+Noch nicht implementierte Vorhaben sind ausdrücklich in
+[`PLANNED_FEATURES.md`](PLANNED_FEATURES.md) gekennzeichnet.
 
 ## Direct raw entry point for automated readers
 

@@ -100,7 +100,8 @@ IDs sind opake Schlüssel. Sie werden nicht nachträglich wiederverwendet oder a
 | Wissenschaftsphilosophie-Review | nach `FALSIFIED / PRECISE_NULL / INCONCLUSIVE / INVALID_TEST`, sobald eine materielle Revision oder empirische Fortsetzung erwogen wird | **schemas/scientific_philosophy_review.schema.json** plus semantischer Inspector |
 | Orchestration State | vor jedem materiellen Research-Übergang und nach jedem akzeptierten Fachbeitrag, Blocker oder Nutzerentscheid | **schemas/orchestration_state.schema.json** plus deterministischer Routertest |
 | Routing Decision | für jeden aus einem Orchestration State abgeleiteten nächsten Arbeitsauftrag | **schemas/routing_decision.schema.json** plus **scripts/route_research_task.py** |
-| Research Identity Check | nach jeder Fachagenten-Rückgabe auf einem bestehenden Research-Fall und vor ihrer Annahme | **schemas/research_identity_check.schema.json** plus **scripts/check_research_identity.py** |
+| Research Fingerprint | vor jedem materiellen Research-Schritt; schützt den gesamten wirksamen Forschungsstand und die Prüfsummen seiner Unterlagen | **schemas/research_fingerprint.schema.json** |
+| Research Fingerprint Check / Änderungsvorschlag | nach jedem materiellen Arbeitsergebnis und vor seiner Annahme | **schemas/research_fingerprint_check.schema.json** plus **scripts/check_research_fingerprint.py** |
 | Trace | bei jedem Modell-, Tool-, Retrieval- und Validierungsschritt | Regeln in §6 |
 | Error Log | sobald Warnung oder Fehler auftritt | Regeln in §7 |
 | Delta Report | wenn ein Baseline-Lauf oder eine freigegebene Vorgängerversion existiert | Regeln in §9 |
@@ -1089,17 +1090,26 @@ Schema- und Semantikprüfung darf dieses Ergebnis in den nächsten
 `orchestration_state` eingehen. Danach wird erneut geroutet; der Child-Agent
 darf keine selbst gewählte Delegationskette beginnen.
 
-Jede Übergabe eines bestehenden Research-Falls trägt eine unveränderte
-Sechs-Punkte-Baseline aus Forschungsfrage, Strategie, Markt, Zeithorizont,
-Auslöser und Ziel. Vor der Annahme des Child-Outputs erzeugt
-`scripts/check_research_identity.py` einen
-`research_identity_check`. Nur `UNCHANGED` erlaubt die Annahme. Bei
-`DRIFT_DETECTED` bleiben Baseline und bisheriger Research-Stand wirksam, das
-Child-Artefakt bleibt unangenommen und der Coordinator legt dem Nutzer die
-inhaltliche Abweichung in Alltagssprache vor. Eine beabsichtigte Änderung wird
-als neue Research-Version geführt. Ideengenerierung ohne bestehende Identität
-erhält transparent `NOT_COMPARABLE_NEW_IDENTITY` und legt die Identität erst im
-Intake je Kandidat an.
+Jeder materielle Schritt eines bestehenden Research-Falls trägt die Referenz
+und die verifizierte Prüfsumme des vollständigen Forschungsfingerabdrucks. Er
+schützt Forschungsfrage und Quellenstrategie ebenso wie Operationalisierungen,
+Parameter, Lookbacks, Trigger, Outcomes, Bedingungen, Filter, Ausschlüsse,
+Daten- und Stichprobenrollen, Auswertungsregeln, Kosten, Ausführung, Risiko,
+eingefrorene Ergebnisse, Fortsetzungsentscheidungen und die Prüfsummen aller
+wirksamen Unterlagen.
+
+Vor der Annahme eines Ergebnisses erzeugt
+`scripts/check_research_fingerprint.py` einen vollständigen Vergleich. Nur
+`UNCHANGED` erlaubt die Annahme. Jede Abweichung wird mit ihren exakten Pfaden
+als `CHANGE_PROPOSED` gespeichert. Der bisherige Fingerabdruck bleibt wirksam,
+das geänderte Ergebnis bleibt unangenommen und der Coordinator erklärt dem
+Nutzer die praktische Bedeutung. Selbst eine genehmigte Änderung überschreibt
+nichts: Sie erzeugt eine neue Research-ID oder Research-Version.
+
+Diese Regel gilt auch für materielle Arbeit des Coordinators selbst und nicht
+nur für Child-Agenten. Ideengenerierung ohne bestehenden Forschungsstand erhält
+transparent `NOT_COMPARABLE_NEW_RESEARCH` und legt den ersten Fingerabdruck erst
+im Intake je Kandidat an.
 
 Zwingende Fachrouten sind insbesondere:
 
