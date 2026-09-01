@@ -35,42 +35,88 @@ from the agent's context while the returned artifact remains formally valid.
 Selective loading must therefore not be enabled until missing or stale section
 references are made visible and stop the affected research step.
 
+### Prerequisite: canonical concept registry
+
+Selective loading also removes explanatory context that currently helps an
+agent connect German normative prose, English machine fields, and enum values.
+Before a normative section can be loaded on its own, the project must establish
+a machine-readable canonical concept registry. This is a correctness control,
+not a translation or style project.
+
+Each registry entry must contain:
+
+- a stable, language-independent `concept_id`;
+- a concise definition of the concept;
+- the canonical English term for new normative text;
+- legacy German terms used by the existing corpus;
+- exact machine anchors where possible, such as a schema plus JSON Pointer,
+  field, enum value, or executable check;
+- deprecated or forbidden variants, scoped by language and document type;
+- a status showing whether the mapping is active, deprecated, or unresolved.
+
+Concepts that do not map one-to-one to a machine field must say so explicitly
+instead of inventing a false-precision anchor. Every loadable normative section
+must declare the `concept_id` values it relies on. The loader must append the
+corresponding compact definitions and machine anchors to the section context.
+An unknown concept, unresolved required anchor, or missing concept definition
+must stop the affected material research step.
+
+The effective concept entries and their hashes are part of the rule set for a
+run and must therefore be recorded in the orchestration state and protected by
+the research fingerprint. A changed definition is a normative change even when
+the section text itself did not change.
+
+A terminology lint check should reject explicitly forbidden variants in the
+active normative corpus and point to the canonical term. Its scope must exclude
+or separately handle historical decisions, quotations, source reconstructions,
+and examples where an old or non-canonical term may be evidence rather than an
+active instruction. It must not rewrite terms automatically.
+
 ### Planned implementation order
 
 1. **Complete the behavioural reference cases first.** Add cases in which the
    correct result is to stop, invoke a required specialist, reject returned
    work, report a research-fingerprint change, or block an unsupported causal
    claim. Only then run and freeze the live-agent behavioural baseline.
-2. **Introduce stable section identifiers.** Give every loadable normative
+2. **Build the canonical concept registry.** Collect the concepts already
+   represented in schemas, executable checks, and active normative prose;
+   resolve ambiguous mappings explicitly; and add validation for concept IDs,
+   required definitions, statuses, and machine anchors.
+3. **Introduce stable section identifiers.** Give every loadable normative
    section an explicit identifier that is independent of its heading text.
    Maintain one machine-readable registry as the authoritative map from the
-   identifier to the source document and section boundaries.
-3. **Check the complete reference chain in CI.** Automatically prove that
+   identifier to the source document and section boundaries. Each section
+   entry must also declare its required concept IDs.
+4. **Check the complete reference chain in CI.** Automatically prove that
    every section identifier the router can emit exists exactly once, resolves
-   to non-empty content, and is present in the registry. Unknown, duplicate,
-   empty, or unresolvable identifiers must fail validation.
-4. **Make runtime loading fail closed.** Before a material research step, the
+   to non-empty content, and is present in the registry. Also prove that every
+   declared concept ID resolves, every required machine anchor exists, and all
+   explicitly forbidden variants are absent from their lint scope. Unknown,
+   duplicate, empty, or unresolvable references must fail validation.
+5. **Make runtime loading fail closed.** Before a material research step, the
    loader must confirm that every requested section was resolved and loaded.
-   If any requested section is missing, ambiguous, empty, or fails its
-   integrity check, the step must stop instead of continuing with a reduced
-   rule set. A fallback to a larger document must never happen silently.
-5. **Record the effective rule set for every run.** The orchestration state
+   It must also confirm that the section's required concept entries were
+   resolved and included. If any requested section or required concept is
+   missing, ambiguous, empty, or fails its integrity check, the step must stop
+   instead of continuing with a reduced rule set. A fallback to a larger
+   document must never happen silently.
+6. **Record the effective rule set for every run.** The orchestration state
    must list each loaded section identifier, source document, content hash,
-   reason for loading, and approximate token count. The effective section IDs
-   and hashes must also form part of the research fingerprint so that a rule
-   change between runs cannot remain invisible.
-6. **Preserve useful prompt caching.** Put the small, stable, always-required
+   reason for loading, approximate token count, and effective concept-entry IDs
+   and hashes. These records must also form part of the research fingerprint so
+   that a rule or concept change between runs cannot remain invisible.
+7. **Preserve useful prompt caching.** Put the small, stable, always-required
    rule core first and append variable task-specific sections afterwards. This
    prevents selective loading from needlessly changing the stable prompt
    prefix for every case.
-7. **Measure before shortening.** Use the run manifests to report which
+8. **Measure before shortening.** Use the run manifests to report which
    sections are loaded, how often they are loaded, their approximate token
    cost, and which loads appear unnecessary. Absence from the returned artifact
    is not sufficient evidence that a section was unnecessary: a preventive
    rule may be successful precisely because the prohibited action never
    appears. Token estimates and assumed savings are hypotheses until these
    measurements exist.
-8. **Move explanations and examples cautiously.** Explanations, edge cases,
+9. **Move explanations and examples cautiously.** Explanations, edge cases,
    and examples may affect how an agent applies a short rule. Move them only
    after the behavioural baseline exists, one independently reviewable change
    at a time. Compare each change with the baseline and restore or investigate
@@ -83,8 +129,18 @@ references are made visible and stop the affected research step.
   rule is not loaded, and a schema-valid artifact creates false confidence.
 - **Identifier drift:** renaming or moving a heading breaks references if IDs
   are derived from document wording rather than assigned explicitly.
+- **Semantic disconnect:** a section uses a prose term without loading the
+  concept entry that connects it to the governed machine field or status.
+- **Registry without enforcement:** a correct-looking concept list creates no
+  protection if sections do not declare concepts or the loader ignores them.
+- **False-precision mapping:** a broad research concept is assigned to one
+  convenient schema field even though the rule actually spans several fields
+  or has no one-to-one machine representation.
+- **Overbroad terminology lint:** valid quotations, historical records, or
+  source-language reconstructions are rejected as though they were active
+  normative instructions.
 - **Unrecorded rule changes:** two runs appear comparable although different
-  versions of a normative section governed them.
+  versions of a normative section or concept definition governed them.
 - **Alert fatigue:** harmless editorial changes may alter a content hash. This
   must be handled together with severity-aware change control, without hiding
   genuine rule changes.
@@ -104,11 +160,11 @@ references are made visible and stop the affected research step.
 ### Activation criteria
 
 Selective normative loading may be used for real research only when the
-critical reference cases are in the baseline, the registry and complete
-router-reference check pass, injected missing-section failures stop the run,
-the exact effective sections are recorded and fingerprinted, and a measured
-before-and-after report shows the context saving without a new critical
-behavioural failure.
+critical reference cases are in the baseline, the concept and section
+registries and their complete reference checks pass, injected missing-section
+and missing-concept failures stop the run, the exact effective sections and
+concept entries are recorded and fingerprinted, and a measured before-and-after
+report shows the context saving without a new critical behavioural failure.
 
 ## Research-control hardening backlog
 
@@ -142,7 +198,9 @@ validated:
    history, upgrade claim levels, skip required specialists, or satisfy schemas
    with scientifically empty content. Measure repeated catch rates rather than
    treating contract validity as evidence of agent reliability.
-6. **English migration and terminology control:** Move the normative corpus to
-   English and establish one canonical glossary. Translation must be performed
-   in translation-only commits; redundancy removal, shortening, and substantive
-   rewriting must follow in separate commits with separate validation.
+6. **English migration and terminology control:** Establish the canonical
+   concept registry described above before selective loading or translation.
+   Use it to map the legacy German corpus to canonical English terms and exact
+   machine anchors. Translation must be performed in translation-only commits;
+   redundancy removal, shortening, and substantive rewriting must follow in
+   separate commits with separate validation.
