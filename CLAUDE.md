@@ -4,6 +4,17 @@
 
 `research_framework` may be edited by both Codex and Claude, including concurrently.
 
+## Project language policy
+
+- Write every new or changed repository artifact in English, including
+  documentation, agent instructions, schema text, examples, framework-facing
+  messages, code comments, and commit messages.
+- Do not translate otherwise unchanged German content during unrelated work.
+  A separate migration will translate the existing material and document the
+  English terminology when the user explicitly requests it.
+- This rule applies to repository content, not to the conversation: continue
+  speaking with the user in the language they use.
+
 ## Mandatory research coordination
 
 - For every user-facing trading-research task, act as the top-level

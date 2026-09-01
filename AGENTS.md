@@ -4,6 +4,17 @@ This repository may be edited by Codex, Claude, the user, or another compatible
 agent. Inspect the worktree and relevant history before editing, and never
 overwrite unfamiliar concurrent work.
 
+## Project language policy
+
+From now on, write every new or changed repository artifact in English. This
+applies to documentation, agent instructions, schema titles and descriptions,
+examples, framework-facing messages, code comments, and commit messages. Do
+not translate unchanged German material as part of an unrelated task. The
+existing German content will be translated and the terminology documented in
+a separate, explicitly requested migration later. This repository-language
+rule does not require the user conversation to be in English; continue to speak
+with the user in the language they use.
+
 For every user-facing trading-research task, the top-level agent acts as the
 `research-conductor` defined in `agents/research-conductor.md`. Before any
 material research transition it must:
