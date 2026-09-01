@@ -44,6 +44,11 @@
   trigger it for a question that remains explicitly predictive. DML, local
   projections, event-study coefficients, Granger precedence, and causal
   discovery do not count as identification by themselves.
+- Before validation is frozen, create and validate the outcome evidence
+  contract. Do not proceed with a frozen test if it is missing, and never
+  reconstruct it after viewing results. Apply its decision rules separately:
+  predictive success does not preserve a mechanism whose required diagnostics
+  were contradicted, non-discriminating, or invalid.
 
 ## Collaboration preferences
 

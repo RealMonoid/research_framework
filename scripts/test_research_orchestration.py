@@ -211,7 +211,23 @@ def main() -> int:
     predictive_request = neutral_state()
     predictive_request["request"]["intent"] = "START_OR_CONTINUE_RESEARCH"
     predictive_request["request"]["requested_claim_level"] = "ASSOCIATIONAL_PREDICTIVE"
-    assert_route(predictive_request, "CONDUCT_RESEARCH")
+    decision = assert_route(predictive_request, "DEFINE_OUTCOME_EVIDENCE_CONTRACT")
+    if decision["work_order"]["required_output_type"] != "outcome_evidence_contract":
+        raise AssertionError("Research-case routing did not require the outcome contract.")
+
+    predictive_ready = copy.deepcopy(predictive_request)
+    predictive_ready["artifacts"]["outcome_evidence_contract"] = {
+        "status": "COMPLETE",
+        "artifact_ref": "outcome-contract:synthetic-predictive:v1",
+    }
+    assert_route(predictive_ready, "CONDUCT_RESEARCH")
+
+    frozen_without_contract = neutral_state()
+    frozen_without_contract["request"]["intent"] = "START_OR_CONTINUE_RESEARCH"
+    frozen_without_contract["research_context"]["stage"] = "FROZEN_TEST"
+    decision = assert_route(frozen_without_contract, "BLOCKED")
+    if "Do not reconstruct" not in " ".join(decision["work_order"]["excluded_actions"]):
+        raise AssertionError("Missing pre-test contract did not fail closed after freeze.")
 
     identified_request = copy.deepcopy(causal_request)
     identified_request["artifacts"]["causal_identification_assessment"] = {
@@ -305,7 +321,8 @@ def main() -> int:
     print(
         "Research-orchestration tests passed: mandatory philosophy handoffs, "
         "causal-identification routing, predictive bypass, full-fingerprint "
-        "continuity, visible change proposals, prerequisite ordering, user pause, and blocker behavior."
+        "continuity, visible change proposals, outcome-contract freeze gating, "
+        "prerequisite ordering, user pause, and blocker behavior."
     )
     return 0
 

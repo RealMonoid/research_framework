@@ -924,6 +924,24 @@ Eine konkrete Multiple-Testing-Korrektur in `N2` kann begründet `N/A` sein. Die
 
 **Warum diese Methode?** ...
 
+## N2.1 Outcome evidence contract
+
+| Field | Frozen value |
+|---|---|
+| Contract reference and version | |
+| Status | `FROZEN / BLOCKED` |
+| Primary outcome ID | |
+| Required mechanism-diagnostic IDs or `NOT_CLAIMED` | |
+| Multiplicity-family references | |
+| Mechanical-coupling assessment complete? | `YES / NO` |
+| Target-specific transportability rules complete? | `YES / NO` |
+| Validation data still unseen when frozen? | `YES / NO` |
+
+The referenced artifact must pass
+`scripts/validate_outcome_evidence_contract.py`. `BLOCKED` stops validation.
+The contract is referenced here rather than copied, so its frozen rules cannot
+diverge from the protected artifact.
+
 ## N3. Formale Phase-0-Re-Kalkulation und Validation-Spezifikation
 
 **PHASENSTATUS:** `COMPLETE / BLOCKED / FAILED`

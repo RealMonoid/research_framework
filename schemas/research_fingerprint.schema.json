@@ -131,6 +131,7 @@
             "RECONSTRUCTION",
             "CONCEPT_AUDIT",
             "OPERATIONALIZATION",
+            "OUTCOME_EVIDENCE_CONTRACT",
             "DATA_CONTRACT",
             "METHOD",
             "FROZEN_RESULT",

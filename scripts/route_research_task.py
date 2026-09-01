@@ -154,7 +154,7 @@ def _decision(
         raise ValueError("next_decision_sequence must be a positive integer")
     if not isinstance(updated_at, str):
         raise ValueError("updated_at must be a timestamp string")
-    if conductor_version != "1.3.0":
+    if conductor_version != "1.4.0":
         raise ValueError("unsupported conductor_version")
 
     fingerprint_guard = _fingerprint_guard(state, execution_mode, route)
@@ -172,7 +172,7 @@ def _decision(
         )
 
     return {
-        "schema_version": "1.3.0",
+        "schema_version": "1.4.0",
         "decision_id": f"routing:{orchestration_id}:{sequence}",
         "created_at": updated_at,
         "orchestration_ref": orchestration_id,
@@ -564,6 +564,64 @@ def route_state(state: Mapping[str, Any]) -> dict[str, Any]:
                 ["Do not use outcome data to choose the definition.", "Do not present a reconstructed choice as a source rule."],
                 ["All material choices and unresolved points are visible."],
                 "Stop before any empirical test unless the user separately requests it and the research path authorizes it.",
+            ),
+        )
+
+    outcome_contract_status = _artifact_status(state, "outcome_evidence_contract")
+    if context.get("stage") == "FROZEN_TEST" and outcome_contract_status != "COMPLETE":
+        return _decision(
+            state,
+            route="BLOCKED",
+            execution_mode="BLOCKED",
+            selected_agent=None,
+            specialist_mode=None,
+            decision_basis=[
+                "The test is marked as frozen, but no complete frozen outcome evidence contract exists."
+            ],
+            work_order=_work_order(
+                "Return to the research-case stage and define outcome roles and decision consequences before any test is run.",
+                "plain-language blocker report",
+                _input_refs(state),
+                [
+                    "Do not reconstruct an outcome contract after viewing test results.",
+                    "Do not run or interpret the frozen test without the contract.",
+                ],
+                [
+                    "The missing pre-test commitment is explicit and no result has been used to fill it."
+                ],
+                "Stop before empirical testing.",
+            ),
+        )
+
+    if (
+        context.get("stage") == "RESEARCH_CASE"
+        and intent == "START_OR_CONTINUE_RESEARCH"
+        and outcome_contract_status != "COMPLETE"
+    ):
+        return _decision(
+            state,
+            route="DEFINE_OUTCOME_EVIDENCE_CONTRACT",
+            execution_mode="CONDUCTOR_ONLY",
+            selected_agent=None,
+            specialist_mode=None,
+            decision_basis=[
+                "The research case is approaching a test, but outcome roles, contradiction rules, and target-specific stability claims are not yet frozen."
+            ],
+            work_order=_work_order(
+                "Define the outcome evidence contract before the test is frozen.",
+                "outcome_evidence_contract",
+                _input_refs(state),
+                [
+                    "Do not inspect validation outcomes while defining the contract.",
+                    "Do not let an exploratory or mechanism diagnostic outcome silently replace the primary outcome.",
+                    "Do not infer mechanism support from predictive success.",
+                ],
+                [
+                    "Every outcome has a fixed role, target, measurement rule, falsifier, multiplicity family, and decision consequence.",
+                    "Mechanical coupling and target-specific transportability are explicit.",
+                    "The contract passes schema and semantic validation.",
+                ],
+                "Stop after the contract is frozen and before empirical testing.",
             ),
         )
 

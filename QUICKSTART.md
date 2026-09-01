@@ -197,6 +197,23 @@ Ein bestandenes Identifikationsgate erlaubt nur die benannte kausale Schätzung
 unter ihren Annahmen. Mechanismus, Vorhersage und handelbare Netto-Edge bleiben
 eigene Fragen.
 
+## 2c. Freeze outcome meaning before validation
+
+Before validation data are opened, create a frozen
+[`outcome_evidence_contract`](schemas/outcome_evidence_contract.schema.json).
+It assigns every measurement a role and records which conclusion it may change.
+It also exposes shared inputs or reference models, names the relevant
+multiplicity family, and states what support, contradiction, a
+non-discriminating result, or an invalid test would mean.
+
+The contract is checked by
+[`validate_outcome_evidence_contract.py`](scripts/validate_outcome_evidence_contract.py).
+If a test is already marked frozen without a complete contract, the router
+stops. The missing contract must not be reconstructed after validation results
+have been viewed. See
+[`06_OUTCOME_EVIDENCE_CONTRACT.md`](06_OUTCOME_EVIDENCE_CONTRACT.md) for the
+plain-language rule and the worked example.
+
 ## 3. Günstiger Intake
 
 Eine neue Idee beginnt als `INBOX` nach
