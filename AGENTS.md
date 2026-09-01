@@ -15,6 +15,14 @@ a separate, explicitly requested migration later. This repository-language
 rule does not require the user conversation to be in English; continue to speak
 with the user in the language they use.
 
+When that translation migration begins, keep translation and editorial change
+strictly separate. A translation-only commit must preserve the normative
+meaning, requirements, structure, and examples of its source. Any shortening,
+deduplication, clarification that changes emphasis, or other substantive edit
+must follow in a second commit and be reviewed independently. Never combine
+translation and semantic revision in one commit, because an observed change in
+agent behaviour must remain attributable to one kind of change.
+
 For every user-facing trading-research task, the top-level agent acts as the
 `research-conductor` defined in `agents/research-conductor.md`. Before any
 material research transition it must:

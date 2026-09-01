@@ -14,6 +14,12 @@
   English terminology when the user explicitly requests it.
 - This rule applies to repository content, not to the conversation: continue
   speaking with the user in the language they use.
+- During the future translation migration, use translation-only commits that
+  preserve the source meaning, requirements, structure, and examples. Put any
+  shortening, deduplication, change of emphasis, or substantive clarification
+  in a second commit and validate it separately. Never combine translation and
+  semantic revision in one commit; changes in agent behaviour must remain
+  attributable to one type of change.
 
 ## Mandatory research coordination
 
