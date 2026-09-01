@@ -166,6 +166,50 @@ and missing-concept failures stop the run, the exact effective sections and
 concept entries are recorded and fingerprinted, and a measured before-and-after
 report shows the context saving without a new critical behavioural failure.
 
+## Interruption-safe framework maintenance
+
+**Status:** planned, not implemented
+
+Long framework-maintenance tasks should be resumable without replaying the full
+conversation or loading the research corpus again. This is separate from the
+research `orchestration_state`: it records development progress, not a market
+research decision or evidential state.
+
+For a multi-step maintenance task, create a small checkpoint before a handoff,
+long pause, expected usage-limit boundary, or other interruption. Record only:
+
+- the fixed objective and scope;
+- the working branch, pull request, and last verified commit or diff;
+- the last completed step and the next bounded step;
+- unresolved user decisions and known concurrent work;
+- checks already passed and checks still required;
+- external side effects already performed, with whether they are safe to retry.
+
+On resumption, verify the checkpoint against the actual Git state before using
+it. Git, validated artifacts, and external service state remain authoritative;
+the checkpoint is only a compact handoff index. A stale or contradictory
+checkpoint must be rejected or repaired visibly. A resumed agent must not
+repeat a push, merge, deletion, publication, or research transition merely
+because the note says it remains pending.
+
+Framework maintenance should load only the files being changed and the project
+instructions that govern that change. It must not load the full normative
+research corpus unless the maintenance task actually requires those rules.
+Mechanical extraction or formatting may use a cheaper model or deterministic
+tool, but ambiguous terminology, rule changes, and scientific judgments still
+require the appropriate review.
+
+Main risks are stale progress notes, conflict with the real repository state,
+blind repetition of external side effects, accidental mixing of maintenance
+and research state, sensitive information in a checkpoint, and creating more
+checkpoint bureaucracy than the interrupted task warrants. The feature should
+therefore apply only to genuinely multi-step or interrupted work.
+
+Activation requires a recovery test in which an interrupted synthetic
+maintenance task resumes from the checkpoint, detects a deliberately stale
+Git reference, does not repeat a recorded external side effect, and completes
+without loading unrelated normative documents.
+
 ## Research-control hardening backlog
 
 **Status:** planned, not implemented
