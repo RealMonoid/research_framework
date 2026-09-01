@@ -764,6 +764,292 @@ framework validation suite still passes. Successful cloud execution, a large
 number of parallel jobs, or an attractive research result cannot substitute
 for these conditions.
 
+## Bounded historical mechanism-led strategy search
+
+**Status:** planned, not implemented
+
+The failure of hundreds of mechanically generated strategies would primarily
+indict the candidate generator, provided the tester is valid and has adequate
+power for plausible effects. The framework should therefore search for a small
+number of testable hypotheses derived from documented market structure or
+repeatable footprints in data that already exist. It must not respond by
+creating larger indicator grids, building a continuously running observatory,
+or waiting weeks or months for future observations.
+
+This feature governs the search for a candidate, not the construction of a
+positive result. Each search cycle uses one fixed historical data inventory,
+has explicit stage budgets and reaches a terminal state within at most three
+consecutive working days. Careful work inside that boundary is required;
+speed is not permission to skip sources, data checks, alternatives, costs or
+falsification.
+
+### Goals
+
+1. Move candidate generation from indicator combinations to documented or
+   historically observable structural mechanisms without turning mechanism
+   stories into an unlimited new search space.
+2. Reject weak ideas within hours and spend a full historical backtest only on
+   candidates that survive cheaper discriminating tests.
+3. Complete every authorized candidate search in no more than three working
+   days using already available historical data.
+4. Make the ordinary `NO_TRADE` or `NO_RESEARCHABLE_PATTERN` outcome explicit
+   so that an agent is never rewarded for inventing daily opportunities.
+5. Return an honest bounded verdict that distinguishes historical support from
+   prospective confirmation, which the planned framework does not perform.
+
+### Explicit scope and non-goals
+
+- **Historical data only.** The search may use approved existing snapshots and
+  a historical holdout sealed before the search. It does not collect or wait
+  for new market data.
+- **No paper or live monitoring.** Paper trading, live signals, forward-data
+  accumulation and long-running observation are outside the planned framework.
+- **No news-trading program.** Known news or exceptional-event dates may be
+  marked as exclusions, strata or rival explanations so they do not masquerade
+  as an everyday effect. Public-news reaction is not the default source of
+  strategies.
+- **No continuous market observatory.** The system performs a bounded query on
+  an existing snapshot for one registered mechanism. It does not operate a
+  permanent anomaly detector that continuously emits ideas.
+- **No indicator combinatorics.** An indicator may measure a frozen construct,
+  but a crossover, threshold or chart pattern is not a mechanism merely because
+  it can be parameterized.
+- **No machine learning.** Candidate discovery, ranking and testing require no
+  learned model, feature store, model registry or hyperparameter search.
+- **No positive-output quota.** A cycle may end with every candidate rejected,
+  blocked or inconclusive. Completion and fast falsification are success
+  measures; survivor count is not.
+
+### Admissible starting points
+
+A search cycle begins through exactly one of two routes:
+
+1. **Documented-structure route:** a source describes a persistent rule,
+   obligation, market design, cost, risk transfer, institutional constraint or
+   routine process. Examples may include auction mechanics, settlement,
+   financing, contract rolls, liquidity provision, benchmark constraints or
+   recurring execution requirements. The source establishes only that the
+   structure exists, not that it creates a tradeable edge.
+2. **Historical-footprint route:** a predeclared descriptive query finds a
+   repeatable relation in an existing dataset, such as a conditional pattern in
+   spread, depth, volume, order-flow imbalance, price impact, resilience,
+   relative pricing or session behavior. The query family and all inspected
+   outcomes are registered as discovery exposure. A return pattern discovered
+   by broad search cannot be retroactively presented as mechanism-first.
+
+The intake must reject a starting point that is only a desired trade direction,
+an unbounded request to “find an edge,” an indicator recipe, or an explanation
+invented after its favorable return chart was seen.
+
+### Required mechanism dossier
+
+Before code for a strategy is written, record:
+
+- the real process or historical footprint being examined;
+- the source or immutable descriptive artifact supporting its existence;
+- the party that may pay, what service or risk transfer that party receives,
+  and whether the party is constrained, compensated or simply operating on a
+  different horizon;
+- any actor identity that is unknown or unobservable, without inventing one;
+- the proposed transmission from the process to order flow, liquidity, price
+  impact or relative price;
+- where, when and in which instruments the footprint should be present;
+- where and when `NO_TRADE` or absence of the footprint is expected;
+- at least two plausible rival explanations when available;
+- at least one observation that discriminates the proposed mechanism from a
+  serious rival;
+- why competition may not immediately remove the effect;
+- the expected firing rate and a plausibility range for magnitude;
+- the minimum data and executable-price information required;
+- the cheapest result that would kill the idea; and
+- the dimensions that may vary in this cycle, with a hard prohibition on
+  adding dimensions after outcomes are seen.
+
+A named mechanism without a discriminating prediction fails the dossier. A
+named actor without observable implications does not improve it. For a purely
+predictive candidate, the actor may remain explicitly unknown, but the pattern,
+scope, alternatives and falsifier must still be concrete.
+
+### Candidate limit and prioritization
+
+One cycle covers one mechanism dossier and no more than three materially
+distinct candidate predictions. Parameter values required to operationalize
+one prediction are registered as one complete fixed family; they do not create
+an excuse for dozens of informal variants.
+
+Rank the candidates before outcome access using only:
+
+- strength and independence of the structural or descriptive starting evidence;
+- observability of the predicted footprint;
+- precision of market, clock, instrument and no-trade scope;
+- ability to distinguish serious alternatives;
+- availability and integrity of the existing data;
+- expected firing rate and effective sample size;
+- feasibility of executable-price and cost modeling; and
+- cost and duration of the cheapest decisive falsification.
+
+Do not rank candidates by preliminary PnL, preferred narrative, number of agent
+votes or how easy it would be to publish a favorable result.
+
+### Fixed time budget and stage gates
+
+The clock begins when a candidate cycle is authorized with its data inventory
+and ends at a terminal verdict. The hard limit is **three consecutive working
+days**, including computation, review, failed jobs and waiting for unavailable
+inputs. No stage extends itself automatically.
+
+This limit applies to one strategy-search cycle. It is not an instruction to
+rush framework engineering, schema review or tester validation. Those are
+separate, carefully reviewed implementation tasks; they may not be hidden
+inside a candidate cycle to keep an otherwise blocked idea alive.
+
+1. **Intake and scope — maximum 2 hours.** Fix the mechanism, starting route,
+   candidate limit, historical datasets, user question and applicable claim
+   level. Reject indicator-only and open-ended prompts.
+2. **Mechanism dossier — maximum 3 hours.** Complete the dossier, serious
+   rivals, no-trade state and cheapest kill condition. Stop if the mechanism is
+   only a story or the required distinction is unobservable.
+3. **Data and implementation feasibility — maximum 3 hours.** Validate the
+   available snapshot, time conventions, sample support, executable prices,
+   costs and required fields. Stop as `BLOCKED_DATA` if completion would require
+   new future data, an unapproved purchase, or infrastructure outside the cycle.
+4. **Cheap falsification — maximum 1 working day.** Run descriptive footprint,
+   negative-control, matched-exposure, sensitivity and simple reference tests.
+   Reject on failed direction, timing, recurrence, rival discrimination, data
+   integrity, plausible magnitude or cost feasibility.
+5. **Full historical test — maximum 1 working day and only for survivors.**
+   Freeze the surviving specification and fixed candidate family, then run the
+   applicable walk-forward, null, cost, selection and harness checks. Use a
+   sealed historical holdout only if it was inaccessible before freeze.
+6. **Review and closure — maximum 2 hours.** Validate artifacts, compare the
+   research fingerprint, record the verdict and update the graveyard or
+   candidate register. Do not spend remaining time searching for a salvage.
+
+The stage maxima are ceilings, not targets, and stages may overlap when that
+does not expose protected outcomes or change the frozen design. The complete
+cycle still ends by the three-working-day boundary. A user may start a new
+explicitly scoped research version later, but it inherits every exposure and
+does not retroactively extend or rewrite the closed cycle.
+
+### Historical data roles
+
+- **Discovery/development:** may be inspected and used for the descriptive
+  footprint, operationalization and cheap falsification. All learned choices
+  remain attached to it.
+- **Sealed historical holdout:** an existing chronological snapshot or segment
+  made inaccessible before candidate specification. It is queried once through
+  the controlled finalizer with predeclared outputs. After release it is
+  exposed and cannot validate a changed descendant independently.
+- **No independent holdout available:** the cycle may still perform a fully
+  disclosed retrospective analysis, but its highest terminal status is limited
+  accordingly. Cross-validation, purged walk-forward and multiple-testing
+  corrections improve the retrospective test; they do not manufacture a fresh
+  independent dataset.
+
+No status requires future data. If a credible answer cannot be produced from
+the fixed historical inventory, the correct result is `BLOCKED_DATA` or
+`INCONCLUSIVE`, not a plan to wait for additional observations.
+
+### Required terminal verdicts
+
+- **`REJECTED_EARLY`:** the dossier, observability, rival-discrimination, data,
+  magnitude, cost or cheap falsification gate failed before a full backtest.
+- **`REJECTED_TESTED`:** the frozen candidate reached the full historical test
+  and failed its predeclared decision rule.
+- **`INVALID`:** a data, implementation, tester or contract defect prevents use
+  of the result. Observed outputs remain in the exposure history.
+- **`BLOCKED_DATA`:** the required existing data or executable-price evidence
+  is unavailable within the fixed inventory and time budget.
+- **`INCONCLUSIVE`:** the test is valid but cannot distinguish the relevant
+  possibilities with the available historical information and power.
+- **`HISTORICALLY_SUPPORTED`:** the frozen candidate passes its historical
+  tests, costs and selection controls. This status does not mean forward-
+  validated, causal, deployable or guaranteed to persist.
+- **`NO_RESEARCHABLE_PATTERN`:** the bounded descriptive route found no stable,
+  discriminating footprint worth promoting. This is an acceptable completed
+  outcome, not a prompt to loosen thresholds.
+
+### Stop rules
+
+Stop the cycle immediately when:
+
+- no concrete mechanism or historical footprint can be stated;
+- the supposed everyday effect is carried only by a few exceptional or known-
+  news periods and news trading is outside scope;
+- a serious rival makes the same predictions and no available measurement can
+  distinguish it within the budget;
+- required data, timestamp integrity, symbology, costs or executable prices are
+  unavailable within the fixed inventory;
+- the plausible gross effect cannot exceed conservative costs;
+- the effective sample size or tester power cannot answer the frozen question;
+- a critical harness test fails;
+- the candidate needs an unregistered parameter, filter, market or outcome
+  after results are visible;
+- the three-working-day boundary is reached; or
+- continuing would require prospective data collection or long-running
+  observation.
+
+An early stop produces a complete reasoned record. It does not authorize the
+agent to fill the remaining time with alternative strategies.
+
+### Required contract and operator view
+
+Add a versioned `mechanism_search_record` rather than encoding the cycle in a
+free-form report. It should reference the existing candidate, concept-audit,
+search-space, data-exposure, execution, tester and fingerprint artifacts and
+record:
+
+- authorization and hard deadline;
+- starting route and mechanism dossier;
+- candidate list and pre-outcome ranking;
+- stage start, stop, budget and decision events;
+- fixed historical data inventory and roles;
+- cheap-test and full-test artifact references;
+- every material result seen before a later choice;
+- terminal verdict and highest permitted claim; and
+- actual human time, wall-clock time, compute and data cost.
+
+The non-technical operator view must show the current stage, elapsed time,
+remaining hard budget, candidates still eligible, next kill condition and why
+the cycle stopped. It must never suggest waiting for future data as the default
+next step.
+
+### Acceptance criteria
+
+- Given an indicator-only recipe, when intake runs, then it is rejected unless
+  it is converted into a measured construct inside a complete mechanism dossier.
+- Given one mechanism with more than three proposed predictions, when the cycle
+  is authorized, then the user or conductor must select at most three before
+  any outcome is accessed.
+- Given a candidate whose required data are not in the authorized historical
+  inventory, when feasibility runs, then it becomes `BLOCKED_DATA` without
+  starting data collection or an infrastructure project.
+- Given an alleged everyday effect driven by excluded exceptional-news days,
+  when the cheap test removes or stratifies them, then the ordinary-day claim
+  is rejected if the footprint disappears.
+- Given a cheap falsification failure, when unused time remains, then the full
+  backtest is not run and no salvage variant is created inside the cycle.
+- Given a surviving candidate and an untouched historical holdout, when the
+  full test runs, then access follows the frozen output contract and the release
+  is recorded as exposure.
+- Given no untouched holdout, when a candidate survives retrospective checks,
+  then it cannot receive a status stronger than the permitted historical claim.
+- Given a cycle at its three-working-day deadline, when work remains, then it
+  closes as `BLOCKED_DATA`, `INCONCLUSIVE`, `INVALID` or a supported/rejected
+  verdict justified by completed artifacts; it does not roll into a fourth day.
+- Given no candidate survives, when closure runs, then the cycle is recorded as
+  completed without lowering gates or generating replacement candidates.
+
+### Activation boundary
+
+This feature may be called implemented only when a synthetic batch proves that
+an indicator-only idea, a weak mechanism story, a missing-data candidate, an
+exceptional-day artifact, a cheap-test failure, a tester defect, a historically
+supported survivor and a deadline overrun all reach the correct terminal state.
+The complete reference cycle must end within three working days using only its
+initial historical data inventory, preserve every exposure and reject any
+automatic proposal to collect future data or continue monitoring.
+
 ## Program-level adaptive research control and sequential evidence
 
 **Status:** planned, not implemented
@@ -780,16 +1066,15 @@ same nominal holdout.
 The current `search_space` contract correctly covers a fixed family whose size
 is declared before screening. It does not yet represent an indefinitely
 ordered hypothesis stream, program-level error spending, holdout information
-release, or optional-stopping-safe forward monitoring. This feature must add
-those controls without weakening the existing White Reality Check, Hansen SPA,
-Deflated Sharpe Ratio, PBO, pipeline nulls, data roles, freeze, fingerprint, or
-human decision gates.
+release, or the strict time boundary of the bounded historical search. This
+feature must add those controls without weakening the existing White Reality
+Check, Hansen SPA, Deflated Sharpe Ratio, PBO, pipeline nulls, data roles,
+freeze, fingerprint, or human decision gates.
 
 The design is informed by work on
 [adaptive holdout reuse](https://proceedings.neurips.cc/paper_files/paper/2015/file/bad5f33780c42f2588878a9d07405083-Paper.pdf),
 [online false-discovery control](https://proceedings.mlr.press/v80/ramdas18a/ramdas18a.pdf),
 [online LORD/LOND procedures](https://arxiv.org/abs/1502.06197),
-[anytime-valid inference](https://doi.org/10.1214/23-STS894), and
 [metamorphic testing of scientific software](https://pmc.ncbi.nlm.nih.gov/articles/PMC7252536/).
 These are design sources, not plug-in guarantees. Their assumptions must be
 matched to dependent financial time series and to the exact inferential object
@@ -806,8 +1091,8 @@ before any method is activated.
 3. The system can control a predeclared error budget over both fixed candidate
    families and an ordered continuing stream, while blocking unsupported
    p-values or dependence assumptions.
-4. Paper and live monitoring either use a valid predeclared sequential method
-   or remain fixed-horizon and unavailable for repeated inferential peeking.
+4. Every candidate search closes inside the bounded historical process rather
+   than creating an open-ended plan to collect or monitor future data.
 5. The backtest and inference apparatus demonstrate that they detect planted
    implementation faults and preserve required invariances before they can
    adjudicate real candidates.
@@ -816,22 +1101,24 @@ before any method is activated.
 
 ### Explicit non-goals
 
-- **No universal statistical correction.** Online FDR, alpha spending,
-  reusable holdouts, e-processes and confidence sequences solve different
-  problems under different assumptions. The framework must choose a valid
-  method per registered design or block the claim.
+- **No universal statistical correction.** Online FDR, alpha spending and
+  reusable holdouts solve different problems under different assumptions. The
+  framework must choose a valid method per registered design or block the claim.
 - **No automatic reusable holdout for market data.** The published reusable-
   holdout guarantees are not automatically valid for non-stationary dependent
-  financial time series. A strictly sealed chronological holdout and genuinely
-  new forward observations are the default until a time-series-specific
-  release mechanism is independently justified and calibrated.
+  financial time series. A strictly sealed segment of the fixed historical
+  inventory is the default unless a time-series-specific release mechanism is
+  independently justified and calibrated.
+- **No prospective data program.** The feature does not collect future data,
+  operate paper or live monitoring, or keep a candidate open while waiting for
+  additional observations.
 - **No machine-learning dependency.** The controls apply to deterministic
   rules, statistical studies, reconstructions and simulations. They do not
   require model training, feature stores, hyperparameter tuning or an ML
   platform.
 - **No evidence from agent consensus.** Debate, reflection, ranking or an Elo-
   like score may prioritize ideas. They cannot supply a p-value, replication,
-  independent review, causal identification or forward evidence.
+  independent review, causal identification or historical evidence.
 - **No restoration of spent independence.** A new Research-ID, renamed rule,
   changed codebase, new agent, delayed publication or user-approved research
   version cannot erase earlier data exposure or program-level error spending.
@@ -870,10 +1157,10 @@ append result and update error/information ledgers
  reject/block       freeze eligible survivor
                              |
                              v
-            sealed holdout or new forward data
+               sealed historical holdout
                              |
                              v
-          fixed-horizon or anytime-valid monitoring
+               bounded historical verdict
 ```
 
 The next idea may depend on earlier results, but that dependence is recorded
@@ -943,7 +1230,7 @@ from being presented as if they had been specified independently.
 
 ### Protected data and holdout-access control
 
-The default data policy has three increasingly protected layers:
+The default data policy has two layers inside one fixed historical inventory:
 
 1. **Discovery and development data:** may be examined repeatedly, but every
    resulting choice is treated as selected on those data.
@@ -951,9 +1238,6 @@ The default data policy has three increasingly protected layers:
    generation, implementation tuning and ordinary agent review. It is used
    only after the complete candidate, code, test, costs, nulls and response
    policy are frozen.
-3. **Newly arriving forward observations:** begin only after freeze and remain
-   append-only. They are the preferred source of continuing independent
-   evidence.
 
 Required behavior:
 
@@ -973,7 +1257,9 @@ Required behavior:
   different agent does not reverse the exposure.
 - If the holdout is accidentally accessed, leaked into logs, or queried with
   an unauthorized statistic, fail closed, preserve the event, and require a
-  new validation plan or genuinely new forward data.
+  new plan using another already-existing segment that was demonstrably sealed
+  before the search; if none exists, close the candidate as historically
+  inconclusive or blocked.
 - Full reusable-holdout mechanisms are P2. Before adoption, test their
   assumptions under block dependence, regime change, heavy tails and the
   actual query class. A method proved for i.i.d. bounded queries must not be
@@ -1017,37 +1303,8 @@ The implementation must support two modes with separate contracts.
   dependence structure relevant to its claim; an ordinary per-backtest p-value
   is not automatically eligible for the online ledger.
 - Statistical rejection remains separate from effect magnitude, costs,
-  stability, capacity, replication, forward performance and the framework's
+  stability, capacity, replication and the framework's
   higher evidence gates.
-
-### Anytime-valid forward monitoring
-
-Before the first protected forward observation, freeze a monitoring plan that
-contains:
-
-- the estimand and observation unit;
-- start time, data source, execution assumptions and cost model;
-- fixed-horizon or sequential monitoring mode;
-- test statistic and, for sequential mode, the exact e-process, e-value,
-  confidence-sequence or other anytime-valid construction;
-- update schedule and rules for delayed, corrected or missing observations;
-- warning, suspension, rejection, success and maximum-duration boundaries;
-- treatment of strategy downtime, code changes and operational incidents;
-- permitted displays and information releases; and
-- the decision each boundary authorizes and, equally important, what it does
-  not establish.
-
-If no validated anytime method matches the estimand and dependence structure,
-use a fixed horizon and suppress repeated inferential summaries until that
-horizon ends. Operational risk monitoring may continue, but it must not be
-presented as repeated evidence testing. An e-value is not anytime-valid merely
-because a field is named `e_value`; the construction and calibration tests are
-required artifacts.
-
-A strategy modification after forward outcomes creates a new frozen candidate.
-The observed forward data remain development evidence for that descendant and
-cannot continue as its untouched forward sample. Newly arriving observations
-after the new freeze may begin a new linked monitoring segment.
 
 ### Backtest and inference harness verification
 
@@ -1121,28 +1378,24 @@ research-governance system.
    must retain their original meaning.
 2. **`statistical_test_event.schema.json`:** record sequence number, candidate
    and family, registration time, outcome-access time, assigned threshold,
-   method state before and after, p-value or e-value with construction
-   reference, decision, validity status, invalidation reason, data snapshots,
-   exposure events, result artifact and event hash. Events are append-only and
-   may be superseded but not edited or resequenced.
+   method state before and after, test statistic and p-value with construction
+   reference where applicable, decision, validity status, invalidation reason,
+   data snapshots, exposure events, result artifact and event hash. Events are
+   append-only and may be superseded but not edited or resequenced.
 3. **`data_exposure_event.schema.json`:** record actor and recipients, dataset
    snapshot and time range, data role, query or artifact hash, disclosure class
    (`NONE`, `PASS_FAIL`, `BOUNDED_SUMMARY`, `FULL_RESULT`, `RAW_ACCESS`),
    purpose, authorization, affected Research-IDs and programs, and whether
    independence was consumed. Exact protected values need not be duplicated in
    the ledger.
-4. **`forward_monitoring_plan.schema.json`:** record the frozen plan described
-   above, method validation reference, effective start, code and data hashes,
-   decision boundaries and permitted releases. Changes after start create a
-   new version and monitoring segment.
-5. **`tester_verification_report.schema.json`:** record metamorphic relations,
+4. **`tester_verification_report.schema.json`:** record metamorphic relations,
    mutation catalog and criticality, differential implementations, seeds,
    expected results, observed discrepancies, mutation score, surviving
    critical faults, tested engine capabilities and final `PASS / FAIL / BLOCKED`.
-6. **Research fingerprint and orchestration state:** include all effective
+5. **Research fingerprint and orchestration state:** include all effective
    program IDs, search-space and sequential-ledger state, exposure history,
-   holdout policy, monitoring plan and tester-verification references. A
-   material difference follows the existing `CHANGE_PROPOSED` rule.
+   holdout policy, bounded-search deadline and tester-verification references.
+   A material difference follows the existing `CHANGE_PROPOSED` rule.
 
 Do not store a mutable summary such as only `alpha_remaining`. The current
 state must be reproducible from immutable events, and the generated value and
@@ -1162,7 +1415,7 @@ For each program and candidate it must show:
 - the assigned threshold or reason no valid threshold is available;
 - the remaining error resource without suggesting that it is investment risk
   capital or a probability the strategy is true;
-- whether forward monitoring is fixed-horizon or anytime-valid;
+- the current bounded-search stage, hard deadline and remaining time;
 - which tester capabilities have passed, failed or remain unverified; and
 - the next permitted action and any decision that requires the user.
 
@@ -1185,21 +1438,17 @@ must show that the exposure and program history remain attached.
 4. **Harness-verification suite:** add metamorphic relations, the critical
    mutation catalog and a simple independent reference implementation before a
    production backtest engine can adjudicate a real strategy.
-5. **Fixed-horizon forward operation:** freeze the monitoring contract and
-   enforce no inferential peeking before the declared horizon. Keep operational
-   safety monitoring separate.
+5. **Bounded-search integration:** connect every program event to the
+   three-working-day mechanism-search record and close rather than extend a
+   candidate when its historical inventory or time budget is exhausted.
 6. **Program-level operator view:** display lineage, exposures, error spending,
-   tester status and allowed next actions in plain language.
+   bounded-search time, tester status and allowed next actions in plain language.
 7. **Online-FDR method:** add LORD, SAFFRON or another selected method only
    after p-value and dependence simulations satisfy predeclared calibration
    criteria and an independent methods review accepts the implementation.
-8. **Anytime-valid monitoring:** add one estimand-specific e-process or
-   confidence sequence only after null calibration, stopping-rule and
-   implementation tests pass. Do not market this as a generic sequential
-   statistics engine.
-9. **Reusable-holdout investigation:** remain P2 until a design appropriate to
+8. **Reusable-holdout investigation:** remain P2 until a design appropriate to
    chronological dependent market data is justified against the simpler sealed
-   holdout and new-forward-data baseline.
+   historical-holdout baseline and can be evaluated inside a bounded project.
 
 Build the P0 controls before increasing autonomous idea-generation throughput.
 Faster search without complete lineage, protected data and error spending would
@@ -1232,9 +1481,9 @@ increase the problem this feature is intended to control.
 - Given any authorized holdout release, when a descendant candidate changes in
   response, then the exposed period cannot retain an independent role for that
   descendant.
-- Given a fixed-horizon forward plan, when a user or agent requests an early
-  inferential result, then the system withholds it or labels it descriptive and
-  does not update an evidential decision.
+- Given a candidate that cannot be resolved from its authorized historical
+  inventory, when its bounded-search deadline arrives, then it closes as
+  blocked or inconclusive instead of starting future-data collection.
 - Given the critical mutation catalog, when each fault is injected, then every
   leakage, timestamp, execution-cost, label-PnL, invariant-null and false-
   completion mutant is killed. Survival of any critical mutant blocks the
@@ -1244,7 +1493,7 @@ increase the problem this feature is intended to control.
   blocked until the discrepancy is explained and resolved.
 - Given unanimous agent approval without new external or computational
   evidence, when evidence status is evaluated, then no statistical, causal,
-  replication or forward-evidence level is upgraded.
+  replication or historical-evidence level is upgraded.
 - Given authorization for a new Research-ID or version, when it is created,
   then relevant program lineage, exposure history and error spending are
   inherited unchanged.
@@ -1254,8 +1503,6 @@ increase the problem this feature is intended to control.
 - One validated online-FDR implementation with method-specific dependence and
   p-value calibration tests, immutable state transitions and independent
   implementation review.
-- One validated anytime-valid monitoring method for one precisely defined
-  estimand and observation process.
 - Tool-level separation between discovery agents, protected-data finalizers and
   evidence reviewers, with denial and information-flow tests.
 - Plain-language counterfactual display showing how the decision would differ
@@ -1267,8 +1514,8 @@ increase the problem this feature is intended to control.
 
 - A time-series-appropriate reusable-holdout mechanism with explicit
   information accounting and empirical calibration.
-- Additional anytime-valid estimands, dependence-robust online procedures and
-  hierarchical budgets across programs and candidate families.
+- Dependence-robust online procedures and hierarchical budgets across programs
+  and candidate families when they can be validated in a bounded project.
 - Privacy-preserving query release only if privacy itself becomes a requirement;
   privacy terminology must not be borrowed merely to suggest generalization.
 - More elaborate multi-agent generation, debate and evolutionary search after
@@ -1291,7 +1538,7 @@ increase the problem this feature is intended to control.
   exposure event, and injected unauthorized access reveals no protected value.
 - The reference operator can explain, from one generated view, why a period is
   or is not independent, what statistical resource the next test receives, and
-  whether forward monitoring permits interim inference.
+  when the bounded historical search must stop.
 
 ### Open implementation decisions
 
@@ -1301,16 +1548,12 @@ increase the problem this feature is intended to control.
 - **Blocking — methods:** select the P0 summable alpha-spending schedule,
   candidate eligibility policy and simulation tolerances before the first
   adaptive-stream result is observed.
-- **Blocking — data owner:** select the chronological discovery, sealed-holdout
-  and forward-data boundaries and document why their length and market regimes
-  are adequate for the intended first claim.
+- **Blocking — data owner:** select the chronological discovery and sealed-
+  historical-holdout boundaries and document why their length and market
+  regimes are adequate for the intended first historical claim.
 - **Blocking for P1 — methods:** choose the exact online-FDR procedure and state
   its p-value and dependence assumptions in testable terms. Popularity or
   nominal power is not sufficient.
-- **Blocking for P1 — methods:** choose one forward estimand and observation
-  process for the first anytime-valid construction. Do not start with a generic
-  Sharpe-ratio field unless a valid sequential method for the actual process is
-  established.
 - **Non-blocking — engineering:** choose the physical holdout isolation
   mechanism. File permissions, encrypted snapshots or a separate service are
   acceptable only if denial and leakage tests pass.
@@ -1322,12 +1565,12 @@ increase the problem this feature is intended to control.
 The program-level adaptive controls may be called implemented only when one
 synthetic program containing fixed-family tests, adaptive descendants,
 abandoned candidates, partial disclosures, an unauthorized holdout request, a
-legitimate holdout release and a forward segment passes the complete P0 matrix.
-The error ledger and data-exposure state must rebuild from immutable events,
-critical tester mutations must be killed, protected values must remain hidden,
-and a new Research-ID must demonstrably inherit its history. Online FDR,
-anytime-valid monitoring and reusable holdout claims remain unavailable until
-their separate method-specific activation criteria pass.
+legitimate historical-holdout release and a deadline closure passes the
+complete P0 matrix. The error ledger and data-exposure state must rebuild from
+immutable events, critical tester mutations must be killed, protected values
+must remain hidden, and a new Research-ID must demonstrably inherit its
+history. Online FDR and reusable-holdout claims remain unavailable until their
+separate method-specific activation criteria pass.
 
 ## Empirical research-desk validation and correction ledger
 
@@ -1370,23 +1613,25 @@ this framework without weakening its existing research controls.
    strategy generalises or has an edge. A material mismatch blocks any
    replication claim or must be recorded as a distinct reconstructed variant.
 4. **Human-readable graveyard and correction ledger.** Generate a concise view
-   of rejected, blocked, invalidated, corrected, retracted, paper-only, and
-   active research states from immutable source artifacts. Keep the original
+   of rejected, blocked, invalidated, corrected, retracted, historical-only,
+   and active research states from immutable source artifacts. The framework
+   does not operate a paper-monitoring program. Keep the original
    verdict visible, show the reason and evidence for every correction, and
    derive all published summaries from one canonical versioned state so that
    landing pages, counts, and detailed records cannot drift silently. Raw
    evidence that is unavailable or access-restricted must be labelled as such.
    External publication remains an explicit human-reviewed action.
-5. **Discovery-to-forward firewall.** Detect when a specification, threshold,
-   stop, target, component, universe, or mechanism story was selected after
-   seeing outcomes. Such a salvage or recombination becomes a new candidate or
-   research version, inherits the complete search lineage and information debt,
-   and cannot reuse the affected data as independent validation. A historical
-   in-sample/out-of-sample split is not independent if both periods influenced
-   the final specification. Paper trading counts as `FORWARD_OOS` only after
-   the full strategy is frozen and its warning, suspension, and rejection rules
-   are predeclared.
-6. **Low-cost triage and program observability.** Before expensive research,
+5. **Discovery-to-historical-validation firewall.** Detect when a
+   specification, threshold, stop, target, component, universe, or mechanism
+   story was selected after seeing outcomes. Such a salvage or recombination
+   becomes a new candidate or research version, inherits the complete search
+   lineage and information debt, and cannot reuse the affected data as
+   independent validation. A historical in-sample/out-of-sample split is not
+   independent if both periods influenced the final specification. The only
+   independent holdout available to this planned feature is an already-existing
+   historical segment that was technically sealed before the candidate was
+   frozen; no paper or future-data phase is created.
+6. **Low-cost triage and program accounting.** Before expensive research,
    support cheap data-model checks, input-distribution diagnostics, matched-
    exposure benchmarks, and explicit questions about the relevant trading
    window, plausible constrained actor, and expected firing rate. These are
@@ -1408,8 +1653,9 @@ The feature may be described as implemented only when:
   claim while a faithful replay does not upgrade evidence;
 - an adaptive post-result rewrite is mechanically prevented from retaining an
   independent validation or holdout role;
-- an unfrozen strategy cannot enter paper operation and a frozen one records
-  its forward monitoring rules before activation;
+- an unfrozen or adaptively changed strategy cannot access the sealed
+  historical holdout, and an authorized release permanently records the
+  resulting exposure;
 - the graveyard and correction view is generated from canonical immutable
   records, detects a deliberately stale summary, and preserves the original
   verdict after a correction or retraction; and
