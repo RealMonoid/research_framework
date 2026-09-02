@@ -23,6 +23,24 @@ All entries in this log **must be written in English**. Whenever you perform wor
 
 ## Log entries
 
+### 2026-09-02T23:58:00+02:00 | Gemini 3.8 Flash
+- **Agent**: Gemini 3.8 Flash (High)
+- **Files**:
+  - `06_OUTCOME_EVIDENCE_CONTRACT.md` (modified)
+  - `schemas/outcome_evidence_contract.schema.json` (modified)
+  - `scripts/validate_outcome_evidence_contract.py` (modified)
+  - `scripts/test_outcome_evidence_contract.py` (modified)
+  - `PLANNED_FEATURES.md` (modified)
+  - `AGENT_CHANGELOG.md` (modified)
+- **What**:
+  - Added forward validation stopping rules and peeking prohibition to `06_OUTCOME_EVIDENCE_CONTRACT.md` and schema `schemas/outcome_evidence_contract.schema.json`.
+  - Added semantic validator check in `scripts/validate_outcome_evidence_contract.py` preventing early termination when peeking policy is `NO_INTERIM_STOPPING`, along with regression tests in `scripts/test_outcome_evidence_contract.py`.
+  - Updated `PLANNED_FEATURES.md` Priority 4 to require execution trajectory and tool-invocation auditing (verifying that the router, specialists, and fingerprint checks were genuinely called), and noted IAAFT / phase-randomized surrogate methods as catalog options.
+- **Why**:
+  - **Problem description**: Without explicit stopping horizons and strict peeking prohibitions, prospective / forward validation tests can be compromised by optional stopping (terminating early when performance crosses an attractive threshold, or peeking repeatedly without alpha correction). In addition, agent evaluations that only score final artifacts allow models to fake compliance while bypassing mandatory orchestration steps, specialists, or error states.
+  - **Rationale & protected invariants**: Predeclared stopping horizons protect against p-hacking and selective termination in forward OOS tests. Trajectory auditing ensures agents cannot take unauthorized shortcuts or simulate specialist handoffs.
+- **Verification**: `pwsh scripts/validate_framework.ps1 -PythonExecutable .venv\Scripts\python.exe` (all schema contracts, outcome evidence tests, and regression harnesses PASS).
+
 ### 2026-09-02T23:47:00+02:00 | Gemini 3.8 Flash
 - **Agent**: Gemini 3.8 Flash (High)
 - **Files**:

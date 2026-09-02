@@ -106,9 +106,31 @@ def main() -> int:
     if not schema_errors(exploratory_promoted):
         raise AssertionError("An exploratory outcome was allowed to change a material evidence stage.")
 
+    valid_forward = copy.deepcopy(frozen)
+    valid_forward["forward_testing_protocol"] = {
+        "stopping_rule": {
+            "horizon_type": "FIXED_OBSERVATIONS",
+            "threshold_value": "500",
+            "unit": "trades",
+        },
+        "peeking_policy": "NO_INTERIM_STOPPING",
+        "early_termination_allowed": False,
+        "justification": "Fixed 500 trades horizon without optional stopping.",
+    }
+    errors = validate_contract(valid_forward)
+    if errors:
+        raise AssertionError("Valid forward testing protocol was rejected:\n- " + "\n- ".join(errors))
+
+    invalid_forward = copy.deepcopy(valid_forward)
+    invalid_forward["forward_testing_protocol"]["early_termination_allowed"] = True
+    assert_contains(
+        semantic_errors(invalid_forward),
+        "forward_testing_protocol cannot permit early_termination_allowed when peeking_policy is NO_INTERIM_STOPPING",
+    )
+
     print(
         "Outcome evidence contract tests passed: predictor/mechanism separation, "
-        "freeze discipline, coupling disclosure, transportability coverage, and role limits."
+        "freeze discipline, coupling disclosure, transportability coverage, role limits, and forward stopping rules."
     )
     return 0
 
