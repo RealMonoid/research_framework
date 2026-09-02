@@ -104,7 +104,7 @@
 
 - Do not assume that Codex or Claude is the only author of local or remote changes.
 - Treat unfamiliar changes and commits as potentially belonging to Codex, Claude, Gemini, or the user.
-- Maintain `AGENT_CHANGELOG.md`: check it before starting work to review recent changes by other agents, and record every completed change with exact timestamp (date and time), full agent model name and version number (e.g. `Claude 3.7 Sonnet`, `Gemini 3.8 Flash`), affected files, summary, and verification status.
+- Maintain `AGENT_CHANGELOG.md`: check it before starting work to review recent changes by other agents, and record every completed change in English with exact timestamp (date and time), full agent model name and version number (e.g. `Claude 3.7 Sonnet`, `Gemini 3.8 Flash`), affected files, detailed WHAT was changed, detailed WHY it was changed, and verification status.
 - Before editing, committing, merging, switching, or pushing, inspect the current worktree and relevant branch history again.
 - Re-read affected files immediately before patching when another collaborator may have worked on them.
 - Never overwrite, reset, revert, or otherwise discard unfamiliar work without first identifying its origin and obtaining user direction when needed.
