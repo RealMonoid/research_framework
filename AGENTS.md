@@ -4,6 +4,20 @@ This repository may be edited by Codex, Claude, Gemini, the user, or another
 compatible agent. Inspect the worktree and relevant history before editing, and
 never overwrite unfamiliar concurrent work.
 
+## Canonical instruction source
+
+This file is the sole authoritative source of repository instructions for every
+AI agent. Host-specific bootstrap files such as `CLAUDE.md` and `GEMINI.md` may
+only direct an agent to read this file; they must not copy, reinterpret, or add
+project rules. `AGENT_CHANGELOG.md` is a historical record, not a second policy
+source.
+
+Before doing any repository work, every agent must read this file in full and
+then inspect the recent entries in `AGENT_CHANGELOG.md`. If either file cannot
+be read, stop rather than continue with an incomplete rule set. If another
+document appears to conflict with this file, this file controls and the conflict
+must be reported instead of resolved silently.
+
 ## Shared agent changelog
 
 Every agent modifying this repository must inspect `AGENT_CHANGELOG.md` before

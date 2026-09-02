@@ -36,6 +36,10 @@ def build_parser() -> argparse.ArgumentParser:
 def main(argv: Sequence[str] | None = None) -> int:
     args = build_parser().parse_args(argv)
     python = sys.executable
+    run(
+        "Agent instruction sources",
+        [python, "scripts/validate_agent_instruction_sources.py"],
+    )
     run("Schema contracts", [python, "scripts/test_schemas.py"])
     run("Strategy reconstruction", [python, "scripts/test_strategy_reconstruction.py"])
     run("Strategy concept audit", [python, "scripts/test_strategy_concept_audit.py"])
