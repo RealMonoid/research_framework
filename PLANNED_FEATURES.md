@@ -104,6 +104,21 @@ checks, live-agent evaluations, or a real Research Case.
    a new research version. Recheck fitness whenever the strategy,
    operationalization, data source, market scope, or intended claim changes.
 
+   Verification is automation-first and must treat acquisition burden as part
+   of feasibility. Prefer one coherent, reusable, versioned export or snapshot
+   over repeated interaction with a chart interface. Automated checks should
+   cover integrity, coverage, internal consistency, and any feasible
+   cross-source comparison. A manual visual review is an exception: it needs a
+   named residual risk, a case-selection rule fixed before inspection, and the
+   smallest defensible scope. There is no generic screenshot minimum, and an
+   agent must never invent an arbitrary quota such as 50 manually reviewed
+   charts. Repeated TradingView scrolling, bar-by-bar history loading, or
+   manual collection of chart sections is not an acceptable default data
+   pipeline. If adequate data cannot be acquired without material repetitive
+   user work, the path is `REMEDIABLE_GAP`, `NOT_TESTABLE`, or `BLOCKED`; the
+   burden is not transferred to the user and the strategy is not weakened to
+   fit the interface.
+
    The purpose is to reject an untestable project before expensive
    reconstruction creates commitment to it, and to prevent a late discovery
    that the available data could never observe the event, mechanism, or fill

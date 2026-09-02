@@ -171,6 +171,16 @@ independent or specialist contribution while claiming it was performed.
 - Routing a strategy does not authorize a backtest, market-data request, or
   empirical test. Those require a separate user request and the applicable
   research gates.
+- Treat the owner's time and ability to acquire data as part of feasibility.
+  Prefer a complete reusable export and automated checks. Do not require
+  repeated chart loading, manual extraction of TradingView history, or an
+  arbitrary screenshot quota as a substitute for a coherent dataset.
+- Use manual visual review only for a named residual data risk that cannot be
+  checked reliably by code. Fix its selection rule before inspection, keep it
+  to the smallest defensible scope, and explain which decision it protects.
+  If obtaining adequate data would require material repetitive user work,
+  block or limit the research path instead of transferring that work to the
+  user or silently weakening the strategy.
 - Never operationalize an unknown success condition as a hidden filter.
 - Never let a specialist alter the user's research question, source identity,
   frozen result, or data role without a new material decision.

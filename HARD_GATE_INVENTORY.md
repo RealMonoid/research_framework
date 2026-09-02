@@ -65,7 +65,8 @@ explicitly as follows:
 | Activation | HG-16 and HG-27 |
 
 The causal-tooling prerequisite used by the detailed case template is recorded
-separately as HG-28.
+separately as HG-28. The prospective data-fitness and acquisition-burden rule
+is recorded separately as HG-29.
 
 ## Inventory: research transitions
 
@@ -114,6 +115,7 @@ separately as HG-28.
 | **HG-26** | A validated phenomenon or forecast must not be called a tradable edge until the complete strategy survives realistic costs, fills, latency, capacity, risk, and a separate forward/OOS test. | The claim ladder, candidate and constraint schemas, research standard, and case-template strategy-engineering sections keep these decisions separate. | A compliant agent reports `ECONOMICALLY_UNTRADEABLE` or stops before activation. Some invalid claim combinations fail schema validation. | Schema and eval cases prevent several direct claim upgrades. No executable cost, fill, capacity, or full-strategy release validator exists. | Plausible but unrealistic cost or fill assumptions can remain formally valid. The framework cannot verify broker execution or capacity from documentation alone. | **C+D+P** |
 | **HG-27** | Capital must not be assigned until the phenomenon, engineered strategy, full-strategy OOS test, costs, risk rules, reproducibility, and degradation rules all pass. | The case template defines the X activation gate; the run-manifest schema prevents an internally inconsistent declared operational `PASS`. | A compliant agent keeps the strategy `NOT_ACTIVE` or `ACTIVE_STRATEGY_CANDIDATE`. | The run-manifest schema has a failed-subgate regression. No live activation or broker-side block is tested. | There is no deployment service, broker permission gate, or automatic monitoring/suspension controller in this repository. | **C+D+P** |
 | **HG-28** | A causal analysis requiring specialist software must not freeze or estimate until the selected package, version, API, environment, seed policy, and a suitable tooling sentinel are verified. | The causal tooling document, case-template E9/O/N4 fields, and conductor instructions define the requirement. | A compliant agent records `TOOLING_BLOCKED` and stops the dependent causal path. | Pipeline tests cover general sentinels; there is no universal executable tooling router or package-specific compatibility suite. | The check is assembled for each design and depends on the agent accurately identifying when specialist tooling is required. | **D+P** |
+| **HG-29** | Research must not proceed when the required data cannot be obtained as a coherent dataset, and data-quality assurance must not be replaced by arbitrary screenshot quotas or repetitive manual chart extraction imposed on the owner. | Root agent instructions and the conductor require automation-first checks, one reusable snapshot where possible, and a named residual risk before any bounded manual review. The prospective data-fitness gate specifies the eventual structured decisions. | A compliant agent reports the data path as limited, remediable, not testable, or blocked instead of silently weakening the strategy or transferring repetitive acquisition work to the user. | No executable regression yet proves that a live agent refuses an arbitrary manual-review request or repeated TradingView loading. | The structured data-fitness artifact and validator are still planned. Current enforcement depends on the host reading and following the instructions and honestly assessing the burden. | **D+P+M** |
 
 ## Trust boundary
 

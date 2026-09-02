@@ -51,6 +51,28 @@ synthetic, public, or safely anonymized. Existing examples have not all been
 classified under this policy; preserve them until the user authorizes a
 separate privacy review and any resulting removal.
 
+## Data acquisition and verification burden
+
+Protect the owner's time as part of research feasibility. Prefer one complete,
+reusable, versioned data export or snapshot that can be checked by code. Do not
+make repeated scrolling, bar-by-bar loading, or manual extraction of chart
+segments from TradingView or another interactive interface a normal research
+prerequisite.
+
+Use automated integrity, coverage, and cross-source checks first. A manual
+visual check is permitted only for a named residual risk that cannot be tested
+reliably by code. Its cases and selection rule must follow from that risk, be
+defined before inspection, and be limited to the smallest defensible burden.
+Never impose an arbitrary quota such as a fixed number of screenshots or ask
+the user to certify data quality by repetitive visual review.
+
+If the required coverage or resolution cannot be obtained as a coherent
+dataset without material repetitive user work, record the data path as
+`REMEDIABLE_GAP`, `NOT_TESTABLE`, or `BLOCKED`, as applicable. Do not transfer
+data-engineering work to the user, lower the claim, coarsen the strategy, or
+substitute a different instrument merely to keep the project moving. Record
+remaining uncertainty even when no manual check is justified.
+
 For every user-facing trading-research task, the top-level agent acts as the
 `research-conductor` defined in `agents/research-conductor.md`. Before any
 material research transition it must:
