@@ -6,6 +6,28 @@ are defined only in `AGENTS.md`. Read `AGENTS.md` in full before using this log.
 
 ## Log entries
 
+### 2026-09-03T01:02:16+02:00 | OpenAI Codex (GPT-5)
+- **Agent**: OpenAI Codex (GPT-5)
+- **Files**:
+  - `README.md` (modified)
+  - `QUICKSTART.md` (modified)
+  - `AGENT_CHANGELOG.md` (modified)
+  - GitHub repository name, description, and local `origin` URL (repository metadata)
+- **What**:
+  - Renamed the visible project from **Research Framework** to **Trading Research Framework**.
+  - Renamed the GitHub repository from `research_framework` to `trading-research-framework`, updated its public description, and changed the local Git remote to the new canonical URL.
+  - Updated the raw Quickstart link to the new repository path.
+  - Deliberately retained existing `urn:research-framework:*` schema identifiers, generic lower-case descriptions, historical architecture records, and the local workspace directory name.
+- **Why**:
+  - **Problem description**: The generic project name did not tell an outside reader that the framework is specifically intended to govern trading research, while a repository-wide textual replacement would alter stable identifiers and historical evidence for no decision-protecting benefit.
+  - **Decision context**: Inspection found only two visible document titles and one canonical raw link that required file changes. Twenty schema files use `research-framework` as a stable machine identity and therefore were excluded from the rename.
+  - **Rationale & protected invariants**: Make the project's purpose immediately clear without breaking schema identity, changing normative meaning, rewriting history, or disturbing the Codex workspace path.
+- **Verification**:
+  - `python scripts/validate_agent_instruction_sources.py` — PASS.
+  - `python scripts/validate_framework.py` — PASS; full framework integrity passed, with the existing notice that no `LIVE_AGENT` release gate was requested.
+  - `git diff --check` — PASS.
+  - GitHub repository lookup and `git ls-remote origin` resolve the new canonical repository URL.
+
 ### 2026-09-03T00:55:35+02:00 | OpenAI Codex (GPT-5)
 - **Agent**: OpenAI Codex (GPT-5)
 - **Files**:

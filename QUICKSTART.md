@@ -1,4 +1,4 @@
-# Research Framework – Quickstart
+# Trading Research Framework – Quickstart
 
 Dieser Kurzpfad ist der einzige verpflichtende Einstieg für jede neue Idee. Die
 langen Normdokumente werden erst nach Status und Aufgabe geroutet; sie müssen

@@ -1,4 +1,4 @@
-# Research Framework
+# Trading Research Framework
 
 ## Purpose and operating boundary
 
@@ -300,4 +300,4 @@ Features that are not yet implemented are listed explicitly in
 If a connector cannot traverse the GitHub interface, fetch the normative entry
 point directly:
 
-<https://raw.githubusercontent.com/RealMonoid/research_framework/main/QUICKSTART.md>
+<https://raw.githubusercontent.com/RealMonoid/trading-research-framework/main/QUICKSTART.md>
