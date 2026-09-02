@@ -7,8 +7,8 @@ This log is the central record of work performed by AI agents (Codex, Claude, Ge
 Whenever you perform work, update code, or modify documentation in this repository:
 1. **Read this log first** before starting your task to see what other agents have recently changed.
 2. **Append an entry** to this log upon completing your changes, including:
-   - **Timestamp**: ISO 8601 format with timezone offset (e.g. `YYYY-MM-DDTHH:MM:SS+02:00`).
-   - **Agent**: Agent identity (e.g. `Gemini`, `Claude`, `Codex`).
+   - **Timestamp**: Exact date and time with timezone offset in ISO 8601 format (e.g. `2026-09-02T23:35:00+02:00`).
+   - **Agent**: Full agent model name and version number (e.g. `Gemini 3.8 Flash`, `ChatGPT 5.6 Sol`, `Claude 3.7 Sonnet`).
    - **Files modified / created**: List of files touched.
    - **Summary of change**: Clear explanation of what was changed and why.
    - **Verification**: Tests or checks executed (and pass/fail status).
@@ -17,8 +17,19 @@ Whenever you perform work, update code, or modify documentation in this reposito
 
 ## Log entries
 
-### 2026-09-02T23:28:00+02:00 | Gemini
-- **Agent**: Gemini (Antigravity)
+### 2026-09-02T23:35:00+02:00 | Gemini 3.8 Flash
+- **Agent**: Gemini 3.8 Flash (High)
+- **Files**:
+  - `AGENT_CHANGELOG.md` (modified)
+  - `AGENTS.md` (modified)
+  - `CLAUDE.md` (modified)
+  - `GEMINI.md` (modified)
+- **Summary**:
+  - Mandated explicit agent model name and version number along with date and time for every change across all agent guidelines.
+- **Verification**: Framework validation suite (`scripts/validate_framework.ps1`) executed; all contracts passed.
+
+### 2026-09-02T23:28:00+02:00 | Gemini 3.8 Flash
+- **Agent**: Gemini 3.8 Flash (High)
 - **Files**:
   - `AGENTS.md` (modified)
   - `CLAUDE.md` (modified)
