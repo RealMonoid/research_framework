@@ -6,6 +6,27 @@ are defined only in `AGENTS.md`. Read `AGENTS.md` in full before using this log.
 
 ## Log entries
 
+### 2026-09-03T00:55:35+02:00 | OpenAI Codex (GPT-5)
+- **Agent**: OpenAI Codex (GPT-5)
+- **Files**:
+  - `AGENT_CHANGELOG.md` (modified)
+  - Git branch references (repository maintenance; no framework files removed)
+- **What**:
+  - Removed five stale remote branches whose changes had already been merged through pull requests: prose strategy reconstruction, research-question drift control, causal-axis provenance, entry-threshold controls, and the mechanism-first generator.
+  - Removed seven corresponding or already-merged local branches, including the concept-audit, research-conductor, and scientific-philosophy working branches whose remotes had previously been deleted.
+  - Retained `codex/framework-maintenance-checkpoint-plan` and `feature/data-snapshot-contract` as explicit temporary archives because each contains unmerged material that may still justify a small, newly designed future change.
+  - Kept `main` and all merged pull-request history unchanged; no stale branch was merged wholesale.
+- **Why**:
+  - **Problem description**: Old working branches made it appear that several completed framework features were still separate or missing, while two genuinely unmerged experiments were indistinguishable from the already-integrated branches.
+  - **Decision context**: Patch-equivalence checks and merged pull-request records showed that the deleted work was already represented in `main`. The two retained archives were deliberately excluded because one holds planning ideas not yet reconciled with the central roadmap and the other holds a closed data-snapshot proposal that conflicts with newer architecture but contains a potentially useful provider-neutral reproducibility concept.
+  - **Rationale & protected invariants**: Keep `main` as the only current implementation, reduce cross-agent branch confusion, preserve all merged history, and avoid either losing uncertain unmerged ideas or importing obsolete code and policy into the current framework.
+- **Verification**:
+  - Remote branch listing contains only `main` and the two named archives, plus the temporary task branch until this pull request is merged.
+  - Local branch listing contains only `main`, the retained maintenance archive, and the temporary task branch.
+  - `python scripts/validate_agent_instruction_sources.py` — PASS.
+  - `python scripts/validate_framework.py` — PASS; full framework integrity passed, with the existing notice that no `LIVE_AGENT` release gate was requested.
+  - `git diff --check` — PASS.
+
 ### 2026-09-03T00:42:48+02:00 | OpenAI Codex (GPT-5)
 - **Agent**: OpenAI Codex (GPT-5)
 - **Files**:
