@@ -171,6 +171,13 @@ material state is unchanged. Every difference becomes a visible change
 proposal. The existing version remains effective unless the user explicitly
 authorizes a new Research-ID or research version.
 
+The [hard-gate inventory](HARD_GATE_INVENTORY.md) distinguishes controls that
+are automatically invoked from executable checks that still depend on the
+host agent, schema-only constraints, judgement calls, prose rules, and missing
+controls. It also records the stop consequence, regression evidence, and known
+bypass for each gate. This prevents the existence of a validator from being
+mistaken for proof that every live research run actually used it.
+
 ### Outcome roles and contradiction handling
 
 Before a validation test is frozen, the conductor creates an

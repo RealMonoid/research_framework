@@ -5,8 +5,9 @@ implementiert noch geprüft noch freigegeben.
 
 ## Authoritative implementation order
 
-**Status:** prioritized on 2026-09-02; individual items remain planned unless
-their entry explicitly says otherwise
+**Status:** prioritized on 2026-09-02; the initial hard-gate inventory is
+complete, while later items remain planned unless their entry explicitly says
+otherwise
 
 This order is authoritative. The detailed sections below describe the same
 initiatives and their risks; they do not establish a second priority order.
@@ -53,7 +54,9 @@ No new control layer should be added merely because it sounds prudent. Existing
 controls must first show their value and their failure modes in executable
 checks, live-agent evaluations, or a real Research Case.
 
-1. **Hard-gate inventory.** First record every research gate and the claim or
+1. **Hard-gate inventory — initial audit completed 2026-09-02.** The
+   [`HARD_GATE_INVENTORY.md`](HARD_GATE_INVENTORY.md) records every current
+   research gate and the claim or
    transition it is meant to prevent. For each gate, identify whether it is
    enforced by automatically invoked executable code, by a schema whose
    validation is mandatory on that path, by an agent or human classification,
@@ -67,7 +70,13 @@ checks, live-agent evaluations, or a real Research Case.
    trust boundary explicitly: the framework cannot discover experiments,
    viewed data, or discarded variants that occurred outside its recorded
    workflow. A control may reduce that exposure but must not claim to eliminate
-   undisclosed external search.
+   undisclosed external search. The audit found substantial deterministic
+   checks but no framework-owned end-to-end runtime that forces their use in a
+   live research task. The current research gates are therefore
+   caller-enforced. Priority 2 remains next and must record whether those calls
+   actually occur; priority 3 must attack false `COMPLETE` states, skipped
+   validators and specialists, ignored fingerprint failures, and semantic
+   misclassification before a new orchestration layer is justified.
 
 2. **One real Research Case.** Run one deliberately unexciting end-to-end case
    with public data and a predeclared expectation that no useful effect will be
@@ -338,11 +347,13 @@ numbers here identify details rather than execution order:
    research changes, evidence-integrity changes, and demonstrably non-material
    editorial changes so that harmless hash changes do not train users to
    approve every warning.
-4. **Priority 1 — Hard-gate coverage accounting:** Maintain an explicit inventory showing
+4. **Priority 1 — Hard-gate coverage accounting (initial inventory complete):** Maintain the
+   [`HARD_GATE_INVENTORY.md`](HARD_GATE_INVENTORY.md), showing
    which research gates are enforced by executable checks, which are enforced
    only by schemas, which depend on an agent classification, and which remain
    prose instructions. Increase executable enforcement where the required
-   condition is objectively decidable.
+   condition is objectively decidable and the real case or behavioural
+   evaluation demonstrates that the current caller-enforced path is unreliable.
 5. **Priority 3 — Adversarial live-agent evaluation:** Extend the planned LLM stress test
    with agents that actively attempt to change definitions, reset the search
    history, upgrade claim levels, skip required specialists, or satisfy schemas
