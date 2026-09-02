@@ -44,6 +44,23 @@
   until the user authorizes a separate privacy review and any resulting
   removal.
 
+## Data acquisition and verification burden
+
+- Prefer one complete, reusable, versioned data export or snapshot that can be
+  checked by code. Do not make repeated TradingView scrolling, bar-by-bar
+  loading, or manual extraction of chart segments a normal prerequisite.
+- Run automated integrity, coverage, and cross-source checks first. Use manual
+  visual review only for a named residual risk that code cannot check
+  reliably. Define the case-selection rule before inspection and keep the
+  burden to the smallest defensible scope.
+- Never impose an arbitrary screenshot quota or ask the user to certify data
+  quality through repetitive visual checking.
+- If suitable data cannot be obtained as a coherent dataset without material
+  repetitive user work, report `REMEDIABLE_GAP`, `NOT_TESTABLE`, or `BLOCKED`
+  as applicable. Do not weaken the claim, coarsen the strategy, substitute an
+  instrument, or transfer data-engineering work to the user merely to continue.
+- Preserve residual data uncertainty even when a manual check is not justified.
+
 ## Mandatory research coordination
 
 - For every user-facing trading-research task, act as the top-level
