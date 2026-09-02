@@ -181,11 +181,12 @@ def semantic_errors(contract: Mapping[str, Any]) -> list[str]:
                 "A mechanism conclusion cannot remain SUPPORTED after a required mechanism diagnostic contradicts or blocks it."
             )
 
-    protocol = contract.get("forward_testing_protocol")
+    protocol = contract.get("validation_protocol") or contract.get("forward_testing_protocol")
     if isinstance(protocol, Mapping):
+        protocol_field = "validation_protocol" if "validation_protocol" in contract else "forward_testing_protocol"
         if protocol.get("peeking_policy") == "NO_INTERIM_STOPPING" and protocol.get("early_termination_allowed") is True:
             errors.append(
-                "forward_testing_protocol cannot permit early_termination_allowed when peeking_policy is NO_INTERIM_STOPPING."
+                f"{protocol_field} cannot permit early_termination_allowed when peeking_policy is NO_INTERIM_STOPPING."
             )
 
     return errors

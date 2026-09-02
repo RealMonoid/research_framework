@@ -128,9 +128,31 @@ def main() -> int:
         "forward_testing_protocol cannot permit early_termination_allowed when peeking_policy is NO_INTERIM_STOPPING",
     )
 
+    valid_backtest = copy.deepcopy(frozen)
+    valid_backtest["validation_protocol"] = {
+        "stopping_rule": {
+            "horizon_type": "HISTORICAL_STATIC_HOLDOUT",
+            "threshold_value": "2020-01-01_to_2024-12-31",
+            "unit": "calendar_window",
+        },
+        "peeking_policy": "NO_INTERIM_STOPPING",
+        "early_termination_allowed": False,
+        "justification": "Full historical static holdout window without selective truncation.",
+    }
+    errors = validate_contract(valid_backtest)
+    if errors:
+        raise AssertionError("Valid backtest validation protocol was rejected:\n- " + "\n- ".join(errors))
+
+    invalid_backtest = copy.deepcopy(valid_backtest)
+    invalid_backtest["validation_protocol"]["early_termination_allowed"] = True
+    assert_contains(
+        semantic_errors(invalid_backtest),
+        "validation_protocol cannot permit early_termination_allowed when peeking_policy is NO_INTERIM_STOPPING",
+    )
+
     print(
         "Outcome evidence contract tests passed: predictor/mechanism separation, "
-        "freeze discipline, coupling disclosure, transportability coverage, role limits, and forward stopping rules."
+        "freeze discipline, coupling disclosure, transportability coverage, role limits, and validation stopping rules."
     )
     return 0
 

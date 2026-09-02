@@ -77,24 +77,37 @@ It shows that part of the observed relationship may be produced by the chosen
 construction and therefore needs an independent outcome or a specific
 sensitivity design.
 
-## Forward validation stopping and peeking rules
+## Validation stopping, sample boundaries, and peeking rules
 
-For any prospective evaluation, forward out-of-sample test, or paper-trading
-validation:
+Whether a validation test evaluates prospective forward data (paper trading /
+live out-of-sample) or a historical static holdout backtest, its sample
+boundaries, execution scope, and stopping criteria must be locked before testing
+begins:
 
-- **Predeclared stopping horizon:** The contract must lock its immutable end
-  condition—such as a fixed observation count, a fixed trade count, or a fixed
-  calendar window—before the validation period begins.
+- **Predeclared stopping horizon and full evaluation window:**
+  - *For historical backtests / static holdouts:* The test must evaluate the
+    complete, immutable historical window predeclared in the research
+    fingerprint. Selective truncation, stopping early once a performance target
+    is reached, or arbitrarily clipping end dates to avoid adverse market
+    conditions is strictly prohibited.
+  - *For prospective forward tests:* The test must lock its immutable end
+    condition—such as a fixed observation count, a fixed trade count, or a fixed
+    calendar window—before the validation period begins.
 - **Prohibition of optional stopping:** An analyst or agent must never terminate
-  a forward test early merely because cumulative performance crossed a
+  a validation test early merely because cumulative performance crossed a
   favorable threshold, nor prolong an underperforming test in hopes of recovery.
-- **Interim peeking discipline:** If periodic inspections or audit checkpoints
-  are planned during the run, their schedule and decision rules (or explicit
-  informational, non-terminating status) must be predeclared before data
-  collection starts.
-- **Invalidation rule:** Any validation run terminated or modified outside its
-  predeclared stopping horizon is marked `INVALID_TEST` and cannot support a
-  `FORWARD_PREDICTIVE_OOS` or `EXECUTABLE_NET_EDGE` conclusion.
+- **Interim peeking discipline and single-shot holdouts:**
+  - *For historical holdouts:* Access to validation or final holdout data
+    consumes its independent information budget. Repeatedly tweaking parameters
+    and re-running against the same holdout is prohibited data snooping.
+  - *For prospective runs:* If periodic inspections or audit checkpoints are
+    planned during the run, their schedule and decision rules (or explicit
+    informational, non-terminating status) must be predeclared before data
+    collection starts.
+- **Invalidation rule:** Any validation run terminated early, selectively
+  truncated, or modified outside its predeclared sample horizon is marked
+  `INVALID_TEST` and cannot support a `FORWARD_PREDICTIVE_OOS` or
+  `EXECUTABLE_NET_EDGE` conclusion.
 
 ## Lifecycle
 

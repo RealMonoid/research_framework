@@ -37,7 +37,8 @@
       "type": "array",
       "items": {"$ref": "#/$defs/transportabilityAssessment"}
     },
-    "forward_testing_protocol": {"$ref": "#/$defs/forwardTestingProtocol"},
+    "validation_protocol": {"$ref": "#/$defs/validationProtocol"},
+    "forward_testing_protocol": {"$ref": "#/$defs/validationProtocol"},
     "stage_conclusions": {"$ref": "#/$defs/stageConclusions"}
   },
   "allOf": [
@@ -485,8 +486,10 @@
         "executable_net_edge": {"$ref": "#/$defs/stageAssessment"}
       }
     },
-    "forwardTestingProtocol": {
+    "forwardTestingProtocol": {"$ref": "#/$defs/validationProtocol"},
+    "validationProtocol": {
       "type": "object",
+      "description": "Predeclared stopping horizon, sample boundary, and peeking rules for prospective forward tests and historical static holdouts.",
       "additionalProperties": false,
       "required": [
         "stopping_rule",
