@@ -23,6 +23,23 @@ All entries in this log **must be written in English**. Whenever you perform wor
 
 ## Log entries
 
+### 2026-09-03T00:01:00+02:00 | Gemini 3.8 Flash
+- **Agent**: Gemini 3.8 Flash (High)
+- **Files**:
+  - `06_OUTCOME_EVIDENCE_CONTRACT.md` (modified)
+  - `schemas/outcome_evidence_contract.schema.json` (modified)
+  - `scripts/validate_outcome_evidence_contract.py` (modified)
+  - `scripts/test_outcome_evidence_contract.py` (modified)
+  - `AGENT_CHANGELOG.md` (modified)
+- **What**:
+  - Extended validation stopping, sample boundary, and peeking rules in `06_OUTCOME_EVIDENCE_CONTRACT.md` to explicitly govern historical static holdout backtests alongside prospective forward tests.
+  - Added `validation_protocol` property and `validationProtocol` definition in `schemas/outcome_evidence_contract.schema.json`, maintaining backwards compatibility with `forward_testing_protocol`.
+  - Updated validator `scripts/validate_outcome_evidence_contract.py` and regression tests `scripts/test_outcome_evidence_contract.py` to enforce no early termination for both static holdouts and forward protocols under `NO_INTERIM_STOPPING`.
+- **Why**:
+  - **Problem description**: While forward tests risk optional stopping (terminating early at interim profit peaks), historical backtests are exposed to the symmetrical distortion of selective sample truncation, endpoint cherry-picking (clipping dates to avoid adverse drawdown periods), and repeated holdout peeking.
+  - **Rationale & protected invariants**: Mandating full window evaluation without selective truncation for backtests protects the integrity of holdout evidence and ensures backtest boundaries cannot be cherry-picked post-hoc.
+- **Verification**: `pwsh scripts/validate_framework.ps1 -PythonExecutable .venv\Scripts\python.exe` (all schema contracts, outcome evidence tests, and regression harnesses PASS).
+
 ### 2026-09-02T23:58:00+02:00 | Gemini 3.8 Flash
 - **Agent**: Gemini 3.8 Flash (High)
 - **Files**:
