@@ -15,6 +15,29 @@ a detailed rationale of WHY it was changed (including an explicit problem
 description, decision context, and invariants protected), and the verification
 status.
 
+## Multi-agent Git collaboration guardrails
+
+When multiple agents or a newly joining LLM work in this repository, follow
+these rules:
+
+1. **Dedicated branch for every task:** Any agent starting work—and specifically
+   any new LLM joining the project—must create and work in its own dedicated
+   feature branch (e.g. `<agent>/<feature-name>`). Never commit or push directly
+   to `main`. Work is merged into `main` exclusively through Pull Requests that
+   pass all automated CI status checks.
+2. **Freshness and Read-Before-Write:** Always inspect the worktree and remote
+   state (`git fetch`, `git status`) before starting. Re-read affected target
+   files immediately before applying edits to ensure no stale context from
+   earlier reads or concurrent collaborator commits.
+3. **Non-destructive safeguard:** Never run destructive git commands (`git reset
+   --hard`, `git clean -f`, blind stashing) on unfamiliar work or uncommitted
+   changes made by another agent. If unfamiliar local changes exist, inspect
+   `AGENT_CHANGELOG.md` and the git log to identify the author, or ask the user
+   before altering them.
+4. **Git author attribution:** Set the local repository committer identity to
+   match the exact agent model name and version (e.g. `user.name = "Gemini 3.8
+   Flash"`, `user.email = "<agent>@local"`).
+
 ## Project language policy
 
 From now on, write every new or changed repository artifact in English. This

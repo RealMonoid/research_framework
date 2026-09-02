@@ -5,9 +5,12 @@ This log is the central record of work performed by AI agents (Codex, Claude, Ge
 ## Rule for all AI agents
 
 All entries in this log **must be written in English**. Whenever you perform work, update code, or modify documentation in this repository:
-1. **Read this log first** before starting your task to see what other agents have recently changed.
-2. **Append an entry** to this log in English upon completing your changes, including:
-   - **Timestamp**: Exact date and time with timezone offset in ISO 8601 format (e.g. `2026-09-02T23:41:00+02:00`).
+1. **Branch isolation**: When starting any new task, or when a new LLM joins the project, create and work in a dedicated feature branch (e.g. `<agent>/<feature-name>`). Never commit or push directly to `main`. All changes must merge into `main` exclusively through Pull Requests that pass all automated status checks.
+2. **Read this log and worktree first**: Inspect `AGENT_CHANGELOG.md` and check `git fetch` / `git status` before starting to see what other agents have recently changed. Re-read target files immediately before applying edits.
+3. **Non-destructive safeguard**: Never execute destructive git commands (`git reset --hard`, `git clean -f`) or overwrite unfamiliar uncommitted work from another agent.
+4. **Git attribution**: Configure your Git committer identity to match your exact agent model name and version (e.g. `user.name = "Gemini 3.8 Flash"`, `user.email = "<agent>@local"`).
+5. **Append an entry** to this log in English upon completing your changes, including:
+   - **Timestamp**: Exact date and time with timezone offset in ISO 8601 format (e.g. `2026-09-02T23:47:00+02:00`).
    - **Agent**: Full agent model name and version number (e.g. `Gemini 3.8 Flash`, `ChatGPT 5.6 Sol`, `Claude 3.7 Sonnet`).
    - **Files**: List of files modified, created, or deleted.
    - **What**: Detailed explanation of concrete modifications made to code, schemas, documentation, or configuration.
@@ -19,6 +22,22 @@ All entries in this log **must be written in English**. Whenever you perform wor
 ---
 
 ## Log entries
+
+### 2026-09-02T23:47:00+02:00 | Gemini 3.8 Flash
+- **Agent**: Gemini 3.8 Flash (High)
+- **Files**:
+  - `AGENT_CHANGELOG.md` (modified)
+  - `AGENTS.md` (modified)
+  - `CLAUDE.md` (modified)
+  - `GEMINI.md` (modified)
+- **What**:
+  - Adopted industry best practices for multi-LLM collaboration into repository guidelines.
+  - Mandated that every agent starting work—and specifically any newly joining LLM—must create its own dedicated feature branch (`<agent>/<topic>`) rather than committing directly to `main`.
+  - Formalized pre-flight worktree and remote sync, read-before-write checks, non-destructive Git rules (banning blind resets/cleans), and exact Git author attribution.
+- **Why**:
+  - **Problem description**: Parallel or sequential LLMs modifying a shared repository risk race conditions, branch collision, overwriting each other's uncommitted work, and obscuring commit provenance when operating on a single shared branch.
+  - **Rationale & protected invariants**: Branch isolation ensures clean sandboxing and requires passing CI status checks before merging. Read-before-write and non-destructive rules protect collaborator progress and maintain the decision integrity of the framework.
+- **Verification**: Framework validation suite (`scripts/validate_framework.ps1`) executed; all contracts passed.
 
 ### 2026-09-02T23:41:00+02:00 | Gemini 3.8 Flash
 - **Agent**: Gemini 3.8 Flash (High)
