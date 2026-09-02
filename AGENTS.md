@@ -1,8 +1,15 @@
 # Research-agent entry point
 
-This repository may be edited by Codex, Claude, the user, or another compatible
-agent. Inspect the worktree and relevant history before editing, and never
-overwrite unfamiliar concurrent work.
+This repository may be edited by Codex, Claude, Gemini, the user, or another
+compatible agent. Inspect the worktree and relevant history before editing, and
+never overwrite unfamiliar concurrent work.
+
+## Shared agent changelog
+
+Every agent modifying this repository must inspect `AGENT_CHANGELOG.md` before
+starting work to review recent changes by other agents, and append a concise
+entry with timestamp, agent name, affected files, summary, and verification
+status upon completing work.
 
 ## Project language policy
 

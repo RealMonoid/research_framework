@@ -103,7 +103,7 @@
 ## Collaboration preferences
 
 - Do not assume that Codex or Claude is the only author of local or remote changes.
-- Treat unfamiliar changes and commits as potentially belonging to Codex, Claude, Gemini, or the user.
+- Treat unfamiliar changes and commits as potentially belonging to Codex, Claude, or the user.
 - Maintain `AGENT_CHANGELOG.md`: check it before starting work to review recent changes by other agents, and record every completed change with timestamp, agent name, affected files, summary, and verification status.
 - Before editing, committing, merging, switching, or pushing, inspect the current worktree and relevant branch history again.
 - Re-read affected files immediately before patching when another collaborator may have worked on them.
