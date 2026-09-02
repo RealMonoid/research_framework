@@ -1,27 +1,31 @@
 # Agent Collaboration Changelog
 
-This log is the central record of work performed by AI agents (Codex, Claude, Gemini, etc.) in this repository.
-
-## Rule for all AI agents
-
-All entries in this log **must be written in English**. Whenever you perform work, update code, or modify documentation in this repository:
-1. **Branch isolation**: When starting any new task, or when a new LLM joins the project, create and work in a dedicated feature branch (e.g. `<agent>/<feature-name>`). Never commit or push directly to `main`. All changes must merge into `main` exclusively through Pull Requests that pass all automated status checks.
-2. **Read this log and worktree first**: Inspect `AGENT_CHANGELOG.md` and check `git fetch` / `git status` before starting to see what other agents have recently changed. Re-read target files immediately before applying edits.
-3. **Non-destructive safeguard**: Never execute destructive git commands (`git reset --hard`, `git clean -f`) or overwrite unfamiliar uncommitted work from another agent.
-4. **Git attribution**: Configure your Git committer identity to match your exact agent model name and version (e.g. `user.name = "Gemini 3.8 Flash"`, `user.email = "<agent>@local"`).
-5. **Append an entry** to this log in English upon completing your changes, including:
-   - **Timestamp**: Exact date and time with timezone offset in ISO 8601 format (e.g. `2026-09-02T23:47:00+02:00`).
-   - **Agent**: Full agent model name and version number (e.g. `Gemini 3.8 Flash`, `ChatGPT 5.6 Sol`, `Claude 3.7 Sonnet`).
-   - **Files**: List of files modified, created, or deleted.
-   - **What**: Detailed explanation of concrete modifications made to code, schemas, documentation, or configuration.
-   - **Why**: Detailed explanation that MUST explicitly include:
-     - **Problem description**: The exact problem, gap, risk, ambiguity, or failure mode observed.
-     - **Rationale & protected invariants**: Why this solution was chosen, how it resolves the problem, and which decisions or safeguards are protected.
-   - **Verification**: Exact test suites or verification commands executed, including status (PASS/FAIL).
-
----
+This file records completed work by AI agents. It is a historical record, not
+an instruction source. All binding repository rules and changelog requirements
+are defined only in `AGENTS.md`. Read `AGENTS.md` in full before using this log.
 
 ## Log entries
+
+### 2026-09-03T00:18:42+02:00 | OpenAI Codex (GPT-5)
+- **Agent**: OpenAI Codex (GPT-5)
+- **Files**:
+  - `AGENTS.md` (modified)
+  - `AGENT_CHANGELOG.md` (modified)
+  - `CLAUDE.md` (modified)
+  - `GEMINI.md` (modified)
+  - `scripts/validate_agent_instruction_sources.py` (created)
+  - `scripts/validate_framework.py` (modified)
+- **What**:
+  - Declared `AGENTS.md` as the sole authoritative repository instruction source for every AI agent.
+  - Replaced the duplicated Claude and Gemini rule sets with identical minimal bootstraps that require the complete canonical instructions and recent collaboration history to be read before work begins.
+  - Removed duplicated policy from the changelog preamble so the changelog remains a historical record rather than a competing source of rules.
+  - Added a fail-closed validation that rejects changed or expanded host bootstraps, a normative changelog preamble, or loss of the canonical-source declaration, and included it in the full framework validation.
+- **Why**:
+  - **Problem description**: Codex, Claude, and Gemini received materially equivalent rules through three independently maintained files, while the changelog repeated a fourth subset. Future edits could therefore create silent policy drift, contradictory instructions, and unnecessary context cost.
+  - **Rationale & protected invariants**: One canonical policy makes every agent receive the same research and collaboration safeguards. Minimal host bootstraps preserve automatic discovery by different tools without permitting agent-specific reinterpretation. The new validation makes renewed duplication visible and blocks it from passing framework checks.
+- **Verification**:
+  - `python scripts/validate_agent_instruction_sources.py` — PASS.
+  - `python scripts/validate_framework.py` — PASS; full framework integrity passed, with the existing notice that no `LIVE_AGENT` release gate was requested.
 
 ### 2026-09-03T00:01:00+02:00 | Gemini 3.8 Flash
 - **Agent**: Gemini 3.8 Flash (High)
