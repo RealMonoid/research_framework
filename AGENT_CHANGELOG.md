@@ -6,6 +6,27 @@ are defined only in `AGENTS.md`. Read `AGENTS.md` in full before using this log.
 
 ## Log entries
 
+### 2026-09-03T00:32:07+02:00 | OpenAI Codex (GPT-5)
+- **Agent**: OpenAI Codex (GPT-5)
+- **Files**:
+  - `AGENTS.md` (modified)
+  - `AGENT_CHANGELOG.md` (modified)
+  - `PLANNED_FEATURES.md` (modified)
+  - `scripts/validate_agent_instruction_sources.py` (modified)
+- **What**:
+  - Made `PLANNED_FEATURES.md` the single shared roadmap and authoritative implementation priority for Codex, Claude, Gemini, and other agents, while preserving the distinction between planning and user authorization.
+  - Added an urgent first-priority roadmap item covering the incomplete enforcement of validation boundaries, stopping rules, and peeking controls.
+  - Recorded the required fixes in dependency order: one mandatory canonical protocol, machine-checkable boundaries, a separate execution record, automatic plan-versus-execution comparison, complete interim-inspection rules, schema migration, and adversarial negative tests.
+  - Renumbered the remaining authoritative priorities and updated their cross-references without changing their substantive scope.
+  - Extended instruction-source validation so CI fails if `AGENTS.md` or `PLANNED_FEATURES.md` loses the shared-roadmap declaration.
+- **Why**:
+  - **Problem description**: Different LLMs could maintain separate feature priorities even after receiving one common rule source. In addition, the new stopping-rule contract remained optional, allowed two competing protocol fields, stored boundaries as free text, and recorded declared intent without proving the executed test followed it.
+  - **Rationale & protected invariants**: A single shared roadmap prevents silent priority drift between agents. Giving the known false-hard-gate problem first priority protects validation and capital decisions from optional stopping, endpoint selection, hidden peeking, and a compliant-looking artifact that does not match the executed test.
+- **Verification**:
+  - `python scripts/validate_agent_instruction_sources.py` — PASS.
+  - `python scripts/validate_framework.py` — PASS; full framework integrity passed, with the existing notice that no `LIVE_AGENT` release gate was requested.
+  - `git diff --check` — PASS.
+
 ### 2026-09-03T00:18:42+02:00 | OpenAI Codex (GPT-5)
 - **Agent**: OpenAI Codex (GPT-5)
 - **Files**:
