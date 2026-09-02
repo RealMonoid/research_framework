@@ -147,7 +147,24 @@ checks, live-agent evaluations, or a real Research Case.
    baseline. Preserve the pre-case code revision, use failures from priority 3
    to add blind cases whose correct response is to stop, reject work, invoke a
    specialist, expose drift, or refuse a claim upgrade, and then run multiple
-   identified models repeatedly. Report catch rates and run-to-run variation.
+   identified models repeatedly. Preserve every case-by-run result and report
+   catch rates, uncertainty, the distribution across cases and runs, and paired
+   improvement over the frozen baseline. The evaluation design should adapt the
+   useful ideas from Google's archived
+   [`rliable`](https://github.com/google-research/rliable) project: uncertainty
+   intervals from a resampling method that preserves the experiment's grouping,
+   performance profiles, robust aggregate summaries, and the probability that
+   one version improves on another. Do not assume that model runs or cases are
+   independent when they share prompts, models, or reference cases.
+
+   These summaries are secondary diagnostics, not permission to average away a
+   safety failure. Predeclare which assertions protect critical research or
+   capital decisions and report their miss count separately. A version with a
+   missed critical assertion fails even when its aggregate score or uncertainty
+   interval looks favourable. Small samples remain visibly uncertain, and no
+   agent-evaluation statistic is evidence that a market claim or trading edge is
+   valid. Use the methodology as a local, reviewable evaluation specification;
+   do not add the archived project as a runtime dependency.
    A human-approved `LIVE_AGENT` baseline must be frozen before later prompt,
    terminology, loading, or shortening changes are judged safe. Protocol smoke
    results are never a substitute.
@@ -227,6 +244,17 @@ Für eine spätere Freigabe braucht der Test einen versionierten Fallkatalog,
 mehrere wiederholte Modellläufe, eine unabhängige Bewertung und feste
 Bestehensgrenzen. Die vorhandenen deterministischen Vertragsprüfungen sind die
 Voraussetzung dafür, aber kein Ersatz für diesen Live-LLM-Stresstest.
+
+The eventual report must retain atomic case-by-run outcomes and show
+uncertainty, run-to-run and case-to-case variation, paired change from the
+frozen baseline, and every critical miss. Resampling must preserve the actual
+grouping of the evaluation rather than pretending that correlated runs are
+independent. Robust aggregates and performance profiles may help describe
+ordinary variation, but they never override the zero-tolerance decision rule
+for a predeclared critical failure. This adapts the evaluation principles
+documented by Google Research's archived
+[`rliable`](https://github.com/google-research/rliable) project; it is not a
+planned software dependency and provides no evidence about a trading claim.
 
 ## Safe and measurable loading of normative sections
 
@@ -407,8 +435,12 @@ numbers here identify details rather than execution order:
 5. **Priority 4 — Adversarial live-agent evaluation:** Extend the planned LLM stress test
    with agents that actively attempt to change definitions, reset the search
    history, upgrade claim levels, skip required specialists, or satisfy schemas
-   with scientifically empty content. Measure repeated catch rates rather than
-   treating contract validity as evidence of agent reliability.
+   with scientifically empty content. Retain case-by-run outcomes; measure
+   repeated catch rates, grouping-aware uncertainty, performance profiles,
+   paired improvement over the frozen baseline, and critical misses rather than
+   treating contract validity or one aggregate score as evidence of agent
+   reliability. A missed predeclared critical assertion fails the candidate
+   regardless of its average score.
 6. **Priorities 7 and 10 — Narrow terminology control and conditional language
    migration:** Establish only the decision-relevant concept mappings described
    above before selective loading. Migrate the legacy German corpus only after
