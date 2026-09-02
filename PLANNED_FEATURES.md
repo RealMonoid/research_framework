@@ -169,6 +169,26 @@ checks, live-agent evaluations, or a real Research Case.
    terminology, loading, or shortening changes are judged safe. Protocol smoke
    results are never a substitute.
 
+   **Execution trajectory and tool-invocation auditing:** The evaluation
+   harness must not assess only the final adapter artifact or returned claims.
+   An agent must not receive a passing score if it fabricates a compliant
+   result while taking unauthorized shortcuts or bypassing mandatory workflow
+   steps. The evaluation design must audit the actual execution trajectory:
+   verifying that `scripts/route_research_task.py` was actually invoked at each
+   material transition, required specialists were genuinely consulted with
+   bounded work orders rather than simulated, `scripts/check_research_fingerprint.py`
+   was executed rather than skipped, and internal tool errors were not silently
+   swallowed and cosmetically repaired in the final prose.
+
+   **Surrogate methodology options:** When negative controls require
+   preserving empirical amplitude distributions and linear autocorrelation
+   while destroying nonlinear temporal phase dependencies, IAAFT (Iterated
+   Amplitude Adjusted Fourier Transform) and phase-randomized surrogate data
+   may be offered as selectable options in the research methods catalog
+   (`03_RESEARCH_METHODS.md`). They must remain optional, design-specific
+   tools rather than a universal hard gate, to avoid inadvertently destroying
+   or preserving critical microstructure structure.
+
 5. **Cross-version search lineage with selection-adjusted reporting.** Treat
    search-history accounting and statistical consequence as one control. Every
    new Research-ID or version inherits prior data exposure, definitions,

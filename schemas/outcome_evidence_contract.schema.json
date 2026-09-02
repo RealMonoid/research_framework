@@ -37,6 +37,7 @@
       "type": "array",
       "items": {"$ref": "#/$defs/transportabilityAssessment"}
     },
+    "forward_testing_protocol": {"$ref": "#/$defs/forwardTestingProtocol"},
     "stage_conclusions": {"$ref": "#/$defs/stageConclusions"}
   },
   "allOf": [
@@ -482,6 +483,45 @@
         "mechanism_supported": {"$ref": "#/$defs/stageAssessment"},
         "forward_predictive_oos": {"$ref": "#/$defs/stageAssessment"},
         "executable_net_edge": {"$ref": "#/$defs/stageAssessment"}
+      }
+    },
+    "forwardTestingProtocol": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "stopping_rule",
+        "peeking_policy",
+        "early_termination_allowed"
+      ],
+      "properties": {
+        "stopping_rule": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["horizon_type", "threshold_value"],
+          "properties": {
+            "horizon_type": {
+              "type": "string",
+              "enum": [
+                "FIXED_OBSERVATIONS",
+                "FIXED_TRADES",
+                "FIXED_CALENDAR_WINDOW",
+                "HISTORICAL_STATIC_HOLDOUT"
+              ]
+            },
+            "threshold_value": {"type": "string", "minLength": 1},
+            "unit": {"type": "string"}
+          }
+        },
+        "peeking_policy": {
+          "type": "string",
+          "enum": [
+            "NO_INTERIM_STOPPING",
+            "PREDECLARED_ALPHA_SPENDING",
+            "FIXED_AUDITS_WITHOUT_TERMINATION"
+          ]
+        },
+        "early_termination_allowed": {"type": "boolean"},
+        "justification": {"$ref": "#/$defs/shortText"}
       }
     }
   }
