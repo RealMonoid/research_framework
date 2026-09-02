@@ -7,10 +7,12 @@ never overwrite unfamiliar concurrent work.
 ## Shared agent changelog
 
 Every agent modifying this repository must inspect `AGENT_CHANGELOG.md` before
-starting work to review recent changes by other agents, and append a concise
-entry with timestamp (date and time), full agent model name and version number
-(e.g. `Gemini 3.8 Flash`, `ChatGPT 5.6 Sol`), affected files, summary, and
-verification status upon completing work.
+starting work to review recent changes by other agents, and append an entry in
+English upon completing work. Each entry must specify the exact timestamp (date
+and time), full agent model name and version number (e.g. `Gemini 3.8 Flash`,
+`ChatGPT 5.6 Sol`), affected files, a detailed description of WHAT was changed,
+a detailed rationale of WHY it was changed (decision context and invariants
+protected), and the verification status.
 
 ## Project language policy
 
