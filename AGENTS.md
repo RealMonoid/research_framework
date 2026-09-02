@@ -8,8 +8,9 @@ never overwrite unfamiliar concurrent work.
 
 Every agent modifying this repository must inspect `AGENT_CHANGELOG.md` before
 starting work to review recent changes by other agents, and append a concise
-entry with timestamp, agent name, affected files, summary, and verification
-status upon completing work.
+entry with timestamp (date and time), full agent model name and version number
+(e.g. `Gemini 3.8 Flash`, `ChatGPT 5.6 Sol`), affected files, summary, and
+verification status upon completing work.
 
 ## Project language policy
 
