@@ -99,8 +99,8 @@ separately as HG-28.
 | ID | Decision or claim protected | Present enforcement and invocation | Failure consequence | Regression evidence | Known bypass or limit | Class |
 |---|---|---|---|---|---|---|
 | **HG-18** | Broken schemas, validators, router rules, fixtures, producer/scorer protocol, or deterministic regressions must not enter unnoticed. | GitHub Actions runs `scripts/validate_framework.py` on every push and pull request on Linux and Windows. | The workflow fails. A protected branch can require that status before merge. | The complete deterministic test suite. | CI validates framework code and fixtures, not a live research run. Whether a failed status blocks merge depends on repository branch-protection settings outside this codebase. | **A** for repository events |
-| **HG-19** | A research step must not proceed with required rules absent from the agent context. | Agents are instructed to read `QUICKSTART.md` and routed documents. | A compliant agent stops if it notices a missing mandatory specialist or prerequisite. | No complete load-manifest or missing-document injection test exists. | The current framework cannot prove which documents were resolved and loaded. Missing or stale rules may therefore fail silently. Priority 5 addresses this. | **P+M** |
-| **HG-20** | Repeatedly creating new research versions must not reset prior searches, viewed data, failed variants, or the multiplicity burden. | The current fingerprint records the effective state of one version, and intake records can cite exposures. | No automatic cross-version consequence exists. | No end-to-end regression covers inherited search lineage. | A new version can appear fresh unless prior exposure is disclosed and carried forward manually. Priority 4 addresses this. | **D+P+M** |
+| **HG-19** | A research step must not proceed with required rules absent from the agent context. | Agents are instructed to read `QUICKSTART.md` and routed documents. | A compliant agent stops if it notices a missing mandatory specialist or prerequisite. | No complete load-manifest or missing-document injection test exists. | The current framework cannot prove which documents were resolved and loaded. Missing or stale rules may therefore fail silently. Priority 6 addresses this. | **P+M** |
+| **HG-20** | Repeatedly creating new research versions must not reset prior searches, viewed data, failed variants, or the multiplicity burden. | The current fingerprint records the effective state of one version, and intake records can cite exposures. | No automatic cross-version consequence exists. | No end-to-end regression covers inherited search lineage. | A new version can appear fresh unless prior exposure is disclosed and carried forward manually. Priority 5 addresses this. | **D+P+M** |
 | **HG-21** | Private strategies, data, real cases, and empirical results must not be committed to the public framework repository. | Repository instructions require private storage, and `.gitignore` excludes designated private paths. | Ordinary unforced additions under those paths are ignored by Git. | No privacy-classification or secret-history test exists. | Files placed elsewhere, forced additions, copied excerpts, already tracked material, and repository history remain outside this protection. | **P** with a limited Git safeguard |
 
 ## Inventory: binding gates that are not yet end-to-end executable
@@ -158,23 +158,29 @@ behavioural evaluation can compare decisions with and without them.
 
 ## Consequences for the roadmap
 
-1. **Priority 2 remains next.** The first real Research Case should record, for
+1. **Priority 2 is now the next prerequisite.** Before the first real Research
+   Case is operationalized, its proposed strategy and intended claim should be
+   compared with the data that can actually be obtained. A material mismatch
+   in history, sampling, contract construction, observability, or execution
+   detail must stop the affected path rather than being repaired by silently
+   weakening the strategy.
+2. **Priority 3 runs the first real case.** It should record, for
    every material transition, whether the checkpoint was validated, the router
    was called, every referenced artifact was opened and validated, the required
    specialist was actually invoked, and the fingerprint exit code was obeyed.
-2. **Priority 3 receives concrete adversarial cases.** At minimum, test a false
+3. **Priority 4 receives concrete adversarial cases.** At minimum, test a false
    `COMPLETE` artifact status, a skipped validator, a skipped specialist call, a
    causal request misclassified as predictive, a revision misclassified as
    explanation, an ignored non-zero fingerprint result, and a formally valid
    but scientifically empty artifact.
-3. **Do not build a large orchestration platform yet.** If the real case or
+4. **Do not build a large orchestration platform yet.** If the real case or
    repeated live-agent runs show that caller-enforced gates are skipped, add the
    smallest fail-closed conductor harness that validates references and owns
    the sequence. The inventory alone does not establish its required size.
-4. **Keep priorities 4 and 5 visible.** Cross-version search lineage and
+5. **Keep priorities 5 and 6 visible.** Cross-version search lineage and
    proof of effective rule loading address two exposures that the present code
    does not close.
-5. **Do not claim automatic enforcement from a validator's existence.** Future
+6. **Do not claim automatic enforcement from a validator's existence.** Future
    documentation must state separately who invokes the validator, what failure
    stops, and how that stop is tested.
 
