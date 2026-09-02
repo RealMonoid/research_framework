@@ -3,6 +3,15 @@
 Diese Liste enthält bewusst nur Vorhaben. Ein Eintrag hier ist weder
 implementiert noch geprüft noch freigegeben.
 
+## Shared roadmap for all agents
+
+This file is the single authoritative feature backlog and implementation
+priority for Codex, Claude, Gemini, and every other agent working on the
+framework. Agents must update this shared list rather than maintain separate
+model-specific roadmaps or silently reorder work in their own memory. A listed
+item remains a plan, not authorization to implement it or to begin empirical
+research. `AGENTS.md` remains the sole source of binding repository rules.
+
 ## Authoritative implementation order
 
 **Status:** prioritized on 2026-09-02; the initial hard-gate inventory is
@@ -54,7 +63,52 @@ No new control layer should be added merely because it sounds prudent. Existing
 controls must first show their value and their failure modes in executable
 checks, live-agent evaluations, or a real Research Case.
 
-1. **Hard-gate inventory — initial audit completed 2026-09-02.** The
+1. **Close the validation-boundary and stopping-rule enforcement gap.**
+   **Status: urgent correctness gap; documented rules exist, hard enforcement
+   is incomplete.** The outcome evidence documentation now prohibits optional
+   stopping, selective historical truncation, and unplanned holdout peeking,
+   but a `FROZEN` or `ASSESSED` contract can still validate without any
+   `validation_protocol`. The schema also permits both `validation_protocol`
+   and the legacy `forward_testing_protocol`; when both exist, the semantic
+   validator silently prefers one. Current boundaries are stored as free text,
+   and the contract records intended behaviour without proving how the test
+   actually ended. A formally valid artifact can therefore promise a fixed
+   test while the executed run uses a different window, stops early, or peeks.
+
+   Resolve the gap in this order:
+
+   1. Require exactly one canonical validation protocol before a contract may
+      become `FROZEN` or `ASSESSED`. Remove the legacy alias through an explicit
+      schema migration; until removal, reject simultaneous or conflicting
+      protocol fields rather than choosing one silently.
+   2. Replace free-text boundaries with machine-checkable fields appropriate to
+      the horizon: integer observation or trade counts, or explicit start and
+      end timestamps for calendar windows and historical static holdouts. Bind
+      these fields to the complete research fingerprint.
+   3. Add a separate execution record containing the actual start, end, count,
+      termination reason, every interim inspection, and every deviation from
+      the frozen protocol. Do not let a declaration stand in for execution.
+   4. Compare the frozen protocol with the execution record automatically.
+      Early termination, extension, selective truncation, an unplanned peek, or
+      any unexplained boundary mismatch must produce `INVALID_TEST` and must
+      block `FORWARD_PREDICTIVE_OOS` and `EXECUTABLE_NET_EDGE` support.
+   5. Make each nontrivial peeking policy complete: predeclared alpha-spending
+      requires its spending schedule and decision thresholds; fixed
+      non-terminating audits require their dates or counts and must not alter
+      the stopping horizon.
+   6. Version the schema and document migration whenever these contract changes
+      alter the meaning of an artifact. Add negative tests for a missing
+      protocol, both protocol fields, malformed boundaries, premature or late
+      termination, selective historical clipping, and undeclared inspection.
+
+   Completion requires evidence that the normal freeze and assessment paths
+   reject a missing protocol, that executed boundaries are compared with frozen
+   boundaries, and that every listed deviation deterministically invalidates
+   the affected test. Priority 5 must additionally verify in live-agent
+   evaluation that an agent cannot bypass or cosmetically repair these checks.
+   Planning this fix does not authorize a backtest or access to validation data.
+
+2. **Hard-gate inventory — initial audit completed 2026-09-02.** The
    [`HARD_GATE_INVENTORY.md`](HARD_GATE_INVENTORY.md) records every current
    research gate and the claim or
    transition it is meant to prevent. For each gate, identify whether it is
@@ -73,12 +127,12 @@ checks, live-agent evaluations, or a real Research Case.
    undisclosed external search. The audit found substantial deterministic
    checks but no framework-owned end-to-end runtime that forces their use in a
    live research task. The current research gates are therefore
-   caller-enforced. Priority 3 must record whether those calls actually occur;
-   priority 4 must attack false `COMPLETE` states, skipped
+   caller-enforced. Priority 4 must record whether those calls actually occur;
+   priority 5 must attack false `COMPLETE` states, skipped
    validators and specialists, ignored fingerprint failures, and semantic
    misclassification before a new orchestration layer is justified.
 
-2. **Prospective data-fitness gate.** Before detailed operationalization,
+3. **Prospective data-fitness gate.** Before detailed operationalization,
    implementation, or empirical testing, translate the proposed strategy and
    intended claim into a minimum data-requirement record, then compare it with
    the metadata and observable content of the data that can actually be
@@ -122,11 +176,11 @@ checks, live-agent evaluations, or a real Research Case.
    The purpose is to reject an untestable project before expensive
    reconstruction creates commitment to it, and to prevent a late discovery
    that the available data could never observe the event, mechanism, or fill
-   being claimed. The real Research Case in priority 3 should supply the first
+   being claimed. The real Research Case in priority 4 should supply the first
    concrete requirements and failure examples. Planning this gate does not
    authorize inspection of strategy outcomes, a backtest, or market-data use.
 
-3. **One real Research Case.** Run one deliberately unexciting end-to-end case
+4. **One real Research Case.** Run one deliberately unexciting end-to-end case
    with public data and a predeclared expectation that no useful effect will be
    found. Pass the prospective data-fitness gate before detailed
    operationalization. Freeze the repository revision and research state
@@ -139,12 +193,12 @@ checks, live-agent evaluations, or a real Research Case.
    authorize data access, a backtest, or empirical strategy research; those
    actions still require an explicit user request.
 
-4. **Behavioural baseline and adversarial live-agent evaluation.** Treat the
+5. **Behavioural baseline and adversarial live-agent evaluation.** Treat the
    earlier LLM stress test, behavioural reference cases, and adversarial agent
    evaluation as one programme. The repository already contains a blind
    producer, scorer, deterministic regression machinery, and a 25-case
    catalog; this is partial infrastructure, not a measured live-agent quality
-   baseline. Preserve the pre-case code revision, use failures from priority 3
+   baseline. Preserve the pre-case code revision, use failures from priority 4
    to add blind cases whose correct response is to stop, reject work, invoke a
    specialist, expose drift, or refuse a claim upgrade, and then run multiple
    identified models repeatedly. Preserve every case-by-run result and report
@@ -189,7 +243,7 @@ checks, live-agent evaluations, or a real Research Case.
    tools rather than a universal hard gate, to avoid inadvertently destroying
    or preserving critical microstructure structure.
 
-5. **Cross-version search lineage with selection-adjusted reporting.** Treat
+6. **Cross-version search lineage with selection-adjusted reporting.** Treat
    search-history accounting and statistical consequence as one control. Every
    new Research-ID or version inherits prior data exposure, definitions,
    filters, outcomes, continuation choices, and failed attempts from the same
@@ -198,7 +252,7 @@ checks, live-agent evaluations, or a real Research Case.
    not merely to the surviving latest version. This becomes urgent as soon as
    a real research line reaches a second version.
 
-6. **Fail-closed rule-set loading and reference checks.** First enforce the
+7. **Fail-closed rule-set loading and reference checks.** First enforce the
    rule at the current whole-document level: a material step must prove that
    every document required by its route was resolved, loaded, and recorded,
    otherwise it stops. Separately, before selective loading is activated,
@@ -207,34 +261,34 @@ checks, live-agent evaluations, or a real Research Case.
    Missing, stale, ambiguous, or incomplete references must never degrade into
    a reduced but apparently valid run.
 
-7. **Canonical concept registry.** Limit the registry to concepts that carry a
+8. **Canonical concept registry.** Limit the registry to concepts that carry a
    decision-protecting rule or whose ambiguity can disable an agent gate. Map
    each such concept to one canonical term, a concise definition, its legacy
    terms, and exact machine anchors where those anchors genuinely exist. Use
-   results from priority 4 to identify which semantic ambiguities cause real
+   results from priority 5 to identify which semantic ambiguities cause real
    failures, while treating the current German-prose/English-machine split as
    an existing but still measurable correctness risk. The registry is required
    before isolated normative sections can be trusted; it is not a general
    terminology or documentation project.
 
-8. **Severity-aware change control.** Separate semantic research changes,
+9. **Severity-aware change control.** Separate semantic research changes,
    evidence-integrity changes, and demonstrably non-material editorial changes.
    Implement this when real fingerprint alerts exist and there is evidence
    that harmless alerts are training users to approve changes reflexively. It
    must reduce alert fatigue without hiding material rule or research changes.
 
-9. **Selective normative loading.** Keep this optional and treat it as an
+10. **Selective normative loading.** Keep this optional and treat it as an
    efficiency project, not a research safeguard. It may start only after the
-   critical live-agent baseline in priority 4, the fail-closed checks in
-   priority 6, the applicable concept mappings in priority 7, and actual
+   critical live-agent baseline in priority 5, the fail-closed checks in
+   priority 7, the applicable concept mappings in priority 8, and actual
    before-change context measurements exist. Measure savings and behavioural
    changes; do not assume that shorter prompts preserve gate behaviour.
 
-10. **Conditional legacy-language migration.** Do not migrate the remaining
+11. **Conditional legacy-language migration.** Do not migrate the remaining
    German corpus merely for publication, an international audience, or
-   stylistic consistency. Proceed only if priority 4 measures a material agent
+   stylistic consistency. Proceed only if priority 5 measures a material agent
    reliability problem that narrower concept mappings cannot solve, or if an
-   actual maintenance need emerges. Priority 7 supplies the necessary semantic
+   actual maintenance need emerges. Priority 8 supplies the necessary semantic
    mappings. Translation-only commits must remain separate from shortening,
    deduplication, or substantive revision so that changes in agent behaviour
    remain attributable.
@@ -242,7 +296,7 @@ checks, live-agent evaluations, or a real Research Case.
 The synthetic pipeline-integrity control, outcome evidence contract, complete
 research fingerprint, central conductor, and specialist routing are completed
 controls rather than new roadmap items. Their actual enforcement and bypass
-resistance are nevertheless subjects of priorities 1 through 4.
+resistance are nevertheless subjects of priorities 1 through 5.
 
 ## LLM-Stresstest gegen heimliche Forschungsänderungen
 
@@ -326,8 +380,8 @@ active instruction. It must not rewrite terms automatically.
 
 ### Selective-loading dependency order
 
-This is the internal dependency sequence for priority 9 above, not a competing
-global roadmap. Priorities 4, 6, and 7 must reach the applicable activation
+This is the internal dependency sequence for priority 10 above, not a competing
+global roadmap. Priorities 5, 7, and 8 must reach the applicable activation
 criteria before selective loading is enabled.
 
 1. **Complete the behavioural reference cases first.** Add cases in which the
@@ -430,29 +484,29 @@ The following findings must remain visible until they are implemented and
 validated. Their authoritative priority and grouping are defined above; the
 numbers here identify details rather than execution order:
 
-1. **Priority 5 — Cross-version search lineage:** A new research version must inherit every
+1. **Priority 6 — Cross-version search lineage:** A new research version must inherit every
    previous data exposure, operationalization attempt, filter choice, outcome
    choice, and continuation decision from the same research line. Repeatedly
    authorizing new versions must not reset the information budget or create an
    apparently fresh search family.
-2. **Priority 5 — Selection-adjusted reporting:** Final performance reporting must show both
+2. **Priority 6 — Selection-adjusted reporting:** Final performance reporting must show both
    the ordinary metric and a correction or decision rule appropriate to the
    complete selection process. The correction must cover the relevant
    candidate family, research-version history, and data reuse rather than only
    the survivors of the latest screen.
-3. **Priority 8 — Severity-aware change control:** Separate the semantic research
+3. **Priority 9 — Severity-aware change control:** Separate the semantic research
    fingerprint from the artifact-integrity manifest. Distinguish material
    research changes, evidence-integrity changes, and demonstrably non-material
    editorial changes so that harmless hash changes do not train users to
    approve every warning.
-4. **Priority 1 — Hard-gate coverage accounting (initial inventory complete):** Maintain the
+4. **Priority 2 — Hard-gate coverage accounting (initial inventory complete):** Maintain the
    [`HARD_GATE_INVENTORY.md`](HARD_GATE_INVENTORY.md), showing
    which research gates are enforced by executable checks, which are enforced
    only by schemas, which depend on an agent classification, and which remain
    prose instructions. Increase executable enforcement where the required
    condition is objectively decidable and the real case or behavioural
    evaluation demonstrates that the current caller-enforced path is unreliable.
-5. **Priority 4 — Adversarial live-agent evaluation:** Extend the planned LLM stress test
+5. **Priority 5 — Adversarial live-agent evaluation:** Extend the planned LLM stress test
    with agents that actively attempt to change definitions, reset the search
    history, upgrade claim levels, skip required specialists, or satisfy schemas
    with scientifically empty content. Retain case-by-run outcomes; measure
@@ -461,7 +515,7 @@ numbers here identify details rather than execution order:
    treating contract validity or one aggregate score as evidence of agent
    reliability. A missed predeclared critical assertion fails the candidate
    regardless of its average score.
-6. **Priorities 7 and 10 — Narrow terminology control and conditional language
+6. **Priorities 8 and 11 — Narrow terminology control and conditional language
    migration:** Establish only the decision-relevant concept mappings described
    above before selective loading. Migrate the legacy German corpus only after
    a measured agent-reliability or actual maintenance need. Translation must be

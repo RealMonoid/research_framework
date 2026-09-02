@@ -30,12 +30,29 @@ are defined only in `AGENTS.md`. Read `AGENTS.md` in full before using this log.
 
 def main() -> int:
     canonical = (ROOT / "AGENTS.md").read_text(encoding="utf-8")
-    required_statement = (
-        "This file is the sole authoritative source of repository instructions "
-        "for every\nAI agent."
+    required_statements = (
+        (
+            "This file is the sole authoritative source of repository instructions "
+            "for every\nAI agent.",
+            "AGENTS.md does not declare itself as the sole instruction source.",
+        ),
+        (
+            "`PLANNED_FEATURES.md` is the single authoritative roadmap and priority "
+            "order for\nCodex, Claude, Gemini, and every other agent.",
+            "AGENTS.md does not declare PLANNED_FEATURES.md as the shared agent roadmap.",
+        ),
     )
-    if required_statement not in canonical:
-        raise SystemExit("AGENTS.md does not declare itself as the sole instruction source.")
+    for statement, error in required_statements:
+        if statement not in canonical:
+            raise SystemExit(error)
+
+    roadmap = (ROOT / "PLANNED_FEATURES.md").read_text(encoding="utf-8")
+    roadmap_statement = (
+        "This file is the single authoritative feature backlog and implementation\n"
+        "priority for Codex, Claude, Gemini, and every other agent"
+    )
+    if roadmap_statement not in roadmap:
+        raise SystemExit("PLANNED_FEATURES.md does not declare itself as the shared roadmap.")
 
     for filename in ("CLAUDE.md", "GEMINI.md"):
         actual = (ROOT / filename).read_text(encoding="utf-8")

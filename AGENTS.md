@@ -18,6 +18,20 @@ be read, stop rather than continue with an incomplete rule set. If another
 document appears to conflict with this file, this file controls and the conflict
 must be reported instead of resolved silently.
 
+## Shared roadmap for all agents
+
+`PLANNED_FEATURES.md` is the single authoritative roadmap and priority order for
+Codex, Claude, Gemini, and every other agent. Before proposing or selecting a
+new feature, changing roadmap priority, or recording a newly discovered
+framework gap, read that file and update the shared entry instead of creating a
+model-specific backlog elsewhere. When implementing an already authorized
+roadmap item, read its current entry and dependencies before editing.
+
+A roadmap entry records planned work; it is not user authorization to execute
+research, access data, run a backtest, or make the implementation automatically.
+If another planning document or agent memory conflicts with
+`PLANNED_FEATURES.md`, keep the shared roadmap unchanged and report the conflict.
+
 ## Shared agent changelog
 
 Every agent modifying this repository must inspect `AGENT_CHANGELOG.md` before
