@@ -6,6 +6,22 @@ are defined only in `AGENTS.md`. Read `AGENTS.md` in full before using this log.
 
 ## Log entries
 
+### 2026-09-03T16:53:22+02:00 | Validate direction inversion as a bounded failure diagnostic
+- **Agent**: ChatGPT 5.6 Sol
+- **Files**: `references/FAILED_STRATEGY_EPISTEMOLOGY.md`, `AGENT_CHANGELOG.md`
+- **What**:
+  - Added a literature-checked direction-inversion diagnostic that separates common-horizon direction, path-dependent exit geometry, entry timing, transaction costs, and a prospective late-entry signature.
+  - Added the first-passage baseline for asymmetric barriers, the exact fixed-horizon inversion identity, dependence-aware inference, equivalence-test requirements, and bounded interpretation rules.
+  - Added primary sources on first passage, momentum, order-book events, conditional predictive ability, dependent resampling, and equivalence testing.
+  - Explicitly rejected unsupported universal claims about fixed chop prevalence, 100% or 90% loss rates, confirmation necessarily implying exhaustion, and bar-level inversion identifying an order-book mechanism.
+- **Why**:
+  - **Problem description**: The proposed paper test mixed a useful contrastive diagnostic with universal empirical percentages, an incorrect first-passage conclusion, path-dependent and fixed-horizon returns, and an untested microstructure story.
+  - **Decision context and protected invariants**: Preserve the possibility of learning from failed trades while preventing a rhetorical inversion exercise from becoming proof of direction irrelevance, market noise, mean reversion, or liquidity provision. Keep generated explanations separate from confirmation, expose observational equivalence, and require fresh evidence for post-failure accounts. The addition is a research design only and does not authorize a backtest.
+- **Verification**:
+  - Primary-source identities and DOI metadata were checked against publisher/Crossref records.
+  - The first-passage and fixed-horizon identities were checked algebraically.
+  - `git diff --check` passed; Markdown heading order and source inventory were inspected manually.
+
 ### 2026-09-03T16:40:06+02:00 | ChatGPT 5.6 Sol | Link failed-strategy epistemology research from the shared roadmap
 - **Files/areas**: `PLANNED_FEATURES.md` and `AGENT_CHANGELOG.md`.
 - **What**: Added a direct roadmap reference to `references/FAILED_STRATEGY_EPISTEMOLOGY.md` for any future proposal that aims to learn from failed strategies. Clarified that the note supplies a contrastive failure-analysis research basis but is neither an implemented feature nor authorization for a new gate, and required any later implementation proposal to identify the continuation, retirement, or new-version decision it protects without duplicating the existing scientific-philosophy review.

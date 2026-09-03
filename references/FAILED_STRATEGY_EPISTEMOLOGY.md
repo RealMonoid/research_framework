@@ -473,7 +473,129 @@ None of these jobs substitutes for identification of a mechanism. They become
 part of the broader synthesis only when their outputs enter an explicit
 rival-explanation map and are interpreted at the claim level they actually test.
 
-## 10. Proposed synthesis: from a binary failure to a discriminating failure map
+## 10. Direction inversion as a bounded failure diagnostic
+
+A direction-inversion exercise can be useful, but the strong retail-trading
+version of the argument is not supported as stated. Claims that markets spend a
+fixed 70--80% of their time in chop, that confirmation is exhausted *by
+definition*, that both directions therefore lose 100% of the time, or that more
+than 90% of failed retail samples also lose when inverted are not mathematical
+consequences and were not supported by the primary literature reviewed here.
+They depend on definitions, sampling, horizon, execution, and the strategy's
+exit rule. The order-book claim is also a separate mechanism claim; bar-level
+trade inversion cannot show that the trader supplied liquidity to resting
+orders. ([Jegadeesh and Titman 1993](https://doi.org/10.1111/j.1540-6261.1993.tb04702.x),
+[Moskowitz, Ooi, and Pedersen 2012](https://doi.org/10.1016/j.jfineco.2011.11.003),
+[Cont, Kukanov, and Stoikov 2014](https://doi.org/10.1093/jjfinec/nbt003))
+
+The defensible use is narrower: treat inversion as one contrast in a design
+that asks whether failure is more consistent with direction selection, entry
+timing, path-dependent exit geometry, or costs. This is a diagnostic design,
+not authorization to run a backtest and not confirmation of a repaired
+strategy.
+
+### Mathematical baseline: what first passage does and does not imply
+
+For a continuous driftless process starting at zero between a stop at \(-a\)
+and a target at \(+b\), the idealized first-passage probability of reaching the
+target first is
+
+\[
+P(\tau_{+b}<\tau_{-a})=\frac{a}{a+b}.
+\]
+
+Thus a \(-1R/+2R\) design has target-first probability \(1/3\) and stop-first
+probability \(2/3\) under that model, with zero gross expectation before costs.
+It does **not** imply a 100% loss rate. If a process is assumed to remain inside
+a band that cannot reach the target but can reach the stop, eventual stop-out
+is built into the assumption rather than discovered in the market. Drift,
+jumps, overshoot, finite holding periods, stochastic volatility, and changing
+barriers further limit the elementary calculation. ([Redner
+2001](https://doi.org/10.1017/CBO9780511606014))
+
+### Contrast 1: isolate direction at a common horizon
+
+At the same entry time and fixed exit horizon, define gross signed return as
+
+\[
+g_i=s_i(P_{t_i+h}-P_{t_i})/R_i,
+\]
+
+where \(s_i\in\{-1,+1\}\). Exact direction inversion gives \(-g_i\). Under a
+symmetric cost \(c_i\), the original and inverse become \(g_i-c_i\) and
+\(-g_i-c_i\); both can be negative whenever \(|g_i|<c_i\). This paired contrast
+separates direction from the original stop/target
+path. Report gross and net results separately and compare the observed signs
+with pre-specified random-sign assignments at the same entry times. A
+non-significant contrast is not evidence of equivalence; an equivalence claim
+requires a pre-specified smallest economically relevant directional effect and
+an appropriate equivalence procedure. ([Schuirmann
+1987](https://doi.org/10.1007/BF01068419))
+
+### Contrast 2: diagnose path-dependent exit geometry separately
+
+Then retain each original entry and compare mirrored long and short
+stop/target rules using first-hit outcome, maximum favorable excursion,
+maximum adverse excursion, and time to each boundary. Mirrored barrier trades
+usually exit at different times, so their returns are not algebraic negatives.
+If both variants lose here but not at the common fixed horizon, the result is
+evidence against the particular path-dependent exit geometry, not proof that
+direction is irrelevant or that the market was noise.
+
+### Contrast 3: separate entry timing from direction
+
+Compare the actual entry times with random or matched control times while
+holding horizon, direction-assignment rule, instrument, session, volatility
+state, and cost model fixed. Matching variables and tolerances must be chosen
+without looking at subsequent outcomes. This contrast can assess whether the
+entry rule selects unusually adverse paths; it cannot by itself identify why.
+Conditional comparisons should use only information available at decision
+time. ([Giacomini and White
+2006](https://doi.org/10.1111/j.1468-0262.2006.00718.x))
+
+### The observable signature of a late-entry reversal account
+
+The simple late-entry story predicts a positive direction-aligned move before
+entry followed by a negative direction-aligned return after entry. Record an
+event-time path around each entry and freeze the pre-entry impulse and
+post-entry horizons before evaluation. If same-entry inversion also loses
+*gross* at the common horizon, simple mean reversion is insufficient because it
+would normally predict that the opposite sign benefits. Momentum evidence also
+rules out treating confirmation as exhaustion by definition; whether a
+particular confirmation rule is late remains an empirical, scope-specific
+question. ([Jegadeesh and Titman
+1993](https://doi.org/10.1111/j.1540-6261.1993.tb04702.x), [Moskowitz, Ooi, and
+Pedersen 2012](https://doi.org/10.1016/j.jfineco.2011.11.003))
+
+### Inference and allowed conclusions
+
+Trade observations overlap and market states persist, so ordinary independent
+trade intervals can be misleading. Use a dependence-aware resampling or
+sampling design whose block structure matches the data, and reserve fresh
+evidence for any account generated from the original failures. ([Kunsch
+1989](https://doi.org/10.1214/aos/1176347265), [Politis and Romano
+1994](https://doi.org/10.1080/01621459.1994.10476870))
+
+The contrasts license only bounded conclusions:
+
+- **Original loses, inverse wins at a common horizon:** evidence that direction
+  selection contributed under that horizon and scope.
+- **Both lose net but are opposites gross:** costs can explain the joint net
+  loss without a directional market story.
+- **Both lose under barriers but not at a common horizon:** evidence against
+  the specified exit geometry.
+- **Actual times underperform matched times:** evidence that the entry rule
+  selected adverse paths, conditional on valid matching.
+- **Late-entry event signature appears on fresh evidence:** support for that
+  predictive signature, not yet for an order-book or behavioral mechanism.
+- **Contrasts are imprecise or observationally equivalent:** non-identification,
+  not proof that direction never matters.
+
+This transforms the proposed paper inversion from a rhetorical proof into a
+small rival-explanation experiment. Its value lies in making several accounts
+risk different observable outcomes.
+
+## 11. Proposed synthesis: from a binary failure to a discriminating failure map
 
 The most useful synthesis is not a universal postmortem score. It is a sequence
 of epistemic gates that converts an undifferentiated failure into explicit rival
@@ -552,7 +674,7 @@ failure condition, and an independent evaluation path. Otherwise it is a
 diagnostic or retrospective accommodation, not confirmation of a repaired
 strategy.
 
-## 11. Main hazards introduced by this broader question
+## 12. Main hazards introduced by this broader question
 
 The broader epistemic inquiry is worthwhile, but it creates characteristic
 failure modes:
@@ -658,3 +780,29 @@ official journal/publisher records.
     Financial Economics," *The Journal of Finance* 75(5), 2020, 2503–2553.
     [Official journal DOI](https://doi.org/10.1111/jofi.12951) and
     [author-hosted manuscript](https://people.duke.edu/~charvey/Research/Published_Papers/P143_False_and_missed.pdf).
+23. Sidney Redner, *A Guide to First-Passage Processes*, Cambridge University
+    Press, 2001. [Publisher DOI](https://doi.org/10.1017/CBO9780511606014).
+24. Narasimhan Jegadeesh and Sheridan Titman, "Returns to Buying Winners and
+    Selling Losers: Implications for Stock Market Efficiency," *The Journal of
+    Finance* 48(1), 1993, 65--91.
+    [Official journal DOI](https://doi.org/10.1111/j.1540-6261.1993.tb04702.x).
+25. Tobias J. Moskowitz, Yao Hua Ooi, and Lasse Heje Pedersen, "Time Series
+    Momentum," *Journal of Financial Economics* 104(2), 2012, 228--250.
+    [Official journal DOI](https://doi.org/10.1016/j.jfineco.2011.11.003).
+26. Rama Cont, Arseniy Kukanov, and Sasha Stoikov, "The Price Impact of Order
+    Book Events," *Journal of Financial Econometrics* 12(1), 2014, 47--88.
+    [Official journal DOI](https://doi.org/10.1093/jjfinec/nbt003).
+27. Raffaella Giacomini and Halbert White, "Tests of Conditional Predictive
+    Ability," *Econometrica* 74(6), 2006, 1545--1578.
+    [Official journal DOI](https://doi.org/10.1111/j.1468-0262.2006.00718.x).
+28. Hans R. Kunsch, "The Jackknife and the Bootstrap for General Stationary
+    Observations," *The Annals of Statistics* 17(3), 1989, 1217--1241.
+    [Project Euclid DOI](https://doi.org/10.1214/aos/1176347265).
+29. Dimitris N. Politis and Joseph P. Romano, "The Stationary Bootstrap,"
+    *Journal of the American Statistical Association* 89(428), 1994,
+    1303--1313.
+    [Official journal DOI](https://doi.org/10.1080/01621459.1994.10476870).
+30. Donald J. Schuirmann, "A Comparison of the Two One-Sided Tests Procedure
+    and the Power Approach for Assessing the Equivalence of Average
+    Bioavailability," *Journal of Pharmacokinetics and Biopharmaceutics* 15,
+    1987, 657--680. [Publisher DOI](https://doi.org/10.1007/BF01068419).
