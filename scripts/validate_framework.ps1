@@ -51,6 +51,12 @@ if ($LASTEXITCODE -ne 0) {
     throw "Scientific-philosophy review tests failed (exit $LASTEXITCODE)."
 }
 
+Write-Output '== Framework-control review =='
+& $PythonExecutable (Join-Path $repoRoot 'scripts\test_framework_control_review.py')
+if ($LASTEXITCODE -ne 0) {
+    throw "Framework-control review tests failed (exit $LASTEXITCODE)."
+}
+
 Write-Output '== Outcome evidence contract =='
 & $PythonExecutable (Join-Path $repoRoot 'scripts\test_outcome_evidence_contract.py')
 if ($LASTEXITCODE -ne 0) {

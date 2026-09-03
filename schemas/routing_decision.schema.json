@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "urn:research-framework:schema:routing-decision:1.5.0",
+  "$id": "urn:research-framework:schema:routing-decision:1.6.0",
   "title": "Research Routing Decision",
   "description": "Deterministic routing decision and bounded work order owned by the research conductor.",
   "type": "object",
@@ -24,11 +24,11 @@
     "control"
   ],
   "properties": {
-    "schema_version": {"const": "1.5.0"},
+    "schema_version": {"const": "1.6.0"},
     "decision_id": {"$ref": "#/$defs/stableId"},
     "created_at": {"$ref": "#/$defs/timestamp"},
     "orchestration_ref": {"$ref": "#/$defs/stableId"},
-    "conductor_version": {"const": "1.5.0"},
+    "conductor_version": {"const": "1.6.0"},
     "route": {"$ref": "#/$defs/route"},
     "execution_mode": {
       "type": "string",
@@ -392,18 +392,32 @@
       "required": [
         "coordinator_retains_control",
         "specialist_may_address_user",
+        "specialist_may_make_research_decision",
+        "specialist_may_change_research_state",
         "sequential_execution",
         "checkpoint_required",
         "specialist_output_requires_validation",
-        "fingerprint_check_required_before_acceptance"
+        "fingerprint_check_required_before_acceptance",
+        "scope_locked_to_request",
+        "delegation_max_depth",
+        "conclusions_require_evidence",
+        "repeat_requires_changed_evidence",
+        "completion_requires_validated_evidence"
       ],
       "properties": {
         "coordinator_retains_control": {"const": true},
         "specialist_may_address_user": {"const": false},
+        "specialist_may_make_research_decision": {"const": false},
+        "specialist_may_change_research_state": {"const": false},
         "sequential_execution": {"const": true},
         "checkpoint_required": {"const": true},
         "specialist_output_requires_validation": {"const": true},
-        "fingerprint_check_required_before_acceptance": {"const": true}
+        "fingerprint_check_required_before_acceptance": {"const": true},
+        "scope_locked_to_request": {"const": true},
+        "delegation_max_depth": {"const": 1},
+        "conclusions_require_evidence": {"const": true},
+        "repeat_requires_changed_evidence": {"const": true},
+        "completion_requires_validated_evidence": {"const": true}
       }
     }
   }

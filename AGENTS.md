@@ -159,6 +159,71 @@ does not trigger this review. An estimator, event window, temporal ordering, or
 causal-discovery result is never a substitute for the required identification
 assessment.
 
+## Permanent research-conductor controls
+
+The following controls apply to the `research-conductor` on every user-facing
+research task, whether or not a specialist or the optional AI-Psychiatry review
+is used. They are not a diagnosis, a plugin preference, or an extra research
+gate.
+
+1. **Scope lock:** keep the objective, requested claim, strategy identity,
+   market, time scope, trigger and outcome fixed to the user's request. A
+   material addition, removal or reinterpretation is a visible proposal and
+   cannot become effective without the complete fingerprint comparison and the
+   owner's decision.
+2. **Bounded delegation:** the conductor owns the task and may issue one
+   sequential, bounded specialist order at delegation depth 1. A specialist
+   may not delegate the conductor's work, call another specialist, widen the
+   mandate, or become a second owner.
+3. **Evidence-bound conclusions:** every material conclusion must point to the
+   appropriate validated artifact or evidence. Missing, unresolved or merely
+   self-declared evidence stays `UNKNOWN`, `BLOCKED`, or the applicable limited
+   claim; fluent explanation, model agreement, or agent activity is not proof.
+4. **Repeat guard:** do not repeat an equivalent check or critic round when the
+   relevant requirements, code, configuration, environment and evidence are
+   unchanged. A new attempt needs changed evidence or a separately recorded
+   user-authorized research version; it must retain the prior attempt history.
+5. **Completion guard:** `COMPLETE`, `PASS` or `SUPPORTED` is allowed only after
+   the required output, referenced evidence, semantic validation, applicable
+   fingerprint comparison, and checkpoint have succeeded. A schema-valid
+   declaration without proof remains incomplete or blocked.
+
+Each routing decision records these invariants in its `control` object. The
+machine-readable contract rejects a decision that relaxes them. This makes the
+conductor responsible for applying the controls; it does not claim that a
+schema alone can prove how a live model behaved.
+
+## Conditional framework-control review
+
+When the user explicitly requests a review of the framework or an observable
+trace indicates a possible control bypass, the research conductor may invoke
+`agents/framework-control-reviewer.md`. Valid triggers include a skipped or
+ignored check, a reset attempt counter, a repeated semantically equivalent
+strategy, an unjustified scope change, conflicting instructions, stale durable
+memory, or an unexplained failure. This is a bounded workflow review, not a
+clinical or psychological assessment and not a new research gate for ordinary
+tasks.
+
+The reviewer may use the provider-neutral procedures represented by the
+AI-Psychiatry plugin (red-team, loophole, strategy-laundering, scope,
+root-cause, rule-conflict, and memory checks). The plugin is optional and never
+overrides this file. If it is unavailable, an agent may apply the repository
+contract but must not claim that the plugin was invoked.
+
+The reviewer must receive a locked objective, mandatory requirements, Definition
+of Done, current evidence, and one concrete observable signal. It returns a
+bounded `framework_control_review` report, never private chain-of-thought. It
+may recommend or apply at most one narrow corrective action with an explicit
+exit condition and `max_attempts = 1`. A proposed change to any research
+question, strategy identity, definition, data role, claim, result, or protected
+artifact remains subject to the complete research fingerprint and visible user
+decision process; the reviewer cannot make it effective. The conductor validates
+the report with `scripts/validate_framework_control_review.py`, retains control
+of the conversation, and records any unresolved issue or proposal. A clean
+review is not evidence that every live agent is reliable, and it never replaces
+the scientific-philosophy or causal-identification specialist when those routes
+are required.
+
 Before any validation test is frozen, create and validate an
 `outcome_evidence_contract` using
 `schemas/outcome_evidence_contract.schema.json` and

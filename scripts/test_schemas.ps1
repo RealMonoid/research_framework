@@ -97,6 +97,7 @@ $positivePairs = @(
     @('examples\condition_inquiry.synthetic_measurement.json', 'schemas\condition_inquiry.schema.json'),
     @('examples\causal_identification_assessment.hfi_pass.json', 'schemas\causal_identification_assessment.schema.json'),
     @('examples\scientific_philosophy_review.synthetic_failed_reconstruction.json', 'schemas\scientific_philosophy_review.schema.json'),
+    @('examples\framework_control_review.synthetic.json', 'schemas\framework_control_review.schema.json'),
     @('examples\outcome_evidence_contract.predictor_without_mechanism.json', 'schemas\outcome_evidence_contract.schema.json'),
     @('examples\pipeline_integrity_assessment.synthetic_controls.json', 'schemas\pipeline_integrity_assessment.schema.json'),
     @('examples\orchestration_state.prose_strategy.json', 'schemas\orchestration_state.schema.json'),
@@ -172,6 +173,34 @@ Test-RejectedFixture -Name 'complete orchestration artifact requires a reference
 $routingSpecialistAddressesUser = Read-JsonText -RelativePath 'examples\routing_decision.pre_operationalization.json' | ConvertFrom-Json -Depth 100
 $routingSpecialistAddressesUser.control.specialist_may_address_user = $true
 Test-RejectedFixture -Name 'routing decision keeps specialist away from user conversation' -Value $routingSpecialistAddressesUser -Schema 'schemas\routing_decision.schema.json'
+
+$routingSpecialistDecides = Read-JsonText -RelativePath 'examples\routing_decision.pre_operationalization.json' | ConvertFrom-Json -Depth 100
+$routingSpecialistDecides.control.specialist_may_make_research_decision = $true
+Test-RejectedFixture -Name 'routing decision keeps research decisions with conductor' -Value $routingSpecialistDecides -Schema 'schemas\routing_decision.schema.json'
+
+$routingSpecialistChangesState = Read-JsonText -RelativePath 'examples\routing_decision.pre_operationalization.json' | ConvertFrom-Json -Depth 100
+$routingSpecialistChangesState.control.specialist_may_change_research_state = $true
+Test-RejectedFixture -Name 'routing decision keeps research state with conductor' -Value $routingSpecialistChangesState -Schema 'schemas\routing_decision.schema.json'
+
+$routingScopeUnlocked = Read-JsonText -RelativePath 'examples\routing_decision.pre_operationalization.json' | ConvertFrom-Json -Depth 100
+$routingScopeUnlocked.control.scope_locked_to_request = $false
+Test-RejectedFixture -Name 'routing decision locks scope to user request' -Value $routingScopeUnlocked -Schema 'schemas\routing_decision.schema.json'
+
+$routingRecursive = Read-JsonText -RelativePath 'examples\routing_decision.pre_operationalization.json' | ConvertFrom-Json -Depth 100
+$routingRecursive.control.delegation_max_depth = 2
+Test-RejectedFixture -Name 'routing decision bounds delegation depth' -Value $routingRecursive -Schema 'schemas\routing_decision.schema.json'
+
+$routingUnsupportedConclusions = Read-JsonText -RelativePath 'examples\routing_decision.pre_operationalization.json' | ConvertFrom-Json -Depth 100
+$routingUnsupportedConclusions.control.conclusions_require_evidence = $false
+Test-RejectedFixture -Name 'routing decision binds conclusions to evidence' -Value $routingUnsupportedConclusions -Schema 'schemas\routing_decision.schema.json'
+
+$routingRepeatWithoutEvidence = Read-JsonText -RelativePath 'examples\routing_decision.pre_operationalization.json' | ConvertFrom-Json -Depth 100
+$routingRepeatWithoutEvidence.control.repeat_requires_changed_evidence = $false
+Test-RejectedFixture -Name 'routing decision requires new evidence for repeats' -Value $routingRepeatWithoutEvidence -Schema 'schemas\routing_decision.schema.json'
+
+$routingFalseCompletion = Read-JsonText -RelativePath 'examples\routing_decision.pre_operationalization.json' | ConvertFrom-Json -Depth 100
+$routingFalseCompletion.control.completion_requires_validated_evidence = $false
+Test-RejectedFixture -Name 'routing decision binds completion to validation' -Value $routingFalseCompletion -Schema 'schemas\routing_decision.schema.json'
 
 $routingWrongPhilosophyAgent = Read-JsonText -RelativePath 'examples\routing_decision.pre_operationalization.json' | ConvertFrom-Json -Depth 100
 $routingWrongPhilosophyAgent.selected_agent = 'condition-inquiry-analyst'
