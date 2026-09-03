@@ -45,6 +45,10 @@ def main(argv: Sequence[str] | None = None) -> int:
     run("Strategy concept audit", [python, "scripts/test_strategy_concept_audit.py"])
     run("Condition inquiry", [python, "scripts/test_condition_inquiry.py"])
     run(
+        "Bounded quantitative data analysis",
+        [python, "scripts/test_data_analysis_report.py"],
+    )
+    run(
         "Causal-identification review",
         [python, "scripts/test_causal_identification.py"],
     )

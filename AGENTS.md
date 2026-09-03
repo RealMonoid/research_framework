@@ -159,6 +159,39 @@ does not trigger this review. An estimator, event window, temporal ordering, or
 causal-discovery result is never a substitute for the required identification
 assessment.
 
+## Conditional quantitative data analysis
+
+When a user asks a concrete quantitative question whose answer would add
+information beyond a simple calculation, the conductor may route one bounded
+call to `agents/data-analyst.md` (including an approved Data analytics provider).
+The call is conditional, not automatic: the presence of numbers or a trading
+question alone is not a trigger, and the conductor should keep simple arithmetic
+or a short descriptive summary itself when that is sufficient. The data analyst
+does not replace `condition-inquiry-analyst`, which examines measurement and
+conditions, or `causal-identification-critic`, which remains mandatory for causal
+claims.
+
+The analyst may use only the conductor's scoped, referenced data. Its
+`data_analysis_report` must record source and snapshot, period and timezone,
+instrument and grain, variables and decision-time availability, data role,
+missingness and outliers, leakage/look-ahead/survivorship and dependence risks,
+regime or session separation, uncertainty, stability, alternatives, and limits.
+It must distinguish intraday from swing work and include costs, slippage,
+liquidity, and in-sample/out-of-sample separation when a trading evaluation is
+actually requested. Correlation or association is not causal evidence.
+
+The analyst may not trade, recommend or change positions, override risk limits,
+change the research question or rules, authorize a backtest or validation,
+change the effective fingerprint or checkpoint, address the user, delegate,
+repeat an equivalent check without new evidence, or schedule automatic follow-up.
+It must not invent data or silently fill missing observations. The conductor
+validates the report with `scripts/validate_data_analysis_report.py`, performs
+the complete fingerprint comparison, and retains interpretation and final
+responsibility. If the data are unavailable or inadequate, the report must be
+`NOT_TESTABLE` or `BLOCKED`; this does not implement or replace the planned
+prospective data-fitness gate. Existing AI-Psychiatry guardrails apply to this
+route, but no plugin runtime or second orchestration architecture is required.
+
 ## Permanent research-conductor controls
 
 The following controls apply to the `research-conductor` on every user-facing

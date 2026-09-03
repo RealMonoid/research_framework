@@ -33,6 +33,7 @@ CONDITION_INTENTS = {
     "CHECK_DEFINITION_SENSITIVITY",
 }
 CAUSAL_CLAIM_LEVELS = {"INTERVENTIONAL", "COUNTERFACTUAL"}
+ROUTER_VERSION = "1.7.0"
 
 
 def _mapping(value: Any, label: str) -> Mapping[str, Any]:
@@ -154,7 +155,7 @@ def _decision(
         raise ValueError("next_decision_sequence must be a positive integer")
     if not isinstance(updated_at, str):
         raise ValueError("updated_at must be a timestamp string")
-    if conductor_version != "1.6.0":
+    if conductor_version != ROUTER_VERSION:
         raise ValueError("unsupported conductor_version")
 
     fingerprint_guard = _fingerprint_guard(state, execution_mode, route)
@@ -172,7 +173,7 @@ def _decision(
         )
 
     return {
-        "schema_version": "1.6.0",
+        "schema_version": ROUTER_VERSION,
         "decision_id": f"routing:{orchestration_id}:{sequence}",
         "created_at": updated_at,
         "orchestration_ref": orchestration_id,
@@ -409,6 +410,7 @@ def route_state(state: Mapping[str, Any]) -> dict[str, Any]:
             "CHECK_DEFINITION_SENSITIVITY",
             "ASSESS_CAUSAL_CLAIM",
             "ESTIMATE_CAUSAL_EFFECT",
+            "QUANTITATIVE_ANALYSIS",
             "START_OR_CONTINUE_RESEARCH",
         }
     )
@@ -535,6 +537,88 @@ def route_state(state: Mapping[str, Any]) -> dict[str, Any]:
                     "Event, order-flow, panel, and time-series risks relevant to the chosen design are addressed or reported as blockers.",
                 ],
                 "Stop after PASS, BLOCKED, FAIL, or NOT_REQUIRED_PREDICTIVE is recorded; do not begin estimation.",
+            ),
+        )
+
+    if intent == "QUANTITATIVE_ANALYSIS":
+        if requested_claim_level in CAUSAL_CLAIM_LEVELS:
+            return _decision(
+                state,
+                route="BLOCKED",
+                execution_mode="BLOCKED",
+                selected_agent=None,
+                specialist_mode=None,
+                decision_basis=[
+                    "The requested conclusion is causal. Quantitative data analysis cannot replace the required causal-identification assessment or issue causal wording."
+                ],
+                work_order=_work_order(
+                    "Keep the causal question on the causal-identification route, or explicitly narrow the request to a non-causal quantitative diagnostic.",
+                    "plain-language blocker report",
+                    _input_refs(state),
+                    [
+                        "Do not ask the data analyst for a causal estimate.",
+                        "Do not turn correlation, temporal order, a backtest, or an estimator into causal evidence.",
+                    ],
+                    [
+                        "The causal-identification prerequisite or the narrower non-causal question is explicit."
+                    ],
+                    "Stop until the requested claim is non-causal or the causal route has been completed.",
+                ),
+            )
+
+        data_analysis_status = _artifact_status(state, "data_analysis")
+        if data_analysis_status == "COMPLETE":
+            return _decision(
+                state,
+                route="BLOCKED",
+                execution_mode="BLOCKED",
+                selected_agent=None,
+                specialist_mode=None,
+                decision_basis=[
+                    "An accepted quantitative analysis already exists for this research version; an equivalent repeat requires new evidence or an explicitly new version."
+                ],
+                work_order=_work_order(
+                    "Preserve the accepted data-analysis report and identify the genuinely new evidence or user-authorized research version needed for another analysis.",
+                    "plain-language blocker report",
+                    _input_refs(state),
+                    [
+                        "Do not repeat an equivalent analysis without changed evidence.",
+                        "Do not overwrite the accepted data-analysis report.",
+                    ],
+                    [
+                        "The reason a new analysis would add information is recorded, or the existing report remains final for this step."
+                    ],
+                    "Stop until new evidence or a new research version is recorded.",
+                ),
+            )
+
+        return _decision(
+            state,
+            route="DATA_ANALYSIS",
+            execution_mode="SPECIALIST_AS_TOOL",
+            selected_agent="data-analyst",
+            specialist_mode="SCOPED_QUANTITATIVE_ANALYSIS",
+            decision_basis=[
+                "The user requested a concrete non-causal quantitative question and no accepted data-analysis report exists for this research version."
+            ],
+            work_order=_work_order(
+                "Answer the scoped quantitative question with documented data provenance, quality checks, uncertainty, and practical limits.",
+                "data_analysis_report",
+                _input_refs(state) + ["the conductor's scoped data references and request summary"],
+                [
+                    "Do not make a trading, position, sizing, or risk decision.",
+                    "Do not change the research question, strategy, definitions, parameters, filters, outcomes, data roles, or effective fingerprint.",
+                    "Do not claim causality, a mechanism, validation, or a tradable after-cost edge.",
+                    "Do not invent data, silently fill missing observations, mix incompatible horizons or regimes, or run an unrequested backtest.",
+                    "Do not delegate, create side branches, repeat equivalent checks, or schedule automatic follow-up.",
+                ],
+                [
+                    "The report passes schemas/data_analysis_report.schema.json and its semantic validator.",
+                    "Sources, periods, variables, data roles, availability, quality limits, uncertainty, and stability are explicit.",
+                    "Correlation or association is not presented as causal evidence, and no trading decision is made.",
+                    "Before acceptance, the complete research fingerprint check reports UNCHANGED.",
+                ],
+                "Stop when the scoped report is complete, inconclusive, not testable, or blocked; do not create automatic follow-up work.",
             ),
         )
 

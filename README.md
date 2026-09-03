@@ -163,6 +163,24 @@ and completion statuses require their evidence and validation. These controls
 are recorded in every routing decision; they do not depend on AI Psychiatry and
 do not turn specialized critics into universal steps.
 
+### Bounded quantitative data analysis
+
+For a concrete quantitative question that needs more than simple arithmetic,
+the conductor can call the bounded, provider-neutral
+[data analyst](agents/data-analyst.md). The role may examine referenced
+price/volume/volatility or other research data and report provenance, data
+quality, decision-time availability, uncertainty, stability, alternatives, and
+limits in a [data-analysis report](schemas/data_analysis_report.schema.json).
+It keeps intraday and swing scopes separate, checks leakage and regime/session
+mixing where relevant, and includes costs, slippage, liquidity, and
+in-sample/out-of-sample separation for a trading evaluation. It never makes a
+trade, risk, causal, activation, or research-state decision; association is not
+causality and a report is not authorization to run a backtest. If the data are
+not coherent or sufficient, it records a limited or blocked result. The
+conductor validates the report and performs the full fingerprint comparison.
+The planned prospective data-fitness gate remains a separate prerequisite for
+future cases.
+
 ### Conditional workflow-control review
 
 When the owner explicitly asks for a framework stress test, or a concrete trace

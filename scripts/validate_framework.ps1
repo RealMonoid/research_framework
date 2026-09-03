@@ -45,6 +45,12 @@ if ($LASTEXITCODE -ne 0) {
     throw "Condition-inquiry tests failed (exit $LASTEXITCODE)."
 }
 
+Write-Output '== Bounded quantitative data analysis =='
+& $PythonExecutable (Join-Path $repoRoot 'scripts\test_data_analysis_report.py')
+if ($LASTEXITCODE -ne 0) {
+    throw "Data-analysis report tests failed (exit $LASTEXITCODE)."
+}
+
 Write-Output '== Scientific-philosophy review =='
 & $PythonExecutable (Join-Path $repoRoot 'scripts\test_scientific_philosophy_review.py')
 if ($LASTEXITCODE -ne 0) {

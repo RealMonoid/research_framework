@@ -28,6 +28,7 @@ The files perform various functions:
 | `agents/intraday-hypothesis-generator.md` | Optional autonomous generator contract |In the case of agentic idea generation|
 | `agents/scientific-philosophy-critic.md` |Concept and requirement review before operationalization, plus Duhem-Quine/Lakatos/Kuhn continuation review|Before completion of any incompletely defined source reconstruction; after a non-positive Q8 result when material revision or continuation is considered|
 | `agents/condition-inquiry-analyst.md` |Quantitative assessment of measuring instruments and generation of observable condition hypotheses|After provisional operationalization, when measurement value, definition dependence or unknown success modifiers are examined|
+| `agents/data-analyst.md` |Bounded quantitative data profiling and analysis with provenance, uncertainty and trading-data checks|Only when the conductor has a concrete quantitative information need beyond a simple calculation; not a permanent gate|
 | `agents/causal-identification-critic.md` |Independent examination of whether a financial-market design supports the intended causal statement|Before any interventional or counterfactual estimate and before causal language; not for purely predictive questions|
 | `agents/framework-control-reviewer.md` |Bounded review of observable workflow-control failures such as bypasses, scope changes, repeated equivalent attempts, conflicts or stale memory|Only after an explicit framework-control request or a concrete control signal; not an ordinary research gate|
 | `references/CAUSAL_IDENTIFICATION_FOR_FINANCE.md` |Versioned research basis for financial market-specific identification risks|At each causality test|
@@ -91,6 +92,20 @@ The original status shall remain valid for any deviation. The change is stored v
 In particular, for an incomplete prose strategy, the source is first reconstructed, then the concept and prerequisite examination is carried out by the `scientific-philosophy-critic`, and only then is it operationalized. This procedure does not authorize a backtest.
 
 Once the strongest intended claim is `INTERVENTIONAL` or `COUNTERFACTUAL`, the `causal-identification-critic` is mandatory before estimation and causal wording. The critic examines the estimand, source of identifying variation, economic model, assumptions, financial-market-specific distortions, falsification checks, and sensitivity. DML, local projections, event-study regressions, temporal ordering, and causal discovery do not replace this review. An explicitly predictive project is not forced into this additional route as a precaution.
+
+For a concrete non-causal quantitative question, the conductor may route the
+bounded `data-analyst` only when it adds information beyond a simple calculation.
+The analyst receives only scoped data references and returns a
+`data_analysis_report` with source/version, period, variables, data role,
+decision-time availability, quality checks, uncertainty, stability,
+alternatives, and practical limits. It keeps intraday and swing horizons and
+session/regime definitions separate where relevant, and does not treat
+correlation as causality. It cannot trade, alter risk or research state,
+authorize a backtest, or create follow-up work. Validate the report with
+`scripts/validate_data_analysis_report.py`; if data are inadequate, retain
+`NOT_TESTABLE` or `BLOCKED` rather than silently weakening the question. This
+bounded report does not replace the prospective data-fitness gate planned in
+`PLANNED_FEATURES.md`.
 
 ### Permanent research-conductor controls
 

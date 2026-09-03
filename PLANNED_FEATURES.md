@@ -247,6 +247,14 @@ authorization if reconsidered later.
    concrete requirements and failure examples. Planning this gate does not
    authorize inspection of strategy outcomes, a backtest, or market-data use.
 
+   The bounded `data-analyst` role is not this gate. It may provide a scoped
+   quantitative data profile or non-causal diagnostic when the conductor has a
+   concrete information need, but its report cannot declare a dataset fit for a
+   strategy, authorize a test, or replace the prospective comparison. The
+   eventual data-fitness artifact must still evaluate the complete strategy,
+   claim, instrument, coverage, resolution, and acquisition burden before
+   operationalization or empirical work.
+
 4. **One real Research Case.** Run one deliberately unexciting end-to-end case
    with public data and a predeclared expectation that no useful effect will be
    found. Pass the prospective data-fitness gate before detailed

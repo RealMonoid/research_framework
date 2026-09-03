@@ -195,6 +195,32 @@ def main() -> int:
     if decision["selected_agent"] != "condition-inquiry-analyst":
         raise AssertionError("Condition inquiry did not select its specialist")
 
+    quantitative_request = neutral_state()
+    quantitative_request["request"]["intent"] = "QUANTITATIVE_ANALYSIS"
+    quantitative_request["request"]["requested_claim_level"] = "ASSOCIATIONAL_PREDICTIVE"
+    decision = assert_route(quantitative_request, "DATA_ANALYSIS")
+    if decision["selected_agent"] != "data-analyst":
+        raise AssertionError("Quantitative request did not select the data specialist")
+    if decision["specialist_mode"] != "SCOPED_QUANTITATIVE_ANALYSIS":
+        raise AssertionError("Data route did not use its bounded specialist mode")
+    if decision["work_order"]["required_output_type"] != "data_analysis_report":
+        raise AssertionError("Data route did not require a data-analysis report")
+    if "Do not make a trading" not in " ".join(decision["work_order"]["excluded_actions"]):
+        raise AssertionError("Data route did not exclude trading decisions")
+
+    quantitative_repeat = copy.deepcopy(quantitative_request)
+    quantitative_repeat["artifacts"]["data_analysis"] = {
+        "status": "COMPLETE",
+        "artifact_ref": "data-report:synthetic-intraday-summary:v1",
+    }
+    assert_route(quantitative_repeat, "BLOCKED")
+
+    quantitative_causal = copy.deepcopy(quantitative_request)
+    quantitative_causal["request"]["requested_claim_level"] = "INTERVENTIONAL"
+    decision = assert_route(quantitative_causal, "CAUSAL_IDENTIFICATION_REVIEW")
+    if decision["selected_agent"] != "causal-identification-critic":
+        raise AssertionError("Causal quantitative request bypassed identification review")
+
     causal_request = neutral_state()
     causal_request["request"]["intent"] = "ASSESS_CAUSAL_CLAIM"
     causal_request["request"]["requested_claim_level"] = "INTERVENTIONAL"

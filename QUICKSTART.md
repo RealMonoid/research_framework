@@ -60,11 +60,41 @@ completed concept review → preliminary operationalization → condition analys
 - Revision or continuation following a non-positive frozen result:
 continuing scientific-philosophical examination before new empiricism;
 - intended intervention or counterfactual statement:
-causality testing before effect estimation or causal formulation;
+  causality testing before effect estimation or causal formulation;
+- concrete quantitative question that needs more than simple arithmetic:
+  one bounded data-analysis report with provenance, quality checks and
+  uncertainty; this does not authorize a backtest or trading decision;
 - new ideas only on an actual request for ideation; an existing idea goes into
 intake and not back to the generator.
 
 A simple result statement does not automatically trigger a specialist agent. A necessary user decision will only be requested if it materially changes the research question, the identity of the source strategy or the permissible claim. After each accepted specialist article, its artifact is checked, the work status updated and routed again.
+
+### Conditional quantitative data analysis
+
+When a user asks for a specific calculation or data diagnostic that would add
+information beyond a simple calculation, the conductor may call the bounded
+[`data-analyst`](agents/data-analyst.md). It is not called just because a task
+contains numbers. The analyst receives only the named data and returns a
+[`data_analysis_report`](schemas/data_analysis_report.schema.json).
+
+The report must show the source and snapshot, period, instrument, sampling
+grain, variables and their availability at decision time, data role,
+missingness, outliers, leakage/look-ahead, survivorship, dependence, and
+session/regime separation where relevant. It must state uncertainty and what
+the data cannot establish. Intraday and swing work remain separate, and costs,
+slippage, liquidity, and in-sample/out-of-sample separation are required when
+the question actually concerns a trading evaluation. Correlation is not
+causality, and a single backtest is not validation.
+
+The analyst cannot trade, recommend or change positions, override risk limits,
+change the research question or rules, authorize a test, change the fingerprint
+or checkpoint, address the user, delegate, repeat an equivalent check, or
+schedule follow-up. Validate the report with
+`scripts/validate_data_analysis_report.py`; then compare the full fingerprint
+before accepting it. If data are missing or cannot be obtained as one coherent
+dataset, keep the result `NOT_TESTABLE` or `BLOCKED` rather than silently
+weakening the research question. This role does not replace the planned
+prospective data-fitness gate.
 
 Before and after each material research step, the full research fingerprint is compared. In addition to research question, source strategy, market and time horizon, it also contains measurement definitions, parameters, lookbacks, filters and exclusions, data and sample decisions, evaluation rules, cost and execution assumptions, frozen results and the checksums of all effective research documents.
 
