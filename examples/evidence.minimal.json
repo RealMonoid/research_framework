@@ -25,7 +25,7 @@
     {
       "source_id": "source-001",
       "source_type": "PRIMARY_DOCUMENT",
-      "title": "Demonstrationsbericht 2026",
+      "title": "Demonstration report 2026",
       "publisher": "Example Institute",
       "uri": "https://example.org/report-2026",
       "published_at": "2026-08-29T09:00:00Z",
@@ -40,7 +40,7 @@
       "claim_revision": 1,
       "claim_class": "SOURCE_FACT",
       "research_claim_level": null,
-      "statement": "Der veröffentlichte Messwert beträgt 8,2 Prozent.",
+      "statement": "The published measurement is 8.2 percent.",
       "origin": "MODEL",
       "as_of": "2026-08-29T09:00:00Z",
       "valid_until": null,
@@ -73,7 +73,7 @@
             "locator_type": "PAGE",
             "value": "12"
           },
-          "extracted_fact": "Messwert: 8,2 %",
+          "extracted_fact": "Measurement: 8.2%",
           "extracted_fact_hash": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
           "relation": "SUPPORTS",
           "extraction_method": "LLM",
@@ -90,7 +90,7 @@
           "hypothesis_id": "H1",
           "effect": "STRENGTHENS",
           "materiality": "MATERIAL",
-          "rationale": "Der Messwert liegt oberhalb der vorab definierten Schwelle."
+          "rationale": "The measurement is above the pre-defined threshold."
         }
       ],
       "decision_refs": [

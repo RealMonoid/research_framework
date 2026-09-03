@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "urn:research-framework:schema:strategy-reconstruction:1.1.0",
   "title": "Strategy Reconstruction from Prose",
-  "description": "Quellennahe Uebersetzung einer Buch-, Artikel-, Video- oder Kursstrategie in explizite Konstrukte und offene Operationalisierungsentscheidungen. Das Artefakt fuehrt weder Backtests noch automatische Definitionauswahl durch.",
+  "description": "Source-faithful translation of a book, article, video, or course strategy into explicit constructs and open operationalization decisions. The artifact performs neither backtests nor automatic definition selection.",
   "type": "object",
   "additionalProperties": false,
   "required": [
@@ -59,7 +59,7 @@
       "items": {
         "$ref": "#/$defs/stableId"
       },
-      "description": "Claims, ohne die nicht mehr dieselbe Quellenstrategie rekonstruiert wuerde. Die Liste ist eine Uebersetzungsaussage, kein Wirksamkeitsurteil."
+      "description": "Claims without which the same source strategy could no longer be reconstructed. The list is a translation statement, not an effectiveness judgment."
     },
     "constructs": {
       "type": "array",
@@ -429,7 +429,7 @@
           "type": "string",
           "minLength": 1,
           "maxLength": 4000,
-          "description": "Quellennahe Paraphrase; keine erfundene Praezisierung und kein unnoetiges Langzitat."
+          "description": "Source-faithful paraphrase; no invented precision and no unnecessary long quotation."
         },
         "source_locator_refs": {
           "type": "array",
@@ -465,7 +465,7 @@
             "ILLUSTRATIVE",
             "UNCLEAR"
           ],
-          "description": "Stellung der Aussage in der Quelle. ILLUSTRATIVE verhindert, dass ein Beispiel stillschweigend zur Regel wird."
+          "description": "Role of the statement in the source. ILLUSTRATIVE prevents an example from silently becoming a rule."
         },
         "core_to_strategy": {
           "type": "boolean"
@@ -539,7 +539,7 @@
           "items": {
             "$ref": "#/$defs/operationalizationCandidate"
           },
-          "description": "Moegliche Uebersetzungen, keine automatisch getesteten Varianten und keine automatische Auswahl."
+          "description": "Possible translations, not automatically tested variants and not an automatic selection."
         },
         "unresolved_questions": {
           "type": "array",

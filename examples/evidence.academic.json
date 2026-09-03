@@ -135,7 +135,7 @@
       "claim_revision": 1,
       "claim_class": "SOURCE_FACT",
       "research_claim_level": null,
-      "statement": "Die synthetische Journalfassung berichtet einen positiven Out-of-Sample-Effekt.",
+      "statement": "The synthetic journal version reports a positive out-of-sample effect.",
       "origin": "MODEL",
       "as_of": "2026-08-01T09:00:00Z",
       "valid_until": null,
@@ -185,7 +185,7 @@
           "hypothesis_id": "H1",
           "effect": "NO_DIRECT_IMPACT",
           "materiality": "UNKNOWN",
-          "rationale": "Der enge Claim beschreibt nur, was die Arbeit berichtet; eine methodische Prüfung steht aus."
+          "rationale": "The narrow claim states only what the paper reports; a methodological review is still pending."
         }
       ],
       "decision_refs": [],
@@ -196,7 +196,7 @@
       "claim_revision": 1,
       "claim_class": "SOURCE_FACT",
       "research_claim_level": null,
-      "statement": "Die verwendete q-fin-Fassung ist der nicht peer-reviewte Preprint 2608.12345v2.",
+      "statement": "The q-fin version used is the non-peer-reviewed preprint 2608.12345v2.",
       "origin": "MODEL",
       "as_of": "2026-08-20T10:00:00Z",
       "valid_until": null,
@@ -246,7 +246,7 @@
           "hypothesis_id": "H1",
           "effect": "NO_DIRECT_IMPACT",
           "materiality": "IMMATERIAL",
-          "rationale": "Die Versionsidentität ändert die Hypothese nicht, begrenzt aber die zulässige Evidenzverwendung."
+          "rationale": "The version identity does not change the hypothesis, but it limits how the evidence may be used."
         }
       ],
       "decision_refs": [],

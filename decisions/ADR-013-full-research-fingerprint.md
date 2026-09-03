@@ -1,42 +1,42 @@
-# ADR-013: Vollständiger Forschungsfingerabdruck und sichtbare Änderungen
+# ADR-013: Full research fingerprint and visible changes
 
 ## Status
 
-Angenommen
+Accepted
 
 ## Problem
 
-Der bisherige Driftcheck verglich nur Forschungsfrage, Strategie, Markt,
-Zeithorizont, Auslöser und Ziel. Diese sechs Punkte konnten gleich bleiben,
-während ein Agent etwa einen Lookback, eine Messdefinition, einen Filter, eine
-Datenquelle, eine Ausschlussregel oder eine Auswertungsannahme änderte. Solche
-Änderungen können das Ergebnis materiell beeinflussen.
+The previous drift check compared only the research question, strategy, market,
+time horizon, trigger, and target. Those six points could remain unchanged while
+an agent changed a lookback, measurement definition, filter, data source,
+exclusion rule, or evaluation assumption. Such changes can materially affect
+the result.
 
-## Entscheidung
+## Decision
 
-Jede Research-Version erhält einen vollständigen, kanonisch geordneten
-Fingerabdruck. Er enthält alle fachlich wirksamen Festlegungen sowie die
-Prüfsummen der zugrunde liegenden materiellen Artefakte. Vor der Annahme eines
-materiellen Arbeitsergebnisses wird daraus ein Kandidatenfingerabdruck erzeugt
-und vollständig mit dem wirksamen Stand verglichen.
+Each Research version receives a complete, canonically ordered fingerprint. It
+contains all materially effective decisions and the checksums of the underlying
+material artifacts. Before a material work result is accepted, a candidate
+fingerprint is derived from it and compared in full with the effective
+fingerprint.
 
-Bei Gleichheit darf die Arbeit nach den übrigen Prüfungen angenommen werden.
-Bei jeder Abweichung bleibt der bisherige Fingerabdruck wirksam. Das System
-erzeugt einen sichtbaren Änderungsvorschlag mit den exakten abweichenden Pfaden.
-Nur eine ausdrückliche Nutzerentscheidung darf daraus eine neue Research-ID
-oder Research-Version machen. Ein bestehender Stand wird niemals still
-überschrieben.
+If the fingerprints are equal, the work may be accepted after the other
+required checks. If any difference exists, the previous fingerprint remains
+effective. The system creates a visible change proposal with the exact paths
+that differ. Only an explicit user decision may turn that proposal into a new
+Research ID or Research version. An existing state is never overwritten
+silently.
 
-Die Regel gilt für Fachagenten und für materielle Arbeit des Hauptagenten.
+The rule applies to specialist agents and to material work performed by the
+main agent.
 
-## Folgen
+## Consequences
 
-- Änderungen an bisher ungeschützten Details werden erkennbar.
-- Umordnungen in ausdrücklich ungeordneten Listen lösen keinen Fehlalarm aus.
-- Der Fingerabdruck beurteilt nicht, ob eine Änderung wissenschaftlich gut ist;
-  er macht sie sichtbar und verhindert ihre heimliche Übernahme.
-- Der Hauptagent muss aus jedem materiellen Ergebnis einen vollständigen
-  Kandidatenfingerabdruck ableiten.
-- Live-Verhalten von Sprachmodellen bleibt zusätzlich zu testen. Der dafür
-  vorgesehene LLM-Stresstest ist in `PLANNED_FEATURES.md` als noch nicht
-  implementiert dokumentiert.
+- Changes to previously unprotected details become visible.
+- Reordering explicitly unordered lists does not trigger a false alarm.
+- The fingerprint does not assess whether a change is scientifically good; it
+  makes the change visible and prevents its silent adoption.
+- The main agent must derive a complete candidate fingerprint from every
+  material result.
+- Live language-model behaviour still requires separate testing. The planned
+  LLM stress test is recorded as not yet implemented in `PLANNED_FEATURES.md`.

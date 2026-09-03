@@ -7,12 +7,12 @@
   "research": {
     "research_id": "research-demo-001",
     "research_version": "1.0.0",
-    "case_title": "Minimaler Demonstrationsfall"
+    "case_title": "Minimal demonstration case"
   },
   "execution_context": {
     "operation_id": "operation-demo-001",
-    "phase": "1-PHASE-0-VORPRUEFUNG",
-    "purpose": "Machbarkeit und Informationsbudget für den Demonstrationsfall prüfen."
+    "phase": "1-PHASE-0-PRE-EXAMINATION",
+    "purpose": "Assess feasibility and the information budget for the demonstration case."
   },
   "lineage": {
     "parent_run_id": null,
@@ -68,8 +68,8 @@
     "unavailable_reasons": [
       {
         "field": "lockfile_hash",
-        "reason": "Der Minimalfall verwendet keine externen Pakete und besitzt kein Lockfile.",
-        "impact": "Keine Auswirkung auf die reproduzierbare Standardbibliotheksausführung."
+        "reason": "The minimal case uses no external packages and has no lockfile.",
+        "impact": "No impact on reproducible standard-library execution."
       }
     ]
   },

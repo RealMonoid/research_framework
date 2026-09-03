@@ -1,8 +1,6 @@
 # Trading Research Framework – Quickstart
 
-Dieser Kurzpfad ist der einzige verpflichtende Einstieg für jede neue Idee. Die
-langen Normdokumente werden erst nach Status und Aufgabe geroutet; sie müssen
-nicht mehr vollständig vorab in den Kontext geladen werden.
+This short path is the only mandatory entry point for any new idea. The long standard documents are routed only by status and task; they no longer have to be loaded completely in advance into the context.
 
 ## Scope and restraint
 
@@ -21,198 +19,101 @@ empirical results in the public repository. Use a separate private location or
 the ignored `private_research/` path. Existing examples require a separate
 privacy review before removal; uncertainty is not permission to delete them.
 
-## Verbindliche Kommunikation mit dem Nutzer
+## Binding communication with the user
 
-Das Framework ist ein Werkzeug für Research und Trading-Entscheidungen, kein
-Softwareprojekt, dessen technische Einzelheiten der Nutzer verfolgen muss. Jeder
-Agent geht davon aus, dass vor ihm **kein Softwareentwickler** sitzt.
+The framework is a tool for research and trading decisions, not a software project whose technical details must be tracked by the user. Every agent assumes that **no software developer** is sitting in front of him.
 
-Für jede sichtbare Antwort gelten deshalb folgende Regeln:
+The following rules therefore apply to any visible response:
 
-1. **Ergebnis und Bedeutung zuerst.** Der Agent beginnt damit, was herauskam,
-   warum es für das Research relevant ist und ob etwas entschieden werden muss.
-2. **Allgemeinverständliche Sprache.** Softwarebegriffe, interne Feldnamen,
-   Funktionsnamen, Dateipfade, Schemanamen, Testnamen, CI-Details und technische
-   Architektur bleiben aus der Antwort, sofern der Nutzer sie nicht ausdrücklich
-   verlangt oder sie seine Entscheidung tatsächlich verändern.
-3. **Auch Research-Fachsprache wird übersetzt.** Unvermeidbare Begriffe aus
-   Statistik, Kausalität oder Marktstruktur werden beim ersten Auftreten in einem
-   einfachen Satz erklärt. Interne Statuscodes dürfen zusätzlich genannt werden,
-   aber nie ohne ihre Bedeutung in Alltagssprache.
-4. **Entscheidungen werden entscheidungsreif erklärt.** Wenn der Nutzer wählen
-   muss, nennt der Agent die konkrete Frage, warum sie jetzt ansteht, die
-   verständlichen Möglichkeiten, deren praktische Folgen und eine begründete
-   Empfehlung. Eine Liste interner Optionen oder Codes genügt nicht.
-5. **Technische Arbeit bleibt im Hintergrund.** Nach einer Umsetzung berichtet
-   der Agent nur, was sich für den Nutzer geändert hat, ob es geprüft wurde,
-   welche sachliche Einschränkung bleibt und ob eine Entscheidung offen ist.
-   Implementierungsdetails werden erst auf Nachfrage erläutert.
-6. **Keine ungefragte Entwickler-Rechtfertigung.** Aussagen darüber, wie
-   Funktionen geschnitten, Imports platziert, Adapter aufgebaut oder einzelne
-   Tests benannt sind, gehören nicht in die Nutzerantwort. Stattdessen genügt
-   beispielsweise: „Die Änderung funktioniert und wurde geprüft. Du musst dazu
-   nichts entscheiden.“
+1. **Result and meaning first.** The agent starts with what came out,
+why it is relevant for research and whether something has to be decided.
+2. **General language.** Software terms, internal field names,
+Function names, file paths, schema names, test names, CI details and technical architecture remain out of the answer unless the user expressly requests them or they actually change their decision.
+3. **Research specialist language is also translated. *** Inevitable terms from
+Statistics, causality or market structure are explained in a simple sentence at the first occurrence. Internal status codes may also be mentioned, but never without their meaning in everyday language.
+4. **Decisions are declared ready for decision.** When the user chooses
+The agent states why the decision is needed now, explains the understandable possibilities and their practical consequences, and gives a reasoned recommendation. A list of internal options or codes is not enough.
+5. **Technical work remains in the background.** Reported after implementation
+the agent only what has changed for the user, whether it has been checked, which factual restriction remains and whether a decision is open. Implementation details are only explained on request.
+6. **No unasked developer justification. ** Statements about how
+Functions cut, imports placed, adapters set up or individual tests named do not belong in the user response. Instead, for example, it suffices: “The change is working and has been checked.” You don’t have to decide anything about it.
 
-Die präzisen technischen und wissenschaftlichen Artefakte bleiben intern
-vollständig erhalten. Diese Kommunikationsregel verändert keine Forschungsregel;
-sie trennt lediglich die interne Dokumentation von der verständlichen Antwort an
-den Nutzer.
+The precise technical and scientific artifacts are fully preserved internally. This communication rule does not change a research rule; it only separates the internal documentation from the understandable response to the user.
 
-## Verbindlicher Forschungsleiter
+## Binding research conductor
 
-Jede Research-Aufgabe wird durch genau einen
-[`research-conductor`](agents/research-conductor.md) geführt. Er bleibt der
-Ansprechpartner des Nutzers, hält den aktuellen Stand fest und ruft Fachagenten
-nur über einen abgegrenzten Arbeitsauftrag auf. Fachagenten übernehmen weder das
-Gespräch noch die Gesamtentscheidung.
+Each research task is guided by exactly one [`research-conductor`](agents/research-conductor.md). The conductor remains the user's contact, keeps the current status, and calls specialist agents only through a defined work order. Specialist agents do not take over the conversation or the overall decision.
 
-Vor jedem sachlich wichtigen Übergang wird der Arbeitsstand als
-[`orchestration_state`](schemas/orchestration_state.schema.json) gespeichert.
-Der ausführbare Router
-[`route_research_task.py`](scripts/route_research_task.py) bestimmt daraus den
-nächsten Pflichtschritt. Dadurch gelten insbesondere diese Reihenfolgen:
+Before each important transition, the work status is stored as [`orchestration_state`](schemas/orchestration_state.schema.json). The executable router [`route_research_task.py`](scripts/route_research_task.py) determines the next mandatory step. In particular, these sequences apply:
 
-- unvollständige Prosastrategie: Quellenrekonstruktion → Begriffs- und
-  Voraussetzungenprüfung → erst danach Operationalisierung;
-- Frage nach Messnutzen oder unbekannten beobachtbaren Bedingungen:
-  abgeschlossene Begriffsprüfung → vorläufige Operationalisierung →
-  Bedingungsanalyse;
-- Revision oder Fortsetzung nach einem nicht positiven eingefrorenen Ergebnis:
-  wissenschaftsphilosophische Fortsetzungsprüfung vor neuer Empirie;
-- beabsichtigte Interventions- oder Kontrafaktualaussage:
-  Kausalitätsprüfung vor Effektschätzung oder kausaler Formulierung;
-- neue Ideen nur auf wirklichen Ideenwunsch; eine vorhandene Idee geht in den
-  Intake und nicht zurück zum Generator.
+- incomplete prose strategy: source reconstruction → conceptual and
+prerequisite review → only then operationalization;
+- question about usefulness or unknown observable conditions:
+completed concept review → preliminary operationalization → condition analysis;
+- Revision or continuation following a non-positive frozen result:
+continuing scientific-philosophical examination before new empiricism;
+- intended intervention or counterfactual statement:
+causality testing before effect estimation or causal formulation;
+- new ideas only on an actual request for ideation; an existing idea goes into
+intake and not back to the generator.
 
-Eine einfache Ergebniserklärung löst nicht automatisch einen Fachagenten aus.
-Eine erforderliche Nutzerentscheidung wird nur dann erfragt, wenn sie die
-Forschungsfrage, die Identität der Quellenstrategie oder den zulässigen Claim
-materiell verändert. Nach jedem angenommenen Fachbeitrag wird dessen Artefakt
-geprüft, der Arbeitsstand aktualisiert und erneut geroutet.
+A simple result statement does not automatically trigger a specialist agent. A necessary user decision will only be requested if it materially changes the research question, the identity of the source strategy or the permissible claim. After each accepted specialist article, its artifact is checked, the work status updated and routed again.
 
-Vor und nach jedem materiellen Forschungsschritt wird der vollständige
-Forschungsfingerabdruck verglichen. Er enthält neben Forschungsfrage,
-Quellstrategie, Markt und Zeithorizont auch Messdefinitionen, Parameter,
-Lookbacks, Filter und Ausschlüsse, Daten- und Stichprobenentscheidungen,
-Auswertungsregeln, Kosten- und Ausführungsannahmen, eingefrorene Ergebnisse und
-die Prüfsummen aller wirksamen Forschungsunterlagen.
+Before and after each material research step, the full research fingerprint is compared. In addition to research question, source strategy, market and time horizon, it also contains measurement definitions, parameters, lookbacks, filters and exclusions, data and sample decisions, evaluation rules, cost and execution assumptions, frozen results and the checksums of all effective research documents.
 
-Ein Beitrag wird nur angenommen, wenn
-[`check_research_fingerprint.py`](scripts/check_research_fingerprint.py) den
-gesamten Stand als `UNCHANGED` meldet. Jede Abweichung bleibt ein sichtbarer
-Änderungsvorschlag. Der alte Stand wird niemals still überschrieben; nur eine
-ausdrückliche Nutzerentscheidung darf daraus eine neue Research-Version machen.
+A contribution is accepted only if [`check_research_fingerprint.py`](scripts/check_research_fingerprint.py) reports the complete state as `UNCHANGED`. Any deviation remains a visible change proposal. The old state is never silently overwritten; only an explicit user decision may turn it into a new research version.
 
-## 1. Was technisch erzwungen wird – und was nicht
+## 1. What is technically enforced – and what is not
 
-| Ebene | Bedeutung |
+| Level | Meaning |
 |---|---|
-| Maschinengeprüft | JSON-Schemas, vollständige Forschungsfingerabdrücke, Schema-Vertragstests, Eval-Scorer, Producer-Protokoll und CI-Checks können objektiv bestehen oder scheitern. |
-| Evidenzgeprüft | Ein Status wie `SUPPORTED`, `PASS` oder `COMPLETE` ist nur belastbar, wenn das vorgeschriebene Evidenz-/Run-Artefakt existiert und die zugehörige Maschinenprüfung besteht. |
-| Selbstdeklaration | Prosa, Checklistenhaken und ein vom ausführenden Agenten selbst gesetztes `COMPLETE` sind zunächst Behauptungen. Ohne Artefaktprüfung oder unabhängiges Review beweisen sie keine korrekte Durchführung. |
+| Machinery tested | JSON schemas, complete research fingerprints, schema contract tests, evaluation scorer, producer protocol, and CI checks can objectively pass or fail. |
+| Evidence checked | A status such as `SUPPORTED`, `PASS`, or `COMPLETE` is reliable only when the required evidence/run artifact exists and its associated machine test passes. |
+| Self-declaration | Prose, checklist markers, and a `COMPLETE` status set by the executing agent are initially claims. Without artifact testing or independent review, they do not prove correct execution. |
 
-Normative Sprache steuert Verhalten, ersetzt aber keine technische Enforcement.
-Das Framework beansprucht nur dort automatische Durchsetzung, wo ein Schema,
-Test oder CI-Check benannt ist.
+Normative language controls behavior but does not replace technical enforcement. The framework claims automatic enforcement only where a scheme, test or CI-check is named.
 
-## 2. Optional: Ideen erzeugen
+## 2. Optional: Generate ideas
 
-Wenn noch keine Rohidee existiert, darf vor dem Intake der ausführbare
-Kurzfristgenerator verwendet werden:
+If no raw idea exists yet, the short-term executable generator may be used before the intake:
 
 ```bash
 python scripts/generate_hypotheses.py --output-dir artifacts/ideas-001 \
   --run-id generation:ideas-001 --markets FUTURES --max-candidates 20
 ```
 
-Grundlage sind
-[`generation/mechanism_catalog.v1.json`](generation/mechanism_catalog.v1.json)
-und die vier Operatoren `PHASE_PATH`, `EXPECTATION_VIOLATION`,
-`MECHANISM_CONNECTION` und `ASSUMPTION_RELAXATION`. Die Erzeugungsrouten sind
-Constraint-first, Mikrostrukturzustand, Instrumentenverknüpfung,
-Literaturreplikation und Beobachtung. Ein benannter gezwungener Akteur ist keine
-universelle Bedingung.
+This is based on [`generation/mechanism_catalog.v1.json`](generation/mechanism_catalog.v1.json) and the four operators `PHASE_PATH`, `EXPECTATION_VIOLATION`, `MECHANISM_CONNECTION`, and `ASSUMPTION_RELAXATION`. The generation routes are constraint-first, microstructure state, instrument linkage, literature replication, and observation. A named compelled actor is not a universal condition.
 
-Der Lauf schreibt einen validierten Generation-Run und minimale `INBOX`-Dateien.
-Er führt kein Screening, Backtesting, Evidence Grading, Ranking oder Promotion
-durch. Details und Filteroptionen stehen in
-[`generation/README.md`](generation/README.md).
+The run writes a validated generation run and minimal `INBOX` files. The generator does not perform screening, backtesting, evidence grading, ranking or promotion. Details and filter options are available in [`generation/README.md`](generation/README.md).
 
-Der Generation-Run dokumentiert den erzeugten Kandidatenraum. Werden etwa alle
-96 Kandidaten datenbasiert gescreent, wird vor dem ersten Ergebnis eine Familie
-mit `planned_screen_count = 96` in
-[`schemas/search_space.schema.json`](schemas/search_space.schema.json)
-fixiert. Die Schwelle jedes
-[`noise_screen`](schemas/noise_screen.schema.json) muss der dort hinterlegten
-Multiplikitätskorrektur entsprechen.
+The generation run documents the generated candidate space. If approximately all 96 candidates are screened using data, a family with `planned_screen_count = 96` is fixed in [`schemas/search_space.schema.json`](schemas/search_space.schema.json) before the first result. The threshold of each [`noise_screen`](schemas/noise_screen.schema.json) must correspond to the multiplicity correction stored there.
 
-## 2a. Optional: Strategie aus Buch, Artikel, Video oder Kurs übersetzen
+## 2a. Optional: Reconstruct a strategy from a book, article, video, or course
 
-Beschreibt eine Quelle ein Setup, operationalisiert Begriffe und Alternativen
-aber nicht vollständig, wird vor einer eigenen Spezifikation ein
-[`strategy_reconstruction`](schemas/strategy_reconstruction.schema.json)
-angelegt. Der Pfad trennt Quellenregel, Empfehlung, Option, Beispiel,
-Discretion und offene Definition. Mögliche Übersetzungen bleiben Kandidaten;
-sie werden weder automatisch gewählt noch getestet.
+If a source describes a setup but does not fully operationalize its terms and alternatives, create a [`strategy_reconstruction`](schemas/strategy_reconstruction.schema.json) before specifying it. The process separates source rules, recommendations, options, examples, discretion, and open definitions. Possible translations remain candidates; they are neither automatically chosen nor tested.
 
-Vor Abschluss der Rekonstruktion ist der
-[`scientific-philosophy-critic`](agents/scientific-philosophy-critic.md) im
-Pre-Operationalisierungsmodus zu verwenden. Sein
-[`strategy_concept_audit`](schemas/strategy_concept_audit.schema.json) trennt:
+Before the reconstruction is completed, use the [`scientific-philosophy-critic`](agents/scientific-philosophy-critic.md) in pre-operationalization mode. Its [`strategy_concept_audit`](schemas/strategy_concept_audit.schema.json) separates:
 
-- was die Strategie definiert,
-- was die Quelle nur als Anwendungsbedingung nennt,
-- was lediglich als Erfolgsmodifikator vermutet wird,
-- und welche Erfolgsbedingungen unbekannt bleiben.
+- what defines the strategy;
+- what the source names only as an application condition;
+- what is only suspected as a success modifier; and
+- which conditions for success remain unknown.
 
-Es legt außerdem gemeinsame Rechenbestandteile und Fenster offen, ohne sie als
-Kausalbeleg oder automatischen Fehler zu behandeln. Regime- und Zustandsfilter
-bleiben vorläufige Messinstrumente: Gruppenhäufigkeit allein ist keine
-Trennleistung, prognostische Trennung kein Beweis eines realen verborgenen
-Zustands und kein Mechanismusnachweis.
+It also reveals common computing components and windows without treating them as causal or automatic errors. Regime and state filters remain preliminary measuring instruments: group frequency alone is not separation performance, prognostic separation is not proof of a real hidden state and no proof of mechanism.
 
-Nach einer vorläufigen Operationalisierung kann eine
-[`condition_inquiry`](schemas/condition_inquiry.schema.json) aktiviert werden.
-Der
-[`condition-inquiry-analyst`](agents/condition-inquiry-analyst.md) kann damit
-Messinstrumente beurteilen, Definitionsabhängigkeit sichtbar machen und neue
-beobachtbare Bedingungshypothesen erzeugen. Datenbasiert gefundene Bedingungen
-bleiben neue Hypothesen; sie werden nicht in die Quellenstrategie
-zurückgeschrieben.
+After a preliminary operationalization, a [`condition_inquiry`](schemas/condition_inquiry.schema.json) can be activated. The [`condition-inquiry-analyst`](agents/condition-inquiry-analyst.md) can assess measuring instruments, make definition dependence visible, and generate new observable condition hypotheses. Conditions found from data remain new hypotheses; they are not written back into the source strategy.
 
-Der Arbeitsablauf steht in
-[`reconstruction/README.md`](reconstruction/README.md). Das ausgefüllte
-[`VWAP-Price-Discovery-Beispiel`](examples/strategy_reconstruction.vwap_wave_price_discovery.json)
-endet bewusst als `SOURCE_EXTRACTION` mit lauter offenen Entscheidungen. Es ist
-kein Backtest und keine Behauptung, die Quelle sei profitabel.
+The workflow is in [`reconstruction/README.md`](reconstruction/README.md). The completed [`VWAP price-discovery example`](examples/strategy_reconstruction.vwap_wave_price_discovery.json) deliberately ends as `SOURCE_EXTRACTION` with all decisions open. It is not a backtest and does not claim that the source is profitable.
 
-## 2b. Nur bei einer echten Kausalitätsfrage
+## 2b. Only on a real causality question
 
-Eine Tradingstrategie kann vollständig als Prognose untersucht werden, ohne zu
-behaupten, dass ein Signal den Markt verursacht. In diesem Normalfall entsteht
-kein zusätzlicher Kausalitätsaufwand.
+A trading strategy can be fully studied as a forecast without claiming that a signal is causing the market. In this normal case, no additional causality expenditure arises.
 
-Sobald dagegen eine Intervention, ein struktureller Schock oder ein
-Kontrafaktual behauptet werden soll, muss vor der Schätzung der
-[`causal-identification-critic`](agents/causal-identification-critic.md) prüfen,
-ob der Vergleich diese Bedeutung überhaupt trägt. Sein
-[`causal_identification_assessment`](schemas/causal_identification_assessment.schema.json)
-benennt Zielwirkung, Quelle der identifizierenden Variation, ökonomisches
-Modell, Annahmen, Finanzmarktrisiken, Gegenproben, Sensitivität und die stärkste
-zulässige Aussage.
+On the other hand, as soon as an intervention, a structural shock, or a counterfactual is to be claimed, the [`causal-identification-critic`](agents/causal-identification-critic.md) must check whether the comparison carries this meaning at all. Its [`causal_identification_assessment`](schemas/causal_identification_assessment.schema.json) identifies target impact, the source of identifying variation, the economic model, assumptions, financial-market risks, negative controls, sensitivity, and the strongest allowable statement.
 
-Ein Modell oder Schätzer ersetzt diese Prüfung nicht. Das gilt ausdrücklich für
-DML, Causal Forests, Local Projections, VARs, Event-Study-Regressionen,
-Granger-Verfahren und Causal Discovery. Finanzielle Event Studies müssen unter
-anderem das gegenfaktische Renditemodell, Event-Timing, Volatilität und andere
-Nachrichten behandeln; High-Frequency-Designs zusätzlich Leakage,
-Zeitstempel, Überraschungskonstruktion und Informationsschocks. Die verbindliche
-Forschungsbasis steht in
-[`references/CAUSAL_IDENTIFICATION_FOR_FINANCE.md`](references/CAUSAL_IDENTIFICATION_FOR_FINANCE.md).
+A model or estimator does not replace this test. This applies explicitly to DML, causal forests, local projections, VARs, event-study regressions, Granger procedures, and causal discovery. Financial event studies must cover, among other things, the counterfactual return model, event timing, volatility, and other news; high-frequency designs add leakage, timestamps, surprise construction, and information shocks. The mandatory research basis is in [`references/CAUSAL_IDENTIFICATION_FOR_FINANCE.md`](references/CAUSAL_IDENTIFICATION_FOR_FINANCE.md).
 
-Ein bestandenes Identifikationsgate erlaubt nur die benannte kausale Schätzung
-unter ihren Annahmen. Mechanismus, Vorhersage und handelbare Netto-Edge bleiben
-eigene Fragen.
+A passed identification gate allows only the named causal estimate under its assumptions. Mechanism, prediction and tradable net edge remain questions of their own.
 
 ## 2c. Freeze outcome meaning before validation
 
@@ -252,120 +153,81 @@ with
 The practical explanation is in
 [`07_PIPELINE_INTEGRITY_CONTROLS.md`](07_PIPELINE_INTEGRITY_CONTROLS.md).
 
-## 3. Günstiger Intake
+## 3. Cheap intake
 
-Eine neue Idee beginnt als `INBOX` nach
-[`schemas/hypothesis_candidate.schema.json`](schemas/hypothesis_candidate.schema.json).
-Benötigt werden zunächst nur:
+A new idea starts as `INBOX` after [`schemas/hypothesis_candidate.schema.json`](schemas/hypothesis_candidate.schema.json). Initially, record only:
 
-- stabile IDs und Zeitstempel,
-- Herkunft,
-- ein Rohsatz der Idee,
-- bereits verbrauchte Informations-/Datenreferenzen,
+- stable IDs and timestamps,
+- origin,
+- the raw idea,
+- information/data references already consumed,
 - `intake_status = INBOX`,
-- ein leeres `transition`-Objekt.
+- An empty `transition` object.
 
-Siehe [`examples/hypothesis_candidate.inbox.json`](examples/hypothesis_candidate.inbox.json).
-Wird die Idee beim Screening verworfen, genügt der kurze `REJECTED`-Datensatz mit
-Begründung; siehe
-[`examples/hypothesis_candidate.rejected.json`](examples/hypothesis_candidate.rejected.json).
+See [`examples/hypothesis_candidate.inbox.json`](examples/hypothesis_candidate.inbox.json). If the idea is discarded during screening, the short `REJECTED` record with a justification is sufficient; see [`examples/hypothesis_candidate.rejected.json`](examples/hypothesis_candidate.rejected.json).
 
-Erst `PROMOTED` verlangt vollständigen Scope, einen ausdrücklich dokumentierten
-Akteursstand, einen bestandenen
-Noise Screen oder einen begründeten theorie-/event-/replikationsbasierten Waiver,
-beobachtbare Footprints, Alternativerklärungen, Datenanforderungen, frühe
-Machbarkeit, die drei getrennten Evidenzstufen und einen Record zur
-Variablenauswahl. Bei
-`PREDEFINED` genügen Begründung und beibehaltene Konstrukte. `DATA_DRIVEN` und
-`HYBRID` verlangen zusätzlich Kandidatenuniversum, Selektionsdaten und deren
-Rolle, Outcome-Sichtbarkeit, Methode, effektive Kandidatenzahl, Suchraum und
-Kontrollen gegen Auswahlbias. SHAP, Impurity- oder andere
-Feature-Importance-Verfahren sind mögliche Diagnosen, aber weder Pflicht noch
-Kausalitätsnachweis. Ist für eine rein vorhersagende oder assoziative Frage kein
-Akteur belastbar bekannt, wird `UNSPECIFIED / NOT_CLAIMED` festgehalten. Das ist
-kein Hindernis für diese begrenzte Frage, darf aber nicht als Mechanismusbeleg
-gelesen werden. Promotion bestätigt keine Evidenzstufe.
+Only `PROMOTED` requires complete scope, an explicitly documented actor status, a passed noise screen or a well-founded theory-/event-/replication-based waiver, observable footprints, alternative explanations, data requirements, early feasibility, the three separate evidence levels and a record for variable selection. With `PREDEFINED` justification and retained constructs are sufficient. `DATA_DRIVEN` and `HYBRID` additionally require candidate universe, selection data and their role, outcome visibility, method, effective candidate number, search space and controls against selection bias. SHAP, impurity or other feature import procedures are possible diagnoses, but neither duty nor proof of causality. If no actor is known to be reliable for a purely predictive or associative question, `UNSPECIFIED / NOT_CLAIMED` is recorded. This is not an obstacle to this limited question, but it must not be read as a proof of mechanism. Promotion does not confirm an evidence level.
 
-## 4. Dokumentrouter nach Promotion
+## 4. Document router by promotion
 
-Nach `PROMOTED` wird nicht pauschal alles geladen:
+After `PROMOTED` everything is not loaded flat-rate:
 
-1. [`00_RESEARCH_AGENT_README.md`](00_RESEARCH_AGENT_README.md) für Gate- und Routinglogik.
-2. [`01_RESEARCH_STANDARD.md`](01_RESEARCH_STANDARD.md) für den verbindlichen Research-Pfad.
-3. [`02_RESEARCH_CASE_TEMPLATE.md`](02_RESEARCH_CASE_TEMPLATE.md) erst beim Anlegen des konkreten Research Case.
-4. Aus [`03_RESEARCH_METHODS.md`](03_RESEARCH_METHODS.md) nur die durch den Methodenrouter ausgewählten Abschnitte.
-5. [`04_CAUSAL_TOOLING.md`](04_CAUSAL_TOOLING.md) nur bei ausführbarer kausaler Kernoperation; sonst dokumentiertes `TOOLING_NOT_REQUIRED`.
-6. Aus [`05_AGENT_OPERATIONS.md`](05_AGENT_OPERATIONS.md) die zum erzeugten Artefakt oder Systemwechsel gehörenden Abschnitte.
+1. [`00_RESEARCH_AGENT_README.md`](00_RESEARCH_AGENT_README.md) for gate and routing logic.
+2. [`01_RESEARCH_STANDARD.md`](01_RESEARCH_STANDARD.md) for the mandatory research path.
+3. [`02_RESEARCH_CASE_TEMPLATE.md`](02_RESEARCH_CASE_TEMPLATE.md) only when creating the specific research case.
+4. From [`03_RESEARCH_METHODS.md`](03_RESEARCH_METHODS.md), only the sections selected by the method router.
+5. [`04_CAUSAL_TOOLING.md`](04_CAUSAL_TOOLING.md) only for an executable causal core operation; otherwise record `TOOLING_NOT_REQUIRED`.
+6. From [`05_AGENT_OPERATIONS.md`](05_AGENT_OPERATIONS.md), the sections belonging to the created artifact or system change.
 
-Das Nicht-Überspringen-Protokoll gilt innerhalb des aktivierten Pfads. Nicht
-aktivierte optionale Methoden erzeugen keine Serien begründeter `N/A`-Einträge.
+The non-skip protocol applies within the activated path. Unenabled optional methods do not generate series of justified `N/A` entries.
 
-## 4a. Nach einem nicht positiven Validation-Ergebnis
+## 4a. After a non-positive validation result
 
-`FALSIFIED`, `PRECISE_NULL`, `INCONCLUSIVE` und `INVALID_TEST` werden nicht durch
-eine nachträglich verdächtigte Operationalisierung ersetzt. Wird dennoch eine
-materielle Revision oder ein neuer empirischer Test erwogen, ist der
-[`scientific-philosophy-critic`](agents/scientific-philosophy-critic.md) zu
-verwenden. Sein
-[`scientific_philosophy_review`](schemas/scientific_philosophy_review.schema.json)
-trennt Kernclaim und Hilfsannahmen, hält eine nicht eindeutige Fehlerzurechnung
-offen und klassifiziert Anschlussideen als `PROGRESSIVE`, `DEGENERATIVE`,
-`DIAGNOSTIC_ONLY` oder `UNRESOLVED`.
+`FALSIFIED`, `PRECISE_NULL`, `INCONCLUSIVE`, and `INVALID_TEST` are not replaced by a subsequently suspected operationalization. If, however, a material revision or a new empirical test is considered, use the [`scientific-philosophy-critic`](agents/scientific-philosophy-critic.md). Its [`scientific_philosophy_review`](schemas/scientific_philosophy_review.schema.json) separates the core claim from auxiliary assumptions, keeps an inconclusive error allocation open, and classifies continuation ideas as `PROGRESSIVE`, `DEGENERATIVE`, `DIAGNOSTIC_ONLY`, or `UNRESOLVED`.
 
-Nur `PROGRESSIVE` autorisiert eine empirische Fortsetzung: neue Research-ID,
-zuvor nicht implizierte Vorhersage, Falsifikator und unabhängiger
-Evaluationsplan. Das
-[`synthetische Beispiel`](examples/scientific_philosophy_review.synthetic_failed_reconstruction.json)
-zeigt die Buchstrategie nur als Gedankenfall; es enthält keinen Backtest.
+Only `PROGRESSIVE` authorizes empirical continuation: a new Research ID, a previously unimplied prediction, a falsifier, and an independent evaluation plan. The [`synthetic example`](examples/scientific_philosophy_review.synthetic_failed_reconstruction.json) shows the book strategy only as a thought case; it contains no backtest.
 
-## 5. Nicht verhandelbare Kernregeln
+## 5. Non-negotiable core rules
 
-- Beobachtung, Mechanismus, Forward-OOS-Prognose und ausführbare Netto-Edge bleiben getrennte Aussagen.
-- Claim-Level (`ASSOCIATIONAL_PREDICTIVE / INTERVENTIONAL / COUNTERFACTUAL`) und Validierungs-/Handelsstatus (`mechanism_supported / forward_predictive_oos / executable_net_edge`) sind unabhängige Achsen. Keine Achse stuft die andere automatisch hoch.
-- Kausale Identifikation darf als SCM/DAG, Potential-Outcomes-Design, strukturell-ökonometrisches oder anderes explizites Identifikationsmodell formuliert werden. Die Notation entscheidet nicht über den Claim-Level.
-- Bereits betrachtete Daten werden im Informationsbudget erfasst.
-- Erzeugte und tatsächlich gescreente Kandidaten werden vollständig im Search-Space-Register gezählt; ein Noise-Screen-`PASS` ist keine Evidenz.
-- Prädiktoren müssen zum Entscheidungszeitpunkt tatsächlich verfügbar sein.
-- Materielle Regeln werden vor unabhängiger Evaluation eingefroren.
-- Kosten, Latenz, Fills und gegebenenfalls Queue/Borrow werden vor einem Netto-Edge-Claim geprüft.
-- `IDENTIFIED_CAUSAL_LEVER` erfordert ein bestandenes Identifikationsgate und ein Estimand-Artefakt.
-- `IMPLEMENTATION_CONSTRAINT` erfordert ein validiertes Phänomen und bestandene Umsetzbarkeitsprüfung.
-- Unbekannte Erfolgsbedingungen bleiben unbekannt; plausible Bedingungen werden
-  nicht heimlich zu Pflichtfiltern.
-- Konstruktionsabhängigkeit, statistische Abhängigkeit, prognostischer Nutzen
-  und kausaler Mechanismus bleiben getrennte Aussagen.
-- Ein Regimefilter ist ein Messinstrument. Seine Klassenhäufigkeit validiert ihn
-  nicht; prognostische Trennung beweist weder einen realen Zustand noch einen
-  Akteur oder Mechanismus.
+- Observation, mechanism, forward OOS forecast and net executable edge remain separate statements.
+- Claim level (`ASSOCIATIONAL_PREDICTIVE / INTERVENTIONAL / COUNTERFACTUAL`) and validation/trading status (`mechanism_supported / forward_predictive_oos / executable_net_edge`) are independent axes. Neither axis automatically upgrades the other.
+- Causal identification may be formulated as SCM/DAG, potential outcomes design, structural econometric or other explicit identification model. The notation does not decide on the claim level.
+- Data already considered is recorded in the information budget.
+- Created and actually screened candidates are fully counted in the Search Space Register; Noise screen `PASS` is not evidence.
+- Predictors must actually be available at the decision time.
+- Material rules are frozen before independent evaluation.
+- Costs, latency, fills and, where applicable, queue/borrow are assessed before a net edge claim.
+- `IDENTIFIED_CAUSAL_LEVER` requires a passed identification gate and an Estimand artifact.
+- `IMPLEMENTATION_CONSTRAINT` requires a validated phenomenon and a pass feasibility test.
+- Unknown conditions for success remain unknown; plausible conditions are not
+silently turned into mandatory filters.
+- Design dependence, statistical dependence, prognostic benefit
+and causal mechanism remain separate statements.
+- A regime filter is a measuring instrument. Its class frequency does not
+validate it; predictive separation proves neither a real state nor an actor or mechanism.
 
-Die letzten beiden Regeln sind in
-[`schemas/constraint_assessment.schema.json`](schemas/constraint_assessment.schema.json)
-maschinenprüfbar.
+The last two rules are machine-testable in [`schemas/constraint_assessment.schema.json`](schemas/constraint_assessment.schema.json).
 
-## 6. Framework-Integrität prüfen
+## 6. Check framework integrity
 
-Plattformneutral:
+Platform-neutral:
 
 ```bash
 python -m pip install -r requirements-dev.txt
 python scripts/validate_framework.py
 ```
 
-Windows/PowerShell bleibt als zweiter, in CI geprüfter Einstieg erhalten:
+Windows/PowerShell remains as the second entry checked in CI:
 
 ```powershell
 .\scripts\validate_framework.ps1
 ```
 
-Beide Pfade prüfen Framework-Verträge. Der mitgelieferte 1,000-Eval-Lauf ist nur
-`PROTOCOL_SMOKE` und kein Qualitätsbeleg für einen Live-Agenten.
+Both paths check framework contracts. The included 1.000 Eval run is only `PROTOCOL_SMOKE` and not a proof of quality for a live agent.
 
-## 7. Echten Agenten evaluieren
+## 7. Evaluating Real Agents
 
-`evals/produce_results.py` sendet jedem Agentenadapter nur Fallinput und
-Outputvertrag – niemals die erwarteten Assertions. Es unterstützt einen lokalen
-Subprozess oder einen JSON/HTTP-Endpunkt. Anschließend muss der Release-Check
-explizit `LIVE_AGENT` verlangen:
+`evals/produce_results.py` sends each agent adapter only case input and output contract – never the expected assertions. It supports a local subprocess or a JSON/HTTP endpoint. Then the release check must explicitly request `LIVE_AGENT`:
 
 ```bash
 python evals/produce_results.py --output artifacts/live-results.json \
@@ -377,13 +239,8 @@ python scripts/validate_framework.py \
   --report artifacts/live-eval-report.json
 ```
 
-Ohne produziertes `LIVE_AGENT`-Artefakt ist nur die Framework-Integrität geprüft,
-nicht die Qualität einer Modell- oder Promptänderung.
+Without produced `LIVE_AGENT` artifact, only the framework integrity is tested, not the quality of a model or prompt change.
 
-## 8. Bekannte offene Validierungslücke
+## 8. Known open validation gap
 
-Das Repository enthält derzeit keinen vollständig durchgearbeiteten realen
-Research Case. Schema-Fixtures und Eval-Fälle testen Verträge, nicht die
-praktische Bewährung des gesamten Research-Prozesses. Bis ein geeigneter Fall
-vorliegt, darf das Framework deshalb nicht als end-to-end praxiserprobt
-bezeichnet werden.
+The repository does not currently contain a fully completed real-world research case. Schema fixtures and Eval cases test contracts, not the practical probation of the entire research process. Until a suitable case exists, the framework must therefore not be described as end-to-end practice-tested.

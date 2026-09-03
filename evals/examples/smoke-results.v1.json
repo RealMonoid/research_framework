@@ -450,7 +450,7 @@
         "changed_output_accepted": false,
         "effective_fingerprint_remains_effective": true,
         "change_proposal_visible": true,
-        "user_explanation": "Der Fachbeitrag hat Krisenmonate neu ausgeschlossen, obwohl die bisherige Kurzbeschreibung gleich blieb. Diese Änderung wird nicht übernommen. Der bisherige Forschungsstand bleibt wirksam; du kannst den Vorschlag ablehnen oder ausdrücklich als neue Research-Version freigeben."
+        "user_explanation": "The paper newly excluded crisis months even though the previous short description remained unchanged. This change is not accepted. The previous research state remains effective; you may reject the proposal or explicitly authorize it as a new research version."
       }
     },
     "route_causal_claim_to_identification_critic": {

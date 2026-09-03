@@ -1,90 +1,90 @@
-# ADR-007: Entry Noise Screen und vorab fixierter Suchraum
+# ADR-007: Entry noise screen and pre-fixed search space
 
 **Status:** Accepted
 **Date:** 2026-08-31
-**Deciders:** Projektverantwortlicher und Maintainer des Research-Frameworks
+**Deciders:** Research owner and research-framework maintainer
 
 ## Context
 
-Der Generator macht die Erzeugung vieler Hypothesen billig. Er macht deren
-statistische Prüfung nicht billig und beseitigt keine Multiplizität. Ein Lauf
-mit 96 datenbasiert gescreenten Kandidaten ist eine Familie von 96 Tests, auch
-wenn später nur wenige davon in einem Research Case erscheinen.
+The generator makes it cheap to create many hypotheses. It does not make their
+statistical testing cheap and does not remove multiplicity. A run with 96
+data-screened candidates is a family of 96 tests, even if only a few later
+appear in a research case.
 
-Das bisherige §13-Gebot verlangte zwar die Dokumentation des Suchraums, besaß
-aber kein Entry-Artefakt, das Familiengröße und Schwelle vor dem ersten Ergebnis
-fixierte. Ein einzelner Screen bei fünf Prozent hätte deshalb aus einer großen
-Nullfamilie erwartbar falsche Überlebende erzeugen können.
+The former §13 rule required documenting the search space, but had no entry
+artifact that fixed family size and the threshold before the first result. A
+single five-percent screen could therefore produce expected false survivors
+from a large null family.
 
-Außerdem war der Ursprung neuer Katalogeinträge nicht explizit. Dadurch konnte
-der Mechanismenkatalog nicht sauber zwischen Literatur, Marktregel und eigener
-Beobachtung unterscheiden und systematisch aus neuen Beobachtungen wachsen.
+The origin of new catalogue entries was also not explicit. The mechanism
+catalogue could not cleanly distinguish literature, market rules, and the
+owner's observations or grow systematically from new observations.
 
 ## Decision
 
-1. Jeder Mechanismus führt ein `entry_origin` mit Ursprungstyp, stabilen
-   Referenzen, Kurzbegründung und Erfassungszeitpunkt. Eigene Beobachtungen
-   verwenden `INTERNAL_OBSERVATION` und eine Journal-/Beobachtungsreferenz.
-2. Ein Generatorlauf ist eine Kandidatenuniversums-Referenz. Vor dem ersten
-   datenbasierten Entry Screen wird die tatsächlich geplante Testfamilie in
-   `schemas/search_space.schema.json` fixiert.
-3. Das Register enthält registrierte Kandidaten, geplante und durchgeführte
-   Screens, Familien-Alpha, Korrekturmethode und wirksames Perzentil.
-4. `schemas/noise_screen.schema.json` speichert Statistik, Surrogatverfahren,
-   erhaltene Struktur, vorab gesetzte Schwelle, Exceedance-Zahl, Datenrolle und
-   Search-Space-Referenz.
-5. Ein beobachtungsgetriebener Candidate benötigt vor `PROMOTED` einen Screen.
-   Theorie-, terminierte Event- und publizierte Replikationsideen dürfen einen
-   begründeten Waiver verwenden.
-6. `PROMOTED` verlangt einen `actor_constraint` mit Akteur, Zwang, erwarteter
-   Handlung, Beobachtbarkeit und konkurrierender Akteurshypothese. Das ist eine
-   Plausibilitätsanforderung, kein Mechanismusnachweis.
-7. `scripts/validate_entry_thresholds.py` prüft die Regeln, die JSON Schema
-   nicht ausdrücken kann: Datumsreihenfolge, Quotienten, Zählergrenzen,
-   Cross-Artifact-Referenzen und die nachgerechnete Korrekturschwelle.
-8. Bonferroni verwendet die vorab geplante Familiengröße. Ein
-   Effective-Tests-Ansatz benötigt eine Evidenzreferenz. Benjamini–Hochberg darf
-   erst nach vollständigem Batch mit dokumentiertem Rang entscheiden.
-   `NONE_JUSTIFIED` ist nur bei `planned_screen_count = 1` zulässig; bei mehreren
-   geplanten Screens kann die Korrektur nicht wegbegründet werden.
-9. Noise Screens verwenden nur `DISCOVERY`- oder `SYNTHETIC`-Daten. `PASS`
-   berechtigt zu Phase-0-Aufwand und ist keine Evidenz für Effekt, Mechanismus,
-   Prognose oder Netto-Edge.
+1. Each mechanism carries an `entry_origin` with origin type, stable
+   references, a brief rationale, and collection time. The owner's observations
+   use `INTERNAL_OBSERVATION` and a journal or observation reference.
+2. A generator run is a candidate-universe reference. Before the first
+   data-based entry screen, fix the planned test family in
+   `schemas/search_space.schema.json`.
+3. The register contains registered candidates, planned and completed screens,
+   family alpha, correction method, and effective percentile.
+4. `schemas/noise_screen.schema.json` stores the statistic, surrogate method,
+   preserved structure, pre-set threshold, exceedance count, data role, and
+   search-space reference.
+5. An observation-driven candidate requires a screen before `PROMOTED`.
+   Theory-driven, scheduled-event, and published-replication ideas may use a
+   justified waiver.
+6. `PROMOTED` requires an `actor_constraint` with actor, compulsion, expected
+   action, observability, and a competing actor hypothesis. This is a
+   plausibility requirement, not proof of a mechanism.
+7. `scripts/validate_entry_thresholds.py` checks rules that JSON Schema cannot
+   express: date order, ratios, counter bounds, cross-artifact references, and
+   the recalculated correction threshold.
+8. Bonferroni uses the pre-planned family size. An effective-tests approach
+   requires an evidence reference. Benjamini–Hochberg may decide only after a
+   complete batch with a documented rank. `NONE_JUSTIFIED` is allowed only when
+   `planned_screen_count = 1`; for several planned screens the correction
+   cannot be explained away.
+9. Noise screens use only `DISCOVERY` or `SYNTHETIC` data. `PASS` permits Phase-0
+   expenditure and is not evidence of an effect, mechanism, forecast, or net
+   edge.
 
-## Rejected Alternatives
+## Rejected alternatives
 
-- **Fester universeller p-Wert:** verworfen, weil Familiengröße und
-  Abhängigkeitsstruktur variieren und die Markt-Nullverteilung driftet.
-- **Naive Permutation als Standard:** verworfen, wenn sie Sessionstruktur,
-  Autokorrelation oder Volatilitätscluster zerstört.
-- **Nur überlebende Kandidaten zählen:** verworfen, weil dies den tatsächlichen
-  Suchraum nach Ergebnissicht verkleinert.
-- **Familiengröße nach jedem Screen erhöhen:** verworfen, weil dadurch bereits
-  getroffene Entscheidungen nachträglich eine andere Schwelle erhielten.
-- **Benjamini–Hochberg als laufender Einzeltest-Cutoff:** verworfen, weil der
-  BH-Rang die vollständige sortierte p-Wert-Familie voraussetzt.
-- **Noise Screen für jede Idee ohne Ausnahme:** verworfen zugunsten eng
-  definierter Waiver für Theorie, terminierte Events und Replikation.
-- **Actor Constraint schon bei `INBOX`:** verworfen, damit Rohideen weiterhin
-  billig und ohne nachträgliche Herkunftsverluste erfasst werden können.
-- **Schema-Prosa als angebliche Rechenprüfung:** verworfen; die semantischen
-  Invarianten werden ausführbar validiert.
+- **Fixed universal p-value:** rejected because family size and dependency
+  structure vary, and the market null distribution drifts.
+- **Naive permutation as the standard:** rejected when it destroys session
+  structure, autocorrelation, or volatility clusters.
+- **Count only surviving candidates:** rejected because this shrinks the actual
+  search space after seeing results.
+- **Increase family size after each screen:** rejected because decisions already
+  made would retroactively receive a different threshold.
+- **Benjamini–Hochberg as a running individual-test cutoff:** rejected because
+  the BH rank requires the complete sorted p-value family.
+- **Noise screen for every idea without exception:** rejected in favour of a
+  narrowly defined waiver for theory, scheduled events, and replication.
+- **Require an actor constraint already at `INBOX`:** rejected so raw ideas can
+  continue to be recorded cheaply without losing their origin.
+- **Treat schema prose as a calculation check:** rejected; semantic invariants
+  are validated by executable code.
 
 ## Consequences
 
-- Ein großer Generatorlauf kann nicht mehr stillschweigend als Folge
-  unabhängiger Fünf-Prozent-Screens behandelt werden.
-- Der Katalog kann aus internen Beobachtungen wachsen, ohne Beobachtung mit
-  Evidenz zu verwechseln.
-- `INBOX` bleibt unverändert klein; die zusätzlichen Pflichten beginnen erst
-  beim datenbasierten Screen beziehungsweise bei Promotion.
-- Das Framework wird dadurch nicht end-to-end praxiserprobt. Die bekannte Lücke
-  eines vollständig durchgearbeiteten realen Research Case bleibt bestehen.
+- A large generator run can no longer be silently treated as a series of
+  independent five-percent screens.
+- The catalogue can grow from internal observations without confusing
+  observation with evidence.
+- `INBOX` remains lightweight; additional obligations begin only at a
+  data-based screen or promotion.
+- The framework is still not tested end to end in practice. The known gap of a
+  fully completed real Research Case remains.
 
-## Action Items
+## Action items
 
-1. [x] Katalogherkunft ergänzen und vorhandene Einträge migrieren.
-2. [x] Search-Space- und Noise-Screen-Schemas anlegen.
-3. [x] Semantischen Cross-Artifact-Validator implementieren.
-4. [x] `PROMOTED`-Intake und Actor Constraint verschärfen.
-5. [x] Positive, negative, arithmetische und plattformübergreifende Tests ergänzen.
+1. [x] Add catalogue origins and migrate existing entries.
+2. [x] Create search-space and noise-screen schemas.
+3. [x] Implement a semantic cross-artifact validator.
+4. [x] Tighten the `PROMOTED` intake and actor constraint.
+5. [x] Add positive, negative, arithmetic, and cross-platform tests.

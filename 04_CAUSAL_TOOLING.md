@@ -1,227 +1,217 @@
 # 04_CAUSAL_TOOLING.md
 
-**Version:** 1.1
-**Stand:** 2026-08-31
-**Status:** VERBINDLICH
-**Zweck:** Verbindlicher Router für spezialisierte Python-Bibliotheken bei expliziter Identifikation, optionaler DAG-Prüfung, kausaler Schätzung, Refutation und zeitserienspezifischer Causal Discovery.
+**Version:** 1.1 **As of:** 2026-08-31 **Status:** BINDING **Purpose:** Binding router for specialized Python libraries with explicit identification, optional DAG checking, causal estimation, refutation, and time-series-specific causal discovery.
 
 ---
 
-# 1. Grundregel
+# 1. Basic rule
 
-Dieses Dokument regelt erst die Werkzeuge **nach** der inhaltlichen
-Identifikationsprüfung. Bei `INTERVENTIONAL` oder `COUNTERFACTUAL` muss zuvor
-ein validiertes `causal_identification_assessment` nach
-`schemas/causal_identification_assessment.schema.json` vorliegen. Ein
-Bibliothekslauf kann dieses Pflichtartefakt nicht ersetzen. Die verbindliche
-finanzmarktspezifische Forschungsbasis steht in
-`references/CAUSAL_IDENTIFICATION_FOR_FINANCE.md`.
+This document only regulates the tools **after** the content identification check. For `INTERVENTIONAL` or `COUNTERFACTUAL`, a validated `causal_identification_assessment` conforming to `schemas/causal_identification_assessment.schema.json` must be available beforehand. A library run cannot replace this mandatory artifact. The binding financial market-specific research basis is in `references/CAUSAL_IDENTIFICATION_FOR_FINANCE.md`.
 
-Sobald eine kausale Methode als Code ausgeführt wird, verwendet der Agent eine geeignete spezialisierte Bibliothek, sofern eine gepflegte und für das Design passende Implementierung verfügbar ist. Kausale Kernalgorithmen werden nicht ad hoc neu geschrieben.
+Once a causal method is executed as code, the agent uses a suitable specialized library, provided a well-maintained and design-friendly implementation is available. Causal core algorithms are not rewritten ad hoc.
 
-Ausnahmen sind nur zulässig, wenn:
+Exceptions are only allowed if:
 
-- keine geeignete Bibliothek die benötigte Methode unterstützt,
-- eine kleine Eigenimplementierung ausschließlich als unabhängiger Kontrolltest dient,
-- oder eine veröffentlichte Replikation exakt die ursprüngliche Implementierung verlangt.
+- no suitable library supports the required method,
+- a small self-implementation serves exclusively as an independent control test,
+- or a published replication requires exactly the original implementation.
 
-In jedem Ausnahmefall werden Grund, Tests und Abweichungen dokumentiert.
+In each exceptional case, reason, tests and deviations are documented.
 
-Der Status je Research-Version lautet:
+The status per Research version is:
 
 - `TOOLING_REQUIRED`,
-- `TOOLING_NOT_REQUIRED + Begründung`,
-- oder `TOOLING_BLOCKED + fehlende Laufzeit/Bibliothek/API/Kompatibilität`.
+- `TOOLING_NOT_REQUIRED + justification`,
+- or `TOOLING_BLOCKED + missing runtime/library/API/compatibility`.
 
-Ein Tooling-Blocker beendet nicht automatisch rein beschreibende Discovery. Er blockiert jedoch jeden abhängigen kausalen Freeze oder Schätzschritt.
-
----
-
-# 2. Was Bibliotheken nicht leisten
-
-Eine Bibliothek kann die logischen und numerischen Operationen korrekt ausführen. Sie kann nicht aus Marktbeobachtungen allein garantieren, dass:
-
-- der eingegebene DAG wahr ist,
-- kein relevanter latenter Confounder fehlt,
-- ein Instrument die Exclusion Restriction erfüllt,
-- Positivity/Overlap gegeben ist,
-- eine Event-Überraschung exogen ist,
-- eine gefundene Kante stabil über Regime bleibt,
-- oder der geschätzte Effekt handelbar ist.
-
-Ein erfolgreiches API-Ergebnis erhöht den Claim-Level nicht. `ASSOCIATIONAL_PREDICTIVE`, `INTERVENTIONAL` und `COUNTERFACTUAL` werden ausschließlich nach `01_RESEARCH_STANDARD.md` vergeben.
-
-Auch die Bibliothekswahl entscheidet nicht über den Formalismus. Je nach Frage
-kann das Identifikationsmodell als SCM/DAG, Potential-Outcomes-Design,
-strukturell-ökonometrisches oder anderes explizites Modell formuliert werden.
-Graphbibliotheken sind nur dann Pflicht, wenn eine graphische Kernoperation
-tatsächlich Teil des Designs ist.
-
-Für diese Arbeit muss kein eigenes LLM trainiert werden. `EconML`, `DoubleML` und ähnliche Verfahren können im Research Nuisance- oder Effektmodelle fitten; das ist normale statistische Modellschätzung und kein Training eines Sprachmodells.
+A tooling blocker does not automatically terminate purely descriptive discovery. However, it blocks any dependent causal freeze or estimation step.
 
 ---
 
-# 3. Verbindlicher Bibliotheksrouter
+# 2. What Libraries Don't Do
 
-| Aufgabe | Primärer Default | Geeignet für | Nicht als |
+A library can perform the logical and numerical operations correctly. It cannot guarantee from market observations alone that:
+
+- that the supplied DAG is true,
+- that no relevant latent confounder is missing,
+- an instrument meets the exclusion restriction;
+- positivity/overlap is given,
+- an event surprise is exogenous,
+- a found edge remains stable over regimes,
+- or the estimated effect is tradable.
+
+A successful API result does not increase the claim level. `ASSOCIATIONAL_PREDICTIVE`, `INTERVENTIONAL` and `COUNTERFACTUAL` are assigned exclusively to `01_RESEARCH_STANDARD.md`.
+
+The choice of library does not decide on formalism either. Depending on the question, the identification model can be formulated as SCM/DAG, potential outcomes design, structural econometric or other explicit model. Graph libraries are only mandatory if a core graphics operation is actually part of the design.
+
+For this work, no in-house LLM has to be trained. `EconML`, `DoubleML`, and similar procedures can fit research nuisance or effect models; this is normal statistical model estimation, not training of a language model.
+
+---
+
+# 3. Binding library router
+
+| Task | Primary default | Suitable for | Not as |
 |---|---|---|---|
-| Model–Identify–Estimate–Refute | `DoWhy` | expliziter Graph, Identifikation, Schätzeraufruf, Placebos/Refuter/Sensitivität | Oracle für DAG-Wahrheit oder Identifikationsannahmen |
-| DAG-, d-Separation- und Adjustierungsprüfung | `pgmpy` | Backdoor-/Frontdoor-Prüfung, Adjustmentsätze, graphische und probabilistische Abfragen | automatische Wahrheitssuche aus beliebigen Marktzeitreihen |
-| CATE, Causal Forest, flexible DML-Schätzung | `EconML` | heterogene Effekte und ML-basierte Nuisance-Modelle nach Identifikation | Ersatz für Unconfoundedness, IV-Gültigkeit oder temporale Splitlogik |
-| DML in unterstützten formalen Designs | `DoubleML` | orthogonale Scores, Cross-Fitting, PLR/IRM/IV/DID/RDD je unterstützter Modellklasse | universeller Kausalschätzer oder IID-Rechtfertigung für Zeitreihen |
-| Zeitreihen-Causal-Discovery | `Tigramite` | PCMCI/PCMCI+, LPCMCI und passende Conditional-Independence-Tests | eindeutiger „wahrer DAG“ ohne Algorithmusannahmen |
-| einfaches binäres Treatment | `causalinference` | Overlap, Propensity, Trimming, Matching, Blocking, Weighting, Least Squares | Standard für DML, Zeitreihen-Discovery oder allgemeine graphische Identifikation |
+| Model–identify–estimate–refute | `DoWhy` | explicit graph, identification, estimation, placebos, refuters, and sensitivity | Oracle for DAG truth or identification assumptions |
+| DAG, d-separation, and adjustment test | `pgmpy` | Backdoor/frontdoor checks, adjustment sets, and graphical or probabilistic queries | Automatic truth search from any market time series |
+| CATE, causal forest, or flexible DML estimate | `EconML` | Heterogeneous effects and ML nuisance models after identification | Replacement for unconfoundedness, IV validity, or temporal split logic |
+| DML in supported formal designs | `DoubleML` | Orthogonal scores and cross-fitting for supported PLR/IRM/IV/DID/RDD classes | Universal causal estimator or IID justification for time series |
+| Time-series causal discovery | `Tigramite` | PCMCI/PCMCI+, LPCMCI, and suitable conditional-independence tests | A “true DAG” without algorithm assumptions |
+| Simple binary treatment | `causalinference` | Overlap, propensity, trimming, matching, blocking, weighting, and least squares | Standard for DML, time-series discovery, or general graphical identification |
 
-`causalinference` bezeichnet hier das separate Python-Paket. Es ist nicht mit `pgmpy.inference.CausalInference` zu verwechseln.
+`causalinference` here denotes the separate Python package. It should not be confused with `pgmpy.inference.CausalInference`.
 
-Pro Aufgabe wird eine primäre Bibliothek festgelegt. Zwei Bibliotheken für denselben Schritt sind nur sinnvoll, wenn der zweite Lauf vorab als unabhängige Replikation oder Kompatibilitätskontrolle definiert ist.
+A primary library is set for each task. Two libraries for the same step are only useful if the second run is defined in advance as independent replication or compatibility control.
 
 ---
 
-# 4. Auswahl nach Research-Frage
+# 4. Selection by research question
 
-## 4.1 Rein prädiktive Reaktionsinnovation
+## 4.1 Purely predictive reaction innovation
 
-Beispiel: Ein zeitlich OOS geschätztes Modell prognostiziert die 2Y- oder Nasdaq-Reaktion auf einen CPI-Schock; das Residuum dient als `REACTION_INNOVATION`.
+Example: A temporal OOS estimated model predicts the 2Y or Nasdaq response to a CPI shock; the residual serves as `REACTION_INNOVATION`.
 
-Kausalbibliothek: `TOOLING_NOT_REQUIRED`, sofern kein kausaler Effekt oder DAG-Claim geschätzt wird. Eine gewöhnliche Statistik-/ML-Bibliothek genügt. Die Reaktionsinnovation bleibt prädiktiv.
+Causal tooling: `TOOLING_NOT_REQUIRED` unless a causal effect or DAG claim is estimated. An ordinary statistical/ML library is sufficient. Reaction innovation remains predictive.
 
-## 4.2 Identifizierter durchschnittlicher Effekt
+## 4.2 Identified average effect
 
-1. Estimand und explizites Identifikationsmodell festlegen.
-2. Bei SCM/DAG-Designs Adjustmentsatz und Identifikationsstrategie mit `DoWhy`
-   oder `pgmpy` prüfen; bei Potential Outcomes oder anderen Designs die
-   designspezifischen Identifikationsbedingungen und Diagnosen protokollieren.
-3. Den einfachsten designspezifisch geeigneten Schätzer wählen.
-4. Schätzung und Refutation mit `DoWhy` beziehungsweise designspezifischer Bibliothek ausführen.
-5. Mindestens eine unabhängige Diagnose vorsehen, etwa alternative zulässige Adjustierung, Negativkontrolle, Placebo oder Sensitivitätsanalyse.
+1. Estimand and explicit identification model.
+2. For SCM/DAG designs, check the adjustment set and identification strategy
+   with `DoWhy` or `pgmpy`; for potential outcomes or other designs, log the
+   design-specific identification conditions and diagnoses.
+3. Choose the simplest design-specific estimator.
+4. Perform estimation and refutation with `DoWhy` or a design-specific library.
+5. Provide at least an independent diagnosis, such as alternative permitted adjustment, negative control, placebo or sensitivity analysis.
 
-## 4.3 Heterogene Effekte oder hochdimensionale Controls
+## 4.3 Heterogeneous effects or high-dimensional controls
 
-1. Identifikation muss bereits bestanden sein.
-2. `EconML` **oder** `DoubleML` entsprechend Estimand und unterstütztem Design wählen.
-3. Overlap, Effektmodifikatoren, Nuisance-Learner und Splitlogik vor Freeze festlegen.
-4. Bei Marktzeitreihen keine zufälligen IID-Folds verwenden, wenn sie zeitliche oder clusterbezogene Abhängigkeit verletzen; externe zeitliche/Cluster-Splits nutzen, soweit die gewählte API dies korrekt unterstützt.
-5. CATE-/Policy-Ergebnisse benötigen eigene Multiplicity- und OOS-Regeln.
+1. Identification must already exist.
+2. Choose `EconML` **or** `DoubleML` according to the estimand and supported design.
+3. Set overlap, effect modifiers, nuisance-model specification, and split logic before freeze.
+4. For market time series, do not use random IID folds if they violate temporal or cluster dependency; use external temporal/cluster splits, as long as the selected API supports this correctly.
+5. CATE/Policy results require their own multiplicity and OOS rules.
 
-## 4.4 DAG-Prüfung ohne Effektschätzung
+## 4.4 DAG test without effect estimation
 
-`pgmpy` ist der Default für d-Separation, graphische Struktur, Adjustmentsatzvalidierung und kausale Abfragen auf einem angenommenen Modell. `DoWhy` ist sinnvoll, wenn der Graph direkt in einen vollständigen Identifikations- und Refutationsworkflow übergeht.
+`pgmpy` is the default for d-separation, graphical structure, adjustment-set validation, and causal queries on an assumed model. `DoWhy` makes sense if the graph goes directly into a complete identification and refutation workflow.
 
-## 4.5 Causal Discovery in Zeitreihen
+## 4.5 Causal discovery in time series
 
-`Tigramite` ist der Default für PCMCI-/PCMCI+-artige Aufgaben. Vor dem Lauf werden mindestens eingefroren:
+`Tigramite` is the default for PCMCI/PCMCI+-type tasks. At least the following shall be frozen before the run:
 
-- Variablen und Zeitauflösung,
+- variables and time resolution;
 - `tau_min`/`tau_max`,
-- Conditional-Independence-Test,
-- Link-Annahmen,
-- Stationaritäts-/Regimelogik,
-- Behandlung latenter Confounder,
-- Signifikanz- und Multiple-Testing-Regel,
-- sowie die zulässige Ausgabe als Kandidatengraph oder Äquivalenzklasse.
+- conditional-independence test,
+- link assumptions,
+- stationarity/regime logic,
+- treatment of latent confounders,
+- significance and multiple-testing rule,
+- as well as the permitted output as a candidate graph or equivalence class.
 
-Das Ergebnislabel bleibt `CAUSAL_HYPOTHESIS`, solange keine zusätzliche Identifikationsstrategie besteht.
+The result label remains `CAUSAL_HYPOTHESIS` as long as no additional identification strategy exists.
 
-## 4.6 Matching/Propensity bei binärem Treatment
+## 4.6 Matching/Propensity in binary treatment
 
-`causalinference` darf verwendet werden, wenn sein enger Funktionsumfang genau passt und die aktuelle Python-/NumPy-/SciPy-Kompatibilität durch Tests bestätigt ist. Bei neuen oder komplexeren Designs werden `DoWhy`, `EconML` oder `DoubleML` bevorzugt. Ein Wechsel darf nicht nur deshalb erfolgen, weil ein Paket einen günstigeren Punktschätzer liefert.
-
----
-
-# 5. Reproduzierbare Umgebung
-
-Keine Bibliothek wird stillschweigend in eine globale oder gemeinsam genutzte Python-Umgebung installiert. Für ein ausführbares Projekt wird eine isolierte, projektspezifische Umgebung oder das bereits freigegebene Projekt-Environment verwendet.
-
-Vor der ersten Analyse sind zu protokollieren:
-
-- Python- und Betriebssystemversion,
-- Paketname und exakte installierte Version,
-- Installationsquelle,
-- Lockfile beziehungsweise vollständiger Environment-Export,
-- Hauptklasse/-funktion und relevante Parameter,
-- Zufallsseeds,
-- Strukturmodell-/Design-, Estimand- und Datenversions-ID,
-- Split-/Cross-Fitting-Logik,
-- relevante Runtime-Warnungen und Deprecations,
-- sowie Pfad oder Hash der erzeugten Konfiguration und Ergebnisse.
-
-Ein unversioniertes `pip install <paket>` ist kein reproduzierbarer Freeze. Die konkrete Version wird erst nach Kompatibilitätsprüfung im Projekt-Lockfile fixiert; dieses Framework friert absichtlich keine universelle Paketkombination ein.
+`causalinference` may be used if its narrow range of functions fits exactly and the current Python/NumPy/SciPy compatibility is confirmed by tests. For new or more complex designs, `DoWhy`, `EconML` or `DoubleML` are preferred. A change must not be made only because a package delivers a more favorable point estimate.
 
 ---
 
-# 6. Kompatibilitäts- und Integritätsgate
+# 5. Reproducible environment
 
-Vor Freeze muss bei `TOOLING_REQUIRED` Folgendes `PASS` sein:
+No library is quietly installed in a global or shared Python environment. For an executable project, an isolated, project-specific environment or the already released project environment is used.
 
-1. Import aller benötigten Pakete.
-2. Ausgabe der tatsächlichen Versionen.
-3. Ausführung der konkret verwendeten Haupt-API ohne unerklärte Warnung.
-4. Synthetisches, zum Formalismus passendes Identifikationsdesign mit bekanntem
-   Zielwert; bei graphischer Adjustierung zusätzlich ein bekannter zulässiger
-   Adjustmentsatz.
-5. Synthetischer positiver Effekt mit bekanntem Vorzeichen.
-6. Synthetischer Nullfall, in dem die Pipeline keinen stabilen Effekt erfinden darf.
-7. Mindestens ein Collider-/post-treatment-Sentinel, wenn Adjustierung Teil der Analyse ist.
-8. Zeit-/Leakage-Sentinel, wenn Marktzeitreihen oder Eventfenster verwendet werden.
-9. Bei gekoppelten Bibliotheken ein End-to-End-Smoke-Test genau dieser Versionskombination.
+Before the initial analysis, the following should be recorded:
 
-Die Entscheidung lautet:
+- Python and operating system version,
+- package name and exact installed version,
+- installation source,
+- Lockfile or complete environment export,
+- main class/function and relevant parameters,
+- random seeds,
+- structural model/design, estimand and data version ID,
+- split/cross-fitting logic,
+- relevant runtime warnings and deprecations,
+- as well as path or hash of the generated configuration and results.
 
-- `PASS`: nur für die protokollierte Versionskombination und API.
-- `FAIL`: Implementierung oder Konfiguration ist falsch; kein Freeze.
-- `BLOCKED`: notwendige Laufzeit, kompatible Version oder Diagnose fehlt; kein abhängiger kausaler Schritt.
-- `NOT_REQUIRED`: keine ausführbare kausale Methode im Design.
-
-Warnungen werden nicht pauschal unterdrückt. Sie werden zuerst klassifiziert und nur dann gezielt gefiltert, wenn ihre Ursache verstanden und im Artefakt dokumentiert ist.
+An unversioned `pip install <package>` is not a reproducible freeze. The
+specific version is fixed in the project lockfile only after a compatibility
+check; this framework deliberately does not freeze a universal package
+combination.
 
 ---
 
-# 7. Tool-spezifische Mindestregeln
+# 6. Compatibility and integrity gate
+
+Before Freeze, the following must be `PASS` when `TOOLING_REQUIRED` applies:
+
+1. Import all required packages.
+2. Report the actual installed versions.
+3. Execution of the specifically used main API without unexplained warning.
+4. A synthetic identification design with a known target value; for graphical
+   adjustment, also a known valid adjustment set.
+5. Synthetic positive effect with known sign.
+6. Synthetic zero case in which the pipeline must not invent a stable effect.
+7. At least one collider/post-treatment sentinel if adjustment is part of the analysis.
+8. Time/Leakage Sentinels when market time series or event windows are used.
+9. For coupled libraries, an end-to-end smoke test of exactly this version combination.
+
+The decision is:
+
+- `PASS`: only for the logged version combination and API.
+- `FAIL`: Implementation or configuration is wrong; no freeze.
+- `BLOCKED`: a required runtime, compatible version, or diagnosis is missing;
+  no dependent causal step may proceed.
+- `NOT_REQUIRED`: no executable causal method in design.
+
+Warnings are not generally suppressed. They are first classified and only filtered specifically if their cause is understood and documented in the artifact.
+
+---
+
+# 7. Tool-specific minimum rules
 
 ## 7.1 DoWhy
 
-- Graph, Treatment, Outcome und Estimand werden explizit versioniert.
-- `identify_effect` oder die entsprechende aktuelle API wird vor `estimate_effect` ausgeführt.
-- Die vom Identifikator verwendete Strategie und der Adjustmentsatz werden gespeichert.
-- Refuter sind Falsifikationsversuche, keine Bestätigung der Wahrheit.
-- Placebo-, Negativkontroll- und Sensitivitätstests werden designspezifisch ausgewählt; nicht jeder Refuter ist für jedes Design sinnvoll.
+- Graph, Treatment, Outcome and Estimand are explicitly versioned.
+- `identify_effect` or the corresponding current API is executed before `estimate_effect`.
+- The strategy used by the identifier and the adjustment set are stored.
+- Refuters are falsification attempts, not confirmation of the truth.
+- placebo, negative-control, and sensitivity tests are selected design-specifically; not every refuter makes sense for every design.
 
 ## 7.2 pgmpy
 
-- Modelltyp und Kantenliste werden versioniert.
-- Backdoor-/Frontdoor- und Adjustierungsabfragen werden gegen das konkrete Estimand geprüft.
-- Ein technisch gültiger Adjustmentsatz ist nur relativ zum angenommenen Graph gültig.
-- Probabilistische Query und interventionale Query werden sprachlich getrennt.
+- Model type and edge list are versioned.
+- Backdoor/frontdoor and adjustment queries are checked against the specific Estimand.
+- A technically valid adjustment set is valid only relative to the assumed graph.
+- Probabilistic query and interventional query are separated linguistically.
 
-## 7.3 EconML und DoubleML
+## 7.3 EconML and DoubleML
 
-- Identifikationsannahme und Estimand stehen vor der Modellklasse fest.
-- Treatment-, Outcome-, Confounder-, Instrument- und Effektmodifikatorrollen werden nicht vertauscht.
-- Nuisance-Learner, Hyperparameter, Tuningraum und Cross-Fitting werden eingefroren.
-- Overlap/Instrumentrelevanz und Abhängigkeit werden diagnostiziert.
-- Ein flexibler Schätzer wird gegen eine einfachere, identisch identifizierte Baseline geprüft.
-- Unsicherheitsangaben werden nur verwendet, wenn ihre Voraussetzungen zur Split-/Clusterstruktur passen.
+- Identification assumption and estimand are fixed before the model class.
+- Treatment, outcome, confounder, instrument and effect modifier roles are not interchanged.
+- Nuisance readers, hyperparameters, tuning room and cross-fitting are frozen.
+- Overlap/instrument relevance and dependence are diagnosed.
+- A flexible estimator is tested against a simpler, identically identified baseline.
+- Uncertainties are only used if their prerequisites match the split/cluster structure.
 
 ## 7.4 Tigramite
 
-- Conditional-Independence-Test und seine Verteilungsannahmen passen zu den Daten.
-- Lag-Suche und Kantenraum zählen zum Multiple Testing.
-- Gleichzeitige Kanten werden nicht durch bloße Reihenfolge innerhalb grober Bars kausal orientiert.
-- Regime- oder Kontextverfahren benötigen vorab definierte Umgebungen oder eine eigene Validationslogik.
+- The conditional-independence test and its distribution assumptions match the data.
+- Lag search and edge space are part of multiple testing.
+- Simultaneous edges are not causally oriented by mere order within coarse bars.
+- Regime or context procedures require predefined environments or their own validation logic.
 
 ## 7.5 causalinference
 
-- Nur für binäres Treatment und die tatsächlich unterstützten Propensity-/Matching-/Weighting-Schritte verwenden.
-- Overlap, Trimming, Balance und Schätzervariante berichten.
-- Vor Einsatz gegen die aktuelle Laufzeit testen.
-- Nicht als Ersatz für Graphidentifikation, DML oder Zeitreihenverfahren verwenden.
+- Use only for binary treatment and the actual supported propensity/matching/weighting steps.
+- Report overlap, trimming, balance and estimator variant.
+- Test against the current runtime before use.
+- Do not use as a substitute for graph identification, DML or time series methods.
 
 ---
 
-# 8. Pflichtartefakt im Research Case
+# 8. Required Research Case artifact
 
-Abschnitt `E9` von `02_RESEARCH_CASE_TEMPLATE.md` enthält mindestens:
+Section `E9` of `02_RESEARCH_CASE_TEMPLATE.md` contains at least:
 
 ```text
 TOOLING_STATUS:
@@ -244,25 +234,25 @@ ALLOWED_CLAIM:
 FORBIDDEN_CLAIM:
 ```
 
-Ohne dieses Artefakt ist `E9 PASS` bei `TOOLING_REQUIRED` unzulässig.
+Without this artifact, `E9 PASS` is inadmissible at `TOOLING_REQUIRED`.
 
 ---
 
-# 9. Anti-Popanz-Regel
+# 9. Anti-window-dressing rule
 
-Der minimale ausreichende Stack gewinnt:
+The minimum sufficient stack wins:
 
-- keine Causal-Discovery-Bibliothek für eine bereits identifizierte einfache Eventregression,
-- kein Causal Forest, wenn ein vorab spezifizierter linearer Effekt die Frage beantwortet,
-- nicht DoWhy, pgmpy, EconML und DoubleML gleichzeitig ohne getrennte Aufgabe,
-- kein GCM-/Counterfactual-Modell für einen rein prädiktiven Residualalarm,
-- kein Paketwechsel nach Blick auf Validation-Ergebnisse.
+- no causal discovery library for an already identified simple event regression,
+- no causal forest if a pre-specified linear effect answers the question,
+- not DoWhy, pgmpy, EconML and DoubleML simultaneously without separate task,
+- no GCM/counterfactual model for a purely predictive residual alarm,
+- no package change after looking at validation results.
 
-Komplexität wird nur hinzugefügt, wenn sie eine vorher benannte Identifikations-, Schätz-, Heterogenitäts-, Refutations- oder Discovery-Frage beantwortet und inkrementell validiert werden kann.
+Complexity is added only if it can answer a previously named identification, estimate, heterogeneity, refutation, or discovery question and be incrementally validated.
 
 ---
 
-# 10. Offizielle Dokumentation
+# 10. Official documentation
 
 - DoWhy User Guide: <https://www.pywhy.org/dowhy/v0.14/user_guide/>
 - DoWhy Refutation Guide: <https://www.pywhy.org/dowhy/v0.14/user_guide/refuting_causal_estimates/index.html>
@@ -273,4 +263,4 @@ Komplexität wird nur hinzugefügt, wenn sie eine vorher benannte Identifikation
 - Tigramite Documentation: <https://jakobrunge.github.io/tigramite/>
 - Causalinference Documentation: <https://causalinferenceinpython.org/>
 
-Vor jeder neuen Projektumgebung wird die aktuelle offizielle Dokumentation erneut geprüft. APIs, optionale Dependencies und getestete Paketkombinationen können sich ändern.
+Before each new project environment, the current official documentation is checked again. APIs, optional dependencies and tested package combinations can change.

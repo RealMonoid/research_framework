@@ -4,7 +4,7 @@ description: Use this agent whenever a trading-research request makes or prepare
 
 <example>
 Context: The user wants to know whether a central-bank surprise caused an asset-price move.
-user: "Hat der unerwartete Zinsentscheid diese Bewegung verursacht?"
+user: "Did the unexpected interest rate decision cause this movement?"
 assistant: "Use the causal-identification critic before estimating the effect. It must examine the event window, information leakage, concurrent news, shock construction, and the economic model that makes the surprise plausibly exogenous."
 <commentary>
 The question is causal, and a narrow event window alone does not establish exogeneity.
@@ -13,7 +13,7 @@ The question is causal, and a narrow event window alone does not establish exoge
 
 <example>
 Context: A researcher proposes Double Machine Learning to estimate whether order flow moves prices.
-user: "Nehmen wir DML, dann haben wir doch den kausalen Effekt."
+user: "If we take DML, then we have the causal effect."
 assistant: "Use the causal-identification critic. It must separate the estimator from the identification argument and examine simultaneity, reverse causality, instruments, timing, and market-microstructure measurement."
 <commentary>
 DML can estimate an already identified effect; it does not create exogenous variation.
@@ -22,7 +22,7 @@ DML can estimate an already identified effect; it does not create exogenous vari
 
 <example>
 Context: A causal-discovery algorithm found a lagged edge between two market variables.
-user: "Damit ist bewiesen, dass X Y verursacht."
+user: "This proves that X causes Y."
 assistant: "Use the causal-identification critic. The discovered edge may be retained only as a causal hypothesis unless an independent design justifies intervention or counterfactual language."
 <commentary>
 Time order and conditional dependence do not by themselves identify a market intervention.
@@ -31,7 +31,7 @@ Time order and conditional dependence do not by themselves identify a market int
 
 <example>
 Context: The user asks only whether a signal predicts the next return out of sample.
-user: "Hilft dieses Merkmal bei der Vorhersage?"
+user: "Does this feature help predict the next return?"
 assistant: "Keep the claim associational and predictive; the causal-identification critic is not required unless the question is changed into a causal one."
 <commentary>
 The causal gate must not add bureaucracy to an explicitly predictive study.

@@ -17,13 +17,13 @@
       "issued_at": "2026-08-30T08:00:10Z",
       "as_of": "2026-08-30T08:00:00Z",
       "target": {
-        "target_object": "Demonstrationsmarkt",
-        "target_variable": "Richtung des Tagesreturns",
-        "unit": "Kategorie",
-        "population": "Nächste vollständige Handelssitzung"
+        "target_object": "Demonstration market",
+        "target_variable": "Direction of the daily return",
+        "unit": "Category",
+        "population": "Next complete trading session"
       },
       "window": {
-        "horizon_description": "Eine vollständige Handelssitzung nach Ausgabe",
+        "horizon_description": "One complete trading session after issuance",
         "starts_at": "2026-08-31T07:00:00Z",
         "ends_at": "2026-08-31T15:30:00Z",
         "resolution_deadline": "2026-09-01T12:00:00Z"
@@ -47,7 +47,7 @@
         "expected_source_refs": [
           "official-close-dataset"
         ],
-        "resolution_rule": "UP, wenn der offizielle Schlusskurs strikt über dem offiziellen Eröffnungskurs liegt; sonst DOWN oder FLAT gemäß Vorzeichen.",
+        "resolution_rule": "UP if the official close is strictly above the official open; otherwise DOWN or FLAT according to the sign.",
         "scheduled_at": "2026-09-01T08:00:00Z",
         "scoring_rule": "DIRECTION_ACCURACY",
         "custom_scoring_rule": null

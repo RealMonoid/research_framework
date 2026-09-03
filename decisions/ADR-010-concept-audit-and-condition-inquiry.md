@@ -1,94 +1,88 @@
-# ADR-010: Begriffsprüfung und quantitative Bedingungsanfrage
+# ADR-010: Concept audit and quantitative condition inquiry
 
 **Status:** Accepted
 **Date:** 2026-08-31
-**Deciders:** Projektverantwortlicher und Maintainer des Research-Frameworks
+**Deciders:** Research owner and research-framework maintainer
 
 ## Context
 
-Die Quellenrekonstruktion macht offene Definitionen sichtbar, unterschied aber
-bisher nicht sauber zwischen vier Dingen: Bestandteilen der Strategie,
-quellengenannten Anwendungshinweisen, nur vermuteten Erfolgsbedingungen und
-vollständig unbekannten Erfolgsbedingungen. Dadurch konnten plausible
-Voraussetzungen vor der Operationalisierung unbemerkt wie Tatsachen behandelt
-werden.
+Source reconstruction makes open definitions visible, but the framework did
+not previously distinguish cleanly between four things: strategy components,
+application instructions stated by the source, suspected success conditions,
+and completely unknown success conditions. Plausible prerequisites could
+therefore be treated as facts without being noticed before operationalization.
 
-Zudem können Trigger, Filter und Outcome gemeinsame Rohgrößen oder Fenster
-verwenden. Der daraus mögliche statistische Zusammenhang ist weder automatisch
-ein Marktmechanismus noch automatisch ein Fehler. Regimefilter wurden bislang
-zwar als Statevariablen behandelt, aber nicht ausdrücklich als vorläufige
-Messinstrumente mit begrenzter Aussage.
+Triggers, filters, and outcomes can also use common raw variables or windows.
+The resulting statistical relationship is neither automatically a market
+mechanism nor automatically an error. Regime filters had been treated as state
+variables, but not explicitly as provisional measuring instruments with limited
+scope.
 
-Schließlich fehlte eine positive Methode zur Erzeugung von
-Bedingungshypothesen. Das Framework konnte bekannte Bedingungen dokumentieren,
-aber nicht geregelt fragen, unter welchen beobachtbaren Umständen sich ein
-Ergebnis verändert.
+Finally, the framework lacked a positive method for generating condition
+hypotheses. It could document known conditions, but did not regulate how to ask
+under which observable circumstances an outcome changes.
 
 ## Decision
 
-1. Vor Abschluss jeder unvollständig definierten Quellenrekonstruktion erzeugt
-   der `scientific-philosophy-critic` ein `strategy_concept_audit`.
-2. Das Audit trennt `STRATEGY_DEFINING`, `SOURCE_STATED_APPLICATION`,
-   `SUSPECTED_PERFORMANCE_MODIFIER` und `UNKNOWN_SUCCESS_CONDITION`.
-3. Vermutete und unbekannte Bedingungen dürfen nicht heimlich als Pflichtfilter
-   in die Quellenstrategie eingehen. Das Audit beansprucht keine Vollständigkeit.
-4. Gemeinsame Inputs, Fenster und deterministische Transformationen werden als
-   Konstruktionsabhängigkeiten erfasst. Sie können Assoziationen mit erzeugen
-   oder die beantwortete Frage verändern, sind aber weder Kausalbeleg noch
-   automatisch ein Konstruktionsfehler.
-5. Regime-, State- und Kontextfilter sind vorläufige Messinstrumente. Ihre
-   Klassenhäufigkeit misst keine Trennleistung. Eine Beurteilung verwendet
-   zukünftiges Verhalten, das nicht bereits in der Filterkonstruktion steckt,
-   und einen inkrementellen Vergleich mit kontinuierlichen Inputs oder einer
-   einfachen Baseline.
-6. Prognostische Trennung validiert höchstens den erklärten praktischen Zweck
-   der Einteilung. Sie beweist weder einen realen verborgenen Marktzustand noch
-   Akteur, Absicht, Zwang oder Kausalmechanismus.
-7. Ein nicht informativer Filter entwertet den von ihm abhängigen
-   Zustandsclaim. Ein davon trennbarer Ereignisclaim kann offen bleiben.
-8. Fehlt für eine assoziative oder prädiktive Frage eine belastbare
-   Akteurshypothese, wird der Akteursstand ausdrücklich als
-   `UNSPECIFIED / NOT_CLAIMED` dokumentiert. Das verhindert eine erfundene
-   Mechanismusgeschichte, ohne die engere Frage zu verbieten.
-9. Nach vorläufiger Operationalisierung kann der
-   `condition-inquiry-analyst` ein `condition_inquiry` für
-   Konstruktionsdiagnostik, Definitionssensitivität, interpretierbare
-   Bedingungserzeugung, bedingte Prognosefähigkeit oder Zeit-/Umgebungsstabilität
-   anlegen.
-10. Eine datenbasiert gefundene Bedingung ist eine neue
-   Erfolgsmodifikator-Hypothese. Sie wird nicht rückwirkend zur Quellenregel.
-11. Ein quellenfestgelegtes Ziel wird nicht unbemerkt durch ein methodisch
-    unabhängigeres Ziel ersetzt. Die neue Zielgröße beantwortet eine neue Frage.
-12. Necessary Condition Analysis ist nur ein begründeter explorativer
-    Spezialfall, kein Default für verrauschte kurzfristige Märkte.
+1. Before any incompletely defined source reconstruction is completed, the
+   `scientific-philosophy-critic` creates a `strategy_concept_audit`.
+2. The audit separates `STRATEGY_DEFINING`, `SOURCE_STATED_APPLICATION`,
+   `SUSPECTED_PERFORMANCE_MODIFIER`, and `UNKNOWN_SUCCESS_CONDITION`.
+3. Suspected and unknown conditions must not silently enter the source strategy
+   as mandatory filters. The audit does not claim completeness.
+4. Common inputs, windows, and deterministic transformations are recorded as
+   construction dependencies. They can create associations or change the
+   question being answered, but they are neither causal evidence nor
+   automatically a design error.
+5. Regime, state, and context filters are provisional measuring instruments.
+   Their class frequency does not measure separation performance. Assessment
+   uses future behaviour not already used to construct the filter and an
+   incremental comparison with continuous inputs or a simple baseline.
+6. Predictive separation validates at most the declared practical purpose of a
+   classification. It proves neither a real hidden market state nor an actor,
+   intention, coercion, or causal mechanism.
+7. A non-informative filter invalidates the state claim that depends on it. An
+   event claim that can be separated from the filter may remain open.
+8. If a reliable actor hypothesis is missing for an associative or predictive
+   question, record the actor status explicitly as `UNSPECIFIED / NOT_CLAIMED`.
+   This prevents an invented mechanism story without banning the narrower
+   question.
+9. After provisional operationalization, the `condition-inquiry-analyst` may
+   create a `condition_inquiry` for construction diagnostics, definition
+   sensitivity, interpretable condition generation, conditional predictive
+   ability, or stability across time and environments.
+10. A condition found from data is a new success-modifier hypothesis. It does
+    not retroactively become part of the source rule.
+11. A source-defined target must not be silently replaced by a methodologically
+    more independent target. The new target answers a new question.
+12. Necessary Condition Analysis is only a justified exploratory special case,
+    not the default for noisy short-term markets.
 
-## Rejected Alternatives
+## Rejected alternatives
 
-- **Jeden plausiblen Kontext sofort als Filter aufnehmen:** verworfen, weil
-  Vermutung und Quellenstrategie dadurch ununterscheidbar würden.
-- **Einen Filter durch seine Klassenhäufigkeit beurteilen:** verworfen, weil
-  Häufigkeit keine Trennleistung misst.
-- **Prädiktiv verschiedene Filtergruppen als reale Regime behandeln:**
-  verworfen; praktischer Informationswert, Ontologie und Kausalität sind
-  verschiedene Aussagen.
-- **Gemeinsame Fenster automatisch als Fehler behandeln:** verworfen. Die
-  Abhängigkeit muss sichtbar und begrenzt interpretiert werden; ihre sachliche
-  Zulässigkeit hängt von der ursprünglichen Frage ab.
-- **Unabhängiges Outcome als neutrale Reparatur:** verworfen. Es kann eine
-  sinnvolle neue Frage sein, ersetzt aber nicht still die Quellenbehauptung.
-- **Bedingungssuche nur als weiteres Schutzgate:** verworfen. Ihr Hauptzweck ist
-  die Erzeugung verständlicher, beobachtbarer und später prüfbarer
-  Bedingungshypothesen.
+- **Add every plausible context immediately as a filter:** rejected because it
+  would make assumptions indistinguishable from the source strategy.
+- **Judge a filter by its class frequency:** rejected because frequency does not
+  measure separation power.
+- **Treat different filter groups predictively as real regimes:** rejected;
+  practical information value, ontology, and causality are different claims.
+- **Treat common windows automatically as errors:** rejected. The dependence
+  must be made visible and interpreted narrowly; its substantive admissibility
+  depends on the original question.
+- **Use an independent outcome as a neutral repair:** rejected. It may be a
+  meaningful new question, but it does not silently replace the source claim.
+- **Make condition search only another protection gate:** rejected. Its primary
+  purpose is to generate understandable, observable, and later testable
+  condition hypotheses.
 
 ## Consequences
 
-- Das Framework kann unbekannte Voraussetzungen nicht vollständig entdecken,
-  behauptet diese Vollständigkeit aber auch nicht mehr.
-- Versteckte Annahmen werden vor der Operationalisierung sichtbar, ohne
-  plausible Ideen voreilig in Tatsachen zu verwandeln.
-- Statefilter können zweckbezogen beurteilt werden, ohne ihre Namen zu
-  Marktontologie oder Kausalerklärung aufzuwerten.
-- Quantitative Bedingungssuche wird ein Generator neuer Research-Fragen und
-  bleibt von der Identität der Quellenstrategie getrennt.
-- Die synthetischen Beispiele führen keinen Backtest aus und enthalten kein
-  Marktergebnis.
+- The framework cannot fully discover unknown prerequisites, and no longer
+  claims that it can.
+- Hidden assumptions become visible before operationalization without turning
+  plausible ideas prematurely into facts.
+- State filters can be assessed for their stated purpose without upgrading their
+  names into market ontology or causal explanations.
+- Quantitative condition search becomes a generator of new research questions
+  and remains separate from the identity of the source strategy.
+- The synthetic examples perform no backtest and contain no market result.

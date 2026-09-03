@@ -1,66 +1,57 @@
-# ADR-005: Unabhängige Kausal- und Handelsachse sowie bedingte Variablenauswahl-Provenienz
+# ADR-005: Independent causal and commercial axis and conditional variable selection provenance
 
-**Status:** Angenommen
-**Datum:** 2026-08-31
+**Status:** Accepted
+**Date:** 2026-08-31
 
-## Kontext
+## Context
 
-Das Framework führte bereits drei Claim-Level und getrennte Status für
-Mechanismus, Forward-OOS-Prognose und ausführbare Netto-Edge. Die Beziehung
-zwischen beiden Gruppen war jedoch nur implizit. Dadurch blieb der Fehlschluss
-möglich, ein identifizierter kausaler Effekt sei automatisch prognostisch oder
-nach Kosten handelbar.
+The framework already introduced three claim levels and separate statuses for mechanism, forward OOS forecast and net executable edge. However, the relationship between the two groups was only implicit. This left the misconception possible that an identified causal effect was automatically prognostic or tradable at cost.
 
-Zugleich fehlte im Intake ein maschinenprüfbarer Unterschied zwischen vorab
-fachlich festgelegten Variablen und einer datengetriebenen Suche über viele
-Kandidaten. Eine universelle Pflicht zu Feature-Importance-Verfahren würde den
-einfachen Fall belasten und kausale Relevanz vortäuschen.
+At the same time, the intake lacked a machine-testable difference between predefined variables and a data-driven search for many candidates. A universal duty to feature import procedures would burden the simple case and pretend causal relevance.
 
-## Entscheidung
+## Decision
 
-1. Der Research-Claim-Level
-   (`ASSOCIATIONAL_PREDICTIVE / INTERVENTIONAL / COUNTERFACTUAL`) und die
-   Validierungs-/Handelsstatus (`mechanism_supported`, `forward_predictive_oos`,
-   `executable_net_edge`) sind ausdrücklich unabhängige Achsen.
-2. Ein kausaler Claim darf durch ein SCM/DAG, Potential-Outcomes-Design,
-   strukturell-ökonometrisches oder anderes explizites Identifikationsmodell
-   begründet werden. Die Notation selbst erhöht den Claim-Level nicht.
-3. Jeder promovierte Intake deklariert die Variablenauswahl als `PREDEFINED`,
-   `DATA_DRIVEN` oder `HYBRID`.
-4. `PREDEFINED` benötigt nur Begründung und beibehaltene Variablen. Erst
-   `DATA_DRIVEN` und `HYBRID` benötigen Kandidatenuniversum, Selektionsdaten und
-   -rolle, Outcome-Sichtbarkeit, Methoden, effektive Kandidatenzahl, Suchraum und
-   Auswahlbias-Kontrollen.
-5. SHAP-, Shapley-, Impurity- und andere Feature-Importance-Verfahren bleiben
-   optionale Diagnosen. Sie sind weder Pflicht noch Kausalitätsnachweis.
-6. `VALIDATED_PHENOMENON` bestätigt weder einen kausalen Claim noch eine
-   ausführbare Netto-Edge.
+1. The research claim level
+   (`ASSOCIATIONAL_PREDICTIVE / INTERVENTIONAL / COUNTERFACTUAL`) and the
+   validation/trading statuses (`mechanism_supported`, `forward_predictive_oos`,
+   `executable_net_edge`) are expressly independent axes.
+2. A causal claim may be based on an SCM/DAG, potential-outcomes design,
+   structural econometric model, or another explicit identification model. The
+   notation itself does not increase the claim level.
+3. Each promoted intake declares variable selection as `PREDEFINED`,
+   `DATA_DRIVEN`, or `HYBRID`.
+4. `PREDEFINED` needs only a justification and the retained variables. `DATA_DRIVEN`
+   and `HYBRID` additionally require the candidate universe, selection data and
+   role, outcome visibility, methods, effective candidate number, search space,
+   and selection-bias controls.
+5. SHAP, Shapley, Impurity and other feature import procedures remain
+optional diagnoses. They are neither a duty nor a proof of causality.
+6. `VALIDATED_PHENOMENON` confirms neither a causal claim nor an executable
+   net edge.
 
-## Folgen
+## Consequences
 
-- Das Hypothesen-Schema steigt auf Version `1.2.0`; `PROMOTED` verlangt den neuen
-  Auswahlrecord.
-- Positive und negative Vertragstests prüfen sowohl den leichten
-  `PREDEFINED`-Pfad als auch die strengere datengetriebene Provenienz.
-- Ein Eval-Fall schützt die Trennung zwischen identifiziertem Effekt und
-  wirtschaftlicher Handelbarkeit.
-- Reale Research Cases werden durch diese Änderung nicht erfunden. Die bekannte
-  end-to-end Validierungslücke bleibt bestehen, bis ein echter Fall verfügbar ist.
+- The hypothesis schema increases to version `1.2.0`; `PROMOTED` demands the new
+  variable-selection record.
+- Positive and negative contract tests cover both the light `PREDEFINED` path
+  and the stricter data-driven provenance.
+- An eval case protects the separation between an identified effect and economic
+  tradability.
+- Real research cases are not invented by this change. The known end-to-end
+  validation gap remains until a real case is available.
 
-## Verworfene Alternativen
+## Rejected alternatives
 
-### Universeller DAG-Zwang
+### Universal DAG requirement
 
-Verworfen, weil Potential-Outcomes- und andere explizite Designs ein Estimand
-ohne zusätzlichen DAG identifizieren können. Ein Diagramm allein verbessert die
-Identifikation nicht.
+Rejected because potential-outcomes and other explicit designs can identify an
+estimand without an additional DAG. A diagram alone does not improve
+identification.
 
-### Obligatorische SHAP-/MDI-Auswertung
+### Mandatory SHAP/MDI interpretation
 
-Verworfen, weil diese Verfahren modell- und verteilungsabhängige Relevanz
-beschreiben und keine allgemeine kausale Variablenauswahl liefern.
+Rejected because these methods describe model- and distribution-dependent relevance and do not provide a general causal variable selection.
 
-### Kausaler PASS als automatische Handelsfreigabe
+### Causal PASS as an automatic trade release
 
-Verworfen, weil ein wissenschaftlich identifizierter Effekt unterhalb von
-Spread, Gebühren, Slippage oder Latenz ökonomisch wertlos sein kann.
+Rejected because a scientifically identified effect below spread, fees, slippage or latency can be economically worthless.

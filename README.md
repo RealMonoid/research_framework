@@ -116,11 +116,11 @@ exists, the [short-horizon generator](generation/README.md) can create an
 unranked set of literature-anchored candidates. Generating or reconstructing an
 idea does not authorize a backtest.
 
-Many of the existing normative documents are still written in German. New and
-changed repository content is written in English. Translation of the existing
-material is conditional on a measured agent-reliability or actual maintenance
-need. If it becomes necessary, translation and substantive editing remain
-separate changes.
+The normative and framework-facing documents are maintained in English. Any
+remaining German text is limited to historical records, source identifiers, or
+private project filenames. Translation-only changes remain separate from
+shortening, deduplication, or substantive editing so that any change in agent
+behaviour remains attributable.
 
 ## Technical reference
 
