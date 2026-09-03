@@ -6,6 +6,34 @@ are defined only in `AGENTS.md`. Read `AGENTS.md` in full before using this log.
 
 ## Log entries
 
+### 2026-09-03T03:21:40+02:00 | ChatGPT 5.6 Sol
+- **Agent**: ChatGPT 5.6 Sol
+- **Files**:
+  - `PLANNED_FEATURES.md` (translated)
+  - `AGENT_CHANGELOG.md` (modified)
+- **What**:
+  - Translated the remaining German title, introductory note, and LLM stress-test
+    roadmap entry in `PLANNED_FEATURES.md` into English.
+  - Preserved the roadmap hierarchy, status, requirements, examples, and
+    normative meaning; no priorities were reordered and no content was removed
+    or added.
+- **Why**:
+  - **Problem description**: The shared roadmap still mixed German and English,
+    despite the repository policy that new or changed repository artifacts are
+    written in English.
+  - **Decision context**: The user explicitly requested translation of the
+    remaining German content. This is a translation-only change, kept separate
+    from editorial revision so any behaviour change remains attributable.
+  - **Protected invariants**: All roadmap requirements, statuses, and scope
+    boundaries remain unchanged; `PLANNED_FEATURES.md` remains the single
+    authoritative roadmap for every agent.
+- **Verification**:
+  - `python scripts/validate_agent_instruction_sources.py` passed.
+  - `python scripts/validate_framework.py` passed all contract, orchestration,
+    entry-threshold, generator, and eval tests.
+  - `git diff --check` passed.
+  - The live-agent release gate was not run; no live-agent claim is made.
+
 ### 2026-09-03T02:28:20+02:00 | ChatGPT 5.6 Sol
 - **Agent**: ChatGPT 5.6 Sol
 - **Files**:

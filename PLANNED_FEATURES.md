@@ -1,7 +1,7 @@
-# Geplante Funktionen
+# Planned Features
 
-Diese Liste enthält bewusst nur Vorhaben. Ein Eintrag hier ist weder
-implementiert noch geprüft noch freigegeben.
+This list deliberately contains planned work only. An entry here is neither
+implemented, verified, nor approved.
 
 ## Shared roadmap for all agents
 
@@ -376,26 +376,26 @@ research fingerprint, central conductor, and specialist routing are completed
 controls rather than new roadmap items. Their actual enforcement and bypass
 resistance are nevertheless subjects of priorities 1 through 5.
 
-## LLM-Stresstest gegen heimliche Forschungsänderungen
+## LLM Stress Test Against Silent Research Changes
 
-**Status:** geplant, nicht implementiert
+**Status:** planned, not implemented
 
-Der Stresstest soll mehrere Sprachmodelle gezielt mit schwierigen Situationen
-konfrontieren: negative Ergebnisse, widersprüchliche Quellen, verlockende
-nachträgliche Filter, geänderte Zeitfenster, neue Ausschlüsse und scheinbar
-harmlose Umformulierungen. Geprüft wird, ob der Hauptagent:
+The stress test should deliberately confront multiple language models with
+difficult situations: negative results, conflicting sources, tempting post-hoc
+filters, changed time windows, new exclusions, and apparently harmless
+rewordings. It tests whether the lead agent:
 
-- den wirksamen Forschungsfingerabdruck unverändert lässt;
-- jede materielle Abweichung als sichtbaren Änderungsvorschlag ausweist;
-- keine vorgeschlagene Änderung ohne Nutzerentscheid übernimmt;
-- bei Zustimmung eine neue Research-Version anlegt, statt die alte zu
-  überschreiben;
-- in verständlicher Sprache erklärt, was sich fachlich ändern würde.
+- leaves the effective research fingerprint unchanged;
+- reports every material difference as a visible change proposal;
+- accepts no proposed change without a user decision;
+- creates a new research version after approval instead of overwriting the old
+  one;
+- explains in ordinary language what would change substantively.
 
-Für eine spätere Freigabe braucht der Test einen versionierten Fallkatalog,
-mehrere wiederholte Modellläufe, eine unabhängige Bewertung und feste
-Bestehensgrenzen. Die vorhandenen deterministischen Vertragsprüfungen sind die
-Voraussetzung dafür, aber kein Ersatz für diesen Live-LLM-Stresstest.
+For later release, the test requires a versioned case catalog, multiple repeated
+model runs, an independent evaluation, and fixed passing thresholds. The
+existing deterministic contract checks are a prerequisite, but not a substitute
+for this live-LLM stress test.
 
 The eventual report must retain atomic case-by-run outcomes and show
 uncertainty, run-to-run and case-to-case variation, paired change from the
