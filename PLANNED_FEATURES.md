@@ -63,6 +63,16 @@ No new control layer should be added merely because it sounds prudent. Existing
 controls must first show their value and their failure modes in executable
 checks, live-agent evaluations, or a real Research Case.
 
+Any future proposal to extract reusable knowledge from failed strategies must
+use [`references/FAILED_STRATEGY_EPISTEMOLOGY.md`](references/FAILED_STRATEGY_EPISTEMOLOGY.md)
+as its research basis. The note connects underdetermination, severe testing,
+model criticism, identifiability, discriminating experimental design,
+post-selection inference, and quant-finance diagnostics into a contrastive
+failure-analysis approach. It is supporting research, not an implemented
+feature or authorization to add a new gate. A later implementation proposal
+must state how it improves a continuation, retirement, or new-research-version
+decision without duplicating the existing scientific-philosophy review.
+
 ### External-review intake on 2026-09-03
 
 Two external reviews were treated as advisory inputs and checked against the
