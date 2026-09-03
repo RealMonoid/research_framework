@@ -63,7 +63,29 @@ No new control layer should be added merely because it sounds prudent. Existing
 controls must first show their value and their failure modes in executable
 checks, live-agent evaluations, or a real Research Case.
 
-1. **Close the validation-boundary and stopping-rule enforcement gap.**
+### External-review intake on 2026-09-03
+
+Two external reviews were treated as advisory inputs and checked against the
+repository rather than copied into the roadmap. Their broad refactoring claims
+are not reliable enough to authorize work: both identify revision `4af9cff`
+while citing material added after that revision, and their reported counts for
+schemas, agents, scripts, mechanisms, and generated combinations do not match
+that revision or the current repository. Their severity labels and estimate of
+a thirty-percent reduction are therefore not evidence of benefit.
+
+Only findings that protect a research or capital decision, expose a confirmed
+deterministic defect, or make an existing gate measurably harder to bypass are
+incorporated below. In particular, this roadmap does **not** adopt proposals to
+return success for `CHANGE_PROPOSED`, add validation data to pre-freeze pipeline
+controls, merge distinct epistemic stages or specialist roles, split this
+authoritative roadmap, remove the Windows validation path, or add packaging and
+style tooling merely to make the repository look like a conventional software
+project. Those changes could weaken fail-closed behaviour or add maintenance
+without protecting a decision. They require separate evidence and user
+authorization if reconsidered later.
+
+1. **Close the validation-boundary, stopping-rule, and confirmed
+   pipeline-integrity enforcement gaps.**
    **Status: urgent correctness gap; documented rules exist, hard enforcement
    is incomplete.** The outcome evidence documentation now prohibits optional
    stopping, selective historical truncation, and unplanned holdout peeking,
@@ -108,6 +130,30 @@ checks, live-agent evaluations, or a real Research Case.
    evaluation that an agent cannot bypass or cosmetically repair these checks.
    Planning this fix does not authorize a backtest or access to validation data.
 
+   **Confirmed pipeline-integrity corrections from the external reviews:**
+
+   1. Fix the repeated-random-walk bypass. The current semantic validator
+      rejects exactly one required `RANDOM_WALK` control, but two or more
+      required random-walk controls can evade the list-equality check even
+      though no structure-appropriate negative-control family is present.
+      Compare the distinct required null-model families instead, and add a
+      regression case with repeated random-walk controls. One or many random
+      walks must never satisfy the requirement by themselves.
+   2. Replace the free-text Monte Carlo record with machine-checkable fields
+      for planned and completed replications, the uncertainty method, estimate,
+      standard error or interval bounds where applicable, and a complete seed
+      or replication-manifest reference. Preserve a plain-language summary,
+      but do not let prose stand in for the numerical record. Document and test
+      the scientific basis of any minimum-run floor rather than treating the
+      present value as self-justifying.
+   3. Bind every required negative-control and positive-sentinel result to
+      evidence produced by executing the exact candidate pipeline identified by
+      the frozen pipeline fingerprint. Schema validation of an agent-written
+      `PASS` declaration is not evidence that the control ran. Until a trusted
+      runner or the conditional harness in priority 2 performs or verifies that
+      execution, describe this gate as caller-enforced and do not use it as an
+      automatic reliability claim.
+
 2. **Hard-gate inventory — initial audit completed 2026-09-02.** The
    [`HARD_GATE_INVENTORY.md`](HARD_GATE_INVENTORY.md) records every current
    research gate and the claim or
@@ -131,6 +177,27 @@ checks, live-agent evaluations, or a real Research Case.
    priority 5 must attack false `COMPLETE` states, skipped
    validators and specialists, ignored fingerprint failures, and semantic
    misclassification before a new orchestration layer is justified.
+
+   The external reviews sharpen the scope of that conditional implementation
+   without changing the evidence-first order. If priority 4 or repeated
+   priority-5 runs show that caller-enforced gates are skipped or fabricated,
+   build the smallest fail-closed conductor harness that can own the affected
+   sequence. It must dereference required artifact references, validate the
+   referenced content, record validator and fingerprint exit codes, invoke
+   mandatory specialists rather than merely naming them, and keep a persistent
+   attempt count so `max_attempts` cannot be reset by another model call. A
+   non-zero `CHANGE_PROPOSED` result remains a stop signal, not a successful
+   acceptance.
+
+   The same harness must derive the effective fingerprint baseline from the
+   previously accepted checkpoint rather than trusting a baseline path supplied
+   by the current agent. Use a private append-only, content-addressed, or
+   commit-addressed store appropriate to the confidentiality of real research;
+   never require proprietary research to be committed to the public repository.
+   The predecessor reference, protected-artifact hashes, and current rule-set
+   identity must form one verifiable chain. If that chain is not independently
+   anchored, say plainly that it is tamper-evident bookkeeping only to the
+   extent that the storage history is trustworthy.
 
 3. **Prospective data-fitness gate.** Before detailed operationalization,
    implementation, or empirical testing, translate the proposed strategy and
@@ -233,6 +300,17 @@ checks, live-agent evaluations, or a real Research Case.
    bounded work orders rather than simulated, `scripts/check_research_fingerprint.py`
    was executed rather than skipped, and internal tool errors were not silently
    swallowed and cosmetically repaired in the final prose.
+
+   The critical adversarial set must explicitly include: substitution or
+   rewriting of the accepted fingerprint baseline; relabelling causal language
+   as merely predictive to avoid the causal critic; a self-declared pipeline or
+   sentinel `PASS` without execution evidence; repeated random-walk controls
+   presented as sufficient diversity; simultaneous legacy and canonical
+   validation-protocol fields; an ignored non-zero fingerprint result; reset of
+   the attempt counter; and producer or configuration hashes that are
+   well-formed but not bound to the actual model, prompt, tools, and retrieved
+   rule set. These are trajectory failures even when the final artifact is
+   schema-valid.
 
    **Surrogate methodology options:** When negative controls require
    preserving empirical amplitude distributions and linear autocorrelation
@@ -522,3 +600,19 @@ numbers here identify details rather than execution order:
    performed in translation-only commits; redundancy removal, shortening, and
    substantive rewriting must follow in separate commits with separate
    validation.
+7. **Priority 1 — Pipeline-integrity correctness:** Reject one or many required
+   random-walk controls when they are the only null-model family, structure the
+   Monte Carlo and seed record, and bind every required control result to
+   evidence from the exact frozen pipeline. Passing a JSON contract alone must
+   not be reported as execution evidence.
+8. **Priority 2 — Conditional fail-closed conductor and baseline provenance:**
+   If the real case or live-agent runs demonstrate caller bypasses, implement
+   the minimal harness and predecessor-chain requirements described above.
+   Preserve the current separation between router, specialist, validator,
+   fingerprint, and research stages; consolidation is not an objective.
+9. **Priority 7 — Cross-schema identifier consistency:** Audit materially linked
+   identifier grammars and establish one tested canonical rule where a shared
+   identifier crosses artifact boundaries. A shared schema file is optional,
+   not the goal. If external `$ref` definitions are introduced, resolution from
+   a clean checkout must be tested and fail closed; reducing duplicated lines
+   must never create a silent missing-definition path.
