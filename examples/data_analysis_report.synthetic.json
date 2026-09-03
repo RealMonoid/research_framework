@@ -1,0 +1,190 @@
+{
+  "schema_version": "1.0.0",
+  "report_id": "data-report:synthetic-intraday-summary:v1",
+  "created_at": "2026-09-03T09:00:00+02:00",
+  "updated_at": "2026-09-03T09:05:00+02:00",
+  "agent_contract_version": "1.0.0",
+  "research_id": "research:synthetic-intraday-summary",
+  "research_version": 1,
+  "analysis_question": "Describe the distribution and missingness of a synthetic intraday price series without evaluating a trading rule.",
+  "question_scope": {
+    "market": "Synthetic futures-like series",
+    "instrument": "SYNTH-1",
+    "time_horizon": "INTRADAY",
+    "session_scope": "09:30-16:00 local session",
+    "timezone": "UTC",
+    "decision_relevance": "Decide whether the supplied snapshot is suitable for a later, separately authorized descriptive study.",
+    "requested_claim_level": "ASSOCIATIONAL_PREDICTIVE"
+  },
+  "data_context": {
+    "status": "USED",
+    "sources": [
+      {
+        "source_ref": "dataset:synthetic-bars:v1",
+        "name": "Synthetic public bar fixture",
+        "snapshot_or_version": "fixture-v1",
+        "role": "DEVELOPMENT",
+        "instrument_scope": "SYNTH-1",
+        "period_start": "2025-01-02T09:30:00+00:00",
+        "period_end": "2025-01-02T16:00:00+00:00",
+        "timezone": "UTC",
+        "resolution": "5-minute bars",
+        "coverage_note": "One complete synthetic session supplied with the repository; it is not market evidence."
+      }
+    ],
+    "observations": 78,
+    "effective_independent_units": 1,
+    "grain": "One 5-minute OHLC observation",
+    "coverage_summary": "All expected timestamps for the one synthetic session are present.",
+    "missing_data_treatment": "NOT_APPLICABLE",
+    "quality_flags": ["Synthetic fixture; not evidence for a market claim."]
+  },
+  "variables": [
+    {
+      "variable_ref": "variable:synthetic-close",
+      "name": "Close price",
+      "role": "DESCRIPTIVE",
+      "available_at_decision": "YES",
+      "source_ref": "dataset:synthetic-bars:v1",
+      "construction_note": "Read directly from each bar; no forward information is used.",
+      "post_outcome_risk": "None for this descriptive summary."
+    }
+  ],
+  "methods": [
+    {
+      "method_ref": "method:descriptive-summary:v1",
+      "type": "DESCRIPTIVE_SUMMARY",
+      "data_source_refs": ["dataset:synthetic-bars:v1"],
+      "data_role": "DEVELOPMENT",
+      "parameters_locked": true,
+      "parameter_refs": ["parameter:summary-rules:v1"],
+      "purpose": "Summarize the observed close-price range.",
+      "result_summary": "The synthetic close ranged from 100.0 to 101.4 over the session."
+    },
+    {
+      "method_ref": "method:data-quality-profile:v1",
+      "type": "DATA_QUALITY_PROFILE",
+      "data_source_refs": ["dataset:synthetic-bars:v1"],
+      "data_role": "DEVELOPMENT",
+      "parameters_locked": true,
+      "parameter_refs": ["parameter:expected-session-grid:v1"],
+      "purpose": "Check the expected timestamp grid and duplicate rows.",
+      "result_summary": "The expected synthetic timestamp grid is complete and contains no duplicate rows."
+    }
+  ],
+  "findings": [
+    {
+      "finding_id": "finding:range-descriptive:v1",
+      "type": "DESCRIPTIVE",
+      "statement": "The close-price range in this synthetic session was 1.4 price units.",
+      "metric_name": "close_range",
+      "estimate": 1.4,
+      "units": "price units",
+      "sample_units": 78,
+      "evidence_refs": ["method:descriptive-summary:v1"],
+      "uncertainty": {
+        "kind": "NONE_JUSTIFIED",
+        "estimate_standard_error": null,
+        "interval_low": null,
+        "interval_high": null,
+        "note": "This is a description of one synthetic session, not an estimate of a population effect."
+      },
+      "stability": "NOT_ASSESSED"
+    },
+    {
+      "finding_id": "finding:coverage-pass:v1",
+      "type": "DATA_QUALITY",
+      "statement": "All 78 expected timestamps are present once in the synthetic fixture.",
+      "metric_name": "timestamp_coverage",
+      "estimate": 1.0,
+      "units": "share of expected timestamps",
+      "sample_units": 78,
+      "evidence_refs": ["method:data-quality-profile:v1"],
+      "uncertainty": {
+        "kind": "NONE_JUSTIFIED",
+        "estimate_standard_error": null,
+        "interval_low": null,
+        "interval_high": null,
+        "note": "The fixture's expected grid is known exactly."
+      },
+      "stability": "NOT_ASSESSED"
+    }
+  ],
+  "data_quality": {
+    "status": "PASS_WITH_LIMITS",
+    "checks": [
+      {
+        "check_id": "quality:coverage:v1",
+        "type": "COVERAGE",
+        "status": "PASS",
+        "evidence_refs": ["method:data-quality-profile:v1"],
+        "impact": "No missing timestamps in this fixture.",
+        "note": "This says nothing about coverage outside the one synthetic session."
+      },
+      {
+        "check_id": "quality:duplicates:v1",
+        "type": "DUPLICATES",
+        "status": "PASS",
+        "evidence_refs": ["method:data-quality-profile:v1"],
+        "impact": "No duplicate rows were observed.",
+        "note": "Checked on the supplied fixture only."
+      },
+      {
+        "check_id": "quality:lookahead:v1",
+        "type": "LOOKAHEAD",
+        "status": "PASS",
+        "evidence_refs": ["method:descriptive-summary:v1"],
+        "impact": "The descriptive calculation uses only the supplied bar values.",
+        "note": "No predictive or trading claim was evaluated."
+      }
+    ],
+    "missingness_summary": "No missing values were present in the supplied fixture.",
+    "outlier_summary": "No outlier rule was needed for this descriptive fixture.",
+    "leakage_summary": "No forward-looking input was used; this report is not a validation result."
+  },
+  "trading_checks": {
+    "time_horizon_separation": "SEPARATED",
+    "session_regime_separation": "SEPARATED",
+    "point_in_time_availability": "CONTROLLED",
+    "leakage_check": "CONTROLLED",
+    "survivorship_check": "NOT_APPLICABLE",
+    "overlapping_horizons": "NOT_APPLICABLE",
+    "in_sample_out_of_sample": "NOT_APPLICABLE",
+    "costs_slippage_liquidity": "NOT_APPLICABLE",
+    "note": "No signal, forecast, backtest, execution or trading decision was requested."
+  },
+  "interpretation": {
+    "evidence_assessment": "DESCRIPTIVE_ONLY",
+    "claim_level_reached": "DESCRIPTIVE",
+    "alternative_explanations": [
+      "The range is a property of the synthetic fixture and may not resemble a live market session."
+    ],
+    "claim_limits": [
+      "One synthetic session cannot establish a market relationship, forecast, mechanism, or trading edge."
+    ],
+    "causal_claim_made": false,
+    "trading_decision_made": false,
+    "mechanism_claim_made": false
+  },
+  "limitations": {
+    "data": ["Only one synthetic session is present."],
+    "method": ["The report uses descriptive checks only."],
+    "generalization": ["No generalization to a real instrument is justified."],
+    "cost_execution": ["Execution costs and liquidity were not relevant to this request."],
+    "open_questions": ["Whether a future real-data request can obtain adequate coverage remains untested."]
+  },
+  "disposition": {
+    "status": "REPORT_READY",
+    "next_conductor_action": "Keep this descriptive report separate from any later predictive or trading test.",
+    "automatic_follow_up": false
+  },
+  "research_state_unchanged": true,
+  "no_trading_action": true,
+  "no_risk_override": true,
+  "no_research_goal_change": true,
+  "no_fingerprint_change": true,
+  "no_recursive_delegation": true,
+  "no_automatic_follow_up": true,
+  "no_causal_claim": true,
+  "no_private_chain_of_thought": true
+}

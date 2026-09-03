@@ -1,0 +1,500 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:research-framework:schema:data-analysis-report:1.0.0",
+  "title": "Bounded Quantitative Data Analysis Report",
+  "description": "Provider-neutral report for a scoped quantitative analysis. It supplies evidence and uncertainty to the research conductor without making a trading, risk, causal, or research-state decision.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "report_id",
+    "created_at",
+    "updated_at",
+    "agent_contract_version",
+    "research_id",
+    "research_version",
+    "analysis_question",
+    "question_scope",
+    "data_context",
+    "variables",
+    "methods",
+    "findings",
+    "data_quality",
+    "trading_checks",
+    "interpretation",
+    "limitations",
+    "disposition",
+    "research_state_unchanged",
+    "no_trading_action",
+    "no_risk_override",
+    "no_research_goal_change",
+    "no_fingerprint_change",
+    "no_recursive_delegation",
+    "no_automatic_follow_up",
+    "no_causal_claim",
+    "no_private_chain_of_thought"
+  ],
+  "properties": {
+    "schema_version": {"const": "1.0.0"},
+    "report_id": {"$ref": "#/$defs/stableId"},
+    "created_at": {"$ref": "#/$defs/timestamp"},
+    "updated_at": {"$ref": "#/$defs/timestamp"},
+    "agent_contract_version": {"const": "1.0.0"},
+    "research_id": {"$ref": "#/$defs/stableId"},
+    "research_version": {"type": "integer", "minimum": 1},
+    "analysis_question": {"$ref": "#/$defs/text"},
+    "question_scope": {"$ref": "#/$defs/questionScope"},
+    "data_context": {"$ref": "#/$defs/dataContext"},
+    "variables": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/variable"}
+    },
+    "methods": {
+      "type": "array",
+      "minItems": 1,
+      "items": {"$ref": "#/$defs/method"}
+    },
+    "findings": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/finding"}
+    },
+    "data_quality": {"$ref": "#/$defs/dataQuality"},
+    "trading_checks": {"$ref": "#/$defs/tradingChecks"},
+    "interpretation": {"$ref": "#/$defs/interpretation"},
+    "limitations": {"$ref": "#/$defs/limitations"},
+    "disposition": {"$ref": "#/$defs/disposition"},
+    "research_state_unchanged": {"const": true},
+    "no_trading_action": {"const": true},
+    "no_risk_override": {"const": true},
+    "no_research_goal_change": {"const": true},
+    "no_fingerprint_change": {"const": true},
+    "no_recursive_delegation": {"const": true},
+    "no_automatic_follow_up": {"const": true},
+    "no_causal_claim": {"const": true},
+    "no_private_chain_of_thought": {"const": true}
+  },
+  "$defs": {
+    "stableId": {
+      "type": "string",
+      "pattern": "^[A-Za-z][A-Za-z0-9._:-]{2,199}$"
+    },
+    "timestamp": {"type": "string", "format": "date-time"},
+    "shortText": {"type": "string", "minLength": 1, "maxLength": 2000},
+    "text": {"type": "string", "minLength": 1, "maxLength": 8000},
+    "nullableText": {
+      "oneOf": [
+        {"$ref": "#/$defs/shortText"},
+        {"type": "null"}
+      ]
+    },
+    "nullableNumber": {
+      "oneOf": [
+        {"type": "number"},
+        {"type": "null"}
+      ]
+    },
+    "questionScope": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "market",
+        "instrument",
+        "time_horizon",
+        "session_scope",
+        "timezone",
+        "decision_relevance",
+        "requested_claim_level"
+      ],
+      "properties": {
+        "market": {"$ref": "#/$defs/shortText"},
+        "instrument": {"$ref": "#/$defs/shortText"},
+        "time_horizon": {
+          "type": "string",
+          "enum": ["INTRADAY", "SWING", "OTHER"]
+        },
+        "session_scope": {"$ref": "#/$defs/shortText"},
+        "timezone": {"$ref": "#/$defs/shortText"},
+        "decision_relevance": {"$ref": "#/$defs/shortText"},
+        "requested_claim_level": {"const": "ASSOCIATIONAL_PREDICTIVE"}
+      }
+    },
+    "source": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "source_ref",
+        "name",
+        "snapshot_or_version",
+        "role",
+        "instrument_scope",
+        "period_start",
+        "period_end",
+        "timezone",
+        "resolution",
+        "coverage_note"
+      ],
+      "properties": {
+        "source_ref": {"$ref": "#/$defs/stableId"},
+        "name": {"$ref": "#/$defs/shortText"},
+        "snapshot_or_version": {"$ref": "#/$defs/shortText"},
+        "role": {
+          "type": "string",
+          "enum": [
+            "DISCOVERY",
+            "DEVELOPMENT",
+            "VALIDATION",
+            "FINAL_HOLDOUT",
+            "FORWARD_OOS",
+            "UNKNOWN"
+          ]
+        },
+        "instrument_scope": {"$ref": "#/$defs/shortText"},
+        "period_start": {"$ref": "#/$defs/timestamp"},
+        "period_end": {"$ref": "#/$defs/timestamp"},
+        "timezone": {"$ref": "#/$defs/shortText"},
+        "resolution": {"$ref": "#/$defs/shortText"},
+        "coverage_note": {"$ref": "#/$defs/text"}
+      }
+    },
+    "dataContext": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "status",
+        "sources",
+        "observations",
+        "effective_independent_units",
+        "grain",
+        "coverage_summary",
+        "missing_data_treatment",
+        "quality_flags"
+      ],
+      "properties": {
+        "status": {
+          "type": "string",
+          "enum": ["USED", "PARTIAL", "NOT_AVAILABLE", "UNKNOWN"]
+        },
+        "sources": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {"$ref": "#/$defs/source"}
+        },
+        "observations": {"type": ["integer", "null"], "minimum": 0},
+        "effective_independent_units": {"type": ["number", "null"], "minimum": 0},
+        "grain": {"$ref": "#/$defs/shortText"},
+        "coverage_summary": {"$ref": "#/$defs/text"},
+        "missing_data_treatment": {
+          "type": "string",
+          "enum": [
+            "EXPLICITLY_MISSING",
+            "EXCLUDED_WITH_REASON",
+            "IMPUTED_PREDECLARED",
+            "NOT_APPLICABLE",
+            "UNKNOWN"
+          ]
+        },
+        "quality_flags": {
+          "type": "array",
+          "items": {"$ref": "#/$defs/shortText"}
+        }
+      }
+    },
+    "variable": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "variable_ref",
+        "name",
+        "role",
+        "available_at_decision",
+        "source_ref",
+        "construction_note",
+        "post_outcome_risk"
+      ],
+      "properties": {
+        "variable_ref": {"$ref": "#/$defs/stableId"},
+        "name": {"$ref": "#/$defs/shortText"},
+        "role": {
+          "type": "string",
+          "enum": ["PREDICTOR", "OUTCOME", "CONTROL", "DESCRIPTIVE"]
+        },
+        "available_at_decision": {
+          "type": "string",
+          "enum": ["YES", "NO", "UNKNOWN"]
+        },
+        "source_ref": {"$ref": "#/$defs/stableId"},
+        "construction_note": {"$ref": "#/$defs/text"},
+        "post_outcome_risk": {"$ref": "#/$defs/shortText"}
+      }
+    },
+    "method": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "method_ref",
+        "type",
+        "data_source_refs",
+        "data_role",
+        "parameters_locked",
+        "parameter_refs",
+        "purpose",
+        "result_summary"
+      ],
+      "properties": {
+        "method_ref": {"$ref": "#/$defs/stableId"},
+        "type": {
+          "type": "string",
+          "enum": [
+            "DESCRIPTIVE_SUMMARY",
+            "DATA_QUALITY_PROFILE",
+            "DISTRIBUTION_COMPARISON",
+            "TIME_SERIES_DIAGNOSTIC",
+            "REGIME_COMPARISON",
+            "SIGNAL_EVALUATION",
+            "PREDICTIVE_EVALUATION",
+            "BACKTEST_SUMMARY",
+            "ROBUSTNESS_CHECK",
+            "OUTLIER_ANALYSIS",
+            "CORRELATION_ANALYSIS"
+          ]
+        },
+        "data_source_refs": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {"$ref": "#/$defs/stableId"}
+        },
+        "data_role": {
+          "type": "string",
+          "enum": [
+            "DISCOVERY",
+            "DEVELOPMENT",
+            "VALIDATION",
+            "FINAL_HOLDOUT",
+            "FORWARD_OOS",
+            "UNKNOWN"
+          ]
+        },
+        "parameters_locked": {"type": "boolean"},
+        "parameter_refs": {
+          "type": "array",
+          "items": {"$ref": "#/$defs/stableId"}
+        },
+        "purpose": {"$ref": "#/$defs/shortText"},
+        "result_summary": {"$ref": "#/$defs/text"}
+      }
+    },
+    "uncertainty": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "estimate_standard_error", "interval_low", "interval_high", "note"],
+      "properties": {
+        "kind": {
+          "type": "string",
+          "enum": [
+            "NONE_JUSTIFIED",
+            "STANDARD_ERROR",
+            "CONFIDENCE_INTERVAL",
+            "BOOTSTRAP_INTERVAL",
+            "PERMUTATION",
+            "BAYESIAN_INTERVAL",
+            "SCENARIO_RANGE",
+            "NOT_COMPUTABLE",
+            "UNKNOWN"
+          ]
+        },
+        "estimate_standard_error": {"$ref": "#/$defs/nullableNumber"},
+        "interval_low": {"$ref": "#/$defs/nullableNumber"},
+        "interval_high": {"$ref": "#/$defs/nullableNumber"},
+        "note": {"$ref": "#/$defs/shortText"}
+      }
+    },
+    "finding": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "finding_id",
+        "type",
+        "statement",
+        "metric_name",
+        "estimate",
+        "units",
+        "sample_units",
+        "evidence_refs",
+        "uncertainty",
+        "stability"
+      ],
+      "properties": {
+        "finding_id": {"$ref": "#/$defs/stableId"},
+        "type": {
+          "type": "string",
+          "enum": ["DESCRIPTIVE", "PREDICTIVE", "DATA_QUALITY", "ROBUSTNESS"]
+        },
+        "statement": {"$ref": "#/$defs/text"},
+        "metric_name": {"$ref": "#/$defs/shortText"},
+        "estimate": {"$ref": "#/$defs/nullableNumber"},
+        "units": {"$ref": "#/$defs/shortText"},
+        "sample_units": {"type": ["integer", "null"], "minimum": 0},
+        "evidence_refs": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {"$ref": "#/$defs/stableId"}
+        },
+        "uncertainty": {"$ref": "#/$defs/uncertainty"},
+        "stability": {
+          "type": "string",
+          "enum": ["STABLE", "UNSTABLE", "NOT_ASSESSED", "UNKNOWN"]
+        }
+      }
+    },
+    "qualityCheck": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["check_id", "type", "status", "evidence_refs", "impact", "note"],
+      "properties": {
+        "check_id": {"$ref": "#/$defs/stableId"},
+        "type": {
+          "type": "string",
+          "enum": [
+            "COMPLETENESS",
+            "TIMELINESS",
+            "GRAIN",
+            "DUPLICATES",
+            "VALIDITY",
+            "CONSISTENCY",
+            "LEAKAGE",
+            "LOOKAHEAD",
+            "SURVIVORSHIP",
+            "DEPENDENCE",
+            "OVERLAP",
+            "REGIME_MIXING",
+            "SOURCE_RECONCILIATION",
+            "OUTLIERS",
+            "COVERAGE"
+          ]
+        },
+        "status": {
+          "type": "string",
+          "enum": ["PASS", "FAIL", "UNKNOWN", "NOT_APPLICABLE"]
+        },
+        "evidence_refs": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {"$ref": "#/$defs/stableId"}
+        },
+        "impact": {"$ref": "#/$defs/shortText"},
+        "note": {"$ref": "#/$defs/text"}
+      }
+    },
+    "dataQuality": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status", "checks", "missingness_summary", "outlier_summary", "leakage_summary"],
+      "properties": {
+        "status": {
+          "type": "string",
+          "enum": ["PASS", "PASS_WITH_LIMITS", "FAIL", "BLOCKED", "NOT_ASSESSED"]
+        },
+        "checks": {
+          "type": "array",
+          "minItems": 1,
+          "items": {"$ref": "#/$defs/qualityCheck"}
+        },
+        "missingness_summary": {"$ref": "#/$defs/text"},
+        "outlier_summary": {"$ref": "#/$defs/text"},
+        "leakage_summary": {"$ref": "#/$defs/text"}
+      }
+    },
+    "tradingChecks": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "time_horizon_separation",
+        "session_regime_separation",
+        "point_in_time_availability",
+        "leakage_check",
+        "survivorship_check",
+        "overlapping_horizons",
+        "in_sample_out_of_sample",
+        "costs_slippage_liquidity",
+        "note"
+      ],
+      "properties": {
+        "time_horizon_separation": {"$ref": "#/$defs/checkStatus"},
+        "session_regime_separation": {"$ref": "#/$defs/checkStatus"},
+        "point_in_time_availability": {"$ref": "#/$defs/checkStatus"},
+        "leakage_check": {"$ref": "#/$defs/checkStatus"},
+        "survivorship_check": {"$ref": "#/$defs/checkStatus"},
+        "overlapping_horizons": {"$ref": "#/$defs/checkStatus"},
+        "in_sample_out_of_sample": {"$ref": "#/$defs/checkStatus"},
+        "costs_slippage_liquidity": {"$ref": "#/$defs/checkStatus"},
+        "note": {"$ref": "#/$defs/text"}
+      }
+    },
+    "checkStatus": {
+      "type": "string",
+      "enum": ["SEPARATED", "CONTROLLED", "INCLUDED", "NOT_APPLICABLE", "UNKNOWN"]
+    },
+    "interpretation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "evidence_assessment",
+        "claim_level_reached",
+        "alternative_explanations",
+        "claim_limits",
+        "causal_claim_made",
+        "trading_decision_made",
+        "mechanism_claim_made"
+      ],
+      "properties": {
+        "evidence_assessment": {
+          "type": "string",
+          "enum": ["SUPPORTS", "WEAKENS", "OPEN", "NOT_TESTABLE", "BLOCKED", "DESCRIPTIVE_ONLY"]
+        },
+        "claim_level_reached": {
+          "type": "string",
+          "enum": ["DESCRIPTIVE", "ASSOCIATIONAL", "PREDICTIVE"]
+        },
+        "alternative_explanations": {
+          "type": "array",
+          "minItems": 1,
+          "items": {"$ref": "#/$defs/shortText"}
+        },
+        "claim_limits": {
+          "type": "array",
+          "minItems": 1,
+          "items": {"$ref": "#/$defs/shortText"}
+        },
+        "causal_claim_made": {"const": false},
+        "trading_decision_made": {"const": false},
+        "mechanism_claim_made": {"const": false}
+      }
+    },
+    "limitations": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["data", "method", "generalization", "cost_execution", "open_questions"],
+      "properties": {
+        "data": {"type": "array", "items": {"$ref": "#/$defs/shortText"}},
+        "method": {"type": "array", "items": {"$ref": "#/$defs/shortText"}},
+        "generalization": {"type": "array", "items": {"$ref": "#/$defs/shortText"}},
+        "cost_execution": {"type": "array", "items": {"$ref": "#/$defs/shortText"}},
+        "open_questions": {"type": "array", "items": {"$ref": "#/$defs/shortText"}}
+      }
+    },
+    "disposition": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status", "next_conductor_action", "automatic_follow_up"],
+      "properties": {
+        "status": {
+          "type": "string",
+          "enum": ["REPORT_READY", "INCONCLUSIVE", "NOT_TESTABLE", "BLOCKED"]
+        },
+        "next_conductor_action": {"$ref": "#/$defs/shortText"},
+        "automatic_follow_up": {"const": false}
+      }
+    }
+  }
+}

@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "urn:research-framework:schema:routing-decision:1.6.0",
+  "$id": "urn:research-framework:schema:routing-decision:1.7.0",
   "title": "Research Routing Decision",
   "description": "Deterministic routing decision and bounded work order owned by the research conductor.",
   "type": "object",
@@ -24,11 +24,11 @@
     "control"
   ],
   "properties": {
-    "schema_version": {"const": "1.6.0"},
+    "schema_version": {"const": "1.7.0"},
     "decision_id": {"$ref": "#/$defs/stableId"},
     "created_at": {"$ref": "#/$defs/timestamp"},
     "orchestration_ref": {"$ref": "#/$defs/stableId"},
-    "conductor_version": {"const": "1.6.0"},
+    "conductor_version": {"const": "1.7.0"},
     "route": {"$ref": "#/$defs/route"},
     "execution_mode": {
       "type": "string",
@@ -103,6 +103,19 @@
           "execution_mode": {"const": "SPECIALIST_AS_TOOL"},
           "selected_agent": {"const": "causal-identification-critic"},
           "specialist_mode": {"const": "PRE_ESTIMATION"},
+          "fingerprint_guard": {
+            "properties": {"mode": {"const": "PRESERVE_EFFECTIVE"}}
+          }
+        }
+      }
+    },
+    {
+      "if": {"properties": {"route": {"const": "DATA_ANALYSIS"}}, "required": ["route"]},
+      "then": {
+        "properties": {
+          "execution_mode": {"const": "SPECIALIST_AS_TOOL"},
+          "selected_agent": {"const": "data-analyst"},
+          "specialist_mode": {"const": "SCOPED_QUANTITATIVE_ANALYSIS"},
           "fingerprint_guard": {
             "properties": {"mode": {"const": "PRESERVE_EFFECTIVE"}}
           }
@@ -291,6 +304,7 @@
         "DEFINE_OUTCOME_EVIDENCE_CONTRACT",
         "ASSESS_PIPELINE_INTEGRITY",
         "CONDITION_INQUIRY",
+        "DATA_ANALYSIS",
         "CAUSAL_IDENTIFICATION_REVIEW",
         "SCIENTIFIC_PHILOSOPHY_POST_RESULT",
         "RESEARCH_INTAKE",
@@ -305,7 +319,8 @@
             "intraday-hypothesis-generator",
             "scientific-philosophy-critic",
             "condition-inquiry-analyst",
-            "causal-identification-critic"
+            "causal-identification-critic",
+            "data-analyst"
           ]
         },
         {"type": "null"}

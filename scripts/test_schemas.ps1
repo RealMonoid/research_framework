@@ -95,6 +95,7 @@ $positivePairs = @(
     @('examples\strategy_reconstruction.vwap_wave_price_discovery.json', 'schemas\strategy_reconstruction.schema.json'),
     @('examples\strategy_concept_audit.synthetic.json', 'schemas\strategy_concept_audit.schema.json'),
     @('examples\condition_inquiry.synthetic_measurement.json', 'schemas\condition_inquiry.schema.json'),
+    @('examples\data_analysis_report.synthetic.json', 'schemas\data_analysis_report.schema.json'),
     @('examples\causal_identification_assessment.hfi_pass.json', 'schemas\causal_identification_assessment.schema.json'),
     @('examples\scientific_philosophy_review.synthetic_failed_reconstruction.json', 'schemas\scientific_philosophy_review.schema.json'),
     @('examples\framework_control_review.synthetic.json', 'schemas\framework_control_review.schema.json'),
@@ -137,6 +138,14 @@ Test-RejectedFixture -Name 'filter label share alone cannot validate instrument'
 $conditionCircularTarget = Read-JsonText -RelativePath 'examples\condition_inquiry.synthetic_measurement.json' | ConvertFrom-Json -Depth 100
 $conditionCircularTarget.measurement_assessment.targets_reused_in_construction = $true
 Test-RejectedFixture -Name 'measurement assessment cannot reuse its construction target' -Value $conditionCircularTarget -Schema 'schemas\condition_inquiry.schema.json'
+
+$dataActionBoundary = Read-JsonText -RelativePath 'examples\data_analysis_report.synthetic.json' | ConvertFrom-Json -Depth 100
+$dataActionBoundary.no_trading_action = $false
+Test-RejectedFixture -Name 'data specialist cannot make a trading action' -Value $dataActionBoundary -Schema 'schemas\data_analysis_report.schema.json'
+
+$dataCausalBoundary = Read-JsonText -RelativePath 'examples\data_analysis_report.synthetic.json' | ConvertFrom-Json -Depth 100
+$dataCausalBoundary.no_causal_claim = $false
+Test-RejectedFixture -Name 'data specialist cannot make a causal claim' -Value $dataCausalBoundary -Schema 'schemas\data_analysis_report.schema.json'
 
 $predictiveCausalPass = Read-JsonText -RelativePath 'examples\causal_identification_assessment.hfi_pass.json' | ConvertFrom-Json -Depth 100
 $predictiveCausalPass.requested_claim_level = 'ASSOCIATIONAL_PREDICTIVE'

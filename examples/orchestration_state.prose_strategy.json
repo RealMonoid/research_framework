@@ -1,8 +1,8 @@
 {
-  "schema_version": "1.6.0",
+  "schema_version": "1.7.0",
   "orchestration_id": "orchestration:synthetic-prose-strategy:v1",
   "updated_at": "2026-08-31T18:00:00+02:00",
-  "conductor_version": "1.6.0",
+  "conductor_version": "1.7.0",
   "next_decision_sequence": 2,
   "request": {
     "request_id": "request:operationalize-synthetic-prose-strategy",
@@ -50,6 +50,10 @@
       "artifact_ref": null
     },
     "condition_inquiry": {
+      "status": "NOT_APPLICABLE",
+      "artifact_ref": null
+    },
+    "data_analysis": {
       "status": "NOT_APPLICABLE",
       "artifact_ref": null
     },
