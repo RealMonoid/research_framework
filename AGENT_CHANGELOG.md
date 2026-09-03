@@ -6,6 +6,66 @@ are defined only in `AGENTS.md`. Read `AGENTS.md` in full before using this log.
 
 ## Log entries
 
+### 2026-09-03T02:28:20+02:00 | ChatGPT 5.6 Sol
+- **Agent**: ChatGPT 5.6 Sol
+- **Files**:
+  - `PLANNED_FEATURES.md` (modified)
+  - `AGENT_CHANGELOG.md` (modified)
+- **What**:
+  - Triaged an external red-team audit and a separate architecture review
+    against the current repository instead of adopting their severity labels or
+    refactoring plan wholesale.
+  - Added a confirmed regression target for the repeated-random-walk loophole,
+    in which multiple required `RANDOM_WALK` controls can evade the current
+    exact-list comparison while still providing no structure-appropriate null
+    family.
+  - Planned structured Monte Carlo, replication, uncertainty, and seed evidence
+    and required pipeline-control results to be bound to execution of the exact
+    frozen candidate pipeline rather than accepted as agent-written `PASS`
+    declarations.
+  - Defined the narrow conditional scope of a future fail-closed conductor:
+    artifact dereferencing, actual validator and specialist invocation,
+    persistent attempt counting, preservation of non-zero fingerprint stops,
+    and predecessor-derived fingerprint baselines in a private append-only or
+    content-addressed history.
+  - Expanded the adversarial evaluation plan with baseline substitution,
+    causal-claim relabelling, phantom sentinel passes, repeated random walks,
+    competing validation protocols, ignored fingerprint failures, attempt
+    resets, and unbound producer-configuration hashes.
+  - Recorded a lower-priority cross-schema identifier-consistency check while
+    making shared external schema definitions optional and fail-closed rather
+    than treating reduced line count as the objective.
+  - Explicitly declined audit recommendations that would weaken change-control
+    exit semantics, contaminate pre-freeze controls with validation data,
+    collapse distinct epistemic artifacts or specialist roles, split the shared
+    roadmap, remove the Windows validation path, or add developer tooling
+    without a protected research decision.
+- **Why**:
+  - **Problem description**: The reviews contained a mixture of genuine bypasses,
+    already-recorded gaps, incorrect repository counts, irreproducible revision
+    claims, and conventional software-cleanup advice. Copying the full plans
+    would give questionable external severity labels authority over the shared
+    roadmap and could erase deliberate scientific boundaries.
+  - **Decision context**: Both reviews identify revision `4af9cff` while citing
+    later material, and their schema, agent, script, mechanism, and generator
+    counts do not match that revision or current `main`. Direct code inspection
+    nevertheless confirmed the repeated-random-walk defect and the free-text
+    Monte Carlo record. The existing roadmap already covered validation
+    protocols, caller-enforced gates, the real Research Case, live-agent
+    evaluation, search lineage, rule loading, terminology, and conditional
+    language migration.
+  - **Rationale & protected invariants**: Preserve one authoritative roadmap;
+    retain fail-closed fingerprint semantics; keep precommitment separate from
+    result assessment and predictive claims separate from causal claims; add
+    only controls that make false pipeline, drift, or agent-reliability claims
+    harder; and keep proprietary research out of the public repository.
+- **Verification**:
+  - `python scripts/validate_agent_instruction_sources.py` — PASS.
+  - `python scripts/validate_framework.py` — PASS; full deterministic framework
+    integrity passed. The `LIVE_AGENT` release gate was not run, so no model or
+    prompt reliability claim is made.
+  - `git diff --check` — PASS.
+
 ### 2026-09-03T01:02:16+02:00 | OpenAI Codex (GPT-5)
 - **Agent**: OpenAI Codex (GPT-5)
 - **Files**:
