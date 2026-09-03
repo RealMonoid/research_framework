@@ -20,23 +20,23 @@ from typing import Any, Mapping, Sequence
 METADATA_FIELDS = {"schema_version", "fingerprint_id", "created_at", "fingerprint_sha256"}
 
 SECTION_LABELS = {
-    "research_question": "Forschungsfrage",
-    "source_strategy": "Quellstrategie",
-    "market_and_instruments": "Markt und Instrumente",
-    "time_scope": "Zeitraum und Zeithorizont",
-    "constructs_and_operationalizations": "Begriffe und Messdefinitionen",
-    "trigger_entry_and_position": "Auslöser, Einstieg und Position",
-    "outcomes_targets_and_exits": "Ergebnis, Ziel und Ausstieg",
-    "conditions_filters_and_exclusions": "Bedingungen, Filter und Ausschlüsse",
-    "data_sampling_and_observability": "Daten, Stichprobe und Verfügbarkeit",
-    "analysis_and_inference": "Auswertung und Schlussfolgerung",
-    "costs_execution_and_risk": "Kosten, Ausführung und Risiko",
-    "results_and_continuation": "Ergebnisstand und Fortsetzung",
-    "additional_material_commitments": "weitere Festlegungen",
-    "protected_artifacts": "geschützte Forschungsunterlagen",
-    "completeness": "Vollständigkeitserklärung",
-    "research_id": "Research-ID",
-    "research_version": "Forschungsversion",
+    "research_question": "Research question",
+    "source_strategy": "Source strategy",
+    "market_and_instruments": "Market and instruments",
+    "time_scope": "Time scope and horizon",
+    "constructs_and_operationalizations": "Constructs and operationalizations",
+    "trigger_entry_and_position": "Trigger, entry, and position",
+    "outcomes_targets_and_exits": "Outcome, target, and exit",
+    "conditions_filters_and_exclusions": "Conditions, filters, and exclusions",
+    "data_sampling_and_observability": "Data, sample, and availability",
+    "analysis_and_inference": "Analysis and inference",
+    "costs_execution_and_risk": "Costs, execution, and risk",
+    "results_and_continuation": "Result state and continuation",
+    "additional_material_commitments": "Additional material commitments",
+    "protected_artifacts": "Protected research artifacts",
+    "completeness": "Completeness statement",
+    "research_id": "Research ID",
+    "research_version": "Research version",
 }
 
 
@@ -213,7 +213,7 @@ def build_fingerprint_check(
         "overall_status": "NOT_APPLICABLE",
         "changes": [],
         "proposal": None,
-        "plain_language_summary": "Für diesen Schritt ist kein bestehender Forschungsstand zu vergleichen.",
+        "plain_language_summary": "There is no existing research state to compare for this step.",
         "candidate_may_become_effective": True,
     }
 
@@ -232,7 +232,7 @@ def build_fingerprint_check(
         report.update({
             "overall_status": "NOT_COMPARABLE_NEW_RESEARCH",
             "plain_language_summary": (
-                "Es gibt noch keinen wirksamen Forschungsstand. Der neue Fingerabdruck muss bei der Aufnahme als eigene Forschungsversion sichtbar festgelegt werden."
+                "There is no effective research state yet. The new fingerprint must be explicitly established as its own research version when it is recorded."
             ),
         })
         return report
@@ -258,7 +258,7 @@ def build_fingerprint_check(
         report.update({
             "overall_status": "UNCHANGED",
             "plain_language_summary": (
-                "Der vollständige Forschungsfingerabdruck ist unverändert. Es wurden weder Festlegungen noch geschützte Forschungsunterlagen ausgetauscht."
+                "The complete research fingerprint is unchanged. No commitments or protected research artifacts were exchanged."
             ),
         })
         return report
@@ -277,8 +277,8 @@ def build_fingerprint_check(
             "effect_if_accepted": "CREATE_NEW_RESEARCH_VERSION",
         },
         "plain_language_summary": (
-            "Vorgeschlagene Änderung in: " + ", ".join(labels) + ". "
-            "Die bisherige Forschungsversion bleibt wirksam. Die neue Fassung darf nur nach einer sichtbaren Entscheidung als neue Version angelegt werden."
+            "Proposed change in: " + ", ".join(labels) + ". "
+            "The previous research version remains effective. The new version may be created only after a visible decision."
         ),
         "candidate_may_become_effective": False,
     })

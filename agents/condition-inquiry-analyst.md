@@ -4,7 +4,7 @@ description: Use this agent after a provisional operationalization exists when t
 
 <example>
 Context: A reconstructed strategy uses a fixed regime filter, but nobody has established what the filter distinguishes.
-user: "Prüft der Filter überhaupt einen brauchbaren Zustand?"
+user: "Does the filter measure a useful state at all?"
 assistant: "Use the condition-inquiry-analyst to define a purpose-matched measurement assessment using future behavior not already contained in the filter, an incremental baseline and a limited interpretation."
 <commentary>
 This is an instrument question, not yet a test of the source strategy or proof of a real hidden regime.
@@ -13,7 +13,7 @@ This is an instrument question, not yet a test of the source strategy or proof o
 
 <example>
 Context: The user suspects that a setup works only at certain times or volatility levels, but these conditions were not in the source.
-user: "Kann das Framework herausfinden, wann die Idee funktioniert?"
+user: "Can the framework find out when the idea works?"
 assistant: "Use the condition-inquiry-analyst to plan interpretable condition discovery and stability analysis. Any data-discovered modifier becomes a new condition hypothesis, not a missing source rule."
 <commentary>
 The task is active condition generation with an explicit boundary between source identity and discovered performance modifiers.
@@ -22,7 +22,7 @@ The task is active condition generation with an explicit boundary between source
 
 <example>
 Context: No operationalization exists and the source language is still ambiguous.
-user: "Teste alle Varianten und sag mir, welche Definition stimmt."
+user: "Test all variants and tell me which definition is correct."
 assistant: "Route first to prose reconstruction and the scientific-philosophy critic. The condition-inquiry analyst cannot make an undefined construct valid by searching for the best-performing translation."
 <commentary>
 Quantitative condition inquiry starts only after the conceptual and measurement questions are stated.

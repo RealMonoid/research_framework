@@ -1,177 +1,103 @@
 # 00_RESEARCH_AGENT_README.md
 
 **Version:** 2.5
-**Stand:** 2026-08-31
-**Status:** ENTWURF ZUR ÜBERNAHME  
-**Zweck:** Verbindliche Lese- und Ausführungsanweisung für AI-Agenten, die Trading-Research-Projekte bearbeiten.
-
+**As of:** 2026-08-31
+**Status:** DRAFT FOR ADOPTION
+**Purpose:** Binding reading and execution instructions for AI agents handling trading research projects.
 ---
 
-## 1. Gestaffelter Einstieg und Dokumentrouter
+## 1. Staggered entry and document router
 
-Jede vorhandene neue Idee beginnt mit `QUICKSTART.md` und einem Intake nach
-`schemas/hypothesis_candidate.schema.json`. Wenn noch keine Rohidee existiert,
-kann davor optional `scripts/generate_hypotheses.py` den versionierten Katalog
-`generation/mechanism_catalog.v1.json` in günstige `INBOX`-Kandidaten
-überführen. Dieser Generator ist eine Produktionsschicht und trifft keine
-Screening-, Evidenz-, Backtest- oder Promotionsentscheidung.
+Every new idea starts with `QUICKSTART.md` and an intake after `schemas/hypothesis_candidate.schema.json`. If no raw idea exists yet, `scripts/generate_hypotheses.py` can optionally convert the versioned catalogue `generation/mechanism_catalog.v1.json` into cheap `INBOX` candidates. This generator is a production layer and does not make a screening, evidence, backtest or promotion decision.
 
-Für `INBOX`, `MERGED` oder `REJECTED` müssen die sechs Detaildokumente nicht
-vorab geladen werden. Der kurze Intake hält dennoch Herkunft, Rohidee und bereits
-verbrauchte Informationsreferenzen fest.
+For `INBOX`, `MERGED` or `REJECTED`, the six detailed documents do not have to be preloaded. The short intake nevertheless records origin, raw idea and already consumed information references.
 
-Erst ein `PROMOTED`-Intake öffnet Phase 0; Promotion ist keine
-Evidenzbestätigung. Dann werden `00_RESEARCH_AGENT_README.md` und
-`01_RESEARCH_STANDARD.md` geladen. `02_RESEARCH_CASE_TEMPLATE.md` wird beim
-Anlegen des konkreten Research Case verwendet. Aus `03_RESEARCH_METHODS.md`,
-`04_CAUSAL_TOOLING.md` und `05_AGENT_OPERATIONS.md` werden nur die durch Methode,
-Claim-Level und erzeugten Artefakte aktivierten Abschnitte geladen.
+Only a `PROMOTED` intake opens phase 0; promotion is not evidence. Then `00_RESEARCH_AGENT_README.md` and `01_RESEARCH_STANDARD.md` are loaded. `02_RESEARCH_CASE_TEMPLATE.md` is used when creating the specific research case. From `03_RESEARCH_METHODS.md`, `04_CAUSAL_TOOLING.md` and `05_AGENT_OPERATIONS.md`, only the sections activated by method, claim level and created artifacts are loaded.
 
-Jeder tatsächliche Agentenlauf erhält ein valides Run-Manifest nach
-`schemas/run_manifest.schema.json`. Entscheidungsrelevante Aussagen, menschliche
-Reviews und echte Eval-Ergebnisse werden nach `05_AGENT_OPERATIONS.md` als
-getrennte operative Artefakte geführt und im Research Case referenziert.
+Each actual agent run receives a valid run manifest validated against `schemas/run_manifest.schema.json`. Decision-relevant statements, human reviews and real eval results are listed as separate operational artifacts according to `05_AGENT_OPERATIONS.md` and referenced in the research case.
 
-Die Abschnitte `U–Y` dieser Kopie bleiben bis zu einer bestandenen Phänomen-Entscheidung in Abschnitt `T` **inaktiv**. Nach `VALIDATED_PHENOMENON` werden sie nur durch eine ausdrückliche Fortsetzungsentscheidung aktiviert; andernfalls bleibt `VALIDATED_PHENOMENON` ein zulässiger eigenständiger Endzustand und der Block erhält `DEFERRED_AFTER_VALIDATION`. Wird `T` nicht als `VALIDATED_PHENOMENON` abgeschlossen, erhält der Block `NOT_ACTIVATED_BY_T_GATE`. Die einzelnen Felder werden in beiden Fällen nicht mit Serien von `N/A` befüllt. Abschnitt `Z` bleibt von Beginn an aktiv, weil Entscheidungs-, Versions- und Ablehnungsgründe während des gesamten Research-Prozesses protokolliert werden müssen.
+The sections `U–Y` of this copy remain inactive in section `T` until a passed phenomenon decision. After `VALIDATED_PHENOMENON` they are activated only by an explicit continuation decision. Otherwise, `VALIDATED_PHENOMENON` remains a permissible stand-alone end state and the block is marked `DEFERRED_AFTER_VALIDATION`. If `T` is not completed as `VALIDATED_PHENOMENON`, the block is marked `NOT_ACTIVATED_BY_T_GATE`. In both cases, the individual fields are not filled with a series of `N/A` entries. Section `Z` remains active from the start because decisions, versions, and rejection reasons must be logged throughout the research process.
 
-Die Dateien erfüllen verschiedene Funktionen:
+The files perform various functions:
 
-| Datei | Funktion | Wann laden? |
+| File | Function | When to load? |
 |---|---|---|
-| `QUICKSTART.md` | Kurzpfad, Enforcement-Grenze und Statusrouter | Immer |
-| `generation/mechanism_catalog.v1.json` | Literaturgestützte Mechanismen für Intraday- und kurze Swing-Ideen | Wenn Ideen erzeugt oder der Katalog erweitert werden soll |
-| `generation/README.md` | Bedienung und Grenzen des Generators | Bei einem Generatorlauf |
-| `agents/intraday-hypothesis-generator.md` | Optionaler autonomer Generatorvertrag | Bei agentischer Ideenerzeugung |
-| `agents/scientific-philosophy-critic.md` | Begriffs-/Voraussetzungspruefung vor Operationalisierung sowie Duhem-Quine-/Lakatos-/Kuhn-Fortsetzungspruefung | Vor Abschluss jeder unvollstaendig definierten Quellenrekonstruktion; nach nicht positivem Q8-Ergebnis bei materieller Revision oder Fortsetzung |
-| `agents/condition-inquiry-analyst.md` | Quantitative Beurteilung von Messinstrumenten und Erzeugung beobachtbarer Bedingungshypothesen | Nach vorlaeufiger Operationalisierung, wenn Messnutzen, Definitionsabhaengigkeit oder unbekannte Erfolgsmodifikatoren untersucht werden |
-| `agents/causal-identification-critic.md` | Unabhängige Prüfung, ob ein Finanzmarktdesign die beabsichtigte kausale Aussage trägt | Vor jeder interventionalen oder kontrafaktischen Schätzung und vor kausaler Sprache; nicht für rein prädiktive Fragen |
-| `references/CAUSAL_IDENTIFICATION_FOR_FINANCE.md` | Versionierte Forschungsbasis für finanzmarktspezifische Identifikationsrisiken | Bei jeder Kausalitätsprüfung |
-| `reconstruction/README.md` | Quellennahe Übersetzung von Buch-/Artikel-/Video-/Kursstrategien | Wenn eine Quellenstrategie nicht vollständig operationalisiert ist |
-| `00_RESEARCH_AGENT_README.md` | Routing, Gate- und Nicht-Überspringen-Regeln | Ab `PROMOTED` |
-| `01_RESEARCH_STANDARD.md` | Normativer Forschungsstandard | Ab `PROMOTED` |
-| `02_RESEARCH_CASE_TEMPLATE.md` | Operatives Arbeitsartefakt je Research-ID | Beim Eröffnen eines Research Case |
-| `03_RESEARCH_METHODS.md` | Methodenauswahl und Einsatzregeln | Nur ausgewählte Methodenabschnitte |
-| `04_CAUSAL_TOOLING.md` | Router für ausführbare kausale Kernoperationen | Bei `TOOLING_REQUIRED` |
-| `05_AGENT_OPERATIONS.md` | Provenance, Evidence, Reviews, Evals und Freigabe | Passende Abschnitte bei den jeweiligen Artefakten/Systemänderungen |
-| `schemas/` | Maschinenlesbare Artefaktverträge | Sobald der Artefakttyp entsteht |
-| `evals/` | Producer, Scorer und Regression Gate | Bei Agenten-/Prompt-/Modell-/Tooländerungen |
-| `decisions/` | Architekturentscheidungen und Konsequenzen | Bei betroffener Entscheidung |
+| `QUICKSTART.md` |Short path, enforcement boundary and status router|Always|
+| `generation/mechanism_catalog.v1.json` |Literature-based mechanisms for intraday and short swing ideas|When creating ideas or expanding the catalogue|
+| `generation/README.md` |Operation and limits of the generator|In the case of a generator run|
+| `agents/intraday-hypothesis-generator.md` | Optional autonomous generator contract |In the case of agentic idea generation|
+| `agents/scientific-philosophy-critic.md` |Concept and requirement review before operationalization, plus Duhem-Quine/Lakatos/Kuhn continuation review|Before completion of any incompletely defined source reconstruction; after a non-positive Q8 result when material revision or continuation is considered|
+| `agents/condition-inquiry-analyst.md` |Quantitative assessment of measuring instruments and generation of observable condition hypotheses|After provisional operationalization, when measurement value, definition dependence or unknown success modifiers are examined|
+| `agents/causal-identification-critic.md` |Independent examination of whether a financial-market design supports the intended causal statement|Before any interventional or counterfactual estimate and before causal language; not for purely predictive questions|
+| `references/CAUSAL_IDENTIFICATION_FOR_FINANCE.md` |Versioned research basis for financial market-specific identification risks|At each causality test|
+| `reconstruction/README.md` |Source-based translation of book/article/video/course strategies|When a source strategy is not fully operationalized|
+| `00_RESEARCH_AGENT_README.md` |Routing, gate and non-skip rules|From `PROMOTED`|
+| `01_RESEARCH_STANDARD.md` |Normative research standard|From `PROMOTED`|
+| `02_RESEARCH_CASE_TEMPLATE.md` |Operational working artifact per Research ID|When opening a research case|
+| `03_RESEARCH_METHODS.md` |Selection of methods and rules of engagement|Only selected method sections|
+| `04_CAUSAL_TOOLING.md` |Router for executable causal core operations|At `TOOLING_REQUIRED`|
+| `05_AGENT_OPERATIONS.md` |Provenance, Evidence, Reviews, Evals and Release|Appropriate sections for the respective artifacts/system changes|
+| `schemas/` |Machine-readable artifact contracts|Once the artifact type is created|
+| `evals/` |Producer, scorer and regression gate|For agent/prompt/model/tool changes|
+| `decisions/` |Architectural decisions and consequences|In case of affected decision|
 
-## 1.1 Enforcement-Grenze
+## 1.1 Enforcement boundary
 
-Ein Agent, der `COMPLETE`, `PASS` oder `SUPPORTED` schreibt, beweist damit nichts.
-Diese Werte sind Selbstdeklarationen, solange nicht das zugehörige Artefakt gegen
-ein Schema geprüft, die Evidence-Referenz aufgelöst oder ein unabhängiges Review
-dokumentiert wurde. Normative Prosa steuert Verhalten, ist aber keine technische
-Enforcement.
+An agent who writes `COMPLETE`, `PASS` or `SUPPORTED` does not prove anything. These values are self-declarations unless the associated artifact has been verified against a schema, the evidence reference has been resolved, or an independent review documented. Normative prose controls behavior but is not technical enforcement.
 
-Automatisch durchgesetzt werden ausschließlich explizit benannte Schemas, Tests,
-Eval-Gates und CI-Checks. Ein grüner `PROTOCOL_SMOKE` bestätigt nur Verträge und
-Scorer. Eine Aussage über Modell- oder Promptqualität benötigt einen blind
-produzierten `LIVE_AGENT`-Lauf.
+Automatically enforced are only explicitly named schemas, tests, eval gates, and CI checks. A green `PROTOCOL_SMOKE` only confirms contracts and scorers. A statement about model or prompt quality requires a blindly produced `LIVE_AGENT` run.
 
-Dieses Paket ersetzt **nicht automatisch** aktive Projektregeln. Eine formale Aktivierung im Trading-Projekt erfolgt erst nach der dafür vorgesehenen Versions- und Freigabelogik.
+This package does not automatically replace active project rules. A formal activation in the trading project takes place only after the planned version and release logic.
 
-## 1.2 Verständliche Nutzerkommunikation ist Pflicht
+## 1.2 Understandable user communication is mandatory
 
-Der Nutzer wird als fachlicher Entscheider behandelt, nicht als
-Softwareentwickler. Interne Präzision und externe Sprache sind zwei getrennte
-Ebenen: Artefakte, Schemas, Logs und Tests behalten ihre exakten Begriffe; die
-sichtbare Nutzerantwort übersetzt deren Bedeutung in gewöhnliche Sprache.
+The user is treated as a professional decision maker, not a software developer. Internal precision and external language are two separate levels: artifacts, schemas, logs and tests retain their exact terms; the visible user response translates their meaning into ordinary language.
 
-Jede Nutzerantwort MUSS:
+Every user response MUST:
 
-- mit Ergebnis, Bedeutung und einer eventuell offenen Entscheidung beginnen,
-- Fachbegriffe vermeiden oder bei erster Verwendung einfach erklären,
-- interne Codes in Alltagssprache übersetzen,
-- technische Implementierungsdetails weglassen, solange sie weder Ergebnis noch
-  Risiko noch Nutzerentscheidung verändern,
-- bei einer notwendigen Entscheidung Frage, Anlass, Möglichkeiten, praktische
-  Folgen und eine begründete Empfehlung erklären,
-- deutlich sagen, wenn der Nutzer nichts entscheiden oder technisch tun muss.
+- begin with result, meaning and a possible open decision,
+- avoid technical terms or explain them simply when they are first used,
+- translate internal codes into everyday language,
+- omit technical implementation details unless they contain a result, risk, or information that changes the user's decision,
+- for a necessary decision question, explain the occasion, options, practical consequences, and a reasoned recommendation,
+- say clearly if the user does not have to decide or do anything technically.
 
-Der Agent DARF NICHT ungefragt Funktions-, Klassen-, Adapter-, Import-, Schema-,
-CI- oder Testdetails als Fortschritts- oder Abschlussbericht ausgeben. Dateinamen
-und interne Statusfelder werden nur genannt, wenn der Nutzer sie verlangt oder
-für Nachvollziehbarkeit wirklich benötigt. Dass ein Agent etwas implementiert
-oder geprüft hat, ist kein Anlass, den Nutzer mit dem technischen Weg dorthin zu
-belasten.
+The Agent SHOULD NOT output function, class, adapter, import, schema, CI or test details as a progress or final report unsolicited. File names and internal status fields are only mentioned if the user requests them or really needs them for traceability. The fact that an agent has implemented or checked something is no reason to burden the user with the technical way there.
 
-Diese Regel gilt auch für statistische, kausale und wissenschaftsphilosophische
-Fachsprache. Die präzise Bezeichnung darf intern bestehen bleiben; nach außen
-muss zuerst erklärt werden, was sie im konkreten Fall bedeutet.
+This rule also applies to statistical, causal and scientific-philosophical terminology. The precise designation may remain internally; externally, it must first be explained what it means in the specific case.
 
-## 1.3 Verbindlicher Forschungsleiter und ausführbares Routing
+## 1.3 Binding head of research and executable routing
 
-Jede nutzerseitige Research-Aufgabe hat genau einen verantwortlichen
-Forschungsleiter nach `agents/research-conductor.md`. Er bleibt die einzige
-Stimme zum Nutzer, hält den aktuellen Arbeitsstand fest und entscheidet nicht
-frei darüber, ob eine vorgeschriebene Fachprüfung stattfindet.
+Each user-side research task has exactly one responsible research conductor according to `agents/research-conductor.md`. The conductor remains the only voice to the user, records the current state of work, and does not freely decide whether a prescribed technical examination takes place.
 
-Vor jedem materiellen Übergang wird ein `orchestration_state` nach
-`schemas/orchestration_state.schema.json` gespeichert und durch
-`scripts/route_research_task.py` in genau einen nächsten Arbeitsauftrag
-überführt. Die erzeugte `routing_decision` nach
-`schemas/routing_decision.schema.json` hält mindestens fest:
+Before each material transition, an `orchestration_state` is stored and validated against `schemas/orchestration_state.schema.json`, then transferred by `scripts/route_research_task.py` into exactly one next work order. The generated `routing_decision` is validated against `schemas/routing_decision.schema.json` and records at least:
 
-- weshalb dieser Schritt jetzt zulässig oder erforderlich ist,
-- welcher Fachagent gegebenenfalls zwingend gebraucht wird,
-- welche Unterlagen er sehen darf,
-- was er nicht verändern oder untersuchen darf,
-- welches Ergebnis erwartet wird und wann er stoppen muss,
-- welcher Schritt danach zwingend folgt.
+- why this step is now permissible or necessary,
+- which specialised agent may be required,
+- what documents it may see,
+- what it must not change or investigate,
+- which outcome is expected and when it must stop,
+- which step is mandatory afterwards.
 
-Der feste Router entscheidet über objektive Voraussetzungen. Der
-Forschungsleiter bleibt für die inhaltliche Einordnung der Nutzerabsicht und des
-Quellenstands verantwortlich. Unsichere Einordnung wird als solche gespeichert;
-eine materielle Nutzerentscheidung darf nicht vom Router erfunden werden.
+The fixed router decides on objective conditions. The research lead remains responsible for the substantive classification of the user intention and the source status. Uncertain classification is stored as such; a material user decision must not be invented by the router.
 
-Fachagenten arbeiten als begrenzte Werkzeuge des Forschungsleiters. Sie führen
-kein eigenes Nutzergespräch, bestimmen nicht den Gesamtstatus und dürfen den
-Forschungsauftrag nicht erweitern. Nach jedem Fachbeitrag prüft der
-Forschungsleiter das geforderte Artefakt, aktualisiert den Arbeitsstand und
-routet erneut. Ist ein zwingender Fachagent technisch nicht verfügbar, bleibt
-der Schritt `BLOCKED`; der Forschungsleiter darf dessen Beitrag nicht selbst
-simulieren und zugleich als erfolgt ausgeben.
+Specialised agents work as bounded tools of the research conductor. They do not have their own user conversation, do not determine the overall status and may not extend the research mandate. After each contribution, the conductor checks the required artifact, updates the work status and routes again. If a mandatory specialist agent is technically not available, the step `BLOCKED` remains; the conductor may not simulate its contribution and at the same time declare that it was made.
 
-Vor jedem materiellen Forschungsschritt wird der vollständige wirksame
-Forschungsfingerabdruck festgehalten. Er umfasst nicht nur Forschungsfrage,
-Strategie, Markt, Zeithorizont, Auslöser und Ziel, sondern auch
-Operationalisierungen, Parameter, Lookbacks, Filter, Ausschlüsse, Datenrollen,
-Auswertungsregeln, Kosten- und Ausführungsannahmen, eingefrorene Ergebnisse und
-die Prüfsummen der wirksamen Unterlagen. Nach dem Arbeitsschritt vergleicht
-`scripts/check_research_fingerprint.py` den gesamten Stand. Nur `UNCHANGED`
-erlaubt die Annahme.
+Before each material research step, the full effective research fingerprint is recorded. It includes not only research question, strategy, market, time horizon, trigger and goal, but also operationalizations, parameters, lookbacks, filters, exclusions, data roles, evaluation rules, cost and execution assumptions, frozen results and the checksums of the effective documents. After the work step, `scripts/check_research_fingerprint.py` compares the entire fingerprint. Only `UNCHANGED` allows acceptance.
 
-Bei jeder Abweichung bleibt der ursprüngliche Stand wirksam. Die Änderung wird
-mit ihren exakten Pfaden als `CHANGE_PROPOSED` sichtbar gespeichert und dem
-Nutzer mit ihrer praktischen Folge verständlich erklärt. Erst eine
-ausdrückliche Entscheidung darf daraus eine neue Research-ID oder
-Research-Version machen. Ein bestehender Stand wird niemals still
-überschrieben. Diese Regel gilt auch für materielle Arbeit des
-Forschungsleiters selbst.
+The original status shall remain valid for any deviation. The change is stored visibly with its exact paths as `CHANGE_PROPOSED` and explained to the user with its practical consequence. Only an explicit decision may turn it into a new Research ID or Research version. An existing state is never quietly overwritten. This rule also applies to material work performed by the conductor.
 
-Insbesondere wird bei einer unvollständigen Prosastrategie zuerst die Quelle
-rekonstruiert, danach zwingend die Begriffs- und Voraussetzungenprüfung durch den
-`scientific-philosophy-critic` durchgeführt und erst anschließend
-operationalisiert. Dieser Ablauf autorisiert keinen Backtest.
+In particular, for an incomplete prose strategy, the source is first reconstructed, then the concept and prerequisite examination is carried out by the `scientific-philosophy-critic`, and only then is it operationalized. This procedure does not authorize a backtest.
 
-Sobald der stärkste beabsichtigte Claim `INTERVENTIONAL` oder
-`COUNTERFACTUAL` lautet, ist vor Schätzung und kausaler Formulierung zusätzlich
-der `causal-identification-critic` zwingend. Er prüft Estimand, Quelle der
-identifizierenden Variation, ökonomisches Modell, Annahmen, finanzmarkttypische
-Verzerrungen, Gegenproben und Sensitivität. DML, Local Projections,
-Event-Study-Regressionen, zeitliche Reihenfolge und Causal Discovery ersetzen
-diese Prüfung nicht. Ein explizit prädiktives Projekt wird nicht aus Vorsicht in
-diese zusätzliche Route gezwungen.
+Once the strongest intended claim is `INTERVENTIONAL` or `COUNTERFACTUAL`, the `causal-identification-critic` is mandatory before estimation and causal wording. The critic examines the estimand, source of identifying variation, economic model, assumptions, financial-market-specific distortions, falsification checks, and sensitivity. DML, local projections, event-study regressions, temporal ordering, and causal discovery do not replace this review. An explicitly predictive project is not forced into this additional route as a precaution.
 
 ---
 
-## 2. Quellen- und Zuständigkeitsregel
+## Rules of source and jurisdiction
 
-Dieses Research-Paket regelt die **Entwicklung und Validierung neuer Marktphänomene, Edge-Hypothesen und Strategien**.
+This research package regulates the development and validation of new market phenomena, edge hypotheses and strategies.
 
-Es ersetzt keine operativen Trading-Regeln aus:
+It does not replace operational trading rules from:
 
 - `Trading_System.md`
 - `Projekt-Workflow.md`
@@ -179,127 +105,97 @@ Es ersetzt keine operativen Trading-Regeln aus:
 - `ACTIVE_DOCUMENTS.md`
 - `Masterjournal.md`
 - `ChangeLog.md`
-- `LLM_README` des nativen Trading-Journals
+- `LLM_README` of the native trading journal
 
-Bei Konflikten mit aktiven Projektregeln gilt die bestehende Projekthierarchie. Neue Research-Ergebnisse sind **keine aktiven Trading-Regeln**, bis sie nach dem Projektprozess formal aktiviert wurden.
-
----
-
-## 3. Nicht-Überspringen-Protokoll
-
-Der Agent darf innerhalb des durch Status und Router aktivierten Pfads **keine
-Phase stillschweigend auslassen**. Nicht aktivierte Methoden oder Artefakttypen
-erzeugen keine künstlichen Serien von `N/A`-Einträgen.
-
-Für jede Phase muss im Research-Artefakt genau einer der folgenden Zustände stehen:
-
-- `COMPLETE` – vollständig bearbeitet.
-- `N/A` – sachlich nicht anwendbar; Begründung ist Pflicht.
-- `BLOCKED` – erforderlich, aber aktuell nicht ausführbar; fehlende Information oder Ressource muss benannt werden.
-- `FAILED` – Gate oder Kriterium nicht bestanden.
-
-Wird eine aktuelle Research-Version durch ein Gate beendet, erhalten alle dadurch nicht mehr erreichbaren späteren Abschnitte einmalig den Blockstatus `NOT_REACHED_DUE_TO_FAILED_GATE`; sie werden nicht einzeln künstlich ausgefüllt. Abschnitt `Z` bleibt für Abschluss und Begründung aktiv.
-
-`BLOCKED` beendet die Research-Version nicht. Abhängige Folgeabschnitte bleiben unangetastet, Abschnitt `Z` protokolliert Blocker und fehlende Information, und dieselbe Version darf erst nach Auflösung des Blockers fortgesetzt werden. `NOT_REACHED_DUE_TO_FAILED_GATE` wird ausschließlich nach `FAIL` verwendet.
-
-`N/A` ohne Begründung ist unzulässig.
-
-Die einzige Blockausnahme ist der ausdrücklich bedingte Post-T-Bereich `U–Y`: `NOT_ACTIVATED_BY_T_GATE` oder `DEFERRED_AFTER_VALIDATION` ersetzt die Einzelstatus dieser fünf Abschnitte. Das ist kein Überspringen, sondern die vorab definierte Gate-Folge.
-
-Ein Agent darf nicht aus Bequemlichkeit von `BLOCKED` zu einer späteren Phase springen, wenn die blockierte Phase eine Voraussetzung darstellt.
+In case of conflicts with active project rules, the existing project hierarchy applies. New research results are **not active trading rules** until formally activated after the project process.
 
 ---
 
-## 4. Gate-Regel
+## 3. No skip protocol
 
-Die Research-Pipeline enthält echte Gates. Ein nicht bestandenes Gate darf nicht sprachlich in eine „interessante Beobachtung“ umetikettiert und übersprungen werden.
+The agent may not silently omit any phase within the path activated by status and router. Unenabled methods or artifact types do not generate artificial series of `N/A` entries.
 
-Gate- und Phasenstatus sind fest gekoppelt:
+For each phase, the research artifact must contain exactly one of the following states:
+
+- `COMPLETE` – fully processed.
+- `N/A` – not materially applicable; justification is mandatory.
+- `BLOCKED` – required but not currently executable; missing information or resource must be named.
+- `FAILED` – gate or criterion failed.
+
+If a current Research version is terminated by a gate, all subsequent sections which can no longer be reached thereby receive the block status `NOT_REACHED_DUE_TO_FAILED_GATE` once; they are not artificially filled in individually. Section `Z` remains active for conclusion and justification.
+
+`BLOCKED` does not terminate the Research version. Dependent follow-up sections remain untouched, section `Z` logs blockers and missing information, and the same version may not be continued until the blocker has been resolved. `NOT_REACHED_DUE_TO_FAILED_GATE` is used only after `FAIL`.
+
+`N/A` without justification is inadmissible.
+
+The only block exception is the expressly conditional post-T area `U–Y`: `NOT_ACTIVATED_BY_T_GATE` or `DEFERRED_AFTER_VALIDATION` replaces the individual statuses of these five sections. This is not skipping, but the predefined gate sequence.
+
+An agent may not jump from `BLOCKED` to a later phase out of convenience if the blocked phase is a requirement.
+
+---
+
+## 4. Gate rule
+
+The research pipeline contains real gates. A failed gate must not be linguistically relabeled and skipped into an “interesting observation”.
+
+Gate and phase status are fixedly coupled:
 
 - `Gate PASS → Phase COMPLETE`
 - `Gate FAIL → Phase FAILED`
 - `Gate BLOCKED → Phase BLOCKED`
 
-Nach `FAIL` oder `BLOCKED` ist kein abhängiger Folgeschritt zulässig.
+After `FAIL` or `BLOCKED` no dependent follow-up step is allowed.
 
-Verbindliche Gates sind mindestens:
+Binding gates are at least:
 
-1. **Phase-0-Machbarkeitsgate**
-2. **Kausalitäts-/Identifikationsgate**, sobald eine interventionale oder kontrafaktische Behauptung erhoben wird
-3. **Mess-/Leakage-Gate**
-4. **Pipeline-Integritätsgate**
-5. **Freeze-Vollständigkeitsgate**
-6. **Validation-Unabhängigkeitsgate**
-7. **Ökonomisches Umsetzbarkeitsgate**
-8. **Aktivierungsgate**
+1. **Phase-0 feasibility gate**
+2. **Causality/Identification gate** as soon as an interventional or counterfactual claim is made
+3. **Measurement/leakage gate**
+4. **Pipeline integrity gate**
+5. **Freeze-completeness gate**
+6. **Validation-independence gate**
+7. **Economic-feasibility gate**
+8. **Activation gate**
 
-Für rein assoziative oder prädiktive Forschung lautet der Identifikationsstatus `NOT_REQUIRED_PREDICTIVE`; das ist kein kausales `PASS` und erlaubt keine kausale Sprache.
+For purely associative or predictive research, the identification status is `NOT_REQUIRED_PREDICTIVE`; this is not causal `PASS` and does not allow causal language.
 
-Wenn ein Gate `FAILED` ist, endet die aktuelle Research-Version. Eine Fortsetzung erfordert je nach Fall:
+If a gate is `FAILED`, the current Research version ends. A continuation, depending on the case, requires:
 
-- mehr Daten,
-- eine neue Research-Version,
-- eine neue Hypothese,
-- oder einen Abbruch.
+- more data,
+- a new research version,
+- a new hypothesis,
+- or an abort.
 
-## 4.1 Begriffs- und Voraussetzungenprüfung vor Operationalisierung
+## 4.1 Conceptual and prerequisite testing before operationalization
 
-Eine aus unvollständiger Prosa rekonstruierte Strategie darf nicht als
-`RECONSTRUCTION_COMPLETE` oder `DISCRETIONARY_PROTOCOL_COMPLETE` abgeschlossen
-werden, bevor der `scientific-philosophy-critic` ein
-`strategy_concept_audit` nach
-`schemas/strategy_concept_audit.schema.json` erstellt hat.
+A strategy reconstructed from incomplete prose may not be completed as `RECONSTRUCTION_COMPLETE` or `DISCRETIONARY_PROTOCOL_COMPLETE` before the `scientific-philosophy-critic` has created a `strategy_concept_audit` after `schemas/strategy_concept_audit.schema.json`.
 
-Das Audit trennt strategiedefinierende Bedingungen, von der Quelle genannte
-Anwendungsbedingungen, vermutete Erfolgsmodifikatoren und unbekannte
-Erfolgsbedingungen. Vermutete oder unbekannte Bedingungen dürfen nicht als
-Pflichtfilter in die Quellenstrategie gelangen.
+The audit separates strategy-defining conditions, application conditions cited by the source, suspected success modifiers, and unknown success conditions. Suspected or unknown conditions must not enter the source strategy as a mandatory filter.
 
-Trigger, Zustand, Ziel und Outcome werden auf gemeinsame Rohdaten, Fenster und
-deterministische Berechnungen geprüft. Eine solche Konstruktionsabhängigkeit
-kann eine Assoziation mit erzeugen oder die beantwortete Frage verändern. Sie
-ist weder Kausalbeleg noch automatisch ein Fehler.
+Trigger, state, target and outcome are checked for common raw data, windows and deterministic calculations. Such a design dependence can create an association with or change the answered question. It is neither causal nor automatically a mistake.
 
-Regime-, State- und Kontextfilter gelten als vorläufige Messinstrumente. Ihre
-Klassenhäufigkeit misst keine Trennleistung. Auch eine spätere prognostische
-Trennung beweist keinen buchstäblich realen verborgenen Zustand, Akteur oder
-Mechanismus.
+Regime, state and context filters are considered as preliminary measuring instruments. Their class frequency does not measure separation performance. Even a later prognostic separation does not prove a literally real hidden state, actor or mechanism.
 
-Nach vorläufiger Operationalisierung kann ein `condition_inquiry` nach
-`schemas/condition_inquiry.schema.json` aktiviert werden. Es kann neue
-Bedingungshypothesen erzeugen. Datenbasiert gefundene Bedingungen werden als
-neue Erfolgsmodifikator-Hypothesen geführt und nicht rückwirkend als Bestandteil
-der Quellenstrategie ausgegeben.
+After preliminary operationalization, a `condition_inquiry` can be activated after `schemas/condition_inquiry.schema.json`. It can generate new condition hypotheses. Conditions found from data are maintained as new success-modifier hypotheses and are not retroactively issued as part of the source strategy.
 
-## 4.2 Wissenschaftsphilosophische Fortsetzungsprüfung
+## 4.2 Scientific-philosophy continuation review
 
-`FALSIFIED`, `PRECISE_NULL`, `INCONCLUSIVE` und `INVALID_TEST` bleiben Ergebnisse
-der eingefrorenen Research-ID. Sie werden nicht dadurch umetikettiert, dass nach
-dem Ergebnis eine Operationalisierung, Hilfsannahme oder Stichprobe verdächtig
-erscheint.
+`FALSIFIED`, `PRECISE_NULL`, `INCONCLUSIVE` and `INVALID_TEST` remain results of the frozen Research ID. They are not relabelled by the fact that, after the result, an operationalization, auxiliary assumption or sample appears suspicious.
 
-Sobald nach einem solchen Q8-Ergebnis eine materielle Revision oder ein neuer
-empirischer Test erwogen wird, ist der Agentenvertrag
-`agents/scientific-philosophy-critic.md` zu laden und ein
-`scientific_philosophy_review` nach
-`schemas/scientific_philosophy_review.schema.json` anzulegen. Der Review:
+As soon as a material revision or a new empirical test is considered after such a Q8 result, the agent contract `agents/scientific-philosophy-critic.md` must be loaded and an `scientific_philosophy_review` to `schemas/scientific_philosophy_review.schema.json` created. The review:
 
-- macht nach Duhem-Quine das getestete Bündel sichtbar,
-- behauptet ohne unterscheidende Evidenz keine eindeutige Fehlerursache,
-- trennt nach Lakatos progressive, degenerative und rein diagnostische Änderungen,
-- und verwendet Kuhns Anomalie-/Rivalenperspektive nur zur Beurteilung des
-  Forschungsprogramms, nie zur Rettung des eingefrorenen Einzeltests.
+- makes the tested bundle visible according to Duhem-Quine,
+- does not claim a single cause of error without distinguishing evidence,
+- separates progressive, degenerative, and purely diagnostic changes according to Lakatos,
+- and uses Kuhn’s anomaly/rival perspective only to assess the research program, never to rescue the frozen individual test.
 
-Empirische Fortsetzung ist nur als neue Research-ID zulässig, wenn die Revision
-eine zuvor nicht implizierte, widerlegbare Vorhersage und einen unabhängigen
-Evaluationsplan festhält. Diagnostik darf Fehler lokalisieren, validiert aber
-weder die alte noch die neue Hypothese.
+Empirical continuation is only allowed as a new Research ID if the revision records a previously unimplied, rebuttable prediction and an independent evaluation plan. Diagnostics may locate errors, but does not validate either the old or the new hypothesis.
 
 ---
 
-## 5. Datenrollen sind unveränderlich
+## 5. Data roles are immutable
 
-Jeder Datensatz muss eine Rolle erhalten:
+Each data set must have a role:
 
 - `DISCOVERY`
 - `DEVELOPMENT`
@@ -307,464 +203,409 @@ Jeder Datensatz muss eine Rolle erhalten:
 - `FINAL_HOLDOUT`
 - `FORWARD_OOS`
 
-Ein Datensatz, dessen Ergebnis irgendeine Designentscheidung beeinflusst hat, ist ab diesem Zeitpunkt **Development Data**.
+A data set whose result has influenced any design decision is **Development Data** as of this date.
 
-Das gilt auch, wenn nur:
+This also applies if only:
 
-- ein Schwellenwert geändert,
-- ein Statefilter angepasst,
-- ein Exit modifiziert,
-- ein Nullmodell gewechselt,
-- ein Outcome geändert,
-- ein Datensplit verändert,
-- eine neue Robustheitsmetrik gewählt
+- a threshold change;
+- adapted a state filter,
+- an exit is modified,
+- changed a null model,
+- changed an outcome,
+- modified a data split,
+- selected a new robustness metric.
 
-wurde.
+was changed.
 
-Ein verbrauchtes Validation-Set darf nicht weiter als unabhängige Validation bezeichnet werden.
+A used validation set may not be further referred to as independent validation.
 
 ---
 
-## 6. Kernregel gegen statistische Selbsttäuschung
+## 6. Nuclear rule against statistical self-deception
 
-Der Agent darf niemals aus `Anzahl Trades` automatisch auf `Anzahl unabhängiger Beobachtungen` schließen.
+The agent must never infer `number of independent observations` from `number of trades` automatically.
 
-Er muss aktiv prüfen auf:
+The agent must actively check for:
 
-- serielle Abhängigkeit,
-- überlappende Forward-Horizonte,
-- wiederholte Signale desselben Marktimpulses,
-- Event-/Sessioncluster,
-- stark korrelierte Symbole,
-- gemeinsame Makroereignisse,
-- dominante Einzelbeobachtungen oder Cluster.
+- serial dependency,
+- overlapping forward horizons,
+- repeated signals from the same market impulse,
+- event/session clusters,
+- highly correlated symbols,
+- shared macro events,
+- dominant individual observations or clusters.
 
-Wenn Abhängigkeit plausibel ist, muss die Inferenzmethode angepasst oder die Einschränkung ausdrücklich als `BLOCKED` ausgewiesen werden.
+If dependency is plausible, the inference method must be adjusted or the restriction must be explicitly reported as `BLOCKED`.
 
-Bei weniger als 30 plausibel unabhängigen Clustern wird zusätzlich `SMALL_CLUSTER_WARNING` gesetzt. Das ist **kein automatisches FAIL** und keine Behauptung, jedes Intervall sei dann zwingend zu schmal. Der Warnstatus verlangt eine für wenige Cluster geeignete Methode, eine designspezifische Simulation/Kalibrierung oder eine ausdrückliche Einstufung als `BLOCKED`.
+For less than 30 plausibly independent clusters, an additional `SMALL_CLUSTER_WARNING` is set. This is **not an automatic FAIL** and not a claim that each interval is then necessarily too narrow. The warning status requires a method suitable for a few clusters, a design-specific simulation/calibration or an explicit classification as `BLOCKED`.
 
-## 6a. Keine Rohidee ohne Intake und Scope
+## 6a. No raw idea without intake and scope
 
-Eine durch Beobachtung, Paper, LLM, Sekundärquelle oder Marktgeschichte erzeugte
-Idee ist zunächst `INBOX`. In diesem Status protokolliert der Agent nur Identität,
-Herkunft, Rohidee und bereits verbrauchte Informationsreferenzen. Dubletten werden
-zusammengeführt, nicht als unabhängige Ideen gezählt. Scope, beobachtbarer
-Footprint, Alternativerklärungen, Datenanforderungen und frühe
-Ausführbarkeitshürden werden schrittweise ergänzt und sind erst für `PROMOTED`
-vollständig Pflicht.
+An idea generated by observation, paper, LLM, secondary source or market history is initially `INBOX`. In this state, the agent logs only identity, origin, raw idea, and already consumed information references. Duplicates are brought together, not counted as independent ideas. Scope, observable footprint, alternative explanations, data requirements and early feasibility hurdles are gradually supplemented and are only completely mandatory for `PROMOTED`.
 
-Vor `PROMOTED` benötigt eine beobachtungsgetriebene Idee einen verknüpften
-Noise Screen mit Status `PASS / FAIL / BLOCKED`. Dessen Search-Space-Register
-fixiert Kandidatenuniversum,
-Familiengröße, Alpha und Korrekturmethode vor dem ersten Ergebnis. Ein Waiver ist
-nur für theoriegetriebene, terminierte Event- oder publizierte
-Replikationsideen mit Begründung zulässig. `PASS` erlaubt Phase-0-Aufwand und ist
-keine Evidenz. Schema plus `scripts/validate_entry_thresholds.py` erzwingen
-Zeitreihenfolge, Quotient, Registerabgleich und Multiplikität. Bei mehr als
-einem geplanten Screen ist eine Korrektur zwingend; `NONE_JUSTIFIED` ist nur
-für eine Ein-Test-Familie zulässig.
+Before `PROMOTED`, an observation-driven idea requires a linked noise screen with status `PASS / FAIL / BLOCKED`. Its search space register fixes candidate universe, family size, alpha and correction method before the first result. A waiver is only allowed for theory-driven, terminated event or published replication ideas with justification. `PASS` allows Phase-0 effort and is not evidence. Schema plus `scripts/validate_entry_thresholds.py` enforce time order, quotient, register matching and multiplicity. For more than one planned screen, a correction is mandatory; `NONE_JUSTIFIED` is only allowed for a one-test family.
 
-Für promovierte Intraday-Ideen sind Markt/Instrument, Venue/Feed, Handelsphase,
-Kalender/Zeitzone/DST, Clock- oder Event-Time-Horizont und Ereignisklasse Pflicht.
-Die News-/Makro-Policy wird als `INCLUDED_AS_SIGNAL`, `NOT_USED_AS_SIGNAL`,
-`FILTER_KNOWN_EVENTS` oder `SCHEDULED_EVENT_STUDY` deklariert. Nur
-`FILTER_KNOWN_EVENTS` mit benannten Feeds, Ausschlussfenstern und Coverage-Lücken
-erlaubt eine qualifizierte Aussage über ausgeschlossene bekannte Ereignisse.
+For intraday ideas, market/instrument, venue/feed, trading phase, calendar/time zone/DST, clock or event time horizon, and event class are mandatory. The news/macro policy is declared as `INCLUDED_AS_SIGNAL`, `NOT_USED_AS_SIGNAL`, `FILTER_KNOWN_EVENTS` or `SCHEDULED_EVENT_STUDY`. Only `FILTER_KNOWN_EVENTS` with named feeds, exclusion windows and coverage gaps allows a qualified statement about excluded known events.
 
-`PROMOTED` verlangt außerdem einen Record zur Variablen- und Konstruktauswahl.
-Bei `PREDEFINED` genügen eine knappe Begründung und die beibehaltenen Variablen.
-Bei `DATA_DRIVEN` oder `HYBRID` werden Kandidatenuniversum, Selektionsdaten und
-deren Datenrolle, Outcome-Sichtbarkeit, Auswahlmethoden, effektive
-Kandidatenzahl, Suchraum und Auswahlbias-Kontrollen protokolliert. Jede dabei
-verwendete Information wird zugleich in `consumed_data_refs` erfasst; unabhängige
-Validation oder Holdout-Daten dürfen die Auswahl nicht beeinflussen.
+`PROMOTED` also requires a record for variable and construct selection. For `PREDEFINED` a brief justification and the retained variables are sufficient. For `DATA_DRIVEN` or `HYBRID`, the candidate universe, selection data and their data role, outcome visibility, selection methods, effective candidate number, search space and selection bias controls are logged. Any information used is simultaneously recorded in `consumed_data_refs`; independent validation or holdout data must not affect the selection.
 
-Zusätzlich ist bei `PROMOTED` ein `actor_constraint` Pflicht. Er enthält
-entweder Akteur, Zwang, erwartete Handlung, beobachtbaren Bezug und mindestens
-eine konkurrierende Akteurshypothese oder dokumentiert ausdrücklich
-`UNSPECIFIED / NOT_CLAIMED`. Der zweite Zustand ist für begrenzte
-assoziative/prädiktive Fragen zulässig und verhindert, dass ein Akteur erfunden
-wird; er liefert keinerlei Mechanismusnachweis.
+In addition, `PROMOTED` requires an `actor_constraint`. It contains either actor, coercion, expected action, observable reference and at least one competing actor hypothesis or explicitly documents `UNSPECIFIED / NOT_CLAIMED`. The second state is allowed for limited associative/predictive questions and prevents an actor from being invented; it does not provide any proof of mechanism.
 
-Der Agent führt getrennt:
+The agent leads separately:
 
 - `mechanism_supported`,
 - `forward_predictive_oos`,
 - `executable_net_edge`.
 
-Keine dieser Stufen wird aus einer früheren Stufe abgeleitet. Insbesondere ist ein
-plausibler oder publizierter Mechanismus keine automatische Forward-Prognose und
-keine handelbare Netto-Edge.
+None of these stages is derived from an earlier stage. In particular, a plausible or published mechanism is not an automatic forward forecast and not a tradable net edge.
 
-Diese drei Status bilden eine andere Achse als der Research-Claim-Level
-`ASSOCIATIONAL_PREDICTIVE / INTERVENTIONAL / COUNTERFACTUAL`. Ein identifizierter
-interventionaler Effekt kann wirtschaftlich unhandelbar sein; eine rein
-assoziative Prognose kann dagegen eine ausführbare Netto-Edge besitzen. Weder
-Claim-Level noch Stufenstatus werden aus der jeweils anderen Achse abgeleitet.
+These three statuses form a different axis than the research claim level `ASSOCIATIONAL_PREDICTIVE / INTERVENTIONAL / COUNTERFACTUAL`. An identified interventional effect may be economically non-tradable; a purely associative forecast, on the other hand, can have an executable net edge. Neither claim level nor stage status is derived from the other axis.
 
 ---
 
-## 7. Kein Research ohne Phase 0
+## 7. No research without phase 0
 
-Bevor unabhängige Validation-Daten verbraucht werden, muss die wirtschaftlich-statistische Machbarkeit geprüft werden.
+Before independent validation data is consumed, the economic-statistical feasibility must be checked.
 
-Phase 0 besteht aus zwei verpflichtenden Prüfungen:
+Phase 0 consists of two mandatory tests:
 
-1. **frühe Vorprüfung** mit konservativen Annahmen, bevor umfangreiche Discovery-/Development-Arbeit oder Holdout-Verbrauch gerechtfertigt wird,
-2. **formale Re-Kalkulation vor Freeze**, nachdem Outcome, Nullmodell, Abhängigkeit, effektives N und Validation-Plan vollständig spezifiziert sind.
+1. **Early pre-examination** with conservative assumptions before large-scale discovery/development work or holdout consumption is justified,
+2. **formal recalculation before Freeze**, after outcome, zero model, dependency, effective N and validation plan are fully specified.
 
-Ein frühes `WEITER` erlaubt nur Discovery und Development. Unabhängige Validation bleibt bis zum `PASS` der formalen Re-Kalkulation gesperrt.
+An early `CONTINUE` allows only discovery and development. Independent validation remains blocked until `PASS` of the formal recalculation.
 
-Pflichtfelder:
+Required fields:
 
-1. minimale wirtschaftlich relevante Effektgröße,
-2. typische Outcome-Skala,
-3. explorativer Streuungs-Punktschätzer samt Unsicherheit und Quelle,
-4. konservative Planungsstreuung beziehungsweise Stressszenario,
-5. vorläufige Kostenhürde,
-6. gewünschtes Signifikanz-/Fehlerniveau,
-7. Ziel-Power oder äquivalentes Entscheidungsniveau,
-8. getrennte Werte für Wirtschaftsgrenze `δ_econ` und angenommene Planungswirkung `δ_plan` beziehungsweise ein direktes Präzisionsziel,
-9. benötigtes N beziehungsweise benötigte unabhängige Information im Basis- und Stressszenario,
-10. verfügbares nominelles N sowie konservative Untergrenze des effektiven N,
-11. Entscheidung `WEITER / DATEN BESCHAFFEN / ABBRECHEN`.
+1. minimum economically relevant effect size;
+2. typical outcome scale,
+3. exploratory spread point estimator including uncertainty and source,
+4. conservative planning dispersion or stress scenario,
+5. provisional cost hurdle,
+6. desired significance/error level,
+7. target power or equivalent decision level,
+8. separate values for economic boundary `δ_econ` and assumed planning effect `δ_plan` or a direct precision target,
+9. required N or required independent information in the baseline and stress scenario,
+10. available nominal N and conservative lower limit of effective N,
+11. Decision: `CONTINUE / OBTAIN DATA / ABORT`.
 
-Die Mindeststichprobe darf **niemals** daraus abgeleitet werden, wie viele Fälle der letzte Datenexport zufällig enthält.
+The minimum sample must **never** be derived from the number of cases returned by a particular data export.
 
-Ein einzelner Streuungs-Punktschätzer aus einer kleinen, selektierten oder nicht übertragbaren Discovery-Stichprobe reicht für `WEITER` nicht aus. Zulässig sind je nach Design beispielsweise externe oder gepoolte Referenzen, eine modellgültige obere Unsicherheitsgrenze, robuste Skalenmaße mit begründetem Stressaufschlag oder eine vorab definierte Szenariorechnung. Mindestens Basis- und konservatives Stressszenario müssen ausgewiesen werden.
+A single spread point estimator from a small, selected, or non-transferable discovery sample is not sufficient for `CONTINUE`. Depending on the design, for example, external or pooled references, a model-valid upper uncertainty limit, robust scale measures with a justified stress surcharge, or a predefined scenario calculation are permitted. At least basic and conservative stress scenarios must be reported.
 
-Die Regel für das Stressszenario wird vor der Berechnung festgelegt. Unter mehreren vorab zulässigen und sachlich übertragbaren Kandidaten verwendet das Gate den konservativsten Wert oder berichtet die vollständige Bandbreite. Ein robustes Skalenmaß darf nur verwendet werden, wenn es nachvollziehbar auf die Stichprobenverteilung des primären Schätzers abgebildet wird. Im Stressszenario wird `DE < 1` beziehungsweise `N_eff > N` nicht angerechnet, sofern dieser Informationsgewinn nicht durch externe, übertragbare Evidenz und ein vorab festgelegtes Modell gestützt ist.
+The stress scenario rule is set before the calculation. Among several pre-eligible and factually transferable candidates, the gate uses the most conservative value or reports the full bandwidth. A robust scale measure may only be used if it is traceably mapped to the primary estimator sample distribution. In the stress scenario, `DE < 1` or `N_eff > N` is not counted, unless this information gain is supported by external, transferable evidence and a predefined model.
 
-Wenn ein klassischer formaler Test verwendet wird und keine sachlich bessere Entscheidungsgrundlage existiert, gelten `α = 0,05` zweiseitig und `Power = 80 %` als **Arbeitsdefaults**. Bei knappem finalem Holdout oder hohen Kosten eines falsch-negativen Befunds sind `90 %` oder ein direktes Präzisionsziel zu prüfen. Arbeitsdefaults sind keine Qualitätsgarantie; jede Abweichung und jede einseitige Testung muss vor Kenntnis des Ergebnisses begründet werden.
+If a classic formal test is used and there is no factually better basis for decision, two-sided `α = 0.05` and `Power = 80%` are considered **working defaults**. In the case of a tight final holdout or high cost of a false negative result, `90%` or a direct precision target should be tested. Working defaults are not a guarantee of quality; any deviation and any one-sided test must be justified before the result is known.
 
 ---
 
-## 8. Zeitliche Beobachtbarkeit ist Pflicht
+## 8. Temporal observability is mandatory
 
-Für jede Prädiktor-, State- und Trigger-Variable muss dokumentiert werden:
+Each predictor, state and trigger variable must be documented:
 
-- welche Rohdaten sie benötigt,
-- wann sie vollständig bekannt ist,
-- ob sie zum Entscheidungszeitpunkt tatsächlich verfügbar war,
-- welches Leakage-/Look-ahead-Risiko besteht.
+- what raw data it needs,
+- when it is fully known,
+- whether it was actually available at the time of the decision,
+- what the leakage/look-ahead risk is.
 
-Ein zurückgezeichneter oder nachträglich bestätigter Chartmarker gilt erst ab seinem tatsächlichen Bestätigungszeitpunkt als bekannt.
+A reversed or subsequently confirmed chart marker is only considered known from its actual confirmation time.
 
-Wenn die Beobachtbarkeit nicht zuverlässig bestimmt werden kann, ist die Variable für den formalen Test nicht zulässig.
+If the observability cannot be reliably determined, the variable is not allowed for the formal test.
 
-## 8a. Kausalstatus und Identifikation sind Pflichtfelder
+## 8a. Causal status and identification are mandatory fields
 
-Jede Research-Version deklariert vor dem Freeze ihre stärkste Behauptung als:
+Each research version declares its strongest claim before the freeze as:
 
 - `ASSOCIATIONAL_PREDICTIVE`,
 - `INTERVENTIONAL`,
-- oder `COUNTERFACTUAL`.
+- or `COUNTERFACTUAL`.
 
-`ASSOCIATIONAL_PREDICTIVE` ist der Default. Eine interventionale oder kontrafaktische Behauptung benötigt zusätzlich:
+`ASSOCIATIONAL_PREDICTIVE` is the default. An interventional or counterfactual claim additionally requires:
 
-- ein präzises kausales Estimand,
-- ein versioniertes SCM/DAG, Potential-Outcomes-Design,
-  strukturell-ökonometrisches oder anderes explizites Identifikationsmodell,
-- eine benannte Identifikationsstrategie,
-- deren nicht aus den Daten allein ableitbare Annahmen,
-- Negativkontrollen, Placebos oder Sensitivitätsanalysen soweit designspezifisch möglich,
-- und ein bestandenes Identifikationsgate.
+- a precise causal estimand,
+- a versioned SCM/DAG, potential-outcomes design,
+- a structural econometric or other explicit identification model,
+- a named identification strategy,
+- assumptions that cannot be derived from the data alone,
+- negative controls, placebos or sensitivity analyses where design-specific,
+- and an existing identification gate.
 
-Die Wahl zwischen graphischer, kontrafaktischer oder anderer expliziter
-Formulierung ist eine Modellierungsentscheidung und erhöht den Claim-Level nicht.
-Bei Potential Outcomes werden insbesondere Konsistenz, Positivity, die für das
-Design benötigte Assignment-/Exchangeability-Annahme und Interferenz
-beziehungsweise ein Exposure Mapping ausdrücklich behandelt. Ein DAG ist dort
-nicht zusätzlich Pflicht, wenn das Identifikationsdesign dieselben relevanten
-Annahmen explizit macht.
+The choice between graphical, counterfactual or other explicit formulation is a modeling decision and does not increase the claim level. In the case of potential outcomes, in particular consistency, positivity, the assumption of assignment/exchangeability required for the design and interference or exposure mapping are explicitly treated. A DAG is not additionally mandatory there if the identification design explicitly makes the same relevant assumptions.
 
-Ein LLM darf konkurrierende DAGs, Confounder-Kandidaten, Instrument-Kandidaten und testbare Konsequenzen vorschlagen. Es darf Pfeile nicht aufgrund plausibler Prosa als wahr deklarieren.
+An LLM may propose competing DAGs, confounder candidates, instrument candidates, and testable consequences. It must not declare arrows as true on the basis of plausible prose.
 
-Die folgenden Ergebnisse sind für sich allein **kein** Kausalitätsnachweis:
+The following results are in themselves **no** proof of causality:
 
-- zeitliche Reihenfolge,
-- Granger-Vorhersageverbesserung,
-- Conditional-Independence- oder Causal-Discovery-Ausgabe,
+- temporal ordering,
+- Granger forecast improvement,
+- conditional independence or causal discovery output;
 - In-Sample-Fit,
-- OOS-Stabilität,
-- Backtest-Profitabilität,
-- oder Double Machine Learning.
+- OOS stability;
+- backtest profitability,
+- Double Machine Learning.
 
-DML und andere flexible Schätzer dürfen erst nach Festlegung des kausalen Estimands und seiner Identifikationsannahmen als Kausalschätzer bezeichnet werden. Der `do(·)`-Operator ist nur zulässig, wenn tatsächlich eine interventionale Größe identifiziert wird.
+DML and other flexible estimators may only be designated as causal estimators after the determination of the causal estimand and its identification assumptions. The `do(·)` operator is only allowed if an interventional quantity is actually identified.
 
-Bei Event-Research werden Veröffentlichungswert und Schock getrennt. Der Schock wird aus einer vor dem Event verfügbaren Erwartung konstruiert; Erwartungsquelle, Daten-Vintage, Zeitstempel, Skalierung, Eventfenster und konkurrierende Nachrichten werden protokolliert.
+In event research, publication value and shock are separated. The shock is constructed from an expectation available before the event; expectation source, data vintage, timestamp, scaling, event window and competing messages are logged.
 
-Eine Abweichung zwischen erwarteter und tatsächlicher Marktreaktion heißt zunächst `REACTION_INNOVATION` oder `REACTION_ANOMALY`. Sie darf nur dann `CAUSAL_CHAIN_BREAK` heißen, wenn die relevante Kette einschließlich Mediatoren kausal identifiziert und gegen vorab definierte Alternativerklärungen getestet wurde.
+A deviation between expected and actual market reaction is first called `REACTION_INNOVATION` or `REACTION_ANOMALY`. It may only be called `CAUSAL_CHAIN_BREAK` if the relevant chain including mediators has been causally identified and tested against predefined alternative explanations.
 
-Für quantitative Event- und Transmissionsanalyse sind die Defaults:
+For quantitative event and transmission analysis, the defaults are:
 
-- wenige ökonomisch begründete Surprise-Faktoren,
-- einfache Event-Response-Regressionen,
-- vor dem Event bekannte State-Interaktionen,
-- zeitlich OOS berechnete Reaktionsinnovationen,
-- und ein inkrementeller OOS-Vergleich gegen ein einfacheres Nullmodell.
+- a few economically justified surprise factors,
+- simple event-response regressions,
+- state interactions known before the event,
+- time-ordered OOS reaction innovations,
+- and an incremental OOS comparison against a simpler zero model.
 
-Ein Kettenglied darf nicht wegen hoher Korrelation, großem `|z|` oder einer
-plausiblen Geschichte zum „Constraint“ erklärt werden. Das Wort wird nur mit
-definiertem Systemziel und einem der folgenden Labels verwendet:
+A chain link must not be declared a “constraint” solely because of high correlation, a large `|z|`, or a plausible story. The term is used only with a defined system goal and one of the following labels:
 
-- `TRANSMISSION_DIAGNOSTIC` – beschreibender Pass-through oder Residualbefund,
-- `INFORMATION_BOTTLENECK_CANDIDATE` – liefert eingefroren und OOS zusätzliche Prognoseinformation für das End-Outcome,
-- `IDENTIFIED_CAUSAL_LEVER` – kausales Estimand und Identifikationsgate bestanden,
-- `IMPLEMENTATION_CONSTRAINT` – Daten-, Timing-, Liquiditäts-, Kosten- oder Prozessengpass.
+- `TRANSMISSION_DIAGNOSTIC` – descriptive pass-through or residual result,
+- `INFORMATION_BOTTLENECK_CANDIDATE` – provides frozen and OOS additional forecast information for the end-outcome,
+- `IDENTIFIED_CAUSAL_LEVER` – causal estimand and identification gate passed,
+- `IMPLEMENTATION_CONSTRAINT` – data, timing, liquidity, cost, or process bottleneck.
 
-`IDENTIFIED_CAUSAL_LEVER` und `IMPLEMENTATION_CONSTRAINT` werden zusätzlich gegen
-`schemas/constraint_assessment.schema.json` geprüft. Goldratts Fokuslogik ist nur
-noch ein optionales Denkwerkzeug nach Phänomen-Validation für bereits belegte
-`IMPLEMENTATION_CONSTRAINT`-Engpässe. Sie gehört nicht zur frühen
-Markttransmissions- oder Identifikationsanalyse.
+`IDENTIFIED_CAUSAL_LEVER` and `IMPLEMENTATION_CONSTRAINT` are additionally tested against `schemas/constraint_assessment.schema.json`. Goldratt’s focus logic is only an optional thinking tool after phenomenon validation for already occupied `IMPLEMENTATION_CONSTRAINT` bottlenecks. It is not part of early market transmission or identification analysis.
 
-## 8b. Spezialisierte Kausalbibliotheken sind bei passender Aufgabe Pflicht
+## 8b. Specialized causal libraries are mandatory if appropriate
 
-Sobald ausführbarer Code für DAG-Prüfung, Identifikation, kausale Effektschätzung, Refutation oder Causal Discovery benötigt wird, muss der Agent den Router in `04_CAUSAL_TOOLING.md` anwenden. Der Default ist eine spezialisierte, dokumentierte Bibliothek statt einer ad hoc selbst geschriebenen Implementierung:
+Once executable code is required for DAG verification, identification, causal effect estimation, refutation, or causal discovery, the agent must apply the router in `04_CAUSAL_TOOLING.md`. The default is a specialized, documented library instead of an ad hoc self-written implementation:
 
-- `DoWhy` für den Model–Identify–Estimate–Refute-Workflow,
-- `pgmpy` für Graph-, d-Separation-, Adjustierungs- und kausale Abfragen,
-- `EconML` oder `DoubleML` für DML beziehungsweise heterogene Effekte nach bestandener Identifikation,
-- `Tigramite` für zeitserienspezifische Causal Discovery,
-- `causalinference` nur optional für seinen engen Matching-/Propensity-Anwendungsbereich.
+- `DoWhy` for the Model–Identify–Estimate–Refute workflow,
+- `pgmpy` for graph, d-separation, adjustment and causal queries,
+- `EconML` or `DoubleML` for DML or heterogeneous effects after existing identification,
+- `Tigramite` for time series specific causal discovery,
+- `causalinference` only optional for its narrow matching/propensity application range.
 
-Es gilt kein Paketzwang für rein prädiktive Eventregressionen oder einfache Reaktionsinnovationen. Der Status lautet je Research-Version `TOOLING_REQUIRED`, `TOOLING_NOT_REQUIRED` oder `TOOLING_BLOCKED` und wird begründet.
+There is no package requirement for purely predictive event regressions or simple reaction innovations. The status is `TOOLING_REQUIRED`, `TOOLING_NOT_REQUIRED` or `TOOLING_BLOCKED` and is justified.
 
-Bibliotheksausgaben ändern den Claim-Level nicht. Insbesondere machen ein gefundener Adjustmentsatz, ein DML-Schätzer, ein Refutationstest oder ein Discovery-Graph aus einer nicht identifizierten Frage keinen Kausalclaim. Vor Ausführung werden Python-, Paket- und API-Versionen, Zufallsseed, Splits, Estimand, Graph, Adjustmentsatz und relevante Warnungen protokolliert. Nicht getestete Paketkombinationen benötigen einen Kompatibilitäts-Smoke-Test; bei Fehlschlag gilt `TOOLING_BLOCKED`.
+Library issues do not change the claim level. In particular, a found adjustment set, a DML estimator, a refutation test, or a discovery graph do not make a causal claim out of an unidentified question. Before execution, Python, package and API versions, random seed, splits, estimand, graph, adjustment set, and relevant warnings are logged. Untested package combinations require a compatibility smoke test; if it fails, `TOOLING_BLOCKED` applies.
 
-Ein LLM muss dafür nicht trainiert werden. Manche Schätzer fitten projektspezifisch Nuisance- oder Effektmodelle; das ist gewöhnliche statistische Schätzung innerhalb der Research-Pipeline, kein Training eines neuen Sprachmodells.
+An LLM does not have to be trained for this. Some estimators fit project-specific nuisance or effect models; this is an ordinary statistical estimate within the research pipeline, not training a new language model.
 
 ---
 
-## 8c. Wissenschaftliche Quellen benötigen Werk-, Versions- und Integritätsprovenienz
+## Scientific sources require proven works, versions and integrity
 
-Für jede akademische Quelle gilt zusätzlich **05_AGENT_OPERATIONS.md §5.4** und das Academic-Metadata-Objekt aus **schemas/evidence.schema.json**.
+Each academic source is also governed by **05_AGENT_OPERATIONS.md §5.4** and the Academic Metadata object in **schemas/evidence.schema.json**.
 
-Pflichtlogik:
+Required logic:
 
-1. Eine **work_id** verbindet Preprint, Working Paper, Accepted Manuscript, Version of Record, Korrektur und weitere Fassungen derselben intellektuellen Arbeit.
-2. Jede tatsächlich verwendete Fassung besitzt eine eigene **source_id**, exakte Version, URI, Abrufzeit und Snapshot-Hash.
-3. Mehrere Fassungen oder Indizes derselben work_id zählen nie als unabhängige Bestätigungen.
-4. Publikationsstatus, DOI und Venue werden verifiziert; ein DOI oder Journalname ist kein Qualitätsbeweis.
-5. Bei einschlägigen Finance-Fragen werden **The Journal of Finance** und das **Journal of Financial Economics** gezielt durchsucht. Das ist eine Coverage-Regel, kein Prestige-Gate und kein Ausschluss anderer Primärquellen.
-6. Bei arXiv werden q-fin-Unterkategorie und konkrete Versionsnummer gespeichert. Zulässig sind **q-fin.CP / q-fin.EC / q-fin.GN / q-fin.MF / q-fin.PM / q-fin.PR / q-fin.RM / q-fin.ST / q-fin.TR**. Die Kategorie ist Themenklassifikation, kein Peer Review.
-7. Vor Freeze, externer Freigabe und Revalidierung werden Correction, Expression of Concern, Retraction und Withdrawal über Publisher/Journal, Crossmark/DOI-Metadaten, Crossref-Retraction-Watch und Repository-Historie geprüft.
-8. Code-, Daten- und Replikationsstatus werden getrennt erfasst. Verfügbarkeit ist kein Qualitätsbeweis; technische Reproduktion beweist weder Identifikation noch externe Validität.
+1. A **work id** combines preprint, working paper, accepted manuscript, version of record, correction and other versions of the same intellectual work.
+2. Each version actually used has its own **source id**, exact version, URI, retrieval time and snapshot hash.
+3. Multiple versions or indices of the same work id never count as independent confirmations.
+4. Publication status, DOI, and venue are verified; a DOI or journal name is not proof of quality.
+5. For relevant finance questions **The Journal of Finance** and the **Journal of Financial Economics** are searched specifically. This is a coverage rule, not a prestige gate and not an exclusion of other primary sources.
+6. With arXiv, q-fin subcategory and specific version number are stored. Allowed are **q-fin.CP / q-fin.EC / q-fin.GN / q-fin.MF / q-fin.PM / q-fin.PR / q-fin.RM / q-fin.ST / q-fin.TR**. The category is subject classification, not peer review.
+7. Before freeze, external release, and revalidation, corrections, expressions of concern, retractions, and withdrawals are reviewed via the publisher/journal, Crossmark/DOI metadata, Crossref Retraction Watch, and repository history.
+8. Code, data, and replication statuses are recorded separately. Availability is not proof of quality; technical reproduction proves neither identification nor external validity.
 
-Eine zurückgezogene oder retraktierte Arbeit darf den betroffenen Sachclaim nicht weiter positiv tragen. Der Claim wird nach Evidence-Ruleset **1.1.0** **INSUFFICIENT**, und die Änderung ist mindestens ein operatives **BREAKING**-Delta. Eine materielle Korrektur, neue arXiv-Version, geänderte Deduplizierung oder konfligierende Replikation erzwingt eine erneute Claim-, Grade- und Delta-Prüfung.
+A withdrawn or retracted work may no longer support the relevant material claim positively. Under Evidence Ruleset **1.1.0**, the claim becomes **INSUFFICIENT**, and the change is at least one operational **BREAKING** delta. A material correction, new arXiv version, modified deduplication, or conflicting replication requires a new claim, grade, and delta check.
 
-Ändert die Quellenrevision Hypothese, Design, Gate oder Entscheidung, gelten zusätzlich die Research-Versions- und Datenverbrauchsregeln aus Abschnitt 16. Reine bibliografische Formatkorrekturen ohne semantische Auswirkung bleiben operative **NON_MATERIAL**-Deltas.
-
----
-
-## 9. Keine heimliche Hypothesenrevision
-
-Ein unerwartetes Ergebnis darf nicht durch semantische Umdeutung zum Erfolg erklärt werden.
-
-Beispiel:
-
-- Hypothese: `Mean Reversion`
-- Ergebnis: stabiler `Continuation`-Effekt
-
-Dann gilt:
-
-- ursprüngliche Hypothese falsifiziert,
-- mögliche neue Hypothese entdeckt,
-- neue Research-ID oder neue Hauptversion erforderlich,
-- neue Freeze- und Validation-Sequenz erforderlich.
+If the source revision changes the hypothesis, design, gate or decision, the Research Version and Data Consumption Rules in Section 16 also apply. Pure bibliographic format corrections without semantic impact remain operational **NON MATERIAL** deltas.
 
 ---
 
-## 10. Pipeline-Integritätsprüfung ist Pflicht
+## 9. No hidden hypothesis revision
 
-Vor dem Freeze muss die **vollständige ausführbare Research-Pipeline** auf Kontroll-Daten geprüft werden. Mindestens vorzusehen sind:
+An unexpected result must not be declared a success by semantic reinterpretation.
 
-- wiederholte Null-/Surrogatläufe, die relevante Zeit-, Cluster-, State- und Volatilitätsstruktur soweit wie methodisch möglich erhalten,
-- dieselben Auswahl-, Filter- und Auswertungsschritte wie im echten Research,
-- mindestens ein synthetischer Test mit bekanntem Vorzeichen und bekanntem Timing, um Vorzeichen-, Indexierungs- und Look-ahead-Fehler aufzudecken,
-- vorab definierte Toleranzen für Fehlalarme, Richtung, Timing und erwartete Nullverteilung.
+Example:
 
-Kontrollbasis und Datenrolle werden protokolliert. Designbeeinflussende Pipeline-Tests dürfen keine unabhängigen Validation- oder Holdout-Daten verbrauchen. Für die Nullkontrollen wird vorab eine Zielpräzision der geschätzten Fehlalarmrate festgelegt; `PASS` setzt ausreichende Monte-Carlo-Präzision voraus.
+- Hypothesis: `Mean Reversion`
+- Result: stable `Continuation` effect
 
-Ein einzelner Shuffle- oder Random-Walk-Lauf genügt nicht. Zerstört eine Kontrolle die für den Test relevante Abhängigkeitsstruktur, muss sie angepasst oder als unzureichend markiert werden.
+Therefore:
 
-Das Ergebnis lautet `PASS / FAIL / BLOCKED`. Ohne `PASS` darf der Freeze nicht bestätigt werden.
-
----
-
-## 11. Vier Ergebniszustände statt „signifikant / nicht signifikant“
-
-Ein Validation-Ergebnis muss mindestens in einen dieser Zustände eingeordnet werden:
-
-1. **Erwarteter wirtschaftlich relevanter Effekt ausreichend präzise gestützt**
-2. **Entgegengesetzter wirtschaftlich relevanter Effekt ausreichend präzise gestützt**
-3. **Kein wirtschaftlich relevanter Effekt ausreichend präzise gestützt**
-4. **Unpräzise / unentscheidbar**
-
-Zustand 4 erlaubt **keine ergebnisgetriebene Revision**. Zulässig sind nur:
-
-- mehr unabhängige Daten,
-- methodisch bereits vorab definierte Zusatzanalyse,
-- oder Abbruch als unentscheidbar.
+- original hypothesis falsified,
+- possible new hypothesis discovered,
+- new Research ID or new main version required,
+- new freeze and validation sequence is required.
 
 ---
 
-## 12. Einflussdiagnostik ist Pflicht
+## 10. Pipeline integrity testing is mandatory
 
-Vor Validation wird festgelegt, wie geprüft wird, ob einzelne Beobachtungen oder Cluster das Ergebnis dominieren.
+Before the freeze, the **complete executable research pipeline** must be checked for control data. At least:
 
-Mindestens vorzusehen:
+- repeated zero/surrogate runs that maintain the relevant time, cluster, state and volatility structure as far as methodologically possible;
+- the same selection, filtering and evaluation steps as in real research,
+- at least one known sign and timing synthetic test to detect sign, indexing and look-ahead errors;
+- Predefined tolerances for false alarms, direction, timing and expected zero distribution.
 
-- Leave-one-out oder Leave-one-cluster-out,
-- Ergebnis ohne dominantes Symbol,
-- Ergebnis ohne dominante Zeit-/Eventgruppe,
-- Anteil der größten Beobachtung/des größten Clusters an einer vorab definierten Ergebnis- oder Streuungsgröße.
+The control base and data role are logged. Design-influencing pipeline tests must not consume independent validation or holdout data. For the zero controls, a target precision of the estimated false alarm rate shall be specified in advance; `PASS` requires sufficient Monte Carlo precision.
 
-Wenn das Entfernen eines einzelnen Clusters das Vorzeichen oder die wirtschaftliche Schlussfolgerung kippt, gilt die Evidenz grundsätzlich als **nicht robust bestätigt**, sofern der Freeze nicht ausdrücklich eine andere, sachlich begründete Regel vorsieht.
+A single shuffle or random walk is not enough. If a control destroys the dependency structure relevant to the test, it must be adjusted or marked as insufficient.
 
----
-
-## 13. Heavy-Tail-Regel
-
-Bei schwerschwänzigen Outcomes muss vor Validation festgelegt werden:
-
-- primärer Lageparameter,
-- robuste Sensitivitätskennzahl,
-- Umgang mit Ausreißern,
-- ob Winsorisierung/Trimming zulässig ist,
-- und ob diese Transformation Teil der primären oder nur der Sensitivitätsanalyse ist.
-
-Der Schätzer darf nicht nach Kenntnis des Validation-Ergebnisses gewechselt werden.
+The result is `PASS / FAIL / BLOCKED`. Without `PASS`, the freeze may not be confirmed.
 
 ---
 
-## 14. Kostenlogik in zwei Stufen
+## 11. Four outcome states instead of “significant / not significant”
 
-Kosten werden zweimal geprüft:
+A validation result must be placed in at least one of these states:
 
-### Früh: Phase-0-Machbarkeit
+1. **Expected economically relevant effect supported with sufficient precision**
+2. **Opposite economically relevant effect supported with sufficient precision**
+3. **No economically relevant effect supported with sufficient precision**
+4. **Imprecise / undecidable**
 
-Grobe, konservative Kostenhürde, damit keine knappen Holdout-Daten für einen Effekt verbraucht werden, der wirtschaftlich ohnehin zu klein wäre.
+State 4 does not allow **a result-driven revision**. Only:
 
-### Spät: Strategy Engineering
-
-Detailliertes, möglichst zustandsabhängiges Modell:
-
-`Kosten = f(State, Volatilität, Liquidität, Größe, Geschwindigkeit, Session, Execution)`
-
-Das frühe Kostengate ersetzt die spätere Execution-Prüfung nicht.
-
-Die Sicherheitsmarge ist ein **zusätzlicher Betrag** zur konservativen Kostenschätzung. Wird stattdessen ein Multiplikator verwendet, muss ausdrücklich unterschieden werden zwischen `Gesamthürde = Multiplikator × Kosten` und `Sicherheitsmarge = Multiplikator × Kosten`. Es gibt keinen universellen Kostenmultiplikator für alle Strategien.
+- more independent data,
+- methodologically already defined additional analysis,
+- Or discontinuation as undecidable.
 
 ---
 
-## 15. Internes Arbeitsprotokoll und verständliche Nutzerantwort
+## 12. Diagnostics of influence are mandatory
 
-Nach jeder bearbeiteten Phase muss der Agent **im Research-Artefakt** festhalten:
+Before validation, it is determined how to check whether individual observations or clusters dominate the result.
+
+At minimum:
+
+- Leave-one-out or leave-one-cluster-out,
+- result without dominant symbol,
+- Result without dominant time/event group,
+- Share of the largest observation/cluster in a predefined result or scatter variable.
+
+If the removal of an individual cluster overturns the sign or the economic conclusion, the evidence is generally considered **not robustly confirmed**, unless the freeze expressly provides for another, factually justified rule.
+
+---
+
+## 13. Heavy-tail rule
+
+For heavy-tailed outcomes, the following must be determined before validation:
+
+- primary location parameter,
+- robust sensitivity index;
+- treatment of outliers,
+- whether winsorisation/trimming is allowed,
+- and whether this transformation is part of the primary or only sensitivity analysis.
+
+The estimator may not be changed after knowledge of the validation result.
+
+---
+
+## 14. Cost logic in two stages
+
+Costs are checked twice:
+
+### Early: Phase-0 feasibility
+
+Rough, conservative cost hurdle so that no tight holdout data is consumed for an effect that would be economically too small anyway.
+
+### Late: Strategy Engineering
+
+Detailed model that is as condition-dependent as possible:
+
+`Costs = f(state, volatility, liquidity, size, speed, session, execution)`
+
+The early cost gate does not replace the later execution exam.
+
+The margin of safety is an **additional amount** added to the conservative cost estimate. If a multiplier is used instead, distinguish clearly between `total hurdle = multiplier × costs` and `margin of safety = multiplier × costs`. There is no universal cost multiplier for all strategies.
+
+---
+
+## 15. Internal working protocol and understandable user response
+
+After each phase is completed, the agent must record the following **in the research artifact**:
 
 ```text
 PHASE:
 STATUS: COMPLETE / N/A / BLOCKED / FAILED
 INPUTS:
-ENTSCHEIDUNGEN:
-OFFENE PUNKTE:
-GATE-ERGEBNIS:
-NÄCHSTER ZULÄSSIGER SCHRITT:
+DECISIONS:
+OPEN ITEMS:
+GATE RESULT:
+NEXT PERMITTED STEP:
 ```
 
-Keine Phase endet mit bloßer Prosa ohne Status.
+No phase ends with mere prose without status.
 
-Dieser Block ist kein verpflichtendes Format für die sichtbare Nutzerantwort und
-wird dort nicht ungefragt wiedergegeben. Gegenüber dem Nutzer fasst der Agent
-stattdessen knapp und allgemeinverständlich zusammen:
+This block is not a mandatory format for the visible user response and is not reproduced there unasked. Instead, the agent summarizes the user in a concise and generally understandable way:
 
-1. Was kam heraus?
-2. Was bedeutet das für die Idee oder Untersuchung?
-3. Muss der Nutzer etwas entscheiden? Wenn ja: welche Möglichkeiten gibt es,
-   welche praktischen Folgen haben sie und was empfiehlt der Agent?
-4. Was ist der nächste sachliche Schritt?
+1. What was found?
+2. What does this mean for the idea or investigation?
+3. Does the user have to decide something? If so, what are the possibilities, practical consequences, and recommendation?
+4. What is the next objective step?
 
-Technische Details, interne Feldnamen und Statuscodes werden nur auf ausdrückliche
-Nachfrage oder bei entscheidungsrelevanter Auswirkung ergänzt.
+Technical details, internal field names and status codes are only supplemented on explicit request or in case of decision-relevant impact.
 
 ---
 
-## 16. Versionierung
+## 16. Versioning
 
-Jede Research-Datei benötigt mindestens:
+Each research file needs at least:
 
 - Research-ID,
 - Version,
 - Status,
-- Erstellungsdatum,
-- Freeze-Datum,
-- Datenrollen,
-- Strukturmodell-/Identifikationsdesign-Version,
-- Tooling-Manifest mit Laufzeit-, Paket- und API-Versionen oder `TOOLING_NOT_REQUIRED`,
-- Hypothesenversion,
-- Entscheidungsprotokoll.
+- creation date,
+- Freeze date,
+- data roles,
+- structural-model/identification-design version,
+- Tooling manifest with runtime, package and API versions or `TOOLING_NOT_REQUIRED`,
+- hypothesis version,
+- decision log.
 
-Materielle Änderungen erzeugen eine neue Version.
+Material changes create a new version.
 
-Materiell sind insbesondere Änderungen an:
+In particular, material changes to:
 
-- Hypothese,
-- Claim-Level oder kausalem Estimand,
-- Identifikationsstrategie oder deren Kernannahmen,
-- primäre Kausalbibliothek, Haupt-API, Versionskombination oder Split-/Seed-Logik,
-- Surprise-Konstruktion, Eventfenster oder Reaktionsmodell,
-- Surprise-Faktoren, Response-Modell oder Constraint-Assessment,
-- Richtung des erwarteten Effekts,
-- Nullmodell,
-- Outcome,
-- Datenuniversum,
-- Session,
-- Timeframe,
-- Statefilter,
+- hypothesis,
+- claim level or causal estimand,
+- identification strategy or its core assumptions,
+- primary causal library, main API, version combination or split/seed logic,
+- surprise design, event window or reaction model,
+- surprise factors, response model or constraint assessment,
+- direction of the expected effect,
+- null model,
+- outcome,
+- data universe,
+- session,
+- timeframe,
+- state filter,
 - Trigger,
 - Invalidation,
 - Stop,
 - Target,
 - Management,
-- Kostenmodell,
-- Datensplit,
-- primärer Auswertungsmethode.
+- cost model,
+- data split,
+- primary evaluation method.
 
-Bei akademischen Quellen sind eine neue Fassung, ein geänderter Publikations-/Integritätsstatus, eine materielle Correction, eine Retraction/Withdrawal, ein Replikationskonflikt oder eine Deduplizierung mit veränderter unabhängiger Evidenz zunächst operative Deltas nach **05 §5.4.8 und §9**. Sobald dadurch Hypothese, Methode, Gate, Evidenzschluss oder Endentscheidung verändert wird, ist die Research-Änderung materiell und erzeugt eine neue Version.
-
----
-
-## 16a. Operative Agentenartefakte und Regression Gate
-
-Research-Version und Agentenlauf sind verschiedene Identitäten:
-
-- Die **Research-ID/Research-Version** bezeichnet den fachlichen Forschungsstand.
-- Die **Run-ID** bezeichnet genau eine konkrete Ausführung dieses Stands mit einem bestimmten Modell, Prompt, Tool- und Datenzustand.
-
-Für jeden LLM-/Agentenlauf gelten zusätzlich die Verträge aus `05_AGENT_OPERATIONS.md` und `schemas/`:
-
-0. Ein optionaler Generation-Run endet bei `INBOX`; er darf weder Screening noch Promotion vorwegnehmen. Nutzt er ein LLM oder einen Agenten, erhält auch dieser Aufruf ein Run-Manifest.
-1. Vor Eröffnung eines Research Case wird ein valider Hypothesen-Intake persistiert und auf `PROMOTED` gescreent.
-2. Vor der Ausführung wird eine eindeutige Run-ID erzeugt; das Run-Manifest wird spätestens bei Laufabschluss vollständig persistiert.
-3. Entscheidungsrelevante Aussagen erhalten eine epistemische Klasse und eine Claim-ID.
-4. Fakten benötigen eine konkrete Quelle und Fundstelle; berechnete Werte und Inferenzclaims referenzieren ihre Inputs.
-5. Akademische Quellen erhalten work_id, konkrete Fassung, Publikations-/Integritätsstatus sowie Code-, Daten- und Replikationsstatus; Fassungen derselben Arbeit werden dedupliziert.
-6. Fehlende Evidenz wird als `UNKNOWN` beziehungsweise blockierender Evidenzstatus ausgewiesen und nicht durch plausible Prosa ersetzt.
-7. Menschliche Korrekturen und Overrides werden append-only gespeichert und dürfen nicht still überschrieben werden.
-8. Änderungen an System-/Task-Prompt, Modell oder Snapshot, Retrieval, Toolbeschreibung, Orchestrierung oder Output-Schema benötigen vor produktiver Freigabe einen bestandenen Eval- und Regressionslauf.
-9. Ein syntaktisch oder semantisch ungültiges Pflichtartefakt, eine ungeklärte kritische Quellenkollision oder eine nicht akzeptierte Regression blockiert die operative Freigabe, auch wenn das Research-Ergebnis inhaltlich plausibel klingt.
-
-Ein einzelnes Run-Manifest ersetzt weder das Research Case noch dessen Gates. Umgekehrt macht ein methodisch vollständiges Research Case einen nicht reproduzierbaren Agentenlauf nicht operativ freigabefähig.
+For academic sources, a new version, changed publication/integrity status, material correction, retraction/withdrawal, replication conflict, or deduplication with changed independent evidence is first an operational delta under **05_AGENT_OPERATIONS.md §5.4.8 and §9**. As soon as the hypothesis, method, gate, evidence conclusion, or final decision changes, the research change is material and creates a new version.
 
 ---
 
-## 17. Abschlussregel
+## 16a. Operational Agent Artifacts and Regression Gate
 
-Ein AI-Agent darf eine Research-Idee nur dann als `VALIDATED_PHENOMENON` oder `ACTIVE_STRATEGY_CANDIDATE` bezeichnen, wenn das zugehörige Research-Artefakt die vorgeschriebenen Gates bestanden hat.
+Research version and agent run are different identities:
 
-`VALIDATED_PHENOMENON` bestätigt nur das eingefrorene Phänomen gemäß seinem
-Design. Der Status erhöht weder den Claim-Level noch setzt er
-`mechanism_supported` oder `executable_net_edge` automatisch auf `SUPPORTED`.
+- The **Research-ID/Research-Version** indicates the technical research status.
+- The **Run-ID** denotes a specific execution of this status with a specific model, prompt, tool and data state.
 
-Fehlende Daten, nicht geprüfte Abhängigkeiten, ein verbrauchtes Validation-Set oder eine ungeprüfte entscheidungstragende akademische Quellenfassung sind keine redaktionellen Kleinigkeiten, sondern Zustandsfehler des Research-Prozesses.
+For each LLM/agent run, the contracts from `05_AGENT_OPERATIONS.md` and `schemas/` apply in addition:
+
+0. An optional generation run ends at `INBOX`; it must not anticipate screening or promotion. If an LLM or agent is used, that call also receives a run manifest.
+1. Before opening a research case, a valid hypothesis intake is persisted and screened for `PROMOTED`.
+2. A unique run ID is generated before execution; the run manifest is completely persisted at the latest at the end of the run.
+3. Decision-relevant statements receive an epistemic class and a claim ID.
+4. Facts require a specific source and reference; calculated values and inference claims reference their inputs.
+5. Academic sources receive work id, concrete version, publication/integrity status, code, data and replication status; versions of the same work are deduplicated.
+6. Missing evidence is reported as `UNKNOWN` or blocking evidence status and is not replaced by plausible prose.
+7. Human corrections and overrides are stored append-only and must not be quietly overwritten.
+8. Changes to the system/task prompt, model or snapshot, retrieval, tool description, orchestration or output schema require a passed eval and regression run before productive release.
+9. A syntactically or semantically invalid obligatory artifact, an unexplained critical source collision or an unaccepted regression blocks the operational release, even if the research result sounds plausible in content.
+
+A single run manifest does not replace the research case or its gates. Conversely, a methodically complete research case does not make a non-reproducible agent run operationally releaseable.
+
+---
+
+## 17. Closing rule
+
+An AI agent may only designate a research idea as `VALIDATED_PHENOMENON` or `ACTIVE_STRATEGY_CANDIDATE` if the related research artifact has passed the prescribed gates.
+
+`VALIDATED_PHENOMENON` only confirms the frozen phenomenon according to its design. The status does not increase the claim level, nor does it automatically set `mechanism_supported` or `executable_net_edge` to `SUPPORTED`.
+
+Missing data, untested dependencies, a used validation set or an untested decision-making academic source version are not editorial details, but state errors of the research process.

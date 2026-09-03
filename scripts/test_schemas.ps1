@@ -488,9 +488,9 @@ $forecastPrematureResolution.forecasts[0].resolution = [PSCustomObject]@{
     actual_value = 'UP'
     source_refs = @('official-close-dataset')
     source_vintage = '2026-08-31'
-    applied_rule = 'Demonstrationsregel'
+    applied_rule = 'Demonstration rule'
     score = 1
-    rationale = 'Aufgelöst.'
+    rationale = 'Resolved.'
 }
 Test-RejectedFixture -Name 'OPEN forecast cannot contain resolution' -Value $forecastPrematureResolution -Schema 'schemas\forecast.schema.json'
 

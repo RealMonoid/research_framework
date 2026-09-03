@@ -1,68 +1,65 @@
-# ADR-002: Versions- und integritätsbewusste Governance akademischer Quellen
+# ADR-002: Version- and integrity-aware governance of academic sources
 
 **Status:** Accepted  
 **Date:** 2026-08-30  
-**Deciders:** Projektverantwortlicher und Maintainer des Research-Frameworks
+**Deciders:** Research owner and research-framework maintainer
 
 ## Context
 
-Der bisherige Evidence-Vertrag kennt den Quellentyp `ACADEMIC`, unterscheidet aber
-nicht zwischen einer peer-reviewten Journalfassung, einem Accepted Manuscript,
-einem Working Paper und einem Preprint. Dadurch könnten unter anderem:
+The previous evidence contract recognized the source type `ACADEMIC`, but did
+not distinguish a peer-reviewed journal version from an accepted manuscript,
+working paper, or preprint. As a result, the framework could:
 
-- eine arXiv-Fassung irrtümlich als peer-reviewt behandelt,
-- mehrere Fassungen derselben Arbeit als unabhängige Bestätigungen gezählt,
-- Korrekturen, Expressions of Concern oder Retraktionen übersehen,
-- Journalprestige mit methodischer Qualität verwechselt,
-- und Replikations-, Code- oder Datenbehauptungen ohne prüfbare Referenzen geführt
-  werden.
+- mistakenly treat an arXiv version as peer reviewed;
+- count several versions of the same work as independent confirmations;
+- overlook corrections, expressions of concern, or retractions;
+- confuse journal prestige with methodological quality; or
+- record replication, code, or data claims without verifiable references.
 
-Trading-Research benötigt zugleich Zugriff auf wissenschaftliche Primärquellen.
-Dazu gehören gezielt Originalarbeiten aus Fachzeitschriften wie *Journal of
-Finance* und *Journal of Financial Economics* sowie aktuelle Manuskripte aus den
-`q-fin`-Kategorien von arXiv. Diese Kanäle haben unterschiedliche Review- und
-Versionszustände und dürfen daher nicht gleich behandelt werden.
+Trading research also needs access to scientific primary sources. These include
+original work in journals such as *The Journal of Finance* and *The Journal of
+Financial Economics*, as well as current manuscripts in arXiv `q-fin`
+categories. These channels have different review and version states and must not
+be treated as equivalent.
 
 ## Decision
 
-Wir führen ein explizites Academic-Source-Protokoll ein.
+We introduce an explicit academic-source protocol.
 
-1. Jede akademische Quelle bezeichnet eine konkrete Dokumentfassung und erhält
-   vollständige `academic_metadata`.
-2. Alle Fassungen derselben Arbeit teilen eine stabile `work_id`. Journalfassung,
-   Accepted Manuscript, Working Paper und Preprint sind dadurch eine
-   Versionsfamilie und keine voneinander unabhängigen Belege.
-3. Der Publikationsstatus ist genau einer von
+1. Each academic source identifies a specific document version and receives
+   complete `academic_metadata`.
+2. All versions of the same work share a stable `work_id`. A journal version,
+   accepted manuscript, working paper, and preprint are therefore one version
+   family, not independent evidence.
+3. Publication status is exactly one of
    `PEER_REVIEWED_VERSION_OF_RECORD`, `ACCEPTED_MANUSCRIPT`, `WORKING_PAPER`,
-   `PREPRINT` oder `OTHER`. Peer Review wird aus diesem Status abgeleitet und nicht
-   über ein redundantes Boolean-Feld modelliert.
-4. `study_type` trennt Originalstudie, Replikationsstudie, systematischen Review,
-   Meta-Analyse, Methodenpapier, Kommentar und sonstige Beiträge. Nur der
-   akademische Kanal macht eine Quelle nicht automatisch zur Primärstudie.
-5. Für arXiv werden ID, konkrete Version, Einreichungs-/Änderungszeit und eine der
-   offiziellen Kategorien `q-fin.CP`, `q-fin.EC`, `q-fin.GN`, `q-fin.MF`,
-   `q-fin.PM`, `q-fin.PR`, `q-fin.RM`, `q-fin.ST` oder `q-fin.TR` gespeichert.
-   `q-fin` ist eine Themenklassifikation, kein Review- oder Gütesiegel.
-6. Vor Evidenzverwendung wird der Integritätsstatus über Verlag, Crossmark,
-   DOI-Metadaten oder Repository geprüft. Korrektur, Expression of Concern,
-   Retraktion oder Withdrawal benötigt eine verlinkte Notice.
-7. Code- und Datenverfügbarkeit werden als Zugriffszustände erfasst. Offenheit ist
-   für Reproduzierbarkeit relevant, ersetzt aber keine Design- oder
-   Identifikationsprüfung; fehlende Offenheit ist umgekehrt nicht automatisch ein
-   Beweis für schlechte Forschung.
-8. Eine positive, negative oder gemischte Replikationsaussage benötigt Referenzen
-   auf tatsächlich unabhängige Arbeiten. Weitere Fassungen derselben `work_id`
-   genügen nicht.
-9. Journalname, Impact Factor und Zitationszahl sind keine Evidence-Grade-Regeln.
-   *Journal of Finance* und *Journal of Financial Economics* werden als gezielte
-   Recherchekanäle berücksichtigt, nicht als Whitelist oder Qualitätsgarantie.
-10. Ein verifizierter Preprint darf den engen `SOURCE_FACT` tragen, dass die Arbeit
-    ein Ergebnis berichtet. Ein alleiniger, nicht unabhängig reproduzierter
-    Preprint darf keinen entscheidungstragenden Claim auf `SUFFICIENT` heben und
-    keine Aktivierung allein tragen.
+   `PREPRINT`, or `OTHER`. Peer review is derived from this status rather than
+   represented by a redundant Boolean field.
+4. `study_type` distinguishes original research, replication, systematic review,
+   meta-analysis, methods paper, commentary, and other contributions. The
+   academic channel alone does not make a source a primary study.
+5. For arXiv, store the ID, concrete version, submission/change time, and one of
+   the official categories `q-fin.CP`, `q-fin.EC`, `q-fin.GN`, `q-fin.MF`,
+   `q-fin.PM`, `q-fin.PR`, `q-fin.RM`, `q-fin.ST`, or `q-fin.TR`. `q-fin` is a
+   subject classification, not a review or quality seal.
+6. Before evidence is used, verify integrity through the publisher, Crossmark,
+   DOI metadata, or repository. A correction, expression of concern,
+   retraction, or withdrawal requires a linked notice.
+7. Record code and data availability as access states. Openness matters for
+   reproducibility, but does not replace design or identification checks; lack
+   of openness is not automatically evidence of poor research.
+8. A positive, negative, or mixed replication statement needs references to
+   genuinely independent work. Additional versions of the same `work_id` do
+   not suffice.
+9. Journal name, impact factor, and citation count are not evidence-grade
+   rules. *The Journal of Finance* and *The Journal of Financial Economics* are
+   targeted research channels, not a whitelist or quality guarantee.
+10. A verified preprint may carry the narrow `SOURCE_FACT` that the work
+    reports a result. A sole, independently unreproduced preprint must not raise
+    a decision-bearing claim to `SUFFICIENT` or support activation by itself.
 
-Die maschinenlesbare Umsetzung erfolgt mit
-`schemas/evidence.schema.json` Version `2.0.0`; die geänderte Grade-Semantik trägt
+The machine-readable implementation uses `schemas/evidence.schema.json` version
+`2.0.0`; the changed grade semantics use
 `evidence_assessment.ruleset_version = 1.1.0`.
 
 ## Primary references for the protocol
@@ -71,51 +68,53 @@ Die maschinenlesbare Umsetzung erfolgt mit
 - [arXiv versioning help](https://info.arxiv.org/help/versions.html)
 - [Crossref Crossmark](https://www.crossref.org/services/crossmark/)
 
-Diese Referenzen definieren Repository-Kategorien, dauerhafte Versionsstände und
-die Abfrage von Updates beziehungsweise Integritätshinweisen. Sie bewerten nicht
-die inhaltliche Qualität einzelner Forschungsarbeiten.
+These references define repository categories, permanent versions, and ways to
+check for updates or integrity notices. They do not evaluate the substantive
+quality of individual research papers.
 
-## Options Considered
+## Options considered
 
-### Option A: `ACADEMIC` ohne Unterstruktur beibehalten
+### Option A: Keep `ACADEMIC` without substructure
 
-Einfach, aber Publikations-, Versions- und Integritätsstatus bleiben implizit. Der
-Agent könnte wichtige Unterschiede nur in freiem Text ausdrücken; automatische
-Prüfung und Deduplizierung wären nicht zuverlässig möglich.
+Simple, but publication, version, and integrity status remain implicit. The
+agent could express important differences only in free text; automated testing
+and deduplication would not be reliable.
 
-### Option B: Journal-Whitelist als Qualitätsfilter
+### Option B: Journal whitelist as a quality filter
 
-Leicht verständlich, aber methodisch falsch. Auch renommierte Journals enthalten
-unterschiedliche Designs, spätere Korrekturen und nicht replizierte Ergebnisse;
-zugleich können hochwertige Working Papers und Preprints relevante frühe Evidenz
-liefern.
+Easy to understand, but methodologically wrong. Even renowned journals contain
+different designs, later corrections, and unreproduced results. High-quality
+working papers and preprints can also provide relevant early evidence.
 
-### Option C: Explizites Versionsfamilien- und Integritätsmodell
+### Option C: Explicit version-family and integrity model
 
-Mehr Metadatenaufwand, dafür werden Reviewstatus, Dokumentversion, Integrität,
-Reproduzierbarkeit und Unabhängigkeit getrennt und maschinenprüfbar behandelt.
-Diese Option wird gewählt.
+This requires more metadata, but review status, document version, integrity,
+reproducibility, and independence are kept separate and made machine-testable.
+This option is chosen.
 
 ## Consequences
 
-- Bestehende `ACADEMIC`-Objekte benötigen eine Migration; deshalb ist das neue
-  Evidence-Schema eine Major-Version.
-- Nichtakademische Quellen bleiben kompatibel und dürfen keine nicht-null
-  `academic_metadata` tragen.
-- Neue arXiv-Versionen überschreiben alte Snapshots nicht. Die verwendete Version
-  bleibt dauerhaft referenziert und eine neuere Fassung erzeugt ein Source-Delta.
-- Eine neue Korrektur, Expression of Concern, Retraktion oder ein bestätigtes
-  Replikationsproblem kann einen materiellen beziehungsweise brechenden Delta
-  auslösen.
-- JSON Schema kann Feldkonsistenz prüfen, aber nicht vollständig feststellen, ob
-  zwei `work_id` tatsächlich dieselbe Arbeit bezeichnen oder eine Replikation
-  methodisch unabhängig ist. Diese Cross-Object-Regeln bleiben zusätzlich Aufgabe
-  von Validator, Eval und Human Review.
+- Existing `ACADEMIC` objects require migration; the evidence schema therefore
+  receives a major version.
+- Non-academic sources remain compatible and must not carry non-null
+  `academic_metadata`.
+- New arXiv versions do not overwrite old snapshots. The version used remains
+  permanently referenced, and a newer version creates a source delta.
+- A new correction, expression of concern, retraction, or confirmed replication
+  problem can trigger a material or breaking delta.
+- JSON Schema can test field consistency, but cannot fully determine whether two
+  `work_id` values denote the same work or whether a replication is methodologically
+  independent. Those cross-object rules remain the work of validators, evals,
+  and human review.
 
-## Action Items
+## Action items
 
-1. [x] Evidence-Schema 2.0 mit Academic-Metadaten und bedingten Verträgen ergänzen.
-2. [x] Positive und negative Schema-Fixtures für Journal- und q-fin-Quellen anlegen.
-3. [x] Academic-Source-Governance in Operationsstandard und Case-Checkliste aufnehmen.
-4. [x] Einen Eval-Fall für die korrekte Behandlung eines q-fin-Preprints ergänzen.
-5. [ ] Cross-Object-Validator für `work_id`-Deduplizierung und Replikationsreferenzen implementieren.
+1. [x] Supplement Evidence Schema 2.0 with academic metadata and conditional
+   contracts.
+2. [x] Create positive and negative schema fixtures for journal and q-fin
+   sources.
+3. [x] Include academic-source governance in the operations standard and case
+   checklist.
+4. [x] Add an eval case for correct treatment of a q-fin preprint.
+5. [ ] Implement a cross-object validator for `work_id` deduplication and
+   replication references.

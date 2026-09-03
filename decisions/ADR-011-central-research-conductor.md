@@ -1,127 +1,113 @@
-# ADR-011: Zentraler Forschungsleiter mit verbindlichem Spezialisten-Routing
+# ADR-011: Central research conductor with binding specialist routing
 
 **Status:** Accepted
 **Date:** 2026-08-31
-**Deciders:** Projektverantwortlicher und Maintainer des Research-Frameworks
+**Deciders:** Research owner and research-framework maintainer
 
 ## Context
 
-Das Framework besitzt spezialisierte Rollen für Ideengenerierung,
-Wissenschaftsphilosophie und quantitative Bedingungsfragen. Bisher war jedoch
-nicht verbindlich geregelt, wer den Gesamtfall führt, den aktuellen Stand über
-mehrere Arbeitsschritte hinweg festhält und entscheidet, wann welche Rolle
-eingeschaltet werden muss.
+The framework has specialist roles for idea generation, philosophy of science,
+and quantitative condition questions. It did not previously specify who leads a
+case, preserves its state across work steps, or decides when each role must be
+involved.
 
-Eine bloße Rollenbeschreibung genügt dafür nicht. Ein Sprachmodell kann eine
-notwendige Prüfung vergessen, Spezialisten können dieselbe Aufgabe doppelt
-bearbeiten, und die Nutzerkommunikation kann in technische Einzelheiten
-zerfallen. Besonders kritisch sind zwei Übergänge: die Begriffsprüfung vor der
-Operationalisierung einer unvollständigen Buchstrategie und die
-wissenschaftsphilosophische Fortsetzungsprüfung nach einem nicht positiven
-festgeschriebenen Ergebnis.
+A role description alone is not enough. A language model can forget a required
+review, specialists can duplicate work, and user communication can collapse into
+technical details. Two transitions are especially critical: the concept review
+before operationalizing an incomplete book strategy, and the
+scientific-philosophy continuation review after a non-positive frozen result.
 
 ## Decision
 
-1. Jede nutzerbezogene Research-Aufgabe wird von genau einem
-   `research-conductor` geführt. Er bleibt alleiniger Ansprechpartner des
-   Nutzers und trägt die Verantwortung für den nächsten Schritt.
-2. Vor jedem wesentlichen Übergang hält der Forschungsleiter den aktuellen
-   Stand in einem maschinenprüfbaren Checkpoint fest.
-3. Ein deterministischer Router entscheidet aus diesem bereits eingeordneten
-   Stand über den nächsten zulässigen Arbeitsschritt. Das Sprachmodell ordnet
-   die Bedeutung der Anfrage ein; feste Übergangsregeln werden nicht seinem
-   Gedächtnis überlassen.
-4. Der `scientific-philosophy-critic` ist vor der Operationalisierung
-   unvollständiger Prosastrategien zwingend, sobald die Quellenrekonstruktion
-   vorliegt und die Begriffsprüfung noch fehlt.
-5. Derselbe Spezialist ist nach `FALSIFIED`, `PRECISE_NULL`, `INCONCLUSIVE` oder
-   `INVALID_TEST` zwingend, wenn Ursachen zugerechnet, die Untersuchung
-   wesentlich verändert oder empirisch fortgesetzt werden soll.
-6. Der `condition-inquiry-analyst` wird erst nach einer vorläufig festgelegten
-   Operationalisierung für Messgüte, Definitionsempfindlichkeit oder
-   beobachtbare Erfolgsbedingungen eingesetzt.
-7. Der Ideengenerator wird nur bei einem tatsächlichen Wunsch nach neuen
-   kurzlaufenden Tradingideen eingesetzt. Er ist kein Ersatz für Aufnahme,
-   Rekonstruktion oder Rettung einer bestehenden Idee.
-8. Spezialisten arbeiten nacheinander mit einem begrenzten Auftrag und einem
-   festgelegten Ausgabeformat. Sie sprechen nicht direkt mit dem Nutzer und
-   ändern weder Forschungsfrage noch Quellenstrategie oder festgeschriebenes
-   Ergebnis.
-9. Spezialistenergebnisse werden geprüft, bevor der Forschungsleiter den Stand
-   fortschreibt. Ein fehlender oder ungültiger Pflichtbeitrag blockiert den
-   Übergang; er wird nicht stillschweigend vom Hauptagenten simuliert.
-10. Eine Routingentscheidung erlaubt weder automatisch Datenzugriff noch einen
-    Backtest. Empirische Arbeit benötigt weiterhin einen gesonderten Auftrag
-    und die dafür geltenden Voraussetzungen.
-11. Für Codex und kompatible Agenten ist `AGENTS.md`, für Claude zusätzlich
-    `CLAUDE.md` der verbindliche Einstieg in diese Steuerung.
-12. Vor und nach jeder Fachagenten-Übergabe auf einem bestehenden Fall werden
-    Forschungsfrage, Strategie, Markt, Zeithorizont, Auslöser und Ziel
-    verglichen. Nur ein unveränderter Vergleich erlaubt die Annahme des
-    Beitrags. Eine Abweichung bleibt unwirksam, wird dem Nutzer verständlich
-    erklärt und benötigt für eine Übernahme eine ausdrücklich neue
-    Research-Version.
-13. Ein beabsichtigter `INTERVENTIONAL`- oder `COUNTERFACTUAL`-Claim wird vor
-    Schätzung und kausaler Sprache zwingend an den
-    `causal-identification-critic` geroutet. Rein prädiktive Fragen lösen diesen
-    Schritt nicht aus.
-14. Der Kausalitätsprüfer liefert ein eigenes maschinen- und semantisch
-    geprüftes Identifikationsartefakt. Schätzverfahren, Eventfenster,
-    Zeitreihenreihenfolge oder Causal Discovery dürfen den Identifikationsgrund
-    nicht ersetzen.
+1. Every user-facing research task is led by exactly one `research-conductor`.
+   It remains the user's sole contact and owns the next-step decision.
+2. Before every material transition, the conductor records the current state in
+   a machine-testable checkpoint.
+3. A deterministic router uses that classified state to choose the next
+   permitted work step. The language model classifies the meaning of the
+   request; fixed transition rules are not left to its memory.
+4. The `scientific-philosophy-critic` is mandatory before operationalizing an
+   incomplete prose strategy once source reconstruction exists and concept
+   review is still missing.
+5. The same specialist is mandatory after `FALSIFIED`, `PRECISE_NULL`,
+   `INCONCLUSIVE`, or `INVALID_TEST` when the owner wants to attribute causes,
+   materially change the investigation, or continue empirically.
+6. The `condition-inquiry-analyst` is used only after a provisional
+   operationalization exists and the question concerns measurement quality,
+   definition sensitivity, or observable success conditions.
+7. The idea generator is used only when the owner actually wants new short-term
+   trading ideas. It does not replace intake, reconstruction, or rescue of an
+   existing idea.
+8. Specialists work sequentially under a bounded order and specified output
+   format. They do not speak directly to the user and do not change the research
+   question, source strategy, or frozen result.
+9. Specialist results are reviewed before the conductor advances the state. A
+   missing or invalid required contribution blocks the transition; the main
+   agent must not silently simulate it.
+10. A routing decision does not automatically authorize data access or a
+    backtest. Empirical work still requires a separate assignment and its own
+    prerequisites.
+11. For Codex and compatible agents, `AGENTS.md` is the binding entry point;
+    Claude also reads `CLAUDE.md`, which points to that same source.
+12. Before and after every specialist handoff on an existing case, compare the
+    research question, strategy, market, time horizon, trigger, and target.
+    Only an unchanged comparison permits acceptance. A deviation remains
+    ineffective, is explained clearly to the user, and requires an explicitly
+    new research version before it can be adopted.
+13. An intended `INTERVENTIONAL` or `COUNTERFACTUAL` claim is routed to the
+    `causal-identification-critic` before estimation or causal wording. Purely
+    predictive questions do not trigger this step.
+14. The causal critic supplies a separate machine- and semantically validated
+    identification artifact. Estimators, event windows, temporal ordering, and
+    causal discovery do not replace the identification argument.
 
-## Rejected Alternatives
+## Rejected alternatives
 
-- **Jeder Spezialist entscheidet selbst, wann er gebraucht wird:** verworfen,
-  weil niemand den Gesamtzustand und die Reihenfolge zuverlässig besitzt.
-- **Nur ein freier Hauptagent ohne feste Übergangsregeln:** verworfen, weil
-  Pflichtprüfungen vom Promptverständnis und Gedächtnis eines einzelnen Laufs
-  abhingen.
-- **Vollständig starre Automatik ohne semantische Einordnung:** verworfen, weil
-  die Bedeutung einer Nutzerfrage und die Materialität einer Entscheidung nicht
-  allein aus Dateiständen hervorgehen.
-- **Spezialisten sprechen direkt mit dem Nutzer:** verworfen, weil dadurch
-  widersprüchliche Erklärungen, technische Innensicht und unklare
-  Gesamtverantwortung entstehen.
-- **Parallele Spezialisten als Standard:** verworfen, weil die hier relevanten
-  Schritte voneinander abhängen und Agentenübereinstimmung keine Evidenz ist.
+- **Let each specialist decide when it is needed:** rejected because no one
+  specialist reliably owns the complete state and order.
+- **Use only a free-form main agent without fixed transition rules:** rejected
+  because required reviews would depend on one run's prompt interpretation and
+  memory.
+- **Use completely rigid automation without semantic classification:** rejected
+  because the meaning of a user question and the materiality of a decision
+  cannot be derived from file states alone.
+- **Let specialists speak directly to the user:** rejected because it creates
+  conflicting explanations, technical inside views, and unclear overall
+  responsibility.
+- **Make parallel specialists the default:** rejected because the relevant steps
+  depend on each other and agreement between agents is not evidence.
 
 ## Consequences
 
-- Der Wissenschaftsphilosoph wird an den beiden kritischen Übergängen
-  automatisch verpflichtend, statt nur als mögliche Rolle dokumentiert zu
-  sein.
-- Kausale Sprache wird nur nach einer eigenständigen, finanzmarktspezifischen
-  Identifikationsprüfung freigegeben. Das erhöht nicht automatisch Mechanismus-,
-  Prognose- oder Tradingstatus.
-- Der Nutzer erhält eine zusammengeführte, allgemeinverständliche Antwort vom
-  Forschungsleiter und muss die interne Agentenarbeit nicht koordinieren.
-- Wiederaufnahme, Fehleranalyse und Zusammenarbeit mit mehreren
-  Schreibwerkzeugen werden durch Checkpoints und eindeutige Zuständigkeiten
-  robuster.
-- Die feste Steuerung verhindert vergessene Pflichtübergänge, beweist aber
-  nicht die inhaltliche Richtigkeit einer Spezialistenantwort.
-- Die deterministischen Vertrags- und Routingtests prüfen Aufbau und
-  Reihenfolge. Ob ein konkretes Modell die Steuerung im echten Dialog befolgt,
-  muss zusätzlich durch einen gekennzeichneten `LIVE_AGENT`-Lauf geprüft
-  werden.
-- Routing und Rekonstruktion führen selbst keine Strategieprüfung, keinen
-  Marktdatenzugriff und keinen Backtest aus.
+- The scientific-philosophy critic is automatically required at the two critical
+  transitions instead of being merely documented as an option.
+- Causal language is released only after an independent, finance-specific
+  identification review. This does not automatically raise mechanism, forecast,
+  or trading status.
+- The user receives one merged, understandable response from the conductor and
+  does not have to coordinate internal agent work.
+- Checkpoints and clear responsibilities make resumption, error analysis, and
+  collaboration with several writing tools more robust.
+- Fixed routing prevents forgotten required transitions, but does not prove that
+  a specialist's substantive answer is correct.
+- Deterministic contract and routing tests check structure and order. Whether a
+  particular model follows the control in a live dialogue must additionally be
+  checked by a marked `LIVE_AGENT` run.
+- Routing and reconstruction themselves do not test a strategy, access market
+  data, or run a backtest.
 
-## Action Items
+## Action items
 
-1. [x] Zentralen Forschungsleiter als Agentenrolle definieren.
-2. [x] Checkpoint und Routingentscheidung maschinenprüfbar festlegen.
-3. [x] Pflichtübergänge für Begriffsprüfung, Bedingungsanfrage und
-   wissenschaftsphilosophische Fortsetzung implementieren.
-4. [x] Einstieg für Codex und Claude verbindlich dokumentieren.
-5. [x] Positive und negative Routingfälle in Vertrags- und Regressionstests
-   aufnehmen.
-6. [x] Sechs-Punkte-Driftkontrolle vor Annahme jedes bestehenden
-   Research-Handoffs ergänzen. Diese erste Fassung wurde durch den vollständigen
-   Forschungsfingerabdruck in ADR-013 abgelöst.
-7. [x] Kausalitätsprüfer, Pflichtartefakt und Router-Gate für kausale Claims
-   ergänzen.
-8. [ ] Das Verhalten eines tatsächlich angeschlossenen Hauptagenten in einem
-   `LIVE_AGENT`-Lauf prüfen, bevor eine Modell- oder Promptfreigabe behauptet
-   wird.
+1. [x] Define the central research conductor as an agent role.
+2. [x] Make checkpoints and routing decisions machine-testable.
+3. [x] Implement mandatory transitions for concept review, condition inquiry,
+   and scientific-philosophy continuation.
+4. [x] Document the mandatory entry point for Codex and Claude.
+5. [x] Add positive and negative routing cases to contract and regression tests.
+6. [x] Add a six-point drift check before accepting existing research handoffs.
+   This first version was superseded by the full research fingerprint in
+   ADR-013.
+7. [x] Add the causal critic, required artifact, and router gate for causal
+   claims.
+8. [ ] Check the behaviour of an actually connected main agent in a
+   `LIVE_AGENT` run before claiming a model or prompt release.

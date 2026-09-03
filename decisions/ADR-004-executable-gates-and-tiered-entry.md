@@ -5,11 +5,7 @@
 
 ## Context
 
-The framework described an agent regression gate, but the published harness only
-scored a hand-authored fixture. No producer connected catalog inputs to an agent
-run. The same fixture therefore scored 1.000 without measuring a model or prompt.
-Validation had no CI workflow and the documented aggregate entry point was
-PowerShell-centric.
+The framework described an agent regression gate, but the published harness only scored a hand-authored fixture. No producer connected catalog inputs to an agent run. The same fixture therefore scored 1.000 without measuring a model or prompt. Validation had no CI workflow and the documented aggregate entry point was PowerShell-centric.
 
 At the research-entry layer, almost all hypothesis-candidate fields were required
 for every status. Registering or rejecting an idea therefore carried much of the
@@ -38,16 +34,11 @@ fixture cannot satisfy that gate.
 PowerShell entry remains supported. GitHub Actions runs Linux/Python and
 Windows/PowerShell integrity jobs on push and pull request.
 
-A separate manual workflow can produce and score a live result when an agent
-endpoint is configured. Framework-integrity CI is not relabeled as a live-agent
-quality gate.
+A separate manual workflow can produce and score a live result when an agent endpoint is configured. Framework-integrity CI is not relabeled as a live-agent quality gate.
 
 ### 3. Make intake requirements status-dependent
 
-`INBOX`, `MERGED`, and `REJECTED` no longer require the full promoted research
-payload. IDs, provenance, raw idea, consumed-information references, status, and
-the appropriate transition record remain mandatory. `PROMOTED` retains full
-scope, alternatives, data, feasibility, and epistemic-stage requirements.
+`INBOX`, `MERGED`, and `REJECTED` no longer require the full promoted research payload. IDs, provenance, raw idea, consumed information references, status, and the appropriate transition record remain mandatory. `PROMOTED` retains full scope, alternatives, data, feasibility, and epistemic-stage requirements.
 
 ### 4. Encode only decision-critical label invariants
 
@@ -77,7 +68,7 @@ cases, and producer integration tests must not be presented as substitutes.
 
 - A score of 1.000 now carries an explicit run class.
 - The repository has an executable path from blind catalog input to agent output
-  to release scoring, but a real quality claim still requires a configured agent.
+to release scoring, but a real quality claim still requires a configured agent.
 - Small ideas can be captured or rejected without constructing a full research
   case.
 - The sharp causal/implementation label rules are machine-testable.

@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "urn:research-framework:schema:review:1.0.0",
   "title": "Human Review and Override Log",
-  "description": "Append-only Protokoll menschlicher Korrekturen, Overrides und Freigaben. Kerndaten eines Review-Eintrags werden durch record_hash versiegelt; Änderungen erzeugen einen neuen Eintrag mit supersedes_review_id.",
+  "description": "Append-only record of human corrections, overrides, and approvals. The core data of a review entry are sealed by record_hash; changes create a new entry with supersedes_review_id.",
   "type": "object",
   "additionalProperties": false,
   "required": [
@@ -170,7 +170,7 @@
         "json_pointer": {
           "type": "string",
           "pattern": "^(?:|/(?:[^~/]|~0|~1)*)*$",
-          "description": "RFC-6901-Pointer auf den geprüften Wert; leerer String bezeichnet die Dokumentwurzel."
+          "description": "RFC-6901 pointer to the reviewed value; an empty string denotes the document root."
         }
       }
     },
@@ -346,7 +346,7 @@
         },
         "status": {
           "$ref": "#/$defs/reviewStatus",
-          "description": "Materialisierter Status des letzten statusändernden Audit-Events."
+          "description": "Materialized status of the latest audit event that changed status."
         },
         "recorded_at": {
           "$ref": "#/$defs/timestamp"
@@ -361,10 +361,10 @@
           "$ref": "#/$defs/reason"
         },
         "before": {
-          "description": "Vorheriger JSON-Wert. Dieses bewusst offene Feld ist der unveränderte Zielwert, kein kontrolliertes Metadatenobjekt."
+          "description": "Previous JSON value. This deliberately open field is the unchanged target value, not a controlled metadata object."
         },
         "after": {
-          "description": "Vorgeschlagener oder angewandter JSON-Wert. Dieses bewusst offene Feld ist Nutzlast, kein kontrolliertes Metadatenobjekt."
+          "description": "Proposed or applied JSON value. This deliberately open field is payload, not a controlled metadata object."
         },
         "before_hash": {
           "$ref": "#/$defs/sha256"
@@ -384,7 +384,7 @@
         },
         "record_hash": {
           "$ref": "#/$defs/sha256",
-          "description": "SHA-256 über die RFC-8785-kanonisierten unveränderlichen Kernfelder (alle Pflichtfelder außer status und audit_trail)."
+          "description": "SHA-256 over the RFC-8785-canonicalized immutable core fields (all required fields except status and audit_trail)."
         },
         "audit_trail": {
           "type": "array",

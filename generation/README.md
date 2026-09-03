@@ -1,13 +1,13 @@
 # Short-horizon hypothesis generator
 
-Dieser vorgelagerte Generator erzeugt Research-Ideen für Intraday- und kurze
-Swing-Horizonte bis fünf Handelstage. Er arbeitet aus einem versionierten
-Mechanismenkatalog und endet bei günstigen `INBOX`-Datensätzen.
+This upstream generator creates research ideas for intraday and short-swing
+horizons of up to five trading days. It works from a versioned mechanism
+catalogue and produces `INBOX` records only.
 
-Er führt ausdrücklich kein Screening, Backtesting, Evidence Grading, Ranking
-oder Promotion durch.
+It explicitly performs no screening, backtesting, evidence grading, ranking, or
+promotion.
 
-## Direkt ausführen
+## Run directly
 
 ```bash
 python scripts/generate_hypotheses.py \
@@ -29,48 +29,49 @@ python .\scripts\generate_hypotheses.py `
   --max-candidates 20
 ```
 
-Der Zielordner muss leer oder neu sein. Der Producer überschreibt keine
-vorhandenen Ergebnisse. Er schreibt:
+The target folder must be empty or new. The producer never overwrites existing
+results. It writes:
 
-- `generation-run.json` mit Katalog-, Mechanismen- und Operator-Provenienz,
-- `candidates/*.json` als valide, ungescreente Hypothesen-Intakes.
+- `generation-run.json` with catalogue, mechanism, and operator provenance;
+- `candidates/*.json` as valid, unscreened hypothesis intakes.
 
-Der Generation-Run ist zugleich die vollständige Kandidatenuniversums-Referenz.
-Wer alle erzeugten Kandidaten datenbasiert screent, trägt deren Anzahl vor dem
-ersten Screen als `planned_screen_count` in ein Search-Space-Register ein.
+The generation run is also the complete candidate-universe reference. If all
+created candidates are screened using data, record their number as
+`planned_screen_count` in a search-space register before the first screen.
 
-## Katalog erweitern
+## Extending the catalogue
 
-Der Katalog ist der eigentliche Ideenbestand. Jeder Mechanismus besitzt deshalb
-ein `entry_origin` mit Ursprungstyp, Referenzen, Kurzbegründung und Zeitpunkt.
-Eigene wiederholte Beobachtungen werden als `INTERNAL_OBSERVATION` mit einer
-stabilen Journal- oder Beobachtungsreferenz aufgenommen. Der Ursprung macht den
-Eintrag generierbar, aber noch nicht wahr oder profitabel.
+The catalogue is the source of candidate ideas. Each mechanism therefore has an
+`entry_origin` containing its origin type, references, short rationale, and
+timestamp. Repeated observations by the owner are recorded as
+`INTERNAL_OBSERVATION` with a stable journal or observation reference. An origin
+makes an entry eligible for generation; it does not make the idea true or
+profitable.
 
-## Erzeugungsrouten
+## Generation routes
 
-- `CONSTRAINT_FIRST`: terminierte oder erzwungene Transaktionen,
-- `MICROSTRUCTURE_STATE`: Orderbuch-, Flow- oder Liquiditätszustände,
-- `LINKAGE_OR_IDENTITY`: Futures, ETFs, Basis, Spreads und Hedge-Ketten,
-- `LITERATURE_REPLICATION`: publizierte Kurzfristbefunde als neue Kandidaten,
-- `OBSERVATION_DRIVEN`: beobachtete Abweichungen oder wiederkehrende Abläufe.
+- `CONSTRAINT_FIRST`: scheduled or forced transactions;
+- `MICROSTRUCTURE_STATE`: order-book, flow, or liquidity conditions;
+- `LINKAGE_OR_IDENTITY`: futures, ETFs, basis, spreads, and hedge chains;
+- `LITERATURE_REPLICATION`: published short-term findings turned into new
+  candidates;
+- `OBSERVATION_DRIVEN`: observed deviations or recurring sequences.
 
-Ein benannter gezwungener Akteur ist nur bei `CONSTRAINT_FIRST` naheliegend und
-keine allgemeine Bedingung.
+A named forced actor is plausible only for `CONSTRAINT_FIRST`; it is not a
+general requirement for every candidate.
 
-## Operatoren
+## Operators
 
-- `PHASE_PATH`: Antizipation, aktive Phase, Absorption, Transmission,
-  Erschöpfung und Unwind,
-- `EXPECTATION_VIOLATION`: ein ausbleibender oder invertierter Abdruck wird zu
-  einer separaten Hypothese,
-- `MECHANISM_CONNECTION`: Mechanismen mit gemeinsamem Takt, Venue, Flow,
-  Hedge-Pfad oder Payoff werden verbunden,
-- `ASSUMPTION_RELAXATION`: der beobachtbare Abdruck wird von Preisrichtung auf
-  Tiefe, Spread, Basis, Volumen, Volatilität, Timing oder ein verknüpftes
-  Instrument verschoben.
+- `PHASE_PATH`: anticipation, active phase, absorption, transmission,
+  exhaustion, and unwind;
+- `EXPECTATION_VIOLATION`: a missing or inverted expected imprint becomes a
+  separate hypothesis;
+- `MECHANISM_CONNECTION`: mechanisms with a common clock, venue, flow,
+  hedge path, or payoff are connected;
+- `ASSUMPTION_RELAXATION`: move the observable imprint from price direction to
+  depth, spread, basis, volume, volatility, timing, or a linked instrument.
 
-Der optionale Agentenvertrag steht in
+The optional agent contract is in
 [`agents/intraday-hypothesis-generator.md`](../agents/intraday-hypothesis-generator.md).
-Ein reproduzierbares Beispiel liegt unter
+A reproducible example is in
 [`examples/generated-run/`](../examples/generated-run/).

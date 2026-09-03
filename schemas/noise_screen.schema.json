@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "urn:research-framework:schema:noise-screen:1.0.0",
   "title": "Candidate Entry Noise Screen",
-  "description": "Frueher Surrogat-Screen fuer beobachtungsgetriebene Rohideen. PASS erlaubt Aufwand fuer Phase 0, ist aber kein Evidenznachweis.",
+  "description": "Early surrogate screen for observation-driven raw ideas. PASS authorizes Phase-0 effort, but is not evidence.",
   "type": "object",
   "additionalProperties": false,
   "required": [

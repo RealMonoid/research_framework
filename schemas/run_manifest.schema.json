@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "urn:research-framework:schema:run-manifest:1.0.0",
   "title": "Research Agent Run Manifest",
-  "description": "Reproduzierbarer, maschinenlesbarer Nachweis eines einzelnen Agentenlaufs. Zeitangaben verwenden RFC 3339, Hashes SHA-256.",
+  "description": "Reproducible, machine-readable record of a single agent run. Times use RFC 3339 and hashes use SHA-256.",
   "type": "object",
   "additionalProperties": false,
   "required": [
@@ -99,7 +99,7 @@
           "type": "string",
           "minLength": 1,
           "maxLength": 300,
-          "description": "Stabile Phasen- oder Pipeline-Schrittkennung aus dem Research-Artefakt."
+          "description": "Stable phase or pipeline-step identifier from the research artifact."
         },
         "purpose": {
           "type": "string",
@@ -118,7 +118,7 @@
       ],
       "properties": {
         "parent_run_id": {
-          "description": "Direkt übergeordneter Agentenlauf, etwa bei delegierten Subruns.",
+          "description": "Direct parent agent run, for example for a delegated sub-run.",
           "oneOf": [
             {
               "$ref": "#/$defs/uuid"
@@ -129,7 +129,7 @@
           ]
         },
         "baseline_run_id": {
-          "description": "Vergleichslauf für Delta-, Regressions- oder Reproduktionsläufe.",
+          "description": "Baseline run for a delta, regression, or reproduction run.",
           "oneOf": [
             {
               "$ref": "#/$defs/uuid"
@@ -140,7 +140,7 @@
           ]
         },
         "supersedes_run_id": {
-          "description": "Lauf, den dieser Lauf fachlich ersetzt, ohne dessen Manifest zu verändern.",
+          "description": "Run that this run substantively replaces without changing its manifest.",
           "oneOf": [
             {
               "$ref": "#/$defs/uuid"
@@ -234,7 +234,7 @@
           "type": "string",
           "minLength": 1,
           "maxLength": 200,
-          "description": "Unveränderliche Snapshot-, Deployment- oder Build-Kennung; keine bewegliche Aliasbezeichnung."
+          "description": "Immutable snapshot, deployment, or build identifier; not a moving alias."
         },
         "api_version": {
           "type": "string",

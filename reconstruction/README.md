@@ -1,192 +1,188 @@
-# Strategien aus Prosa rekonstruieren
+# Reconstructing strategies from prose
 
-Dieser Pfad uebersetzt Strategien aus Buechern, Artikeln, Videos oder Kursen in
-eine nachvollziehbare Spezifikation. Er ist eine **Uebersetzungshilfe**, kein
-Backtest, kein Strategiegenerator und kein Wirksamkeitsgate.
+This path translates strategies from books, articles, videos, or courses into
+a comprehensible specification. It is a **translation aid**, not a backtest,
+strategy generator, or effectiveness gate.
 
-## Warum ein eigenes Artefakt?
+## Why keep a separate artifact?
 
-Eine Quelle kann eine erkennbare Strategie beschreiben und trotzdem Begriffe
-wie „starkes Volumen“, „klarer Ausbruch“, „der Pullback haelt“ oder „naher
-Widerstand“ offenlassen. Werden diese Luecken still gefuellt, ist spaeter nicht
-mehr erkennbar, was aus der Quelle und was vom Rekonstruierenden stammt.
+A source can describe a recognizable strategy while leaving terms such as
+“strong volume,” “clear breakout,” “the pullback holds,” or “near resistance”
+open. If those gaps are filled silently, it is no longer possible to tell what
+came from the source and what was added by the researcher.
 
 [`schemas/strategy_reconstruction.schema.json`](../schemas/strategy_reconstruction.schema.json)
-trennt deshalb:
+therefore separates:
 
-1. den geprueften Quellenausschnitt,
-2. quellennahe, paraphrasierte Aussagen,
-3. die fuer die Strategieidentitaet unverzichtbaren Aussagen,
-4. offene Konstrukte und ihren Quellenstatus,
-5. moegliche Operationalisierungen mit Herkunft,
-6. eine spaetere, ausdrueckliche Entscheidung.
+1. the source passage that was reviewed;
+2. source-faithful, paraphrased statements;
+3. statements that are essential to the strategy's identity;
+4. open constructs and their source status;
+5. possible operationalizations and their origin; and
+6. a later, explicit decision.
 
-Bevor eine Rekonstruktion abgeschlossen und eine Definition eingefroren wird,
-erstellt der
+Before a reconstruction is completed and a definition is frozen, the
 [`scientific-philosophy-critic`](../agents/scientific-philosophy-critic.md)
-zusaetzlich ein
-[`strategy_concept_audit`](../schemas/strategy_concept_audit.schema.json). Diese
-fruehe Pruefung ist Teil der Rekonstruktion, kein Backtest und kein weiteres
-Wirksamkeitsgate.
+also creates a [`strategy_concept_audit`](../schemas/strategy_concept_audit.schema.json).
+This early examination is part of the reconstruction. It is not a backtest and
+not an additional effectiveness gate.
 
-## Vier Arten von Bedingungen
+## Four types of conditions
 
-Das Concept Audit trennt zwingend:
+The concept audit must distinguish:
 
-1. **Strategiedefinierende Bedingungen:** Ohne sie waere es nicht mehr dieselbe
-   Quellenstrategie.
-2. **Von der Quelle genannte Anwendungsbedingungen:** Die Quelle empfiehlt oder
-   verlangt sie; damit ist noch nicht gezeigt, dass sie den Erfolg verursacht
-   oder notwendig ist.
-3. **Vermutete Erfolgsmodifikatoren:** Literatur, Theorie oder Researcher halten
-   sie fuer plausibel. Sie bleiben Kandidaten und werden nicht heimlich als
-   Filter eingebaut.
-4. **Unbekannte Erfolgsbedingungen:** Das Framework behauptet nicht, alle
-   Voraussetzungen zu kennen. Diese Unwissenheit wird ausdruecklich erhalten.
+1. **Strategy-defining conditions:** Without them, it would no longer be the
+   same source strategy.
+2. **Conditions of use stated by the source:** The source recommends or
+   requires them, but that does not yet show that they cause success or are
+   necessary for it.
+3. **Suspected success modifiers:** Literature, theory, or the researcher
+   considers them plausible. They remain candidates and are not silently added
+   as filters.
+4. **Unknown conditions of success:** The framework does not claim to know all
+   requirements. This uncertainty is explicitly retained.
 
-## Konstruktionsabhaengigkeiten
+## Construction dependencies
 
-Trigger, Zustand, Ziel und Ergebnis werden auf ihre Rohdaten, Fenster und
-deterministischen Berechnungen zurueckgefuehrt. Gemeinsame Inputs oder Fenster
-koennen einen statistischen Zusammenhang mit erzeugen oder die beantwortete
-Frage veraendern. Das ist:
+Trace the trigger, state, target, and outcome back to their raw data, windows,
+and deterministic calculations. Shared inputs or windows can create a
+statistical relationship or change the question being answered. That is:
 
-- kein Kausalbeleg,
-- nicht automatisch ein Konstruktionsfehler,
-- und kein Grund, das quellennahe Ziel still durch ein anderes zu ersetzen.
+- not causal evidence;
+- not automatically a construction error; and
+- not a reason to silently replace the source-oriented target with another one.
 
-Das Audit macht nur sichtbar, welcher Teil der beobachtbaren Beziehung aus der
-eigenen Konstruktion stammen koennte und deshalb gesondert interpretiert werden
-muss.
+The audit only makes visible which part of the observable relationship could
+come from the researcher's construction and therefore needs separate
+interpretation.
 
-## Regime- und Zustandsfilter
+## Regime and state filters
 
-Ein Filter ist zunaechst ein **vorlaeufiges Messinstrument**. Er beweist weder,
-dass ein buchstaeblich realer verborgener Marktzustand existiert, noch dass ein
-Akteur oder Mechanismus identifiziert wurde. Auch der Anteil der Beobachtungen,
-die ein Filter einer Klasse zuordnet, misst fuer sich allein keine Trennleistung.
+A filter is first of all a **provisional measuring instrument**. It does not
+prove that a literally real hidden market state exists, and it does not identify
+an actor or mechanism. The share of observations that a filter assigns to a
+class is not, by itself, evidence that the filter separates anything useful.
 
-Eine spaetere Beurteilung fragt deshalb, ob die feste Einteilung kuenftiges
-Verhalten unterscheidet, das nicht bereits in der Filterberechnung steckt, und
-ob sie ueber ihre kontinuierlichen Eingangsgroessen oder eine einfache
-Vergleichsregel hinaus zusaetzliche Information liefert. Ist der Filter nicht
-informativ, faellt der von ihm abhaengige Zustandsclaim. Ein davon trennbarer
-Ereignisclaim kann offen bleiben.
+A later assessment therefore asks whether the fixed classification distinguishes
+future behaviour that was not already used to calculate the filter, and whether
+it adds information beyond its continuous inputs or a simple comparison rule.
+If the filter is not informative, the state claim that depends on it fails. An
+event claim that can be evaluated independently of the filter may remain open.
 
-## Quellenstatus eines Konstrukts
+## Source status of a construct
 
-| Status | Bedeutung |
+| Status | Meaning |
 |---|---|
-| `SOURCE_SPECIFIED` | Die Quelle legt eine reproduzierbare Definition fest. |
-| `SOURCE_ALTERNATIVES` | Die Quelle bietet mehrere Definitionen oder Handlungswege an. |
-| `UNSPECIFIED` | Das Konstrukt wird benannt, aber nicht messbar definiert. |
-| `DISCRETIONARY` | Menschliches Kontexturteil ist ausdruecklicher Teil der Methode. |
-| `CONTRADICTORY` | Die geprueften Stellen verwenden unvereinbare Definitionen. |
+| `SOURCE_SPECIFIED` | The source defines a reproducible definition. |
+| `SOURCE_ALTERNATIVES` | The source gives several definitions or ways to act. |
+| `UNSPECIFIED` | The construct is named but not defined measurably. |
+| `DISCRETIONARY` | Human contextual judgement is an explicit part of the method. |
+| `CONTRADICTORY` | The reviewed passages use incompatible definitions. |
 
-Eine Quellenbehauptung fuehrt zusaetzlich `source_force`. Insbesondere bleibt
-`ILLUSTRATIVE` ein Beispiel und wird nicht stillschweigend zur Regel.
+A source claim also receives `source_force`. In particular, `ILLUSTRATIVE`
+remains an example and does not silently become a rule.
 
-## Kandidaten sind keine Auswahl und keine Tests
+## Candidates are neither a selection nor tests
 
-`operationalization_candidates` darf Definitionen aus der Quelle, aus
-Domänenkonventionen, externer Literatur, einem dokumentierten
-Researcher-Vorschlag oder einem Human-Protocol enthalten. Die Liste zeigt
-Moeglichkeiten. Sie bedeutet nicht:
+`operationalization_candidates` may contain definitions from the source, domain
+conventions, external literature, a documented researcher proposal, or a human
+protocol. The list records possibilities. It does not mean:
 
-- dass eine Variante gewaehlt wurde,
-- dass alle Varianten getestet werden sollen,
-- dass ihre Anzahl bereits statistische Multiplizitaet ist,
-- dass eine vorgeschlagene Definition in der Quelle stand.
+- that one variant has been chosen;
+- that every variant should be tested;
+- that the number of variants is already a statistical multiplicity count; or
+- that a proposed definition appeared in the source.
 
-Erst eine spaetere Entscheidung setzt `decision.status`. Werden Varianten
-spaeter ergebnisabhaengig verglichen, greift der dann tatsaechlich untersuchte
-Suchraum. Das Rekonstruktionsartefakt selbst greift keinen Marktdaten zu.
+A later decision sets `decision.status`. If variants are compared later in a
+result-dependent way, the search space actually examined at that point is the
+one that counts. The reconstruction artifact itself does not access market
+data.
 
-## Moegliche Endergebnisse
+## Possible end states
 
-- `REPLICATION`: nur wenn alle wesentlichen Definitionen wirklich aus der
-  Quelle stammen.
-- `DOCUMENTED_RECONSTRUCTION`: offene Stellen wurden sichtbar und begruendet
-  ergaenzt.
-- `SIMPLIFIED_VARIANT`: wesentliche diskretionaere oder optionale Teile wurden
-  bewusst entfernt.
-- `PLAYBOOK_ONLY`: die Quelle bleibt ein Entscheidungsrahmen, keine eindeutige
-  ausfuehrbare Regel.
+- `REPLICATION`: only when all essential definitions genuinely come from the
+  source.
+- `DOCUMENTED_RECONSTRUCTION`: open points were made visible and supplemented
+  with reasons.
+- `SIMPLIFIED_VARIANT`: essential discretionary or optional parts were
+  deliberately removed.
+- `PLAYBOOK_ONLY`: the source remains a decision framework, not one unique
+  executable rule.
 
-Ein mechanischer Teilnachbau einer diskretionaeren Quelle wird daher nicht als
-Replikation bezeichnet.
+A mechanical partial replica of a discretionary source is therefore not called
+a replication.
 
-## Arbeitsablauf
+## Workflow
 
-Der Forschungsleiter speichert vor Beginn einen Orchestrierungsstand und folgt
-der Entscheidung aus `scripts/route_research_task.py`. Der Fachagent spricht
-nicht direkt mit dem Nutzer; sein geprueftes Audit geht an den Forschungsleiter
-zurueck, der danach erneut routet.
+The research conductor saves an orchestration checkpoint before starting and
+follows the decision from `scripts/route_research_task.py`. The specialist agent
+does not address the user directly; its audit returns to the conductor, who
+routes the work again.
 
-1. Nur die tatsaechlich gelesenen Abschnitte in `locators_reviewed` erfassen.
-2. Aussagen paraphrasieren und Regel, Empfehlung, Option und Beispiel trennen.
-3. `strategy_identity_claim_refs` festhalten: Was darf nicht verschwinden, ohne
-   dass eine andere Strategie entsteht?
-4. Jedes Konstrukt klassifizieren und offene Fragen notieren.
-5. Moegliche Definitionen mit ihrer echten Herkunft erfassen.
-6. Zunaechst `decision.status = UNDECIDED` belassen.
-7. Vor der Auswahl das Concept Audit abschliessen: Bedingungen klassifizieren,
-   Konstruktionsabhaengigkeiten erfassen, Messinstrumente abgrenzen und
-   unbekannte Erfolgsbedingungen erhalten.
-8. Erst danach bei einer wirklichen Rekonstruktion Definitionen waehlen oder
-   ein Human-Protocol festlegen und das Fidelity-Label setzen.
+1. Record only the sections actually read in `locators_reviewed`.
+2. Paraphrase statements and separate rules, recommendations, options, and
+   examples.
+3. Record `strategy_identity_claim_refs`: What must not disappear without
+   creating a different strategy?
+4. Classify every construct and record open questions.
+5. Record possible definitions with their actual origin.
+6. Leave `decision.status = UNDECIDED` initially.
+7. Before selecting a definition, complete the concept audit: classify
+   conditions, identify construction dependencies, distinguish measuring
+   instruments, and preserve unknown conditions of success.
+8. Only then, in a genuine reconstruction, choose definitions or set a human
+   protocol and assign the fidelity label.
 
-## Quantitative Suche nach Bedingungen
+## Quantitative inquiry into conditions
 
-Nach einer vorlaeufigen Operationalisierung kann der
-[`condition-inquiry-analyst`](../agents/condition-inquiry-analyst.md) ein
-[`condition_inquiry`](../schemas/condition_inquiry.schema.json) anlegen. Dieses
-Artefakt dient nicht nur der Kontrolle, sondern kann neue, pruefbare
-Bedingungshypothesen erzeugen:
+After a provisional operationalization, the
+[`condition-inquiry-analyst`](../agents/condition-inquiry-analyst.md) may create a
+[`condition_inquiry`](../schemas/condition_inquiry.schema.json). This artifact
+is not only a control; it can also produce new, testable condition hypotheses:
 
-- Konstruktionsabhaengigkeiten und neutrale Simulationen fuer moeglicherweise
-  eingebaute Zusammenhaenge,
-- Multiversum oder Spezifikationskurve fuer die Abhaengigkeit von vertretbaren
-  Messdefinitionen,
-- interpretierbare Aufteilungen und bedingte Prognosepruefung fuer die Frage,
-  unter welchen beim Entscheid bekannten Bedingungen sich das Ergebnis
-  veraendert,
-- Zeit- und Umgebungsstabilitaet fuer die Frage, ob eine Bedingung wiederkehrt.
+- construction-dependence checks and neutral simulations for possible built-in
+  relationships;
+- a multiverse or specification curve for dependence on defensible measurement
+  definitions;
+- interpretable partitions and conditional forecasting for the question of how
+  the result changes under conditions known at the decision time; and
+- time and environment stability checks for whether a condition recurs.
 
-Eine datenbasiert gefundene Bedingung wird als **neue
-Erfolgsmodifikator-Hypothese** festgehalten. Sie wird nicht nachtraeglich zur
-angeblich schon immer vorhandenen Voraussetzung der Quellenstrategie.
+A condition found in data is recorded as a **new success-modifier hypothesis**.
+It is not retrospectively declared to have been a prerequisite of the source
+strategy all along.
 
-## Wenn die spaetere Validation scheitert
+## If later validation fails
 
-Ein Fehlschlag beweist nicht automatisch, dass gerade die selbst gewaehlte
-Operationalisierung falsch war; getestet wurde das gesamte Buendel aus
-Kernhypothese und Hilfsannahmen. Er erlaubt aber ebenso wenig, nach dem Ergebnis
-eine guenstigere Definition aus der Kandidatenliste zu waehlen und den alten
-Test zu retten.
+A failure does not automatically prove that the selected operationalization was
+the part that was wrong; the test covered the complete bundle of the core
+hypothesis and its auxiliary assumptions. It also does not permit choosing a
+more favourable definition from the candidate list after seeing the result and
+then rescuing the old test.
 
-Wird eine Fortsetzung erwogen, erstellt der
-[`scientific-philosophy-critic`](../agents/scientific-philosophy-critic.md) ein
-[`scientific_philosophy_review`](../schemas/scientific_philosophy_review.schema.json).
-Das alte Ergebnis bleibt bestehen. Eine alternative Definition darf nur unter
-neuer Research-ID empirisch weiterverfolgt werden, wenn sie eine neue,
-widerlegbare und auf unabhaengigen Daten pruefbare Vorhersage erzeugt.
+If continuation is considered, the
+[`scientific-philosophy-critic`](../agents/scientific-philosophy-critic.md)
+creates a [`scientific_philosophy_review`](../schemas/scientific_philosophy_review.schema.json).
+The old result remains unchanged. An alternative definition may be pursued
+empirically only under a new Research-ID if it creates a new, refutable
+prediction that can be tested on independent data.
 
-Das durchgearbeitete Quellenbeispiel ist
+The worked source example is
 [`examples/strategy_reconstruction.vwap_wave_price_discovery.json`](../examples/strategy_reconstruction.vwap_wave_price_discovery.json).
-Es endet bewusst bei `SOURCE_EXTRACTION`: keine Definition ist gewaehlt.
+It deliberately ends at `SOURCE_EXTRACTION`: no definition is selected.
 
-## Pruefen und zusammenfassen
+## Inspect and summarize
 
 ```bash
 python scripts/inspect_strategy_reconstruction.py \
   examples/strategy_reconstruction.vwap_wave_price_discovery.json
 ```
 
-Der Inspector prueft Schema, IDs, Referenzen, Auswahlkonsistenz und unzulaessige
-Replikationslabels. Er waehlt nichts aus und testet keine Marktstrategie.
+The inspector checks the schema, IDs, references, selection consistency, and
+inappropriate replication labels. It selects nothing and does not test a
+market strategy.
 
-Die beiden zusaetzlichen Vertraege lassen sich getrennt pruefen:
+The two additional contracts can be inspected separately:
 
 ```bash
 python scripts/inspect_strategy_concept_audit.py \
@@ -196,4 +192,4 @@ python scripts/inspect_condition_inquiry.py \
   examples/condition_inquiry.synthetic_measurement.json
 ```
 
-Beide Beispiele sind synthetisch und enthalten kein Marktergebnis.
+Both examples are synthetic and contain no market results.

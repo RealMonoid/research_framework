@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "urn:research-framework:schema:forecast-ledger:1.0.0",
   "title": "Research Forecast Ledger",
-  "description": "Append-only ledger für vor dem Outcome eingefrorene und später reproduzierbar aufgelöste Forecasts.",
+  "description": "Append-only ledger for forecasts frozen before the outcome and resolved reproducibly later.",
   "type": "object",
   "additionalProperties": false,
   "required": [

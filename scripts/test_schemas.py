@@ -238,7 +238,7 @@ NEGATIVES: list[tuple[str, str, str, Mutation]] = [
     ("data-driven selection requires selection-bias controls", "examples/hypothesis_candidate.minimal.json", "schemas/hypothesis_candidate.schema.json", invalidate_data_driven_selection("selection_bias_controls", [])),
     ("data-driven selection cannot use NOT_APPLICABLE data role", "examples/hypothesis_candidate.minimal.json", "schemas/hypothesis_candidate.schema.json", invalidate_data_driven_selection("selection_dataset_role", "NOT_APPLICABLE")),
     ("probability forecast requires calibration", "examples/forecast.minimal.json", "schemas/forecast.schema.json", set_value(("forecasts", 0, "prediction", "kind"), "PROBABILITY")),
-    ("OPEN forecast cannot contain resolution", "examples/forecast.minimal.json", "schemas/forecast.schema.json", set_value(("forecasts", 0, "resolution"), {"resolved_at": "2026-09-01T08:00:00Z", "resolved_by": {"actor_type": "HUMAN", "actor_id": "reviewer-001"}, "actual_value": "UP", "source_refs": ["official-close-dataset"], "source_vintage": "2026-08-31", "applied_rule": "Demonstrationsregel", "score": 1, "rationale": "Aufgeloest."})),
+    ("OPEN forecast cannot contain resolution", "examples/forecast.minimal.json", "schemas/forecast.schema.json", set_value(("forecasts", 0, "resolution"), {"resolved_at": "2026-09-01T08:00:00Z", "resolved_by": {"actor_type": "HUMAN", "actor_id": "reviewer-001"}, "actual_value": "UP", "source_refs": ["official-close-dataset"], "source_vintage": "2026-08-31", "applied_rule": "Demonstration rule", "score": 1, "rationale": "Resolved."})),
     ("APPLIED review requires APPLIED audit event", "examples/review.minimal.json", "schemas/review.schema.json", remove_applied_review_event),
 ]
 

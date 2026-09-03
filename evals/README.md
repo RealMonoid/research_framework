@@ -1,58 +1,48 @@
-# Eval-Producer, Scorer und Regression Gate
+# Eval-producer, scorer and regression gate
 
-Dieses Verzeichnis trennt drei Dinge, die nicht verwechselt werden dürfen:
+This directory separates three things that must not be confused:
 
-1. Ein handgeschriebenes Fixture prüft Vertrag und Scorer.
-2. Der Producer ruft einen realen Agentenadapter blind auf.
-3. Der Scorer bewertet das produzierte Ergebnis gegen Katalog und Baseline.
+1. A handwritten fixture checks contract and scorer.
+2. The producer calls a real agent adapter blindly.
+3. The scorer evaluates the produced result against catalog and baseline.
 
-Producer und Scorer benötigen nur die Python-Standardbibliothek. Die
-plattformneutrale Schema-Suite verwendet die gepinnte Development-Abhängigkeit
-aus `requirements-dev.txt`.
+Producers and scorers only need the Python standard library. The platform-neutral schema suite uses the pinned development dependency from `requirements-dev.txt`.
 
-## Artefakte
+## Artifacts
 
-- `catalog.v1.json`: versionierte Inputs und erwartete Assertions.
-- `examples/smoke-results.v1.json`: handgeschriebenes `PROTOCOL_SMOKE`-Fixture
-  mit `schema_version = eval-results.v2`; kein Agentenqualitätsbeleg.
-- `baseline.v1.json`: Mindestwerte und akzeptierte Vergleichsscores.
-- `produce_results.py`: blinder COMMAND-/HTTP_JSON-Producer.
-- `run_evals.py`: Strukturprüfung, Scoring und Regression Gate.
-- `tests/test_produce_results.py`: Producerblindheit und Run-Klassen.
-- `tests/test_run_evals.py`: Scoring, Fehlerpfade und Regressionserkennung.
+- `catalog.v1.json`: Versioned inputs and expected assertions.
+- `examples/smoke-results.v1.json`: hand-authored `PROTOCOL_SMOKE` fixture
+with `schema_version = eval-results.v2`; no agent quality certificate.
+- `baseline.v1.json`: Minimum values and accepted comparison scores.
+- `produce_results.py`: blind COMMAND-/HTTP_JSON producer.
+- `run_evals.py`: structure check, scoring and regression gate.
+- `tests/test_produce_results.py`: Producer blindness and run classes.
+- `tests/test_run_evals.py`: scoring, error paths and regression detection.
 
-Der Katalog prüft zusätzlich die Ablaufsteuerung des Forschungsleiters: die
-zwingende Begriffsprüfung vor der Operationalisierung einer unvollständigen
-Prosastrategie, die Bedingungsanalyse nach einer vorläufigen Definition, die
-Fortsetzungsprüfung nach einem nicht positiven Ergebnis und den Gegenfall einer
-reinen Ergebniserklärung ohne unnötigen Fachagenten.
+The catalogue also examines the management of the research leader's processes: the mandatory conceptual examination before the operationalization of an incomplete prose strategy, the conditional analysis after a preliminary definition, the follow-up examination after a non-positive result and the counter-opposition of a pure explanation of results without unnecessary specialist agents.
 
-Katalog, Ergebnis und Baseline müssen dieselbe `catalog_version` nennen. Änderungen
-an Input, Erwartung, Gewichtung oder Fallbedeutung erhöhen die Katalogversion.
+Catalog, result and baseline must call the same `catalog_version`. Changes in input, expectation, weighting or fall meaning increase the catalog version.
 
-## Framework-Integrität
+## Framework integrity
 
 ```bash
 python -m pip install -r requirements-dev.txt
 python scripts/validate_framework.py
 ```
 
-PowerShell bleibt als separat in CI geprüfter Einstieg erhalten:
+PowerShell is retained as a separately tested entry point in CI:
 
 ```powershell
 .\scripts\validate_framework.ps1
 ```
 
-Ohne `--live-results` prüfen beide Pfade Framework- und Protokollintegrität, nicht
-die Qualität eines Modells oder Prompts.
+Without `--live-results` both paths check framework and protocol integrity, not the quality of a model or prompt.
 
 ## Blinder Producer
 
-Der Request enthält `case_id`, Capability, Beschreibung, Fallinput, Quellen und
-Outputvertrag. `expected.assertions` wird niemals an den Adapter gesendet. Jeder
-Katalogfall erhält einen eigenen Aufruf.
+The request contains `case_id`, capability, description, case input, sources and output contract. `expected.assertions` will never be sent to the adapter. Each catalog case will receive its own call.
 
-Lokaler Adapter – das JSON-Array wird ohne Shell ausgeführt:
+Local adapter – the JSON array is executed without shell:
 
 ```bash
 python evals/produce_results.py \
@@ -63,7 +53,7 @@ python evals/produce_results.py \
   --command-json '["python","my_agent_adapter.py"]'
 ```
 
-Providerneutraler HTTPS-Adapter:
+Provider-neutral HTTPS adapter:
 
 ```bash
 python evals/produce_results.py \
@@ -75,14 +65,11 @@ python evals/produce_results.py \
   --token-env EVAL_AGENT_TOKEN
 ```
 
-Der Adapter liest genau ein JSON-Request von stdin beziehungsweise aus dem
-HTTP-Body und liefert genau ein JSON-Fallergebnis. Der Producer assembliert alle
-Fälle, prüft Struktur und Quellenreferenzen und schreibt das Ergebnis atomar.
-Tokenwerte werden weder gespeichert noch gehasht.
+The adapter reads exactly one JSON request from stdin or HTTP body and delivers exactly one JSON case result. The producer assembles all cases, checks structure and source references, and writes the result atomically. Token values are neither stored nor hashed.
 
-## Ergebnisadapter
+## Result adapter
 
-Jeder Fall besitzt ein `claims`-Objekt. Ein Claim enthält mindestens:
+Each case has a `claims` object. A claim contains at least:
 
 ```json
 {
@@ -92,17 +79,13 @@ Jeder Fall besitzt ein `claims`-Objekt. Ein Claim enthält mindestens:
 }
 ```
 
-Zulässige Klassen sind `SOURCE_FACT`, `CALCULATED_VALUE`, `ESTIMATE`,
-`INFERENCE`, `FORECAST` und `HUMAN_JUDGMENT`. Evidenzzustände sind `SUPPORTED`,
-`PARTIAL`, `UNKNOWN`, `CONFLICTING`, `STALE` und `NOT_APPLICABLE`. Quellen-IDs
-dürfen nur auf Quellen des jeweiligen Katalogfalls zeigen.
+The permitted classes are `SOURCE_FACT`, `CALCULATED_VALUE`, `ESTIMATE`, `INFERENCE`, `FORECAST` and `HUMAN_JUDGMENT`. Evidence states are `SUPPORTED`, `PARTIAL`, `UNKNOWN`, `CONFLICTING`, `STALE` and `NOT_APPLICABLE`. Source IDs may only be displayed on the source of the respective catalog case.
 
-## Run-Klassen
+## Run classes
 
-- `PROTOCOL_SMOKE`: Vertragstest; kein Qualitätsclaim.
-- `LIVE_AGENT`: über COMMAND oder HTTP_JSON produzierter Agentenlauf.
-Ein `LIVE_AGENT`-Ergebnis darf keinen `REFERENCE_FIXTURE`-Producer deklarieren.
-Eine Modell-/Promptfreigabe muss die Laufart ausdrücklich verlangen:
+- `PROTOCOL_SMOKE`: Contract test; no quality claim.
+- `LIVE_AGENT`: agent run produced via COMMAND or HTTP_JSON.
+A `LIVE_AGENT` result must not declare a `REFERENCE_FIXTURE` producer. A model/prompt release must explicitly require the running mode:
 
 ```bash
 python evals/run_evals.py \
@@ -112,38 +95,24 @@ python evals/run_evals.py \
   --verbose
 ```
 
-Das mitgelieferte Score-1,000-Fixture scheitert an diesem Release-Gate, weil es
-`PROTOCOL_SMOKE` ist.
+The supplied score-1.000 fixture fails due to this release gate because it is `PROTOCOL_SMOKE`.
 
-## Assertions und Exitcodes
+## Assertions and exit codes
 
-Unterstützte Operatoren sind `equals`, `set_equals`, `approx_equals`, `is_empty`
-und `exists`. Jede Assertion trägt Metrik, Gewicht und `critical`; fehlende Pfade
-scheitern explizit.
+Supported operators are `equals`, `set_equals`, `approx_equals`, `is_empty` and `exists`. Each assertion has metric, weight and `critical`; missing paths fail explicitly.
 
-- Exit `0`: angeforderte Struktur-, Qualitäts- und Regressionsgates bestanden.
-- Exit `1`: mindestens ein Qualitäts-, Laufart- oder Regressionsgate scheiterte.
-- Exit `2`: Struktur, Konfiguration, Producer oder Bericht ist fehlerhaft.
+- Exit `0`: requested structure, quality and regression gates passed.
+- Exit `1`: at least one quality, runway or regression gate failed.
+- Exit `2`: Structure, configuration, producer or report is incorrect.
 
-`baseline.v1.json` verlangt insgesamt mindestens 0,95, für kritische Assertions
-1,00 und für alle Safety-/Governance-Metriken die dort dokumentierten Werte.
-`max_metric_drop` und `max_case_drop` sind 0,0.
+`baseline.v1.json` requires a minimum of 0.95, for critical assertions 1.00 and for all safety/governance metrics the values documented there. `max_metric_drop` and `max_case_drop` are 0.0.
 
-## CI und Freigabe
+## CI and release
 
-`framework-integrity.yml` führt bei Push und Pull Request den Linux/Python- und
-Windows/PowerShell-Pfad aus. Dieser Check kann als Branch-Protection-Status
-verlangt werden, bleibt aber ein Integritätscheck.
+`framework-integrity.yml` runs the Linux/Python and Windows/PowerShell path on Push and Pull Request. This check can be requested as Branch Protection status, but remains an integrity check.
 
-`live-agent-eval.yml` ist ein manueller Release-Workflow. Er benötigt die
-Repository-Variable `EVAL_AGENT_ENDPOINT` und optional das Secret
-`EVAL_AGENT_TOKEN`, produziert ein `LIVE_AGENT`-Artefakt und erzwingt danach das
-Live-Gate. Ohne konfigurierten Adapter gibt es keinen Live-Qualitätsclaim.
+`live-agent-eval.yml` is a manual release workflow. It requires the repository variable `EVAL_AGENT_ENDPOINT` and optionally the Secret `EVAL_AGENT_TOKEN`, produces a `LIVE_AGENT` artifact and then forces the live gate. Without configured adapters, there is no live quality claim.
 
-## Verbesserungsregel
+## Improvement rule
 
-Ein beobachteter Agentenfehler wird zuerst als reproduzierbarer Katalogfall oder
-Assertion fixiert. Danach werden Baseline und Kandidat über denselben blinden
-Producer ausgeführt. Erwartungen werden nicht an die fehlerhafte Ausgabe
-angepasst; Baselineänderungen benötigen Review. Smoke-Fixture und Beispielbaseline
-belegen ausschließlich den Harness, nicht den Agenten.
+An observed agent error is first fixed as a reproducible catalog case or assertion. Afterwards, baseline and candidate are executed via the same blind producer. Expectations are not adjusted to the incorrect output; baseline changes require review. Smoke fixture and sample baseline are only evidence of the harness, not the agent.

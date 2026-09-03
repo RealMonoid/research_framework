@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "urn:research-framework:schema:hypothesis-candidate:1.4.0",
   "title": "Hypothesis Candidate Inbox Entry",
-  "description": "Versionierter Intake-Datensatz fuer rohe Research-Ideen. Promotion bedeutet nur, dass das Screening vollstaendig genug fuer formales Research ist; sie bestaetigt weder Mechanismus noch OOS-Prognosewert noch ausfuehrbare Netto-Edge.",
+  "description": "Versioned intake record for raw research ideas. Promotion means only that screening is complete enough for formal research; it confirms neither a mechanism, out-of-sample predictive value, nor an executable net edge.",
   "type": "object",
   "additionalProperties": false,
   "required": [
@@ -25,7 +25,7 @@
     },
     "candidate_id": {
       "$ref": "#/$defs/stableId",
-      "description": "Identitaet dieser konkreten Candidate-Fassung."
+      "description": "Identity of this specific candidate version."
     },
     "candidate_version": {
       "$ref": "#/$defs/semanticVersion"
@@ -35,7 +35,7 @@
     },
     "idea_id": {
       "$ref": "#/$defs/stableId",
-      "description": "Versionsstabile Identitaet der Ideenfamilie."
+      "description": "Version-stable identity of the idea family."
     },
     "supersedes_candidate_id": {
       "$ref": "#/$defs/nullableStableId"
@@ -77,7 +77,7 @@
       "type": "string",
       "minLength": 1,
       "maxLength": 500,
-      "description": "Offenes, nicht abschliessendes Routerlabel. Neue Mechanismusfamilien sind zulaessig und werden nicht durch eine Enum als vollstaendige Taxonomie ausgegeben."
+      "description": "Open, non-exhaustive router label. New mechanism families are allowed and are not presented as a complete taxonomy through an enum."
     },
     "actor_constraint": {
       "$ref": "#/$defs/actorConstraint"
@@ -114,7 +114,7 @@
       "items": {
         "$ref": "#/$defs/stableId"
       },
-      "description": "Alle Datensaetze, deren Sichtung den Candidate bereits beeinflusst hat."
+      "description": "All datasets whose review has already influenced the candidate."
     },
     "epistemic_stage_status": {
       "$ref": "#/$defs/epistemicStageStatus"
@@ -766,7 +766,7 @@
             "FILTER_KNOWN_EVENTS",
             "SCHEDULED_EVENT_STUDY"
           ],
-          "description": "NOT_USED_AS_SIGNAL bedeutet nicht, dass die Stichprobe frei von Event- oder News-Kontamination ist. FILTER_KNOWN_EVENTS beansprucht nur Abdeckung durch die benannten Feeds und Fenster."
+          "description": "NOT_USED_AS_SIGNAL does not mean that the sample is free of event or news contamination. FILTER_KNOWN_EVENTS claims only coverage by the named feeds and windows."
         },
         "news_event_coverage": {
           "$ref": "#/$defs/newsEventCoverage"
@@ -936,7 +936,7 @@
           "items": {
             "$ref": "#/$defs/stableId"
           },
-          "description": "Offene Methodenreferenzen. Feature Importance, Shapley- oder Impurity-Verfahren sind zulaessige Optionen, aber weder Pflicht noch Kausalitaetsnachweis."
+          "description": "Open method references. Feature importance, Shapley, or impurity methods are permitted options, but neither mandatory nor causal evidence."
         },
         "retained_variable_refs": {
           "type": "array",
@@ -1016,7 +1016,7 @@
           }
         }
       ],
-      "description": "Provenienz der Variablen- und Konstruktauswahl. PREDEFINED benoetigt nur einen knappen, nachvollziehbaren Record; DATA_DRIVEN und HYBRID muessen Kandidatenuniversum, Datenrolle, Suchraum und Auswahlbias-Kontrollen offenlegen."
+      "description": "Provenance of variable and construct selection. PREDEFINED requires only a brief, traceable record; DATA_DRIVEN and HYBRID must disclose the candidate universe, data role, search space, and selection-bias controls."
     },
     "actorConstraint": {
       "oneOf": [
@@ -1027,7 +1027,7 @@
           "$ref": "#/$defs/unspecifiedActorConstraint"
         }
       ],
-      "description": "Dokumentiert entweder eine benannte Akteurshypothese oder ausdrücklich, dass fuer die vorliegende praediktive/assoziative Frage kein Akteur behauptet wird. Der zweite Fall darf nicht stillschweigend als Mechanismusevidenz gelesen werden."
+      "description": "Documents either a named actor hypothesis or explicitly that no actor is claimed for the present predictive/associational question. The second case must not be silently read as mechanism evidence."
     },
     "namedActorConstraint": {
       "type": "object",
@@ -1097,7 +1097,7 @@
           "maxLength": 2000
         }
       },
-      "description": "Zulaessiger ehrlicher Zustand fuer eine praediktive oder assoziative Frage, wenn weder Quelle noch Rekonstruktion einen belastbaren Akteur liefern."
+      "description": "Permitted honest state for a predictive or associational question when neither source nor reconstruction provides a defensible actor."
     },
     "noiseScreenWaiver": {
       "type": "object",
@@ -2122,7 +2122,7 @@
           }
         }
       ],
-      "description": "Drei getrennte Statusachsen. Mechanismusevidenz wird nicht automatisch auf Prognose oder Edge uebertragen; eine SUPPORTED Netto-Edge setzt jedoch eine SUPPORTED Forward-OOS-Stufe voraus. PROMOTED darf in allen drei Feldern UNKNOWN sein."
+      "description": "Three separate status axes. Mechanism evidence is not automatically transferred to prediction or edge; a SUPPORTED net edge nevertheless requires a SUPPORTED forward-OOS level. PROMOTED may be UNKNOWN in all three fields."
     },
     "stageStatus": {
       "type": "string",
@@ -2152,7 +2152,7 @@
           "items": {
             "$ref": "#/$defs/stableId"
           },
-          "description": "Run-, Evidence-, Forecast-, Validation- oder Execution-Artefakte, die genau diese Stufenbewertung tragen."
+      "description": "Run, evidence, forecast, validation, or execution artifacts that support exactly this level assessment."
         },
         "rationale": {
           "type": "string",

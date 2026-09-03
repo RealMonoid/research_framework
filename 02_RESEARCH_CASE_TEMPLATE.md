@@ -1,928 +1,903 @@
 # 02_RESEARCH_CASE_TEMPLATE.md
 
-**Template-Version:** 2.1
-**ANWEISUNG:** Diese Datei pro Research-Projekt kopieren. Kein Pflichtfeld löschen. Nicht anwendbare Felder mit `N/A + Begründung` ausfüllen. Unbekannte Pflichtfelder mit `BLOCKED + fehlende Information` markieren.
+**Template version:** 2.1 **INSTRUCTION:** Copy this file for each research project. Do not delete any mandatory field. Complete non-applicable fields with `N/A + justification`. Mark unknown mandatory fields with `BLOCKED + missing information`.
 
-**BEDINGTE AKTIVIERUNG:** Die Abschnitte `U–Y` werden erst geöffnet, wenn Abschnitt `T` mit `VALIDATED_PHENOMENON` abgeschlossen **und** Strategy Engineering ausdrücklich als nächster Schritt beschlossen wurde. Bei validiertem, aber nicht fortgesetztem Phänomen erhält der Block `DEFERRED_AFTER_VALIDATION`; ohne validiertes Phänomen erhält er `NOT_ACTIVATED_BY_T_GATE`. In beiden Fällen wird er nicht feldweise mit `N/A` befüllt. Abschnitt `Z` bleibt während des gesamten Projekts aktiv.
+**CONDITIONAL ACTION:** The sections `U–Y` will only be opened when section `T` is completed with `VALIDATED_PHENOMENON` **and** strategy engineering is explicitly chosen as the next step. If the phenomenon is validated but not continued, the block gets `DEFERRED_AFTER_VALIDATION`; without the validated phenomenon, it gets `NOT_ACTIVATED_BY_T_GATE`. In both cases, it is not filled field by field with `N/A`. Section `Z` remains active throughout the project.
 
-**FRÜHER GATE-ABBRUCH:** Beendet ein Gate die aktuelle Research-Version vor Abschnitt `T`, werden alle dadurch nicht mehr erreichbaren späteren Abschnitte einmalig als `NOT_REACHED_DUE_TO_FAILED_GATE` markiert. Sie werden nicht feldweise ausgefüllt; Abschnitt `Z` bleibt aktiv.
+**EARLY GATE BREAKDOWN:** If a gate terminates the current research version before section `T`, all later sections that can no longer be reached are marked once as `NOT_REACHED_DUE_TO_FAILED_GATE`. They are not filled in field by field; section `Z` remains active.
 
-**FRÜHES BLOCKED:** `BLOCKED` beendet die Version nicht. Folgeabschnitte bleiben unangetastet, `Z` protokolliert Blocker und fehlende Information, und die Bearbeitung wird erst nach Auflösung in derselben Version fortgesetzt. `NOT_REACHED_DUE_TO_FAILED_GATE` gilt ausschließlich nach `FAIL`.
+**Early BLOCKED:** `BLOCKED` does not end the version. Subsequent sections remain untouched, `Z` logs blockers and missing information, and editing continues only after resolution in the same version. `NOT_REACHED_DUE_TO_FAILED_GATE` applies only after `FAIL`.
 
-**GATE-STATUS-MAPPING:** `PASS → PHASENSTATUS COMPLETE`, `FAIL → PHASENSTATUS FAILED`, `BLOCKED → PHASENSTATUS BLOCKED`. Nach `FAIL` oder `BLOCKED` beginnt kein abhängiger Folgeschritt.
+**GATE STATUS MAPPING:** `PASS → PHASE STATUS COMPLETE`, `FAIL → PHASE STATUS FAILED`, `BLOCKED → PHASE STATUS BLOCKED`. After `FAIL` or `BLOCKED`, no dependent follow-up step begins.
 
 ---
 
-# A. Research-Metadaten
+# A. Research metadata
 
-| Feld | Eintrag |
+| Field | Entry |
 |---|---|
 | Research-ID | |
-| Research-Titel | |
+| Research title | |
 | Version | |
-| Research-Status | `DISCOVERY / DEVELOPMENT / CANDIDATE_HYPOTHESIS / IN_TEST / NO_PHENOMENON / INCONCLUSIVE / VALIDATED_PHENOMENON / ECONOMICALLY_UNTRADEABLE / ACTIVE_STRATEGY_CANDIDATE / ACTIVE / UNDER_OBSERVATION / SUSPENDED / REVALIDATED / REJECTED` |
-| Erstellt am | |
-| Letzte Änderung | |
-| Freeze-Datum | |
-| Verantwortlicher Researcher/Agent | |
-| Hypothesen-Version | |
-| Claim-Level | `ASSOCIATIONAL_PREDICTIVE / INTERVENTIONAL / COUNTERFACTUAL` |
-| Estimand-Version | `N/A bei ASSOCIATIONAL_PREDICTIVE` |
-| Identifikationsstatus | `NOT_REQUIRED_PREDICTIVE / PASS / FAIL / BLOCKED` |
-| Strukturmodell-/Identifikationsdesign-Version | |
-| Tooling-Status | `TOOLING_REQUIRED / TOOLING_NOT_REQUIRED / TOOLING_BLOCKED` |
-| Tooling-Manifest-Version | |
-| Kostenmodell-Version | |
-| Primärer Datensatz | |
-| Operational-Governance-Version | |
-| Run-Manifest-Register | `Pfad/URI zum Register aller Run-IDs dieser Research-Version` |
-| Evidence-Ledger-Version | |
-| Review-Ledger-Version | |
-| Eval-Suite-Version | |
-| Letzter Regression-Gate-Status | `PASS / FAIL / BLOCKED / NOT_RUN_NO_AGENT_CHANGE` |
-| Intake-Idea-ID / Intake-Version | |
-| Ereignisklasse | `INFORMATION_EVENT / SCHEDULED_STRUCTURAL_EVENT / CONTINUOUS_ENDOGENOUS_MECHANISM / RETURN_DECOMPOSITION` |
-| Mechanismus-Evidenz | `UNKNOWN / SUPPORTED / NOT_SUPPORTED / BLOCKED` |
-| Forward-OOS-Prognose | `UNKNOWN / SUPPORTED / NOT_SUPPORTED / BLOCKED` |
-| Ausführbare Netto-Edge | `UNKNOWN / SUPPORTED / NOT_SUPPORTED / BLOCKED` |
+| Research status | `DISCOVERY / DEVELOPMENT / CANDIDATE_HYPOTHESIS / IN_TEST / NO_PHENOMENON / INCONCLUSIVE / VALIDATED_PHENOMENON / ECONOMICALLY_UNTRADEABLE / ACTIVE_STRATEGY_CANDIDATE / ACTIVE / UNDER_OBSERVATION / SUSPENDED / REVALIDATED / REJECTED` |
+|Created on| |
+|Latest amendment| |
+| Freeze date | |
+|Responsible researcher/agent| |
+|Hypothesis version| |
+| Claim level | `ASSOCIATIONAL_PREDICTIVE / INTERVENTIONAL / COUNTERFACTUAL` |
+| Estimand version | `N/A for ASSOCIATIONAL_PREDICTIVE` |
+| Identification status | `NOT_REQUIRED_PREDICTIVE / PASS / FAIL / BLOCKED` |
+| Structural-model/identification-design version | |
+| Tooling status | `TOOLING_REQUIRED / TOOLING_NOT_REQUIRED / TOOLING_BLOCKED` |
+| Tooling manifest version | |
+| Cost-model version | |
+|Primary data set| |
+| Operational governance version | |
+| Run manifest register | `Path/URI to the register of all run IDs for this research version` |
+| Evidence ledger version | |
+| Review ledger version | |
+| Eval suite version | |
+| Latest regression-gate status | `PASS / FAIL / BLOCKED / NOT_RUN_NO_AGENT_CHANGE` |
+| Intake idea ID / intake version | |
+| Event class | `INFORMATION_EVENT / SCHEDULED_STRUCTURAL_EVENT / CONTINUOUS_ENDOGENOUS_MECHANISM / RETURN_DECOMPOSITION` |
+| Mechanism evidence | `UNKNOWN / SUPPORTED / NOT_SUPPORTED / BLOCKED` |
+| Forward-OOS forecast | `UNKNOWN / SUPPORTED / NOT_SUPPORTED / BLOCKED` |
+|Net executable edge| `UNKNOWN / SUPPORTED / NOT_SUPPORTED / BLOCKED` |
 
-## A1. Aktive Projektquellen zum Startzeitpunkt
+## A1. Active project sources at start
 
-| Quelle | Version/Stand | Relevanz für dieses Research |
+|Source| Version/status |Relevance to this research|
 |---|---|---|
 | ACTIVE_DOCUMENTS.md | | |
 | Trading_System.md | | |
 | Projekt-Workflow.md | | |
 | Chart_Indikator_Settings.md | | |
 | Masterjournal.md | | |
-| Sonstige | | |
+|Other| | |
 
-## A2. Operatives Artefaktregister
+## A2. Operational artifact register
 
-Das Register referenziert die maschinenlesbaren Artefakte nach `05_AGENT_OPERATIONS.md`. Ein Hash bezieht sich auf den unveränderten gespeicherten Inhalt, nicht auf einen später neu erzeugten Export.
+The register references the machine-readable artifacts for `05_AGENT_OPERATIONS.md`. A hash refers to the unchanged stored content, not a later newly created export.
 
-| Artefakttyp | ID/Version | Schema-/Formatversion | Pfad/URI | Content-Hash | Status |
+| Artifact type | ID/version | Schema/format version | Path/URI | Content hash | Status |
 |---|---|---|---|---|---|
 | Run-Manifest | | | | | `COMPLETE / FAILED / BLOCKED` |
 | Evidence Ledger | | | | | `COMPLETE / INCOMPLETE / CONFLICTED / BLOCKED` |
 | Review Ledger | | | | | `NO_REVIEW / OPEN / ACCEPTED / REJECTED / SUPERSEDED` |
 | Forecast Ledger | | | | | `N/A / OPEN / PARTIALLY_RESOLVED / RESOLVED` |
-| Eval-Ergebnis | | | | | `PASS / FAIL / BLOCKED / NOT_RUN` |
-| Hypothesen-Intake | | `1.4.0` | | | `INBOX / SCREENED / MERGED / REJECTED / PROMOTED` |
-| Strategy Reconstruction, falls Quellenstrategie | | `1.1.0` | | | `SOURCE_EXTRACTION / TRANSLATION_DRAFT / RECONSTRUCTION_COMPLETE / DISCRETIONARY_PROTOCOL_COMPLETE / NOT_OPERATIONALIZABLE` |
-| Concept Audit, vor Abschluss einer Quellenrekonstruktion | | `1.0.0` | | | `DRAFT / COMPLETE / BLOCKED` |
-| Condition Inquiry, falls aktiviert | | `1.0.0` | | | `PLAN / EXPLORATORY_RESULTS / INDEPENDENT_RESULTS / BLOCKED` |
-| Causal-Identification-Assessment, bei kausalem Claim | | `1.0.0` | | | `PASS / FAIL / BLOCKED / NOT_REQUIRED_PREDICTIVE` |
-| Wissenschaftsphilosophie-Review, falls Q9 aktiviert | | `1.0.0` | | | `BUNDLE_MAPPED / CONTINUATION_REVIEWED / BLOCKED` |
-| Search-Space-Register | | `1.0.0` | | | `N/A (Zählregister)` |
-| Entry Noise Screen | | `1.0.0` | | | `PASS / FAIL / BLOCKED` oder Intake-Waiver |
+|Eval result| | | | | `PASS / FAIL / BLOCKED / NOT_RUN` |
+|Hypothesis intake| | `1.4.0` | | | `INBOX / SCREENED / MERGED / REJECTED / PROMOTED` |
+|Strategy Reconstruction, if source strategy| | `1.1.0` | | | `SOURCE_EXTRACTION / TRANSLATION_DRAFT / RECONSTRUCTION_COMPLETE / DISCRETIONARY_PROTOCOL_COMPLETE / NOT_OPERATIONALIZABLE` |
+|Concept audit, before completing a source reconstruction| | `1.0.0` | | | `DRAFT / COMPLETE / BLOCKED` |
+|Condition Inquiry, if activated| | `1.0.0` | | | `PLAN / EXPLORATORY_RESULTS / INDEPENDENT_RESULTS / BLOCKED` |
+|Causal identification assessment, in the case of a causal claim| | `1.0.0` | | | `PASS / FAIL / BLOCKED / NOT_REQUIRED_PREDICTIVE` |
+|Philosophy of Science Review if Q9 is activated| | `1.0.0` | | | `BUNDLE_MAPPED / CONTINUATION_REVIEWED / BLOCKED` |
+|Search space register| | `1.0.0` | | | `N/A (counting register)` |
+| Entry Noise Screen | | `1.0.0` | | |`PASS / FAIL / BLOCKED` or intake waiver|
 
-## A3. Academic-Source-Protokoll
+## A3. Academic source protocol
 
-**ACADEMIC_SOURCE_STATUS:** `REQUIRED / NOT_RELEVANT + Begründung / BLOCKED + fehlende Information`
+**ACADEMIC_SOURCE_STATUS:** `REQUIRED / NOT_RELEVANT + justification / BLOCKED + missing information`
 
-Bei `REQUIRED` gelten **05_AGENT_OPERATIONS.md §5.4** und
-`schemas/evidence.schema.json` Version 2.0.0. Gesucht und bewertet werden konkrete
-Fassungen wissenschaftlicher Arbeiten, nicht nur Suchtreffer oder Zitationsangaben.
+For `REQUIRED`, **05_AGENT_OPERATIONS.md §5.4** and `schemas/evidence.schema.json` version 2.0.0 apply. Concrete versions of scientific papers are sought and evaluated, not only search hits or citations.
 
-### A3.1 Recherche-Coverage
+### A3.1 Research coverage
 
-| Kanal | Suchanfrage/Filter | Suchzeitpunkt | Ergebnis | Nachweis/URI |
+| Channel | Search query/filter | Search timestamp |Result| Evidence/URI |
 |---|---|---|---|---|
-| The Journal of Finance | | | `SEARCHED_HIT / SEARCHED_NO_HIT / NOT_RELEVANT + Grund / BLOCKED + Grund` | |
-| Journal of Financial Economics | | | `SEARCHED_HIT / SEARCHED_NO_HIT / NOT_RELEVANT + Grund / BLOCKED + Grund` | |
-| arXiv q-fin | | | `SEARCHED_HIT / SEARCHED_NO_HIT / NOT_RELEVANT + Grund / BLOCKED + Grund` | |
-| Weitere Journals/Working-Paper-Reihen/Repositories | | | | |
+| The Journal of Finance | | | `SEARCHED_HIT / SEARCHED_NO_HIT / NOT_RELEVANT + reason / BLOCKED + reason` | |
+| Journal of Financial Economics | | | `SEARCHED_HIT / SEARCHED_NO_HIT / NOT_RELEVANT + reason / BLOCKED + reason` | |
+| arXiv q-fin | | | `SEARCHED_HIT / SEARCHED_NO_HIT / NOT_RELEVANT + reason / BLOCKED + reason` | |
+| Other journals/working-paper series/repositories | | | | |
 
-### A3.2 Quellen-, Versions- und Integritätsregister
+### A3.2 Source, version, and integrity registers
 
-| work_id | source_id | Studientyp | Publikationsstatus | konkrete Fassung | Autoren/Jahr | Venue | DOI | arXiv-ID / q-fin-Kategorie / Version | Integrity-Status / geprüft am / Notice | Code | Daten | unabhängige Replikation / source_ids | zulässige Evidenzverwendung |
+| work_id | source_id | Study type | Publication status | concrete version | Authors/year | Venue | DOI | arXiv ID / q-fin category / version | Integrity status / checked on / notice | Code | Data | Independent replication / source IDs | Permitted use of evidence |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|---|
 | | | | | | | | | | | | | | |
 
-### A3.3 Versionsfamilien und Unabhängigkeit
+### A3.3 Version families and independence
 
-| geprüfte source_ids | Entscheidung | work_id(s) | Begründung | Prüfer/Zeitpunkt |
+|Verified source ids|Decision| work_id(s) |Justification|Tester/Time|
 |---|---|---|---|---|
 | | `SAME_WORK / DISTINCT_WORK / UNCERTAIN` | | | |
 
-Journalname, DOI, Zitationszahl und q-fin-Kategorie erhöhen den Evidence Grade
-nicht automatisch. `PREPRINT`, `WORKING_PAPER` und `OTHER` werden als vorläufig
-gekennzeichnet; eine konkrete arXiv-Fassung wird mit Versionssuffix eingefroren.
-Correction, Expression of Concern, Retraction, Withdrawal sowie Code-, Daten- und
-Replikationsstatus werden vor Freeze und Freigabe erneut geprüft.
+Journal name, DOI, citation number and q-fin category do not automatically increase the Evidence Grade. `PREPRINT`, `WORKING_PAPER` and `OTHER` are marked as provisional; a concrete arXiv version is frozen with version suffix. Correction, Expression of Concern, Retraction, Withdrawal as well as code, data and replication status are re-checked before freeze and release.
 
-## A4. Research Scope
+## A4. Research scope
 
-| Feld | Eintrag |
+| Field | Entry |
 |---|---|
-| Markt und Instrument(e) | |
-| Venue(s) und konkrete Datenfeeds | |
-| Book-Sicht | `VENUE_DIRECT / CONSOLIDATED / TOP_OF_BOOK / L2 / L3 / N/A + Grund` |
-| Handelsphase | `PRE_MARKET / OPENING_AUCTION / CONTINUOUS / CLOSING_AUCTION / POST_MARKET / OVERNIGHT / CROSS_SESSION / OTHER` |
-| Venue-Kalender, Zeitzone und DST-Regel | |
-| Primäre Zeitbasis | `CLOCK_TIME / EVENT_TIME / TRADING_DAY / ANDERE + Definition` |
-| Prognose-/Outcome-Horizont | |
-| Ereignisklasse | `INFORMATION_EVENT / SCHEDULED_STRUCTURAL_EVENT / CONTINUOUS_ENDOGENOUS_MECHANISM / RETURN_DECOMPOSITION` |
-| News-/Makro-Policy | `INCLUDED_AS_SIGNAL / NOT_USED_AS_SIGNAL / FILTER_KNOWN_EVENTS / SCHEDULED_EVENT_STUDY` |
-| verwendete News-/Eventfeeds und Abdeckungszeitraum | `Pflicht bei FILTER_KNOWN_EVENTS; sonst N/A + Grund` |
-| Ausschlussfenster und Timestamp-Konvention | `Pflicht bei FILTER_KNOWN_EVENTS; sonst N/A + Grund` |
-| bekannte Coverage-Lücken | |
-| explizit ausgeschlossene Research-Fragen | |
+|Market and instrument(s)| |
+|Venue(s) and specific data feeds| |
+| Book view | `VENUE_DIRECT / CONSOLIDATED / TOP_OF_BOOK / L2 / L3 / N/A + reason` |
+| Trading phase | `PRE_MARKET / OPENING_AUCTION / CONTINUOUS / CLOSING_AUCTION / POST_MARKET / OVERNIGHT / CROSS_SESSION / OTHER` |
+|Venue calendar, time zone and DST rule| |
+|Primary time basis| `CLOCK_TIME / EVENT_TIME / TRADING_DAY / OTHER + definition` |
+|Forecast/outcome horizon| |
+| Event class | `INFORMATION_EVENT / SCHEDULED_STRUCTURAL_EVENT / CONTINUOUS_ENDOGENOUS_MECHANISM / RETURN_DECOMPOSITION` |
+| News/macro policy | `INCLUDED_AS_SIGNAL / NOT_USED_AS_SIGNAL / FILTER_KNOWN_EVENTS / SCHEDULED_EVENT_STUDY` |
+|News/event feeds used and coverage period| `Required for FILTER_KNOWN_EVENTS; otherwise N/A + reason` |
+|Exclusion window and timestamp convention| `Required for FILTER_KNOWN_EVENTS; otherwise N/A + reason` |
+|known coverage gaps| |
+| Explicitly excluded research questions | |
 
-**Scope-Regel:** `NOT_USED_AS_SIGNAL` bedeutet nicht, dass Ereignisse aus der
-Stichprobe entfernt wurden. Der Ausdruck „newsfrei“ wird nur als Kurzform einer
-dokumentierten `FILTER_KNOWN_EVENTS`-Policy verwendet und immer zusammen mit
-Feed-Abdeckung und bekannten Lücken berichtet.
+**Scope rule:** `NOT_USED_AS_SIGNAL` does not mean that events have been removed from the sample. The term “news-free” is used only as a short form of a documented `FILTER_KNOWN_EVENTS` policy and is always reported along with feed coverage and known gaps.
 
-## A5. Vorgelagerte Hypothesen-Inbox
+## A5. Upstream hypothesis inbox
 
-Die Rohidee wird vor `B` gegen `schemas/hypothesis_candidate.schema.json`
-persistiert. `PROMOTED` öffnet ausschließlich die Phase-0-Vorprüfung; es ist kein
-positiver Evidenzbefund.
+The raw idea is recorded before section `B` and validated against `schemas/hypothesis_candidate.schema.json`. `PROMOTED` opens only the phase 0 pre-test; it is not a positive evidence finding.
 
-| Feld | Eintrag |
+| Field | Entry |
 |---|---|
 | Idea-ID / Version | |
-| Intake-Status | `INBOX / SCREENED / MERGED / REJECTED / PROMOTED` |
-| Herkunft / konkrete Quelle | |
-| Ideenklasse | `ASSOCIATIONAL_PATTERN / PREDICTIVE_PRECEDENCE / MECHANISM_CANDIDATE / STRUCTURAL_FLOW_CANDIDATE / RELATIVE_VALUE_CANDIDATE / EVENT_RESPONSE_CANDIDATE / RETURN_DECOMPOSITION_CANDIDATE / OTHER` |
-| Mechanismenfamilie | nicht abschließendes Routerlabel oder `UNCLASSIFIED` |
-| Akteursstand | benannte Hypothese mit Zwang/Handlung/Alternative oder `UNSPECIFIED / NOT_CLAIMED` |
-| beobachtbarer Footprint | |
-| erwartetes Outcome und Horizont | |
-| wichtigste Alternativerklärungen | |
-| benötigte Auflösung / Datenfelder / Venue-Coverage | |
-| Clock-Sync-, Sequenz- und Beobachtbarkeitsanforderungen | |
-| frühe Kosten-, Latenz-, Queue-, Borrow-, Funding- oder Leg-Risk-Hürde | |
-| bereits betrachtete Dataset-IDs / aktuelle Datenrolle | |
-| Variablenauswahl-Modus | `PREDEFINED / DATA_DRIVEN / HYBRID` |
-| Auswahlbegründung / beibehaltene Variablen | |
-| bei DATA_DRIVEN/HYBRID: Kandidatenuniversum / effektive Kandidatenzahl | |
-| bei DATA_DRIVEN/HYBRID: Selektionsdaten + Rolle / Outcome-Sichtbarkeit | |
-| bei DATA_DRIVEN/HYBRID: Methoden / Suchraum / Auswahlbias-Kontrollen | |
-| Dublette / merged_into_id | |
-| Screening-Entscheidung und Grund | |
-| bei PROMOTED: nächste Research-ID und Phase-0-Frage | |
+| Intake status | `INBOX / SCREENED / MERGED / REJECTED / PROMOTED` |
+|Origin / concrete source| |
+| Idea class | `ASSOCIATIONAL_PATTERN / PREDICTIVE_PRECEDENCE / MECHANISM_CANDIDATE / STRUCTURAL_FLOW_CANDIDATE / RELATIVE_VALUE_CANDIDATE / EVENT_RESPONSE_CANDIDATE / RETURN_DECOMPOSITION_CANDIDATE / OTHER` |
+| Mechanism family |non-exhaustive router label or `UNCLASSIFIED`|
+| Actor status |Named hypothesis with compulsion/action/alternative or `UNSPECIFIED / NOT_CLAIMED`|
+| Observable footprint | |
+|Expected outcome and horizon| |
+|Main alternative explanations| |
+|Required resolution / data fields / venue coverage| |
+|Clock sync, sequence and observability requirements| |
+|Early cost, latency, queue, borrow, funding or leg-risk hurdle| |
+|Dataset IDs already considered / current data role| |
+| Variable-selection mode | `PREDEFINED / DATA_DRIVEN / HYBRID` |
+|Reason for selection / variables retained| |
+|DATA_DRIVEN/HYBRID: Candidate universe / effective number of candidates| |
+|DATA_DRIVEN/HYBRID: Selection data + role / outcome visibility| |
+|DATA_DRIVEN/HYBRID: Methods / search space / selection-bias controls| |
+| Duplicate / merged_into_id | |
+|Screening decision and reason| |
+|at PROMOTED: next research ID and phase 0 question| |
 
-### A5.1 Getrennte Evidenzstufen
+### A5.1 Separate evidence levels
 
-| Stufe | Status | tragende Evidenz/Run-IDs | Begründung / nächster Test |
+| Level | Status | Supporting evidence/run IDs |Justification / next test|
 |---|---|---|---|
 | `mechanism_supported` | `UNKNOWN / SUPPORTED / NOT_SUPPORTED / BLOCKED` | | |
 | `forward_predictive_oos` | `UNKNOWN / SUPPORTED / NOT_SUPPORTED / BLOCKED` | | |
 | `executable_net_edge` | `UNKNOWN / SUPPORTED / NOT_SUPPORTED / BLOCKED` | | |
 
-Die Stufen werden nicht kaskadenartig hochgestuft. Insbesondere belegt ein
-Mechanismuspaper keine Forward-Prognose, ein kontemporärer Zusammenhang keine
-zukünftige Rendite und ein Midquote-Effekt keine ausführbare Netto-Edge.
+The steps are not upgraded in a cascade. In particular, a mechanism paper does not provide a forward forecast, a contemporaneous context does not provide a future return, and a mid-quote effect does not provide a net executable edge.
 
-### A5.2 Zwei unabhängige Achsen
+### A5.2 Two independent axes
 
-| Achse | Eintrag |
+| Axis | Entry |
 |---|---|
 | Research-Claim-Level | `ASSOCIATIONAL_PREDICTIVE / INTERVENTIONAL / COUNTERFACTUAL` |
-| Validierungs-/Handelsstatus | die drei getrennten Status aus A5.1 |
+| Validation/trading status | the three separate statuses from A5.1 |
 
-Keine Achse wird aus der anderen abgeleitet. Insbesondere kann ein identifizierter
-interventionaler Effekt nach Kosten unhandelbar und eine assoziative Prognose
-ohne kausalen Claim ausführbar sein.
+No axis is derived from another. In particular, an identified interventional effect may be economically untradeable after costs, while an associative forecast may be executable without a causal claim.
 
 ---
 
-# B. Phase 0 – Machbarkeit und Informationsbudget
+# B. Phase 0 – Feasibility and Information Budget
 
-**PHASENSTATUS:** `COMPLETE / BLOCKED / FAILED`
+**PHASE STATUS:** `COMPLETE / BLOCKED / FAILED`
 
-## B1. Vorläufige Beobachtung
+## B1. Preliminary observation
 
-**Was wurde beobachtet?**
-
-...
-
-**Warum ist es forschungswürdig?**
+**What was observed?**
 
 ...
 
-**Was soll ausdrücklich noch NICHT behauptet werden?**
+**Why is it worthy of research?**
 
 ...
 
-## B2. Primäre Outcome-Skala
+**What is NOT to be explicitly claimed yet?**
 
-| Feld | Eintrag |
+...
+
+## B2. Primary outcome scale
+
+| Field | Entry |
 |---|---|
-| Primärer Outcome | |
-| Einheit | z. B. R, ATR-normalisierter Return, Basispunkte, Ereigniswahrscheinlichkeit |
-| Typischer Horizont | |
-| Explorative Streuung aus zulässigen Discovery-/Development-Daten | |
-| Stichprobengröße und effektive Clusterzahl dieser Schätzung | |
-| Unsicherheit/Bandbreite der Streuungsschätzung | |
-| Quelle und Übertragbarkeit auf Validation-Markt/-State | |
-| Schwere Tails bereits sichtbar? | `JA / NEIN / UNKLAR` |
+|Primary outcome| |
+| Unit | e.g. R, ATR-normalized return, basis points, event probability |
+|Typical horizon| |
+|Exploratory scatter from permitted discovery/development data| |
+|Sample size and effective cluster number of this estimate| |
+|Uncertainty/bandwidth of dispersion estimation| |
+|Source and transferability to validation market/state| |
+|Heavy tails already visible?| `YES / NO / UNCLEAR` |
 
-## B3. Vorläufige Kostenhürde
+## B3. Provisional cost hurdle
 
-| Kostenkomponente | Schätzung | Quelle | State-abhängig? |
+| Cost component |Estimation|Source|State-dependent?|
 |---|---:|---|---|
-| Gebühren Round Trip | | | |
+|Fees Round Trip| | | |
 | Spread | | | |
 | Slippage | | | |
-| Funding/Finanzierung | | | |
-| Sonstige | | | |
+| Funding/financing | | | |
+|Other| | | |
 
-**Gesamte konservative Round-Trip-Kosten in Outcome-Einheit:** ...
+**Total Conservative Round Trip Costs in Outcome Unit:** ...
 
-**Zusätzliche Sicherheitsmarge:** ...
+**Additional margin of safety:** ...
 
-**Minimale wirtschaftlich relevante Effektgröße `δ_econ`:** ...
+**Minimum economically relevant effect size `δ_econ`:** ...
 
-**Begründung der Sicherheitsmarge:** ...
+**Justification of the margin of safety:** ...
 
-## B4. Power-/Präzisionsplanung
+## Power/precision planning
 
-| Feld | Eintrag |
+| Field | Entry |
 |---|---|
-| Primärer Test/Schätzer | |
-| Fehlerniveau / α / äquivalente Schwelle | Arbeitsdefault bei klassischem Test: `α = 0,05`, zweiseitig; Abweichung vorab begründen |
-| Ziel-Power / Präzisionsziel | Arbeitsdefault: `80 %`; bei knappem finalem Holdout oder hohen Kosten falsch-negativer Befunde `90 %` oder direktes Präzisionsziel prüfen |
-| Wirtschaftliche Relevanzgrenze | `δ_econ = ...` |
-| Angenommene wahre Planungswirkung | `δ_plan = ...`; nicht mit `δ_econ` gleichsetzen |
-| Quelle/Begründung von `δ_plan` | inklusive Umgang mit Discovery-Bias, Unsicherheit und gegebenenfalls Shrinkage |
-| Null-/Alternativhypothese | `H0: ... / H1: ...` |
-| Intervall-/Entscheidungsregel | z. B. `untere Grenze > δ_econ`; exakt hierfür planen |
-| Basis-Streuungsannahme | |
-| Konservative Planungsstreuung / Stressszenario | |
-| Herleitung der konservativen Annahme | `externe/gepoolte Referenz / modellgültige Obergrenze / robuste Skala + Stressaufschlag / Szenariorechnung / ANDERE` |
-| Abhängigkeitsannahme | |
-| Power-/Simulationsmethode | |
-| Benötigtes nominelles N – Basisszenario | |
-| Benötigtes effektives N / Clusterzahl – Basisszenario | |
-| Benötigtes nominelles N – Stressszenario | |
-| Benötigtes effektives N / Clusterzahl – Stressszenario | |
+|Primary test/estimator| |
+|Error level / α / equivalent threshold|Working default in classical test: `α = 0.05`, two-sided; justify any deviation in advance|
+|Target power / precision target|Working default: `80%`; use `90%` for a close final holdout or high cost of false negatives, or specify a direct precision target|
+| Economic relevance threshold | `δ_econ = ...` |
+| Assumed true planning effect |`δ_plan = ...`; do not equate with `δ_econ`|
+|Source/justification of `δ_plan`|including dealing with discovery bias, uncertainty and, if necessary, shrinkage|
+| Null/alternative hypothesis | `H0: ... / H1: ...` |
+| Interval/decision rule |e.g. `lower bound > δ_econ`; plan exactly for this|
+| Baseline dispersion assumption | |
+| Conservative planning dispersion / stress scenario | |
+|Derivation of conservative adoption| `external/pooled reference / model-valid upper bound / robust scale + stress uplift / scenario analysis / OTHER` |
+|Dependency assumption| |
+| Power/simulation method | |
+|Required nominal N – baseline scenario| |
+|Required effective N/cluster number – baseline scenario| |
+|Required nominal N – stress scenario| |
+|Required effective N/cluster number – stress scenario| |
 
-**Pflichtregel:** Ein einzelner Streuungs-Punktschätzer aus einer kleinen, selektierten oder nicht übertragbaren Discovery-Stichprobe reicht nicht als konservative Planungsannahme. `WEITER` setzt voraus, dass die Machbarkeit auch im Stressszenario besteht oder die zusätzlich benötigte Information ausdrücklich beschafft wird.
+**Mandatory rule:** A single point estimator from a small, selected, or non-transferable discovery sample is not sufficient as a conservative planning assumption. `CONTINUE` assumes that feasibility also exists in the stress scenario or that the additional information required is explicitly obtained.
 
-## B5. Verfügbare Information
+## B5. Information available
 
-| Größe | Wert |
+| Item | Value |
 |---|---:|
-| Nominelle Ereignisse | |
-| Handelstage | |
+| Nominal events | |
+| Trading days | |
 | Sessions | |
-| Eventcluster | |
-| Symbole | |
-| Grobe Korrelationsgruppen | |
-| Methode/Simulation für effektives N | |
-| Verwendeter Design Effect samt Annahmen | |
-| Geschätztes effektives N | |
-| Konservative Untergrenze des effektiven N | |
-| Plausibel unabhängige Clusterzahl | |
-| Realistisch zusätzlich beschaffbare unabhängige Daten | |
+| Event clusters | |
+| Symbols | |
+| Approximate correlation groups | |
+|Method/simulation for effective N| |
+|Design effect used and assumptions| |
+|Estimated effective N| |
+|Conservative lower limit of effective N| |
+|Plausibly independent cluster number| |
+|Realistically additionally obtainable independent data| |
 
-## B6. Machbarkeitsentscheidung
+## B6. Feasibility decision
 
-**Fachentscheidung:** `WEITER / DATEN BESCHAFFEN / ABBRECHEN`
+**Research decision:** `CONTINUE / OBTAIN_DATA / ABORT`
 
-**Begründung:** ...
+** Justification:** ...
 
-**Besteht die Entscheidung auch unter der konservativen Planungsstreuung?** `JA / NEIN / BLOCKED`
+**Is the decision also valid under the conservative planning dispersion?** `YES / NO / BLOCKED`
 
-**Falls DATEN BESCHAFFEN:** Welche Daten, wie viel und warum? ...
+**If OBTAIN_DATA:** What data, how much, and why? ...
 
-**Falls ABBRECHEN:** Welches Gate macht das Projekt unbrauchbar? ...
+**If ABORT:** Which gate makes the project uninformative? ...
 
 ### B-Gate
 
 `PASS / FAIL / BLOCKED`
 
-**Festes Mapping:** `WEITER → PASS`, `DATEN BESCHAFFEN → BLOCKED bis Daten vorliegen`, `ABBRECHEN → FAIL`. `BLOCKED` ist kein vierter Fachentscheid.
+**Fixed mapping:** `CONTINUE → PASS`, `OBTAIN_DATA → BLOCKED until data are available`, `ABORT → FAIL`. `BLOCKED` is not a fourth research decision.
 
-**Reichweite:** Ein `PASS` hier öffnet nur Discovery/Development. Vor Freeze ist die formale Phase-0-Re-Kalkulation in `N3` zwingend.
+**Reach:** A `PASS` here only opens Discovery/Development. Before Freeze, the formal Phase-0 recalculation in `N3` is mandatory.
 
-**Nächster zulässiger Schritt:** ...
+**Next permitted step:** ...
 
 ---
 
-# C. Dateninventar und Rollen
+# C. Data inventory and roles
 
-**PHASENSTATUS:** `COMPLETE / BLOCKED`
+**PHASE STATUS:** `COMPLETE / BLOCKED`
 
-| Dataset-ID | Datei/Quelle | Zeitraum | Märkte/Symbole | Rolle | Schon angesehen? | Designentscheidung beeinflusst? | Aktuelle Rolle korrekt? |
+| Dataset ID |File/source|Period|Markets/symbols| Role | Already viewed? | Influenced a design decision? | Current role correct? |
 |---|---|---|---|---|---|---|---|
 | | | | | `DISCOVERY / DEVELOPMENT / VALIDATION / FINAL_HOLDOUT / FORWARD_OOS` | | | |
 
-## C1. Kontaminationslog
+## C1. Contamination log
 
-| Datum | Dataset | Welche Information wurde gesehen? | Welche Designentscheidung wurde beeinflusst? | Konsequenz für Datenrolle |
+| Date | Dataset |What information was seen?| Which design decision was influenced? |Consequence for data role|
 |---|---|---|---|---|
 | | | | | |
 
-**Regel:** Sobald ein Dataset eine Designentscheidung beeinflusst, darf es nicht weiter als unabhängige Validation/Holdout gelten.
+**Rule:** Once a dataset influences a design decision, it may no longer be considered an independent validation/holdout.
 
 ---
 
-# D. Discovery und Fallkatalog
+# D. Discovery and Case Catalogue
 
-**PHASENSTATUS:** `COMPLETE / N/A / BLOCKED`
+**PHASE STATUS:** `COMPLETE / N/A / BLOCKED`
 
-## D1. Neutrale Beschreibung des Phänomens
+## D1. Neutral description of the phenomenon
 
 ...
 
-## D2. Falltypen
+## D2. Case types
 
-| Falltyp | Anzahl | Bemerkung |
+| Case type | Count | Note |
 |---|---:|---|
-| klare Treffer | | |
-| klare Fehlschläge | | |
-| Grenzfälle | | |
-| unklassifiziert | | |
+| clear hits | | |
+|Clear failures| | |
+|Borderline cases| | |
+| unclassified | | |
 
-## D3. Explorativ getestete Variablen und Varianten
+## D3. Exploratively tested variables and variants
 
-**WICHTIG:** Auch verworfene Varianten eintragen.
+**Important:** Also enter discarded variants.
 
-| ID | Variable/Idee | Lookback/Parameter | Ergebnis grob | Beibehalten? | Hat Hypothese beeinflusst? |
+| ID | Variable/idea | Lookback/parameter |Result gross| Retained? |Did hypothesis influence?|
 |---|---|---|---|---|---|
 | | | | | | |
 
-## D4. Discovery-Entscheidungen
+## D4. Discovery decisions
 
-Welche Begriffe wurden verworfen, geändert oder präzisiert? ...
+Which terms have been rejected, changed or specified? ...
 
 ---
 
-# E. Claim-Level, Identifikationsmodell und Beobachtbarkeit
+# E. Claim Level, Identification Model and Observability
 
-**PHASENSTATUS:** `COMPLETE / BLOCKED / FAILED`
+**PHASE STATUS:** `COMPLETE / BLOCKED / FAILED`
 
-## E1. Claim-Level und Zielgröße
+## E1. Claim level and target size
 
-**Stärkster beabsichtigter Claim:** `ASSOCIATIONAL_PREDICTIVE / INTERVENTIONAL / COUNTERFACTUAL`
+**Strongest intended claim:** `ASSOCIATIONAL_PREDICTIVE / INTERVENTIONAL / COUNTERFACTUAL`
 
-**Kausaler Formalismus:** `SCM_DAG / POTENTIAL_OUTCOMES / STRUCTURAL_ECONOMETRIC / OTHER_EXPLICIT / NOT_REQUIRED_PREDICTIVE`
+**Causal formalism:** `SCM_DAG / POTENTIAL_OUTCOMES / STRUCTURAL_ECONOMETRIC / OTHER_EXPLICIT / NOT_REQUIRED_PREDICTIVE`
 
-**Prädiktive Zielgröße, falls anwendbar:** `P(...) / E[...] / Quantil / sonstige Größe`
+**Predictive target, if applicable:** `P(...) / E[...] / quantile / other quantity`
 
-**Kausales Estimand:** ... / `N/A + Begründung: ASSOCIATIONAL_PREDICTIVE`
+**Causal estimand:** ... / `N/A + justification: ASSOCIATIONAL_PREDICTIVE`
 
-| Bestandteil | Definition |
+| Component | Definition |
 |---|---|
-| Treatment/Intervention/struktureller Schock | |
-| Outcome und Horizont | |
-| Zielpopulation/Eventklasse | |
-| Kontrast und Einheit | |
-| Total-/Direkt-/Mediationseffekt | |
-| Zeitliche Reihenfolge | |
-| Konsistenz / SUTVA oder Abweichung | |
+| Treatment/intervention/structural shock | |
+|Outcome and horizon| |
+| Target population/event class | |
+| Contrast and unit | |
+| Total/direct/mediation effect | |
+| Temporal ordering | |
+|Consistency / SUTVA or deviation| |
 | Positivity / Overlap | |
-| Assignment-/Exchangeability-/Designannahme | |
-| Interferenz / Exposure Mapping | |
+| Assignment/exchangeability/design assumption | |
+| Interference/exposure mapping | |
 
-## E2. Strukturmodell oder Identifikationsdesign
+## E2. Structural model or identification design
 
-**Darstellung:** `SCM_DAG / POTENTIAL_OUTCOMES / STRUCTURAL_ECONOMETRIC / OTHER_EXPLICIT / NOT_REQUIRED_PREDICTIVE`
+**Representation:** `SCM_DAG / POTENTIAL_OUTCOMES / STRUCTURAL_ECONOMETRIC / OTHER_EXPLICIT / NOT_REQUIRED_PREDICTIVE`
 
-**Strukturmodell-/Design-Version:** ... / `N/A bei NOT_REQUIRED_PREDICTIVE`
+**Structural-model/design version:** ... / `N/A for NOT_REQUIRED_PREDICTIVE`
 
-**Grafische, kontrafaktische oder strukturelle Definition:**
+**Graphic, counterfactual, or structural definition:**
 
 ```text
 ...
 ```
 
-**Welche Kanten, Kontraste oder Assignment-Mechanismen bleiben nur partiell identifiziert?** ...
+**Which edges, contrasts or assignment mechanisms remain only partially identified?** ...
 
-## E3. Strukturannahmen und Alternativerklärungen
+## E3 Structural assumptions and alternative explanations
 
-| Strukturannahme/Pfeil/Kante | Annahme | mögliche Confounder/Collider/Messfehler | Alternative Erklärung | Testbare Konsequenz/Negativkontrolle |
+| Structural assumption/edge |Acceptance|Possible confounder/collider/measurement error|Alternative statement| Testable consequence/negative control |
 |---|---|---|---|---|
 | | | | | |
 
-## E4. Identifikationsstrategie
+## E4. Identification strategy
 
-**Strategie:** `Randomisierung / natürliche Variation / Backdoor / Frontdoor / IV / RD / DiD / High-Frequency-Identifikation / sonstige / NOT_REQUIRED_PREDICTIVE`
+**Strategy:** `Randomization / natural variation / Backdoor / Frontdoor / IV / RD / DiD / high-frequency identification / other / NOT_REQUIRED_PREDICTIVE`
 
-**Warum identifiziert diese Strategie genau das Estimand?** ...
+**Why does this strategy identify exactly the estimand?** ...
 
-| Annahme | testbar? | Evidenz/Diagnose | Verletzungsrisiko | Sensitivität/Placebo/Negativkontrolle |
+|Acceptance| Testable? | Evidence/diagnostic | Violation risk |Sensitivity/placebo/negative control|
 |---|---|---|---|---|
-| | `JA/NEIN/TEILWEISE` | | | |
+| | `YES/NO/PARTIAL` | | | |
 
-**Adjustmentsatz oder vergleichbare Designrestriktion und Begründung:** ...
+**Adjustment set or comparable design restriction and justification:** ...
 
-**Positivity/Overlap oder Instrumentrelevanz, falls einschlägig:** ...
+**Positivity/overlap or instrument relevance, if applicable:** ...
 
-**Welche post-treatment Variablen/Mediatoren dürfen nicht als gewöhnliche Controls eingehen?** ...
+**Which post-treatment variables/mediators may not be accepted as ordinary controls?** ...
 
-## E5. Causal-Discovery-/Zeitreihenverfahren, falls verwendet
+## E5. Causal discovery/time series procedure, if used
 
-| Verfahren | Ausgabe darf behaupten | Ausgabe darf NICHT behaupten | benötigte Annahmen | Ergebnislabel |
+| Method |Permitted claim|Claims not permitted|Assumptions required| Result label |
 |---|---|---|---|---|
-| Granger | zusätzliche Prognoseinformation relativ zum Informationssatz | interventionale Kausalität | Stationarität/Modellspezifikation/Informationssatz | `PREDICTIVE_PRECEDENCE` |
-| CI-/Score-/Invarianz-/Zeitreihen-Discovery | DAG-Kandidaten/Äquivalenzklasse unter Annahmen | „wahrer DAG“ ohne Zusatzannahmen | konkret dokumentieren | `CAUSAL_HYPOTHESIS` |
+| Granger |additional forecast information relative to the information set|Interventional causality|Stationarity/model specification/information set| `PREDICTIVE_PRECEDENCE` |
+| CI/score/invariance/time-series discovery |DAG candidates/equivalence class under assumptions|“true DAG” without additional assumptions|Specifically document| `CAUSAL_HYPOTHESIS` |
 
-## E6. Beobachtbarkeitstabelle
+## E6. Observability table
 
-| Variable | Rolle | Rohdaten + Vintage | Berechnung | Frühester vollständig bekannter Zeitpunkt | Zum Entscheidungszeitpunkt verfügbar? | Delay | Leakage-/Revisionsrisiko | Zulässig? |
+| Variable | Role | Raw data + vintage |Calculation|Earliest fully known time|Available at decision time?| Delay | Leakage/revision risk |Permitted?|
 |---|---|---|---|---|---|---|---|---|
-| | `Prädiktor / State / Treatment / Schock / Mediator / Trigger / Outcome` | | | | `JA/NEIN` | | | `JA/NEIN` |
+| | `Predictor / State / Treatment / Shock / Mediator / Trigger / Outcome` | | | | `YES/NO` | | | `YES/NO` |
 
-### E7-Gate – Kausalität/Identifikation
+### E7-Gate – causality/identification
 
 `PASS / FAIL / BLOCKED / NOT_REQUIRED_PREDICTIVE`
 
-**Causal-Identification-Assessment-ID:** ... / `N/A bei NOT_REQUIRED_PREDICTIVE`
+**Causal-identification-assessment ID:** ... / `N/A for NOT_REQUIRED_PREDICTIVE`
 
-Bei `INTERVENTIONAL` oder `COUNTERFACTUAL` darf E7 nur aus einem validierten
-`causal_identification_assessment` übernommen werden. Ein selbst gesetztes
-`PASS`, ein Schätzerlauf, ein enges Eventfenster oder ein Discovery-Ergebnis
-genügt nicht.
+For `INTERVENTIONAL` or `COUNTERFACTUAL`, E7 may only be transferred from a validated `causal_identification_assessment`. A self-set `PASS`, an estimator run, a narrow event window or a discovery result is not enough.
 
-- `PASS`: Nur für den eingefrorenen kausalen Claim und unter den dokumentierten Annahmen.
-- `NOT_REQUIRED_PREDICTIVE`: Research darf fortfahren, aber nur mit prädiktiver/assoziativer Sprache.
-- `FAIL/BLOCKED`: Kein kausaler Freeze. Eine Fortsetzung als prädiktives Research benötigt eine neue entsprechend deklarierte Version.
+- `PASS`: Only for the frozen causal claim and under documented assumptions.
+- `NOT_REQUIRED_PREDICTIVE`: Research may continue, but only with predictive/associative language.
+- `FAIL/BLOCKED`: No causal freeze. A continuation as predictive research requires a new correspondingly declared version.
 
-### E8-Gate – Leakage/Beobachtbarkeit
+### E8-Gate – Leakage/Observability
 
 `PASS / FAIL / BLOCKED`
 
-## E9. Tooling-Router und reproduzierbare Umgebung
+## E9 Tooling Router and Reproducible Environment
 
-**Tooling-Status:** `TOOLING_REQUIRED / TOOLING_NOT_REQUIRED / TOOLING_BLOCKED`
+**Tooling status:** `TOOLING_REQUIRED / TOOLING_NOT_REQUIRED / TOOLING_BLOCKED`
 
-**Begründung:** ...
+** Justification:** ...
 
-| Aufgabe | primäre Bibliothek | exakte Version | Hauptklasse/-funktion | zulässige Aussage | unzulässige Aussage | unabhängige Prüfung |
+| Task |Primary library| Exact version |Main class/function|Permissible statement|Inadmissible statement|Independent verification|
 |---|---|---|---|---|---|---|
-| Strukturmodell/Adjustierung | `DoWhy / pgmpy / designspezifisch / N/A` | | | | | |
-| Effektschätzung | `DoWhy / EconML / DoubleML / causalinference / sonstige / N/A` | | | | | |
-| Refutation/Sensitivität | `DoWhy / designspezifisch / N/A` | | | | | |
-| Zeitreihen-Discovery | `Tigramite / sonstige / N/A` | | | | | |
+| Structural model/adjustment | `DoWhy / pgmpy / design-specific / N/A` | | | | | |
+|Effect assessment| `DoWhy / EconML / DoubleML / causalinference / other / N/A` | | | | | |
+|Refutation/sensitivity| `DoWhy / design-specific / N/A` | | | | | |
+| Time-series discovery | `Tigramite / other / N/A` | | | | | |
 
-| Reproduzierbarkeitsfeld | Eintrag |
+| Reproducibility field | Entry |
 |---|---|
-| Python-/Runtime-Version | |
-| Environment-/Lockfile-Pfad oder Hash | |
-| Paketquelle | `offizieller Release / begründete andere Quelle` |
+| Python/runtime version | |
+|Environment/Lockfile path or hash| |
+| Package source | `official release / justified other source` |
 | Seed(s) | |
-| zeitliche/Cluster-Splitlogik | |
-| Strukturmodell-/Design-/Estimand-Version | |
-| Adjustmentsatz | |
-| Import-/API-/Kompatibilitäts-Smoke-Test | `PASS / FAIL / BLOCKED / NOT_REQUIRED` |
-| relevante Warnungen/Deprecations | |
+| Temporal/cluster split logic | |
+| Structural-model/design/estimand version | |
+| Adjustment set | |
+|Import/API/compatibility smoke test| `PASS / FAIL / BLOCKED / NOT_REQUIRED` |
+| Relevant warnings/deprecations | |
 
-**E9-Gate – Tooling-Reproduzierbarkeit:** `PASS / FAIL / BLOCKED / NOT_REQUIRED`
+**E9-Gate – Tooling reproducibility:** `PASS / FAIL / BLOCKED / NOT_REQUIRED`
 
-**Phasen-Mapping:** `E7 PASS oder NOT_REQUIRED_PREDICTIVE`, `E8 PASS` und `E9 PASS oder NOT_REQUIRED` → `COMPLETE`. Jedes `FAIL` → `FAILED`; jedes `BLOCKED` → `BLOCKED`.
+**Phase mapping:** `E7 PASS or NOT_REQUIRED_PREDICTIVE`, `E8 PASS`, and `E9 PASS or NOT_REQUIRED` → `COMPLETE`. Every `FAIL` → `FAILED`; every `BLOCKED` → `BLOCKED`.
 
-**Falls FAIL:** Research-Version beenden oder Variable neu definieren. Keine rückwirkende Reparatur innerhalb derselben Validation-Version.
+**If FAIL:** exit research version or redefine variable. No retroactive repair within the same validation version.
 
 ---
 
-# F. Operationalisierung
+# F. Operationalization
 
-**PHASENSTATUS:** `COMPLETE / BLOCKED`
+**PHASE STATUS:** `COMPLETE / BLOCKED`
 
-**Strategy-Reconstruction-ID, falls die Idee aus einer unvollständig definierten Quelle stammt:** ... / `N/A + Begründung`
+**Strategy reconstruction ID, if the idea comes from an incompletely defined source:** ... / `N/A + justification`
 
-**Fidelity-Label der Übersetzung:** `REPLICATION / DOCUMENTED_RECONSTRUCTION / SIMPLIFIED_VARIANT / PLAYBOOK_ONLY / N/A`
+**Fidelity label of translation:** `REPLICATION / DOCUMENTED_RECONSTRUCTION / SIMPLIFIED_VARIANT / PLAYBOOK_ONLY / N/A`
 
-**Concept-Audit-ID:** ... / `N/A, weil keine unvollständig definierte Quellenstrategie`
+**Concept-audit ID:** ... / `N/A because there is no incompletely defined source strategy`
 
-**Sind die vier Bedingungsklassen getrennt?**
+**Are the four condition classes separate?**
 
-| Klasse | Einträge/Referenzen | Darf in die Quellenstrategie eingehen? |
+| Class |Entries/references|May be included in the source strategy?|
 |---|---|---|
-| strategiedefinierend | | ja, quellengetreu |
-| von der Quelle genannte Anwendung | | nur mit echtem Quellenstatus |
-| vermuteter Erfolgsmodifikator | | nein; eigene Bedingungshypothese |
-| unbekannte Erfolgsbedingungen | | nein; bleiben unbekannt |
+| strategy-defining | |Yes, true to the source|
+| Application referred to by the source | |Only with real source status|
+| suspected success modifier | |No; own condition hypothesis|
+| unknown success conditions | |No; remain unknown|
 
-**Konstruktionsabhängigkeiten zwischen Zustand, Trigger und Outcome:** ...
+**Design dependencies between state, trigger and outcome:** ...
 
-**Vorläufige Messinstrumente, insbesondere Regime-/Statefilter:** ...
+**Preliminary measuring instruments, in particular regime/state filters:** ...
 
-**Welche Aussage würde bei einem nicht informativen Instrument tatsächlich
-wegfallen, und welche könnte getrennt offen bleiben?** ...
+**Which statement would actually be omitted from a non-informational instrument, and which could remain open separately?** ...
 
-| Konzept | Exakte Messdefinition | Einheit | Lookback | Session | Timeframe | Zeitpunkt | kontinuierlich oder diskret? |
+| Concept | Exact measurement definition | Unit | Lookback | Session | Timeframe | Timestamp |Continuous or discrete?|
 |---|---|---|---|---|---|---|---|
 | | | | | | | | |
 
-**Welche Schwellen wurden noch NICHT festgelegt und warum?** ...
+**Which thresholds have NOT yet been set and why?** ...
 
-**Welche Schwellen sind bereits sachlich begründet?** ...
+**Which thresholds are already factually justified?** ...
 
 ---
 
-# G. Zielvariable und Nullmodell
+# G. Target variable and null model
 
-**PHASENSTATUS:** `COMPLETE / BLOCKED`
+**PHASE STATUS:** `COMPLETE / BLOCKED`
 
-## G1. Primärer Outcome
+## G1. Primary outcome
 
 **Definition:** ...
 
-**Horizont:** ...
+**Horizon:** ...
 
-**Warum dieser Outcome?** ...
+Why this outcome?
 
-## G2. Sekundäre Outcomes
+## G2. Secondary outcomes
 
-| Outcome | Zweck | Primär/diagnostisch |
+| Outcome | Purpose |Primary/diagnostic|
 |---|---|---|
 | | | |
 
-## G3. Primäres Nullmodell
+## G3. Primary null model
 
 **Definition:** ...
 
-**Warum ist dies der richtige Vergleich?** ...
+Why is this the right comparison?
 
-## G4. Sekundäre Benchmarks
+## G4. Secondary benchmarks
 
-| Benchmark | Zweck |
+| Benchmark | Purpose |
 |---|---|
 | | |
 
-## G5. Event-/Surprise-Definition
+## G5. Event/surprise definition
 
-**Anwendbarkeit:** `ANWENDEN / N/A + Begründung`
+**Applicability:** `APPLY / N/A + justification`
 
-| Feld | Festlegung |
+| Field | Specification |
 |---|---|
-| Eventklasse | |
-| offizieller Veröffentlichungszeitpunkt und Zeitzone | |
-| veröffentlichter Wert + Daten-Vintage | |
-| vor dem Event verfügbare Erwartungsquelle | |
-| Erwartungs-Zeitstempel/Vintage | |
-| Surprise-Formel | |
-| vorab definierte Skalierung | |
-| Anzahl Surprise-Faktoren | `1 / mehrere + Begründung` |
-| Faktorbildung/Rotation/Orthogonalisierung | |
-| ökonomische Interpretation und Vorzeichenkonvention je Faktor | |
-| primäres Eventfenster | |
-| sekundäre Eventfenster | |
-| Regel für gleichzeitige/überlappende Nachrichten | |
-| Regel für illiquide/technisch fehlerhafte Fenster | |
-| struktureller Schock identifiziert? | `JA + E7 PASS / NEIN, nur deskriptive Surprise` |
+| Event class | |
+|Official release time and time zone| |
+|Published value + data vintage| |
+|Expectation source available before the event| |
+| Expectation timestamp/vintage | |
+| Surprise formula | |
+| Predefined scaling | |
+| Number of surprise factors | `1 / multiple + justification` |
+| Factor construction/rotation/orthogonalization | |
+|Economic Interpretation and Sign Convention by Factor| |
+|Primary event window| |
+|Secondary Event Window| |
+|Rule for simultaneous/overlapping messages| |
+|Rule for illiquid/technically defective windows| |
+| Structural shock identified? | `YES + E7 PASS / NO, descriptive surprise only` |
 
-## G6. Erwartetes Reaktionsmodell
+## G6. Expected response model
 
-**Anwendbarkeit:** `ANWENDEN / N/A + Begründung`
+**Applicability:** `APPLY / N/A + justification`
 
-| Feld | Festlegung |
+| Field | Specification |
 |---|---|
-| Trainingsdaten und Datenrolle | |
-| strikt zeitliche Trainingsregel `D_<t` | |
-| nur pre-event bekannte Controls `C_t` | |
-| Modell `m̂_j(F_t,C_t,F_t⊗C_t)` | |
-| Refit-/Update-Regel | |
-| Unsicherheitsmodell `σ̂_j,t` | |
-| Kalibrierungsdiagnose | |
-| primäres Residuum `u_j,t` | `R_j,t - m̂_j(F_t,C_t,F_t⊗C_t;D_<t)` |
+|Training data and data role| |
+| Strictly time-ordered training rule `D_<t` | |
+|only pre-event known controls `C_t`| |
+|Model `m̂_j(F_t,C_t,F_t⊗C_t)`| |
+| Refit/update rule | |
+| Uncertainty model `σ̂_j,t` | |
+| Calibration diagnostic | |
+|primary residue `u_j,t`| `R_j,t - m̂_j(F_t,C_t,F_t⊗C_t;D_<t)` |
 | standardisierte Innovation `z_j,t` | `u_j,t / σ̂_j,t` |
-| zulässiges Label | `REACTION_INNOVATION / REACTION_ANOMALY` |
+|Permitted label| `REACTION_INNOVATION / REACTION_ANOMALY` |
 
-**Warum ist die Modellabweichung nicht automatisch Fehlbewertung oder Kausalbruch?** ...
+**Why is the model deviation not automatically misjudgement or causal break?** ...
 
-**Einfachstes angemessenes Modell gewählt?** `JA / NEIN + konkrete Zusatzfrage, die die Komplexität rechtfertigt`
+**Easiest appropriate model chosen?** `YES / NO + concrete additional question that justifies the complexity`
 
-## G7. Reaktionskette und Mediatoren
+## G7 Reaction chain and mediators
 
-| Kettenglied | Messfenster | erwartete Richtung/Form | Rolle `Outcome/Mediator` | post-event? | Verwendung im Total-Effekt zulässig? | Identifikationsstatus |
+| Chain link | Measurement window | Expected direction/form | Role `Outcome/Mediator` | Post-event? |Use allowed in total effect?| Identification status |
 |---|---|---|---|---|---|---|
 | | | | | | | |
 
-**Gemeinsame Chain-Integrity-Kennzahl:** `N/A als Default / ANWENDEN nur mit vorab definierten Gewichten, Kovarianz, Referenzverteilung und Multiple-Testing-Regel`
+**Joint chain-integrity metric:** `N/A by default / APPLY only with predefined weights, covariance, reference distribution, and multiple-testing rule`
 
-**Kriterium für die Bezeichnung `CAUSAL_CHAIN_BREAK`:** ... / `NICHT ZULÄSSIG, weil Kette nicht kausal identifiziert`
+**Criterion for the designation `CAUSAL_CHAIN_BREAK`:** ... / `NOT PERMITTED because the chain is not causally identified`
 
 ---
 
-# H. Explorative Effekt- und State-Analyse
+# H. Exploratory effect and state analysis
 
-**PHASENSTATUS:** `COMPLETE / N/A / BLOCKED / FAILED`
+**PHASE STATUS:** `COMPLETE / N/A / BLOCKED / FAILED`
 
-## H1. Unkonditionaler oder vorab konditionaler Baseline-Effekt
+## H1. Unconditional or preconditional baseline effect
 
-| Größe | Schätzung |
+|Size|Estimation|
 |---|---:|
-| E[Outcome \| Phänomen] | |
-| E[Outcome \| Nullmodell] | |
-| Differenz | |
-| Unsicherheit | |
+| E[Outcome \|phenomenon| |
+| E[Outcome \| null model] | |
+| Difference | |
+|Uncertainty| |
 
-**Ist die Baseline von Anfang an konditional?** `JA / NEIN`
+**Is the baseline conditional from the beginning?** `YES / NO`
 
-**Falls JA: Warum war der State Bestandteil der ursprünglichen Phänomendefinition und nicht nachträglicher Filter?** ...
+**If YES: Why was the state part of the original definition of the phenomenon and not a subsequent filter?** ...
 
-## H2. State-Variablen zunächst kontinuierlich
+## H2. State variables initially continuous
 
-| State | Zusammenhang mit Outcome | Form der Beziehung | stabiler Bereich? | Kandidat für Hypothese? |
+| State | Relationship with outcomes | Form of the relationship | Stable range? | Candidate for hypothesis? |
 |---|---|---|---|---|
 | | | | | |
 
-## H3. Phänomen vs. State vs. Interaktion
+## Phenomenon vs. State vs. Interaction
 
-| Größe | Ergebnis |
+|Size|Result|
 |---|---|
 | E[R \| P] | |
 | E[R \| S] | |
 | E[R \| P,S] | |
-| Zusatzinformation von P über S hinaus | |
+|Additional information from P beyond S| |
 
-## H4. Gewinner und Verlierer gemeinsam analysiert?
+## Winners and losers analyzed together?
 
-`JA / NEIN`
+`YES / NO`
 
-Falls NEIN: `FAILED`.
+If NO: `FAILED`.
 
-## H4a. Quantitative Bedingungsanfrage
+## H4a. Quantitative condition inquiry
 
-**Aktivierung:** `ANWENDEN / NICHT AKTIVIERT + Begründung`
+**Activation:** `APPLY / NOT_ACTIVATED + justification`
 
 **Condition-Inquiry-ID:** ...
 
-**Frage:** `Messinstrument / Konstruktionsabhängigkeit / Definitionssensitivität / Erfolgsmodifikator / Zeitstabilität / Umgebungsstabilität / notwendige Bedingung explorativ`
+**Question:** `measurement instrument / design dependence / definition sensitivity / success modifier / time stability / environment stability / necessary condition (exploratory)`
 
-| Kandidatenbedingung | Herkunft | beim Entscheid bekannt? | Rolle | Status | neue Hypothese nötig? |
+| Candidate condition | Origin |Known at the decision?| Role | Status |Need a new hypothesis?|
 |---|---|---|---|---|---|
-| | `Quelle / Concept Audit / Theorie / datenbasiert / unbekannt` | | `definiert Strategie / Anwendung / Erfolgsmodifikator / unbekannt` | | |
+| | `source / concept audit / theory / data-based / unknown` | | `strategy-defining / application / success modifier / unknown` | | |
 
-Bei einem Messinstrument zusätzlich:
+In the case of an additional measuring instrument:
 
-| Frage | Festlegung/Ergebnis |
+| Question | Settlement/result |
 |---|---|
-| Zweck des Instruments | |
-| in seiner Berechnung verwendete Größen | |
-| zukünftige Zielgrößen, die nicht darin stecken | |
-| Vergleich mit kontinuierlichen Inputs/einfacher Baseline | |
-| Anteil je Label, nur deskriptiv | |
-| zusätzliche Trenninformation | |
-| betroffener Claim bei fehlender Trennung | |
+|Purpose of the instrument| |
+|Quantities used in its calculation| |
+|future targets that are not in it| |
+|Comparison with continuous inputs/simple baseline| |
+|Share per label, only descriptive| |
+|Additional separation information| |
+|Affected claim in the absence of separation| |
 
-Eine datenbasiert gefundene Bedingung wird nicht in die Quellenstrategie
-zurückgeschrieben. Prognostische Trennung beweist weder einen realen verborgenen
-State noch einen Akteur, Mechanismus oder Interventionseffekt.
+A condition discovered from data is not written back into the source strategy. Prognostic separation proves neither a real hidden state nor an actor, mechanism or intervention effect.
 
-## H5. Explorative Event- und Reaktionsanalyse
+## H5. Exploratory event and reaction analysis
 
-**Anwendbarkeit:** `ANWENDEN / N/A + Begründung`
+**Applicability:** `APPLY / N/A + justification`
 
-| Größe | Ergebnis | zulässige Interpretation |
+| Item | Result | Permitted interpretation |
 |---|---|---|
-| Reaktion auf Rohwert | | deskriptiv |
-| Reaktion auf Surprise | | prädiktiv oder kausal nur gemäß E7 |
-| zeitlich OOS geschätzte Reaction Innovation | | Prognosefehler/Anomalie |
-| Kettenglied-Abweichungen | | leg-spezifische Anomalien |
-| State-/Aufmerksamkeitsinteraktion | | Gegenhypothese, bis unabhängig validiert |
-| konkurrierende News-/Liquiditätserklärung | | Alternativerklärung |
+|Gross response| | descriptive |
+|Reaction to Surprise| |Predictive or causal only according to E7|
+|OOS estimated reaction innovation| | forecast error/anomaly |
+| Chain-link deviations | | leg-specific anomalies |
+| State/attention interaction | |Counter-hypothesis until independently validated|
+|competing news/liquidity statement| |Alternative declaration|
 
 ## H6. Quantitative Shock-Response-Map
 
-**Anwendbarkeit:** `ANWENDEN bei mehrgliedriger Event-/Wirkungskette / N/A + Begründung`
+**Applicability:** `APPLY for a multi-link event/effect chain / N/A + justification`
 
-| Glied/Asset | Horizont | Surprise-Faktoren | pre-event State-Interaktionen | Response-Koeffizient + Unsicherheit | Innovation rechtzeitig verfügbar? | zulässiges Label |
+| Chain link/asset |Horizon| Surprise factors | Pre-event state interactions |Response coefficient + uncertainty|Innovation available in time?|Permitted label|
 |---|---|---|---|---|---|---|
 | | | | | | | `TRANSMISSION_DIAGNOSTIC` |
 
-### Inkrementeller Test eines Informationsengpass-Kandidaten
+### Incremental test of an information-bottleneck candidate
 
-**Definiertes End-Outcome:** ...
+**Defined end outcome:** ...
 
-**M0:** `End-Outcome ~ Surprise-Faktoren + pre-event States`
+**M0:** `End outcome ~ surprise factors + pre-event states`
 
-**M1:** `M0 + rechtzeitig verfügbare Innovation des vorab gewählten Kettenglieds`
+**M1:** `M0 + timely available innovation from the pre-selected chain link`
 
-| Feld | Festlegung/Ergebnis |
+| Field | Settlement/result |
 |---|---|
-| Kandidat und Auswahlbegründung | |
-| Zeitpunkt realer Verfügbarkeit | |
-| primäre OOS-Loss-/Kalibrierungs-/Netto-Utility-Größe | |
+|Candidate and reason for selection| |
+|Time of real availability| |
+|primary OOS loss/calibration/net utility size| |
 | M0 OOS | |
 | M1 OOS | |
-| inkrementelle Verbesserung + Unsicherheit | |
-| Multiple-Testing-Behandlung | |
-| zulässige Entscheidung | `INFORMATION_BOTTLENECK_CANDIDATE / KEIN ZUSATZWERT / INCONCLUSIVE` |
+|incremental improvement + uncertainty| |
+| Multiple-testing treatment | |
+|Admissible decision| `INFORMATION_BOTTLENECK_CANDIDATE / NO_ADDED_VALUE / INCONCLUSIVE` |
 
 ---
 
 # I. Candidate Hypothesis
 
-**PHASENSTATUS:** `COMPLETE / BLOCKED`
+**PHASE STATUS:** `COMPLETE / BLOCKED`
 
-## I1. Primäre Hypothese
+## I1. Primary hypothesis
 
 > ...
 
 **Claim-Level:** `ASSOCIATIONAL_PREDICTIVE / INTERVENTIONAL / COUNTERFACTUAL`
 
-**Falls kausal: Estimand-Version und E7-Gate:** ...
+**Causal: Estimand version and E7 gate:** ...
 
-**Falls Constraint-Sprache verwendet wird:**
+**If constraint language is used:**
 
-**Constraint-Assessment-ID nach `schemas/constraint_assessment.schema.json`:** ...
+**Constraint assessment ID after `schemas/constraint_assessment.schema.json`:** ...
 
-| Feld | Festlegung |
+| Field | Specification |
 |---|---|
-| definiertes End-Outcome/Systemziel | |
+| Defined end outcome/system objective | |
 | Label | `TRANSMISSION_DIAGNOSTIC / INFORMATION_BOTTLENECK_CANDIDATE / IDENTIFIED_CAUSAL_LEVER / IMPLEMENTATION_CONSTRAINT` |
-| vorab definiertes Entscheidungskriterium | |
-| warum das Label nicht aus Korrelation oder großem Residuum abgeleitet wurde | |
+| Predefined decision criterion | |
+|why the label was not derived from correlation or large residual| |
 
-## I2. Gegenhypothese
+## I2. Counter-hypothesis
 
 > ...
 
-## I3. Erwartete Richtung
+## I3. Expected direction
 
-`POSITIV / NEGATIV / ZWEISEITIG`
+`POSITIVE / NEGATIVE / TWO_SIDED`
 
-## I4. Wirtschaftlich relevante Grenze
+## I4. Economically relevant threshold
 
 `δ_econ = ...`
 
-## I5. Falsifikationsbedingung
+## I5. Falsification condition
 
 ...
 
-## I6. Regel für unerwartetes Vorzeichen
+## I6. Rule for unexpected signs
 
-Wenn ein ausreichend präziser Effekt mit entgegengesetztem Vorzeichen beobachtet wird:
+If a sufficiently precise effect with opposite sign is observed:
 
-- alte Hypothese = `FALSIFIED`,
-- neue Hypothese = neue Version/Research-ID,
-- keine semantische Umetikettierung.
+- old hypothesis = `FALSIFIED`,
+- new hypothesis = new version/research ID,
+- no semantic relabeling.
 
-## I7. Zielstufe dieses Tests
+## I7. Target level of this test
 
-**Primär getestete Stufe:**
-`mechanism_supported / forward_predictive_oos / executable_net_edge`
+**Primary tested level:** `mechanism_supported / forward_predictive_oos / executable_net_edge`
 
-**Welche stärkere Stufe darf aus diesem Design ausdrücklich NICHT abgeleitet
-werden?** ...
+**What stronger level must NOT be explicitly derived from this design?** ...
 
-**Falls ein kontemporärer Zusammenhang untersucht wird:** Warum ist das Outcome
-nicht als Forward-Prognose beschriftet? ...
+**If a contemporary context is examined:** Why is the outcome not labeled as a forward forecast? ...
 
 ---
 
-# J. Vorhersage-Liste
+# J. Prediction list
 
-**PHASENSTATUS:** `COMPLETE / BLOCKED`
+**PHASE STATUS:** `COMPLETE / BLOCKED`
 
-| ID | Zusätzliche Vorhersage | Datengrundlage | Testmethode | Ergebnis darf Hypothese wie beeinflussen? |
+| ID |Additional prediction| Data basis | Test method |How can the result influence the hypothesis?|
 |---|---|---|---|---|
 | P1 | | | | |
 | P2 | | | | |
 
 ---
 
-# K. Pre-Mortem und Guardrails
+# K. Pre-Mortem and Guardrails
 
-**PHASENSTATUS:** `COMPLETE / BLOCKED`
+**PHASE STATUS:** `COMPLETE / BLOCKED`
 
-**Annahme:** Das Ergebnis sieht gut aus, scheitert später OOS oder live. Warum?
+**Assumption:** The result looks good, fails later OOS or live. Why?
 
-| Risiko | Warum plausibel? | Vorab-Check | Guardrail | Ablehnungskriterium |
+|Risk| Why plausible? | Pre-check | Guardrail | Rejection criterion |
 |---|---|---|---|---|
 | Leakage | | | | |
 | Selection Bias | | | | |
-| latenter Confounder/Collider | | | | |
-| post-treatment Control/nicht identifizierte Mediation | | | | |
-| falsche Erwartungs-Vintage/Eventfenster-Kontamination | | | | |
-| vermischte Nachrichtenschocks | | | | |
-| Aufmerksamkeit/Positionierung/Liquidität statt Mechanismusbruch | | | | |
-| zu wenig unabhängige Evidenz | | | | |
-| dominantes Symbol/Event | | | | |
+| latent confounder/collider | | | | |
+|post-treatment control/unidentified mediation| | | | |
+| wrong expectation vintage/event-window contamination | | | | |
+| mixed news shocks | | | | |
+|Attention/positioning/liquidity instead of mechanism breakage| | | | |
+|Too little independent evidence| | | | |
+| dominant symbol/event | | | | |
 | Multiple Testing | | | | |
-| Kosten/Slippage | | | | |
-| Midquote-Effekt ohne ausführbaren Fill | | | | |
-| Feed-Latenz/Clock-Desynchronisation/stale Quote | | | | |
-| öffentliche Tape-Signatur identifiziert latenten Akteur nicht | | | | |
-| Strukturbruch/Kalender- oder Venue-Regeländerung | | | | |
-| Live-Variable zu spät verfügbar | | | | |
-| Sonstiges | | | | |
+|Costs/Slippage| | | | |
+|Midquote effect without executable fill| | | | |
+| Feed latency/clock desynchronization/stale quote | | | | |
+|Public tape signature does not identify latent actor| | | | |
+|Structural breakage/calendar or venue rule change| | | | |
+|Live variable available too late| | | | |
+| Other | | | | |
 
 ---
 
-# L. Abhängigkeit, effektives N und Inferenz
+# L. Dependence, effective N and inference
 
-**PHASENSTATUS:** `COMPLETE / BLOCKED`
+**PHASE STATUS:** `COMPLETE / BLOCKED`
 
-## L1. Abhängigkeitsdiagnose
+## L1. Dependence diagnosis
 
-| Risiko | Vorhanden? | Messung/Begründung |
+|Risk| Present? |Measurement/justification|
 |---|---|---|
-| serielle Autokorrelation | | |
-| mehrere Signale pro Impuls | | |
-| überlappende Labels | | |
-| korrelierte Symbole | | |
-| gemeinsame Makroevents | | |
-| dominante Session-/Eventcluster | | |
+| serial autocorrelation | | |
+|multiple signals per pulse| | |
+|Overlapping labels| | |
+| correlated symbols | | |
+| joint macro events | | |
+| dominant session/event clusters | | |
 
 ## L2. Clusterdefinition
 
-**Primäre Clustereinheit:** ...
+**Primary cluster unit:** ...
 
-**Sekundäre Clustereinheit:** ...
+**Secondary cluster unit:** ...
 
-## L3. Gewählte Inferenzmethode
+## L3. Selected inference method
 
-`IID / BLOCK_BOOTSTRAP / CLUSTER_BOOTSTRAP / CLUSTER_ROBUST / ANDERE`
+`IID / BLOCK_BOOTSTRAP / CLUSTER_BOOTSTRAP / CLUSTER_ROBUST / OTHER`
 
-**Warum passend?** ...
+**Why appropriate?** ...
 
 ## L4. Purging / Embargo
 
-**Überlappen Label-/Outcome-Fenster über Train/Test-Grenzen?** `JA / NEIN`
+**Overlapping label/outcome windows over train/test limits?** `YES / NO`
 
-**Purging-Regel:** ...
+**Purging rule:** ...
 
-**Embargo-Regel:** ...
+**Embargo rule:** ...
 
-## L5. Effektives N
+## L5. Effective N
 
-**Methode:** ...
+**Method:** ...
 
-**Nominelles N:** ...
+**Nominal N:** ...
 
-**Effektives N / Clusterzahl:** ...
+**Effective N / cluster count:** ...
 
-**Design Effect `DE = Var(tatsächliches Design) / Var(IID-Referenz)`:** ...
+**Design effect `DE = Var(actual design) / Var(IID reference)`:** ...
 
-**Verwendete DE-Formel/Simulation und ihre Annahmen:** ...
+**Used DE formula/simulation and its assumptions:** ...
 
-**Weniger als 30 unabhängige Cluster?** `JA / NEIN / UNKLAR`
+**Less than 30 independent clusters?** `YES / NO / UNCLEAR`
 
-**Falls JA:** Status `SMALL_CLUSTER_WARNING`; verwendete Small-Sample-Methode oder Kalibrierung: ...
+**If YES:** Status `SMALL_CLUSTER_WARNING`; small sample method used or calibration: ...
 
 ---
 
-# M. Heavy Tails und Einflussdiagnostik
+# M. Heavy Tails and Influence Diagnostics
 
-**PHASENSTATUS:** `COMPLETE / BLOCKED / FAILED`
+**PHASE STATUS:** `COMPLETE / BLOCKED / FAILED`
 
-`N/A` ist nur für die Heavy-Tail-spezifischen Unterfelder zulässig, wenn Heavy Tails sachlich ausgeschlossen wurden. Einflussdiagnostik `M3` bleibt Pflicht.
+`N/A` is only allowed for the heavy tail specific subfields if heavy tails have been objectively excluded. Influence diagnostics `M3` remains mandatory.
 
-## M1. Primärer Lageparameter
+## M1. Primary location parameter
 
-`MEAN / MEDIAN / TRIMMED_MEAN / ROBUSTER_M_SCHÄTZER / ANDERE`
+`MEAN / MEDIAN / TRIMMED_MEAN / ROBUST_M_ESTIMATOR / OTHER`
 
-**Begründung:** ...
+** Justification:** ...
 
-## M2. Robuste Sensitivität
+## M2. Robust sensitivity
 
-**Sekundärer Schätzer:** ...
+**Secondary estimator:** ...
 
-**Trimming/Winsorisierung erlaubt?** ...
+**Trimming/Winsorization allowed?** ...
 
-**Falls ja: exakt wie und nur als primär oder Sensitivität?** ...
+**If yes: exactly how and only as primary or sensitivity?** ...
 
-## M3. Vorab definierte Einflussdiagnostik
+## M3. Predefined influence diagnostics
 
-| Diagnose | Schwelle/Entscheidungsregel |
+| Diagnostic | Threshold/decision rule |
 |---|---|
-| Leave-one-out-Spanne | |
-| Leave-one-cluster-out-Spanne | |
-| Anteil größte Beobachtung | |
-| Anteil größter Cluster | |
-| Ergebnis ohne dominantes Symbol | |
-| Ergebnis ohne dominante Periode/Eventgruppe | |
+| Leave-one-out range | |
+| Leave-one-cluster-out range | |
+|Proportion of greatest observation| |
+|Share of largest clusters| |
+|Result without dominant symbol| |
+|Result without dominant period/event group| |
 
-**Mindestregel:** Wenn das Entfernen eines einzelnen plausiblen Clusters das Vorzeichen oder die wirtschaftliche Schlussfolgerung kippt, keine robuste Bestätigung.
+**Minimum rule:** If removing a single plausible cluster tips the sign or economic conclusion, no robust confirmation.
 
 ---
 
 # N. Multiple Testing / Research Search Space
 
-**PHASENSTATUS:** `COMPLETE / BLOCKED / FAILED`
+**PHASE STATUS:** `COMPLETE / BLOCKED / FAILED`
 
-Eine konkrete Multiple-Testing-Korrektur in `N2` kann begründet `N/A` sein. Die formale Phase-0-Re-Kalkulation und das Pipeline-Integritätsgate sind niemals `N/A`.
+A specific multiple testing correction in `N2` can be justified `N/A`. The formal phase 0 recalculation and the pipeline integrity gate are never `N/A`.
 
-## N1. Tatsächlich untersuchte Freiheitsgrade
+## N1. Actually examined degrees of freedom
 
-| Dimension | Anzahl/Varianten |
+| Dimension | Count/variants |
 |---|---|
-| Hypothesen | |
-| Prädiktoren | |
-| Statevariablen | |
+|Hypotheses| |
+|Predictors| |
+| State variables | |
 | Lookbacks | |
-| Schwellen | |
+| Thresholds | |
 | Timeframes | |
 | Sessions | |
-| Symbole/Universen | |
-| Outcomes/Horizonte | |
+| Symbols/universes | |
+| Outcomes/horizons | |
 | Entries/Exits | |
 
-## N2. Gewählte Korrektur-/Bewertungsmethode
+## N2. Selected correction/assessment method
 
-`FDR / WHITE_REALITY_CHECK / HANSEN_SPA / DEFLATED_SHARPE / PBO / PIPELINE_BOOTSTRAP / N/A / ANDERE`
+`FDR / WHITE_REALITY_CHECK / HANSEN_SPA / DEFLATED_SHARPE / PBO / PIPELINE_BOOTSTRAP / N/A / OTHER`
 
-**Warum diese Methode?** ...
+Why this method?
 
 ## N2.1 Outcome evidence contract
 
@@ -942,38 +917,38 @@ The referenced artifact must pass
 The contract is referenced here rather than copied, so its frozen rules cannot
 diverge from the protected artifact.
 
-## N3. Formale Phase-0-Re-Kalkulation und Validation-Spezifikation
+## Formal Phase-0 Calculation and Validation Specification
 
-**PHASENSTATUS:** `COMPLETE / BLOCKED / FAILED`
+**PHASE STATUS:** `COMPLETE / BLOCKED / FAILED`
 
-| Feld | Eingefrorener Wert |
+| Field |Frozen value|
 |---|---|
-| finaler primärer Outcome und Nullmodell | |
+|Final primary outcome and zero model| |
 | `δ_econ` | |
-| `δ_plan` oder direktes Präzisionsziel | |
-| `H0 / H1` beziehungsweise Intervall-Entscheidungsregel | |
-| finale Streuungs- und Abhängigkeitsannahme | |
-| benötigtes effektives N / Clusterzahl im Stressszenario | |
-| daraus per DE/Simulation benötigtes nominelles N | |
-| aktuell vorhandene konservative Untergrenze des effektiven N | |
-| Validation-Dataset, Zeitraum, Rolle und Unangesehen-Status | |
-| Datensplit / äußeres Testfenster | |
-| Erfolgskriterium A | |
-| Gegenrichtungsregel B | |
-| Präzise-Null-Regel C | |
-| Inconclusive-Regel D | |
+|`δ_plan` or direct precision target| |
+| `H0 / H1` or interval decision rule | |
+|final spread and dependency assumption| |
+|Required effective N/cluster number in the stress scenario| |
+|nominal N required therefrom by DE/simulation| |
+|Current Conservative Lower Limit of Effective N| |
+|Validation Dataset, Period, Role and Unviewed Status| |
+|Data split / external test window| |
+| Success criterion A | |
+| Opposite-direction rule B | |
+|Precise zero rule C| |
+| Inconclusive rule D | |
 
-**Fachentscheidung:** `WEITER / DATEN BESCHAFFEN / ABBRECHEN`
+**Research decision:** `CONTINUE / OBTAIN_DATA / ABORT`
 
-### N3-Gate – Formale Machbarkeit vor Freeze
+### N3-Gate – Formal feasibility before Freeze
 
 `PASS / FAIL / BLOCKED`
 
-**Festes Mapping:** `WEITER → PASS`, `DATEN BESCHAFFEN → BLOCKED bis Daten vorliegen`, `ABBRECHEN → FAIL`. Nur dieses `PASS` kann den Weg zum Pipeline-Integritätsgate und Freeze öffnen.
+**Fixed mapping:** `CONTINUE → PASS`, `OBTAIN_DATA → BLOCKED until data are available`, `ABORT → FAIL`. Only this `PASS` can open the way to the pipeline integrity gate and freeze.
 
-## N4. Pipeline-Integritätsprüfung vor Freeze
+## N4 Pipeline Integrity Check before Freeze
 
-**PHASENSTATUS:** `COMPLETE / BLOCKED / FAILED`
+**PHASE STATUS:** `COMPLETE / BLOCKED / FAILED`
 
 | Machine-enforced assessment | Value |
 |---|---|
@@ -985,100 +960,100 @@ diverge from the protected artifact.
 
 The referenced artifact must pass
 `scripts/validate_pipeline_integrity_assessment.py`. Only `overall_gate: PASS`
-may produce `PHASENSTATUS: COMPLETE`; a schema-valid artifact is not enough by
+may produce `PHASE STATUS: COMPLETE`; a schema-valid artifact is not enough by
 itself.
 
-| Test-ID | Kontrolltyp | Kontrollbasis | Empirisches Dataset + gültige Rolle | Null-/Synthetic-Design | Erhaltene Zeit-/Cluster-/State-/Volatilitätsstruktur | geplantes B | tatsächliches B | Zielpräzision + Monte-Carlo-SE/Intervall | Vorab-Akzeptanzregel | Ergebnis |
+| Test ID | Control type | Control basis |Empirical dataset + valid role| Null/synthetic design |Resulting time/cluster/state/volatility structure| Planned B |Actual B|Target precision + Monte Carlo SE/interval| Predefined acceptance rule |Result|
 |---|---|---|---|---|---|---:|---:|---|---|---|
-| PI-NULL | wiederholte Null-/Surrogatkontrolle | `empirisch abgeleitet / rein synthetisch` | nur bei empirischer Basis: `DEVELOPMENT` | | | | | | | |
-| PI-SENTINEL | bekannter Effekt mit festem Vorzeichen und Timing | `rein synthetisch` | kein empirisches Dataset | | | | | | | |
-| PI-CAUSAL-TOOL | bei `TOOLING_REQUIRED`: bekannter DAG/Adjustmentsatz und bekannter Effekt | `rein synthetisch` | kein empirisches Dataset | | | | | | | |
+| PI-NULL | repeated null/surrogate control | `empirically derived / purely synthetic` |only on an empirical basis: `DEVELOPMENT`| | | | | | | |
+| PI-SENTINEL |known effect with fixed sign and timing| `purely synthetic` | no empirical dataset | | | | | | | |
+| PI-CAUSAL-TOOL |`TOOLING_REQUIRED`: known DAG/adjustment set and known effect| `purely synthetic` | no empirical dataset | | | | | | | |
 
-- [ ] Vollständige Feature-, Auswahl-, Filter-, Timing- und Auswertungspipeline ausgeführt.
-- [ ] Nullkontrolle zerstört keine für das Nullmodell relevante Abhängigkeit; jede ungeklärte relevante Strukturabweichung erzwingt `N4-Gate: BLOCKED`.
-- [ ] Fehlalarmrate beziehungsweise Null-Effektverteilung liegt innerhalb der vorab definierten Toleranz.
-- [ ] Vorab definierte Zielpräzision der Fehlalarmrate wurde erreicht.
-- [ ] Sentinel wurde mit korrektem Vorzeichen, Index und Timing erkannt.
-- [ ] Bei `TOOLING_REQUIRED` wurden Import, Version, Haupt-API und Paketkompatibilität geprüft; der kausale Sentinel lieferte zulässigen Adjustmentsatz und korrekte Richtung.
+- [ ] Full feature, selection, filter, timing and evaluation pipeline executed.
+- [ ] Zero control does not destroy any dependency relevant to the zero model; any unexplained relevant structural deviation enforces `N4-Gate: BLOCKED`.
+- [ ] False alarm rate or zero effect distribution is within the previously defined tolerance.
+- [ ] Predefined target precision of the false alarm rate has been achieved.
+- [ ] Sentinel was detected with correct sign, index and timing.
+- [ ] `TOOLING_REQUIRED` tested import, version, main API and package compatibility; the causal sentinel provided a permissible adjustment set and correct direction.
 
-### N4-Gate – Pipeline-Integrität
+### N4-Gate – Pipeline integrity
 
 `PASS / FAIL / BLOCKED`
 
-**Status-Mapping:** `PASS → COMPLETE`, `FAIL → FAILED`, `BLOCKED → BLOCKED`.
+**Status mapping:** `PASS → COMPLETE`, `FAIL → FAILED`, `BLOCKED → BLOCKED`.
 
-Ein einzelner Shuffle- oder Random-Walk-Lauf genügt nicht.
+A single shuffle or random walk is not enough.
 
 ---
 
 # O. FREEZE
 
-**PHASENSTATUS:** `COMPLETE / BLOCKED / FAILED`
+**PHASE STATUS:** `COMPLETE / BLOCKED / FAILED`
 
-## O1. Freeze-Checkliste
+## O1. Freeze checklist
 
-Jeder Punkt muss `YES` sein. `N/A + Begründung` ist nur dort zulässig, wo die Tabellenzeile dies ausdrücklich erlaubt.
+Each point must be `YES`. `N/A + justification` is only allowed where the table row expressly allows it.
 
-| Punkt | Status |
+| Checkpoint | Status |
 |---|---|
-| Research-ID/Version fest | |
-| Candidate Hypothesis fest | |
-| Gegenhypothese fest | |
-| Claim-Level fest | |
-| kausales Estimand fest oder `N/A: ASSOCIATIONAL_PREDICTIVE` | |
-| Identifikationsstrategie/-annahmen fest oder `NOT_REQUIRED_PREDICTIVE` | |
-| E7-Identifikationsgate bestanden oder `NOT_REQUIRED_PREDICTIVE` | |
-| Bei kausalem Claim validiertes `causal_identification_assessment` vorhanden | |
-| Strukturmodell-/Identifikationsdesign-Version fest oder `NOT_REQUIRED_PREDICTIVE` | |
-| E9-Tooling-Gate bestanden oder `NOT_REQUIRED` | |
-| primäre Bibliothek je kausaler Aufgabe und Haupt-API fest oder `TOOLING_NOT_REQUIRED + Begründung` | |
-| Python-/Paketversionen, Lockfile/Environment, Seeds und Splitlogik fest | |
-| Beobachtbarkeit vollständig | |
-| Phänomendefinition fest | |
-| State-Variablen fest | |
-| Ausschlüsse fest | |
-| primärer Outcome fest | |
-| Nullmodell fest | |
-| Event-/Surprise-Konstruktion fest oder `N/A + Begründung` | |
-| Erwartungsquelle, Vintage, Zeitstempel und Eventfenster fest oder `N/A` | |
-| Zahl/Rotation/Orthogonalisierung/Interpretation der Surprise-Faktoren fest oder `N/A` | |
-| Regel für Eventfenster-Kontamination fest oder `N/A` | |
-| Reaktionsmodell/zeitliche Trainingsregel/Unsicherheit fest oder `N/A` | |
-| Reaktionsabweichung korrekt als nicht-kausales Residuum gelabelt oder kausale Kette identifiziert | |
-| bei Informationsengpass-Claim: End-Outcome, Kandidat, Verfügbarkeitszeitpunkt und M0/M1-OOS-Test fest oder `N/A` | |
-| Constraint-Label und Entscheidungskriterium fest oder `N/A` | |
-| erwartete Richtung fest | |
-| δ_econ fest | |
-| δ_plan oder direktes Präzisionsziel fest | |
-| H0/H1 beziehungsweise Intervall-Entscheidungsregel fest | |
-| primärer Schätzer fest | |
-| robuste Sensitivität fest | |
-| Abhängigkeitsmethode fest | |
-| effektives-N-Methode fest | |
-| Purging/Embargo fest oder N/A | |
-| Einflussdiagnostik fest | |
-| Heavy-Tail-Regel fest | |
-| Multiple-Testing-Methode fest | |
-| formale Phase-0-Re-Kalkulation `N3` bestanden | |
-| Validation-Datensplit/-fenster fest | |
-| Mindest-N aus konservativem Stressszenario fest | |
-| Validation-Plan und A/B/C/D-Entscheidungsregeln vollständig | |
-| Pipeline-Integritätsgate bestanden | |
-| bei `TOOLING_REQUIRED`: kausaler Tool-Sentinel und Kompatibilitäts-Smoke-Test bestanden | |
-| Datenrollen fest | |
-| Validation-Dataset unangesehen | |
-| Final Holdout unangesehen oder `N/A + Begründung` bei äußerem Walk-Forward | |
-| Erfolgskriterium fest | |
-| Gegenrichtung-Regel fest | |
-| Null-/Ineffekt-Regel fest | |
-| Inconclusive-Regel fest | |
-| Kostenmodell-Version fest | |
+|Research ID/version fixed| |
+|Solid candidate hypothesis| |
+|Counter-hypothesis fixed| |
+|Claim level fixed| |
+|Causal estimand solid or `N/A: ASSOCIATIONAL_PREDICTIVE`| |
+|Identification strategy/assumptions fixed or `NOT_REQUIRED_PREDICTIVE`| |
+|E7 identification gate passed or `NOT_REQUIRED_PREDICTIVE`| |
+|For causal claim validated `causal_identification_assessment` available| |
+|Structural model/identification design version fixed or `NOT_REQUIRED_PREDICTIVE`| |
+|E9 tooling gate passed or `NOT_REQUIRED`| |
+|primary library per causal task and main API fixed or `TOOLING_NOT_REQUIRED + justification`| |
+|Python/package versions, lockfile/environment, seeds and split logic fixed| |
+|Complete observability| |
+|Phenomenon fixed| |
+|State variables fixed| |
+|Fixed exclusions| |
+|Fixed primary outcome| |
+|Fixed zero model| |
+|Event/surprise construction fixed or `N/A + justification`| |
+|Expectation source, vintage, timestamp and event window fixed or `N/A`| |
+|Number/rotation/Orthogonalization/interpretation of the Surprise factors fixed or `N/A`| |
+|Fixed Event Window Contamination Rule or `N/A`| |
+|Reaction model/time training rule/uncertainty fixed or `N/A`| |
+|Response deviation correctly labeled as non-causal residue or causal chain identified| |
+|for information bottleneck claim: end-outcome, candidate, time of availability and M0/M1-OOS test fixed or `N/A`| |
+|Constraint label and decision criterion fixed or `N/A`| |
+|Expected direction fixed| |
+|δ econ fixed| |
+|δ plan or direct precision target fixed| |
+|H0/H1 or interval decision rule fixed| |
+|primary estimator fixed| |
+|Robust sensitivity fixed| |
+|Dependency method fixed| |
+|Efficient N-method| |
+|Purging/Embargo Solid or N/A| |
+|Influence diagnostics fixed| |
+|Heavy-tail rule fixed| |
+|Multiple testing method fixed| |
+| formal phase-0 recalculation `N3` passed | |
+|Validation data split/window fixed| |
+|Minimum N fixed from conservative stress scenario| |
+|Validation plan and A/B/C/D decision rules fully| |
+|Pipeline integrity gate passed| |
+|`TOOLING_REQUIRED`: Causal Tool Sentinel and Compatibility Smoke Test| |
+|Data rolls fixed| |
+| Validation dataset unviewed | |
+|Final holdout unseen or `N/A + justification` external walk-forward| |
+|Success criterion fixed| |
+|Counter-direction rule fixed| |
+|Fixed zero-effect rule| |
+|Inconclusive rule fixed| |
+|Cost model version fixed| |
 
-## O2. Freeze-Erklärung
+## O2 Freeze Declaration
 
-> Ab diesem Zeitpunkt werden keine materiellen Designänderungen anhand der laufenden Validation-Ergebnisse vorgenommen. Jede materielle Änderung erzeugt eine neue Research-Version und verbraucht die bis dahin angesehenen Daten für diese neue Version als Development Data.
+> From this point on, no material design changes will be made based on the ongoing validation results. Each material change generates a new Research version and consumes the previously viewed data for this new version as Development Data.
 
-**Freeze bestätigt am:** ...
+**Freeze confirmed on:** ...
 
 ### O-Gate
 
@@ -1086,232 +1061,227 @@ Jeder Punkt muss `YES` sein. `N/A + Begründung` ist nur dort zulässig, wo die 
 
 ---
 
-# P. Validation-Ausführung des eingefrorenen Plans
+# P. Validation execution of the frozen plan
 
-**PHASENSTATUS:** `COMPLETE / BLOCKED / FAILED`
+**PHASE STATUS:** `COMPLETE / BLOCKED / FAILED`
 
-## P1. Freeze-Abgleich
+## P1. Freeze comparison
 
-**Referenz auf eingefrorenen Plan in N3/O:** ...
+**Reference to frozen plan in N3/O:** ...
 
-**Wurde seit Freeze irgendein Designfeld geändert?** `JA / NEIN`
+**Was any design field changed since freeze?** `YES / NO`
 
-Falls `JA`: Validation nicht starten beziehungsweise als `INVALID_TEST` beenden; betroffene Daten auf `DEVELOPMENT` umklassifizieren.
+If `YES`: Do not start validation or terminate as `INVALID_TEST`; reclassify affected data to `DEVELOPMENT`.
 
-## P2. Tatsächlich verwendete Datenarchitektur
+## P2. Data architecture actually used
 
-| Dataset | Rolle | Zeitraum | Unangesehen bestätigt? | entspricht N3/O? |
+| Dataset | Role |Period|Unexamined confirmed?| Matches N3/O? |
 |---|---|---|---|---|
 | | VALIDATION | | | |
 
-**Final Holdout weiterhin vollständig reserviert und unangetastet?** `JA / NEIN / N/A + Begründung`
+**Final holdout still fully reserved and untouched?** `YES / NO / N/A + justification`
 
-Falls `NEIN`: normale Validation nicht beginnen beziehungsweise Final-Holdout-Status verwerfen und Datenrolle neu klassifizieren.
+If `NO`: do not start normal validation or discard final holdout status and reclassify data role.
 
-## P3. Stichproben- und Startgate
+## P3. Sample and start gate
 
-**Eingefrorenes Mindest-N aus N3/O:** ...
+**Minimum frozen N from N3/O:** ...
 
-**Tatsächlich verfügbares nominelles N:** ...
+**Actually available nominal N:** ...
 
-**Tatsächlich verfügbare konservative Untergrenze des effektiven N / Clusterzahl:** ...
+**Actually available conservative lower limit of effective N/cluster number:** ...
 
-### P-Gate – Validation darf starten
+### P-Gate validation can start
 
 `PASS / FAIL / BLOCKED`
 
-Nur `PASS` erlaubt die Ausführung. `FAIL → FAILED`, `BLOCKED → BLOCKED`.
+Only `PASS` allows execution. `FAIL → FAILED`, `BLOCKED → BLOCKED`.
 
 ---
 
-# Q. Validation-Ergebnis
+# Q. Validation result
 
-**PHASENSTATUS:** `COMPLETE / BLOCKED / FAILED`
+**PHASE STATUS:** `COMPLETE / BLOCKED / FAILED`
 
-## Q1. Unabhängigkeit bestätigt?
+## Q1 Confirmed Independence?
 
-`JA / NEIN / UNKLAR`
+`YES / NO / UNCLEAR`
 
-Falls NEIN: Welche Designentscheidung wurde beeinflusst? ...
+If NO: Which design decision was influenced? ...
 
-**Konsequenz:** Dataset auf `DEVELOPMENT` umklassifizieren; unabhängige Validation nicht behaupten.
+**Consequence:** Reclassify Dataset to `DEVELOPMENT`; Independent validation is not claimed.
 
-### Q1-Gate – Validation-Unabhängigkeit
+### Q1-Gate – Validation Independence
 
 `PASS / FAIL / BLOCKED`
 
-**Mapping:** `JA → PASS`, `NEIN → FAIL + INVALID_TEST`, `UNKLAR → BLOCKED`. Ohne `PASS` dürfen Q2–Q8 nicht als unabhängige Validation interpretiert werden.
+**Mapping:** `YES → PASS`, `NO → FAIL + INVALID_TEST`, `UNCLEAR → BLOCKED`. Without `PASS`, Q2–Q8 must not be interpreted as independent validation.
 
-## Q2. Primärer Effekt
+## Q2. Primary effect
 
-| Größe | Ergebnis |
+|Size|Result|
 |---|---:|
-| Punktschätzer | |
-| Nullmodell | |
-| Differenz | |
-| Unsicherheitsintervall | |
+|Point estimator| |
+| Null model | |
+| Difference | |
+| Uncertainty interval | |
 | δ_econ | |
-| Primäre Entscheidung A/B/C/D | |
+|Primary Decision A/B/C/D| |
 
-## Q3. Robuste Sensitivität
+## Q3. Robust sensitivity
 
-| Schätzer/Analyse | Ergebnis | Ändert Schlussfolgerung? |
+|Estimator/analysis|Result|Does the conclusion change?|
 |---|---:|---|
 | | | |
 
-## Q4. Einflussdiagnostik
+## Q4. Influence diagnostics
 
-| Diagnose | Ergebnis | Gate bestanden? |
+| Diagnostic |Result| Gate passed? |
 |---|---|---|
 | Leave-one-out | | |
 | Leave-one-cluster-out | | |
-| ohne dominantes Symbol | | |
-| ohne dominante Periode/Eventgruppe | | |
+|Without a dominant symbol| | |
+|without dominant period/event group| | |
 
-## Q5. Multiple-Testing-adjustierte Evidenz
+## Q5. Multiple-testing-adjusted evidence
 
 ...
 
-## Q6. Identifikationsdiagnostik bei kausalem Claim
+## Q6. Identification diagnostics for causal claims
 
-**Anwendbarkeit:** `ANWENDEN / N/A: ASSOCIATIONAL_PREDICTIVE`
+**Applicability:** `APPLY / N/A: ASSOCIATIONAL_PREDICTIVE`
 
-| eingefrorene Annahme/Diagnose | Ergebnis | bestanden? | Konsequenz für kausalen Claim |
+|Frozen acceptance/diagnosis|Result| Passed? |Consequence for causal claim|
 |---|---|---|---|
-| Overlap/Positivity oder Instrumentrelevanz | | | |
-| Balance/Pre-Trends/Placebo, falls einschlägig | | | |
-| Negativkontrolle | | | |
-| Sensitivität gegenüber latentem Confounding | | | |
-| alternative zulässige DAGs/partielle Identifikation | | | |
+|Overlap/positivity or instrument relevance| | | |
+|Balance/Pre-Trends/Placebo if applicable| | | |
+| Negative control | | | |
+|Sensitivity to latent confounding| | | |
+|Alternative allowed DAGs/partial identification| | | |
 
-| Tooling-Ausführung | protokollierter Wert |
+|Tooling execution|Logged value|
 |---|---|
-| Runtime, Pakete und Versionen | |
-| tatsächlich verwendete Klassen/Funktionen | |
-| Seeds und tatsächliche Split-/Cross-Fitting-Logik | |
-| Warnungen, Deprecations oder Kompatibilitätsabweichungen | |
-| Artefakt-/Konfigurationspfad oder Hash | |
-| unabhängige Reproduktion/Sensitivität | |
+|Runtime, packages and versions| |
+|Classes/functions actually used| |
+|Seeds and actual split/cross-fitting logic| |
+|Warnings, deprecations or compatibility deviations| |
+|Artifact/configuration path or hash| |
+|Independent reproduction/sensitivity| |
 
-**Kausaler Claim gemäß eingefrorenem Gate weiterhin zulässig?** `JA / NEIN / BLOCKED`
+**Causal claim still allowed according to frozen gate?** `YES / NO / BLOCKED`
 
-## Q7. Event-/Reaktionsinnovation, falls anwendbar
+## Event/response innovation, if applicable
 
-| Größe | OOS-Ergebnis | Kalibrierung/Unsicherheit | Interpretation |
+|Size|OOS result|Calibration/uncertainty| Interpretation |
 |---|---|---|---|
-| Surprise-Faktoren einschließlich Rotations-/Vorzeichenstabilität | | | |
-| erwartete Reaktion | | | |
+|Surprise factors including rotation/sign stability| | | |
+| Expected response | | | |
 | `REACTION_INNOVATION` | | | |
-| Kettenglied-Abweichungen | | | |
-| M0 gegen M1 für vorab gewählten Informationsengpass-Kandidaten | | | `inkrementeller Prognosewert, kein Kausalbeweis` |
-| konkurrierende News-/Liquiditätserklärung | | | |
+| Chain-link deviations | | | |
+|M0 vs M1 for pre-selected information bottleneck candidates| | | `incremental predictive value, not causal evidence` |
+|competing news/liquidity statement| | | |
 
-**Wurde eine Reaktionsanomalie ohne bestandenes Ketten-Identifikationsdesign als `CAUSAL_CHAIN_BREAK` bezeichnet?** `NEIN / JA → INVALID_CAUSAL_CLAIM`
+**Was a reaction anomaly without a passed chain-identification design called `CAUSAL_CHAIN_BREAK`?** `NO / YES → INVALID_CAUSAL_CLAIM`
 
-**Zulässiges Constraint-/Diagnoselabel nach OOS:** `TRANSMISSION_DIAGNOSTIC / INFORMATION_BOTTLENECK_CANDIDATE / IDENTIFIED_CAUSAL_LEVER / KEIN LABEL / N/A`
+**Authorised constraint/diagnostic label according to OOS:** `TRANSMISSION_DIAGNOSTIC / INFORMATION_BOTTLENECK_CANDIDATE / IDENTIFIED_CAUSAL_LEVER / NO_LABEL / N/A`
 
-## Q8. Validation-Entscheidung
+## Q8 Validation decision
 
 `VALIDATED / FALSIFIED / PRECISE_NULL / INCONCLUSIVE / INVALID_TEST`
 
-**Begründung:** ...
+** Justification:** ...
 
-## Q9. Wissenschaftsphilosophische Fortsetzungsprüfung
+## Q9. Scientific-philosophy continuation review
 
-**Aktivierung:** `AKTIVIERT`, sobald nach `FALSIFIED`, `PRECISE_NULL`,
-`INCONCLUSIVE` oder `INVALID_TEST` eine materielle Revision oder empirische
-Fortsetzung erwogen wird; sonst `NOT_ACTIVATED_NO_CONTINUATION`.
+**Activation:** `ACTIVATED` as soon as a material revision or empirical continuation is considered after `FALSIFIED`, `PRECISE_NULL`, `INCONCLUSIVE`, or `INVALID_TEST`; `NOT_ACTIVATED_NO_CONTINUATION`.
 
-**Review-ID nach `schemas/scientific_philosophy_review.schema.json`:** ...
+**Review ID after `schemas/scientific_philosophy_review.schema.json`:** ...
 
-**Eingefrorenes Q8-Ergebnis unverändert übernommen?** `JA / NEIN → FAILED`
+**Frozen Q8 result unchanged?** `YES / NO → FAILED`
 
-| Ebene | Eintrag |
+| Level | Entry |
 |---|---|
-| Kernclaim des Forschungsprogramms | |
-| Schutzgürtel/Hilfsannahmen | |
-| Fehlerzurechnung | `NON_UNIQUE / UNIQUE_IDENTIFIED / UNRESOLVED` |
-| unterscheidende Evidenz für eindeutige Zurechnung | |
-| Anomaliestatus | `ISOLATED / RECURRING / PROGRAM_LEVEL / UNRESOLVED` |
-| tragfähiges Rivalenprogramm vorhanden? | `JA + Referenz / NEIN; keine positive Evidenz fuer den alten Claim` |
+|Core claim of the research program| |
+|Protective belt/auxiliary assumptions| |
+| Attribution of failure | `NON_UNIQUE / UNIQUE_IDENTIFIED / UNRESOLVED` |
+|Different evidence for clear attribution| |
+| Anomaly status | `ISOLATED / RECURRING / PROGRAM_LEVEL / UNRESOLVED` |
+|Is there a viable rival program?| `YES + reference / NO; no positive evidence for the old claim` |
 
-| Revisions-ID | geändertes Bündelglied | neuer, vorher nicht implizierter Vorhersagesatz | Falsifikator | unabhängiger Evaluationsplan | Klassifikation |
+| Revision ID |modified bundle link|New prediction set not previously implied| Falsifier |Independent evaluation plan| Classification |
 |---|---|---|---|---|---|
 | | | | | | `PROGRESSIVE / DEGENERATIVE / DIAGNOSTIC_ONLY / UNRESOLVED` |
 
-**Fortsetzungsentscheidung:**
+**Continuation decision:**
 `NO_CONTINUATION / NEW_RESEARCH_ID / DIAGNOSTIC_ONLY / SUSPEND_JUDGMENT / RETAIN_PROGRAM_PROVISIONALLY / RIVAL_PROGRAM_REQUIRED`
 
-**Bei `NEW_RESEARCH_ID`:** ausgewählte progressive Revisions-ID und neue
-Research-ID: ...
+**For `NEW_RESEARCH_ID`:** selected progressive revision ID and new research ID: ...
 
-Eine neue ID allein genügt nicht. Ohne neue widerlegbare Vorhersage und
-Unabhängigkeitsplan ist keine empirische Fortsetzung autorisiert. Diagnostik
-darf das alte Q8-Ergebnis nicht in Erfolg umetikettieren.
+A new ID alone is not enough. Without new refutable prediction and independence plan, no empirical continuation is authorized. Diagnostics must not relabel the old Q8 result into success.
 
 ---
 
-# R. Final Holdout / äußeres Walk-Forward
+# R. Final holdout / external walk-forward
 
-**PHASENSTATUS:** `COMPLETE / N/A / BLOCKED`
+**PHASE STATUS:** `COMPLETE / N/A / BLOCKED`
 
-## R1. Holdout niemals zuvor angesehen?
+## R1. Holdout never viewed before?
 
-`JA / NEIN`
+`YES / NO`
 
-Falls NEIN: kein Final Holdout.
+If no, no final holdout.
 
-## R2. Ergebnis
+## R2. Result
 
 ...
 
-## R3. Schlussfolgerung
+## R3. Conclusion
 
 ...
 
 ---
 
-# S. Robustheit und Replikation
+# S. Robustness and replication
 
-**PHASENSTATUS:** `COMPLETE / N/A / BLOCKED`
+**PHASE STATUS:** `COMPLETE / N/A / BLOCKED`
 
-| Test | Ergebnis | Schlussfolgerung stabil? |
+| Test |Result| Conclusion stable? |
 |---|---|---|
-| benachbarte Parameter | | |
-| andere Perioden | | |
-| andere Symbole | | |
-| Statebereiche | | |
-| Forward-Horizonte | | |
-| alternative zulässige DAGs/Identifikationsannahmen, falls kausal | | |
-| andere Eventfenster gemäß Freeze | | |
-| Erwartungsquelle/Vintage-Sensitivität | | |
-| Reaction-Innovation-Kalibrierung | | |
-| ohne dominanten Cluster | | |
-| ohne dominantes Symbol | | |
+| Adjacent parameters | | |
+| Other periods | | |
+| Other symbols | | |
+| State ranges | | |
+| Forward horizons | | |
+|Alternative permitted DAGs/identification assumptions, if causal| | |
+|Other event windows according to Freeze| | |
+|Source of expectation/vintage sensitivity| | |
+| Reaction-innovation calibration | | |
+|Without a dominant cluster| | |
+|Without a dominant symbol| | |
 
 ---
 
-# T. Phänomen-Entscheidung
+# T. Phenomenon decision
 
 `NO_PHENOMENON / INCONCLUSIVE / CANDIDATE_HYPOTHESIS / VALIDATED_PHENOMENON / REJECTED`
 
-**Begründung:** ...
+** Justification:** ...
 
-**Wichtig:** Erst bei `VALIDATED_PHENOMENON` darf Strategy Engineering als regulärer nächster Schritt beginnen.
+**Important:** Only at `VALIDATED_PHENOMENON` can Strategy Engineering start as a regular next step.
 
-**Strategy Engineering als nächster Schritt ausdrücklich beschlossen?** `JA / NEIN`
+**Strategy engineering as the next step explicitly decided?** `YES / NO`
 
 **POST-T-BLOCKSTATUS:** `ACTIVATED / DEFERRED_AFTER_VALIDATION / NOT_ACTIVATED_BY_T_GATE`
 
-`ACTIVATED` ist nur bei `VALIDATED_PHENOMENON + JA` zulässig. Bei `VALIDATED_PHENOMENON + NEIN` gilt `DEFERRED_AFTER_VALIDATION`; ohne validiertes Phänomen gilt `NOT_ACTIVATED_BY_T_GATE`. In den beiden nicht aktivierten Zuständen werden `U–Y` nicht feldweise bearbeitet; Abschnitt `Z` wird fortgeführt.
+`ACTIVATED` is only allowed at `VALIDATED_PHENOMENON + YES`. For `VALIDATED_PHENOMENON + NO`, `DEFERRED_AFTER_VALIDATION` applies; without a validated phenomenon, `NOT_ACTIVATED_BY_T_GATE` applies. In the two non-activated states, `U–Y` are not processed field by field; Section `Z` will continue.
 
 ---
 
-# U. Strategy Engineering
+# U. Strategy engineering
 
-**PHASENSTATUS:** `COMPLETE / N/A / BLOCKED`
+**PHASE STATUS:** `COMPLETE / N/A / BLOCKED`
 
-## U1. Validiertes Phänomen, das umgesetzt werden soll
+## U1. Validated phenomenon to be implemented
 
 ...
 
@@ -1343,230 +1313,229 @@ Falls NEIN: kein Final Holdout.
 
 ...
 
-## U9. Positionsgröße / Risikomodell
+## U9. Position size / risk model
 
 ...
 
-## U10. Detailliertes zustandsabhängiges Kostenmodell
+## U10. Detailed conditional cost model
 
-| State/Execution-Bedingung | Gebühren | Spread | Slippage | Funding | Gesamtkosten |
+|State/execution condition|Fees| Spread | Slippage | Funding | Total cost |
 |---|---:|---:|---:|---:|---:|
 | | | | | | |
 
-## U11. Capacity/Liquidität
+## U11 Capacity/Liquidity
 
 ...
 
-## U12. Entry-/Exit-Diagnostik geplant
+## U12. Planned entry/exit diagnostics
 
-| Größe | Speichern? |
+| Item | Store? |
 |---|---|
 | MFE | |
 | MAE | |
-| Zeit bis MFE | |
-| Zeit bis MAE | |
-| Zeit bis Stop | |
-| Zeit bis Target | |
-| Exit-Grund | |
+| Time to MFE | |
+| Time to MAE | |
+| Time to stop | |
+| Time to target | |
+| Exit reason | |
 
 ---
 
 # V. Prerequisite Tree / Transition Tree
 
-**PHASENSTATUS:** `COMPLETE / N/A / BLOCKED`
+**PHASE STATUS:** `COMPLETE / N/A / BLOCKED`
 
-## V1. Implementation-Constraint-Register
+## V1. Implementation constraint register
 
-**Definiertes Systemziel:** `ausführbare risikoadjustierte Netto-Performance / konkretisieren`
+**Defined system objective:** `executable risk-adjusted net performance / specify`
 
-| Kandidat | Typ | Wie begrenzt er das Systemziel? | Evidenz | beeinflussbar? | nächste Aktion | Widerlegungskriterium |
+| Candidate | Type |How does it limit the system objective?| Evidence | Controllable? |Next action| Falsification criterion |
 |---|---|---|---|---|---|---|
-| | `Daten/Latenz/Liquidität/Kosten/Prozess` | | | | | |
+| | `data/latency/liquidity/cost/process` | | | | | |
 
-**Aktuelles `IMPLEMENTATION_CONSTRAINT`:** ... / `KEINES IDENTIFIZIERT`
+**Current `IMPLEMENTATION_CONSTRAINT`:** ... / `NONE_IDENTIFIED`
 
-## V2. Umsetzungshindernisse
+## V2. Implementation obstacles
 
-| Hindernis | notwendiges Zwischenziel |
+| Obstacle | Necessary intermediate objective |
 |---|---|
 | | |
 
-## V3. Transition Tree
+## V3. Transition tree
 
-| Schritt | Aktion | erwarteter neuer Zustand | Prüfung |
+|Step| Action | Expected new state |Test|
 |---|---|---|---|
 | | | | |
 
 ---
 
-# W. Vollständige Strategie – erneuter OOS-/Forward-Test
+# W. Complete strategy – renewed OOS/Forward test
 
-**PHASENSTATUS:** `COMPLETE / N/A / BLOCKED`
+**PHASE STATUS:** `COMPLETE / N/A / BLOCKED`
 
-| Feld | Eintrag |
+| Field | Entry |
 |---|---|
-| OOS-/Forward-Dataset | |
-| Datenrolle | |
-| Kostenmodell-Version | |
-| Anzahl nomineller Trades | |
-| effektive Clusterzahl | |
+| OOS/forward dataset | |
+| Data role | |
+| Cost-model version | |
+| Number of nominal trades | |
+| Effective cluster count | |
 | Net Expectancy | |
 | Drawdown | |
-| MFE/MAE-Diagnostik | |
-| Prozessabweichungen | |
-| Ergebnis | |
+| MFE/MAE diagnostics | |
+| Process deviations | |
+|Result| |
 
 ---
 
-# X. Aktivierungsgate
+# X. Activation gate
 
-**PHASENSTATUS:** `COMPLETE / BLOCKED / FAILED`
+**PHASE STATUS:** `COMPLETE / BLOCKED / FAILED`
 
 | Gate | PASS/FAIL/BLOCKED |
 |---|---|
-| Phänomen validiert | |
-| Strategy Engineering eingefroren | |
-| Vollständige Strategie OOS bestanden | |
-| Kosten realistisch | |
-| Risiko-/Positionsgrößenlogik vollständig | |
-| Prozess reproduzierbar | |
-| Degradationsregeln vorab definiert | |
+|Phenomenon validated| |
+| Strategy engineering frozen | |
+|Complete strategy OOS passed| |
+|Costs realistic| |
+|Total risk/position size logic| |
+| Process reproducible | |
+| Degradation rules predefined | |
 
-**Entscheidung:** `ACTIVE_STRATEGY_CANDIDATE / ACTIVE / NOT_ACTIVE`
+**Decision:** `ACTIVE_STRATEGY_CANDIDATE / ACTIVE / NOT_ACTIVE`
 
 ---
 
-# Y. Forward-OOS und Degradation
+# Y. Forward-OOS and degradation
 
-**PHASENSTATUS:** `COMPLETE / N/A / BLOCKED`
+**PHASE STATUS:** `COMPLETE / N/A / BLOCKED`
 
-## Y1. Vorab definierte Warn-/Suspendierungsregeln
+## Y1. Predefined warning/suspension rules
 
-| Ebene | Warnschwelle | Suspendierungsschwelle | Revalidierungskriterium |
+| Level | Warning threshold | Suspension threshold | Revalidation criterion |
 |---|---|---|---|
-| statistisch | | | |
-| wirtschaftlich | | | |
+| statistical | | | |
+| economic | | | |
 | State/Regime | | | |
 | Event/Reaction Innovation | | | |
-| Identifikationsdiagnostik, falls kausal | | | |
-| Prozess | | | |
+|Identification diagnosis, if causal| | | |
+| process | | | |
 
-## Y2. Laufende Monitoring-Ergebnisse
+## Y2. Ongoing monitoring results
 
-| Zeitraum | N | effektives N/Cluster | Expectancy | Kosten | Drawdown | State-Mix | Reaction-Innovation-Kalibrierung | Eventkontamination | Prozessqualität | Status |
+|Period| N | Effective N/cluster | Expectancy |Costs| Drawdown | State mix | Reaction-innovation calibration | Event contamination |Process quality| Status |
 |---|---:|---:|---:|---:|---:|---|---|---|---|---|
 | | | | | | | | | | | |
 
 ---
 
-# Z. Entscheidungs- und Versionsprotokoll
+# Z. Decision and version protocol
 
-| Datum | Research-Version | Phase | Entscheidung | Begründung | Daten, die dadurch verbraucht wurden | Neuer Status |
+| Date | Research version | Phase |Decision|Justification|Data that was consumed| New status |
 |---|---|---|---|---|---|---|
 | | | | | | | |
 
-## Z1. Vorab notierte Ablehnungsgründe
+## Z1. Preliminary noted reasons for rejection
 
-Diese Gründe werden **vor** dem relevanten Test notiert.
+These reasons are noted **before** the relevant test.
 
 1. ...
 2. ...
 3. ...
 
-## Z2. Endentscheidung
+## Z2. Final decision
 
-**Aktueller/Endstatus:** `NO_PHENOMENON / INCONCLUSIVE / CANDIDATE_HYPOTHESIS / IN_TEST / VALIDATED_PHENOMENON / ECONOMICALLY_UNTRADEABLE / ACTIVE_STRATEGY_CANDIDATE / ACTIVE / UNDER_OBSERVATION / SUSPENDED / REVALIDATED / REJECTED`
+**Current/final status:** `NO_PHENOMENON / INCONCLUSIVE / CANDIDATE_HYPOTHESIS / IN_TEST / VALIDATED_PHENOMENON / ECONOMICALLY_UNTRADEABLE / ACTIVE_STRATEGY_CANDIDATE / ACTIVE / UNDER_OBSERVATION / SUSPENDED / REVALIDATED / REJECTED`
 
-**Nächste Prozessentscheidung:** `WEITER / NEUE_VERSION / MEHR_DATEN / ABBRECHEN / N/A`
+**Next process decision:** `CONTINUE / NEW_VERSION / MORE_DATA / ABORT / N/A`
 
-**Falls Q9 `NEW_RESEARCH_ID`:** neue Research-ID und progressive Revisions-ID: ...
+**If Q9 `NEW_RESEARCH_ID`:** new Research ID and progressive revision ID: ...
 
-**Begründung:** ...
+** Justification:** ...
 
 ---
 
-# Abschluss-Check für den AI-Agenten
+# Final check for the AI agent
 
-Der Agent darf den jeweils aktivierten Teil des Research-Artefakts nicht als vollständig bezeichnen, bevor er die zutreffenden Fragen explizit beantwortet hat. Nach einem frühen `FAIL` gelten Checkpunkte hinter dem abgebrochenen Gate gesammelt als `NOT_REACHED_DUE_TO_FAILED_GATE`; sie benötigen keine künstlichen Einzelantworten.
+The agent must not designate the activated part of the research artifact as complete until it has explicitly answered the relevant questions. After an early `FAIL`, checkpoints collected behind the aborted gate are considered `NOT_REACHED_DUE_TO_FAILED_GATE`; They do not require artificial individual responses.
 
-## Erreichter Research-Pfad `A–T` und immer aktives Protokoll `Z`
+## Achieved research path `A–T` and always active protocol `Z`
 
-- [ ] Wurde die Rohidee mit Herkunft, Scope, Alternativerklärungen, Datenbedarf und verbrauchtem Informationsbudget in der Hypothesen-Inbox erfasst?
-- [ ] War der Intake vor Phase 0 `PROMOTED`, ohne Promotion als Evidenzbestätigung auszugeben?
-- [ ] Sind Venue, Handelsphase, Kalender/DST, Zeitbasis, Horizont und Ereignisklasse eindeutig?
-- [ ] Ist die News-/Makro-Policy operationalisiert und sind bei `FILTER_KNOWN_EVENTS` Feeds, Ausschlussfenster und Coverage-Lücken dokumentiert?
-- [ ] Werden `mechanism_supported`, `forward_predictive_oos` und `executable_net_edge` getrennt geführt und nicht automatisch hochgestuft?
-- [ ] Wurde Phase 0 durchgeführt?
-- [ ] Stammt Mindest-N aus Power/Präzision statt aus vorhandenem N?
-- [ ] Wurde eine konservative Planungsstreuung samt Stressszenario statt nur eines Discovery-Punktschätzers verwendet?
-- [ ] Sind alle Dataset-Rollen korrekt und Kontaminationen geloggt?
-- [ ] Ist der Claim-Level ausdrücklich als prädiktiv, interventional oder kontrafaktisch deklariert?
-- [ ] Existieren bei kausalem Claim ein präzises Estimand, eine Identifikationsstrategie, dokumentierte Annahmen und `E7 PASS`?
-- [ ] Wurden Granger-/Causal-Discovery-Ergebnisse nur innerhalb ihrer Annahmen und nicht als automatischer Kausalbeweis interpretiert?
-- [ ] Wurde der Tooling-Router angewendet und `TOOLING_REQUIRED / TOOLING_NOT_REQUIRED / TOOLING_BLOCKED` begründet?
-- [ ] Wurde bei ausführbarer kausaler Analyse eine passende Spezialbibliothek statt einer ungeprüften Eigenimplementierung verwendet?
-- [ ] Sind Runtime, exakte Paketversionen, Haupt-APIs, Seeds, Splits, Warnungen und Environment reproduzierbar protokolliert?
-- [ ] Wurde ein Bibliotheksoutput nicht als Ersatz für Identifikation oder als automatisches Upgrade des Claim-Levels behandelt?
-- [ ] Existiert ein versioniertes SCM/DAG, Potential-Outcomes-Design,
-      strukturell-ökonometrisches oder anderes explizites Identifikationsmodell
-      beziehungsweise `NOT_REQUIRED_PREDICTIVE`?
-- [ ] Ist für jede Prädiktorvariable der Beobachtbarkeitszeitpunkt dokumentiert?
-- [ ] Sind Confounder vor dem Schock/Treatment bekannt und post-treatment Mediatoren nicht versehentlich als Total-Effekt-Controls verwendet?
-- [ ] Sind bei Event-Research Erwartungsquelle, Vintage, Surprise-Formel, Zeitstempel, Eventfenster und Kontaminationsregel eingefroren?
-- [ ] Sind Anzahl, Konstruktion und Interpretation der Surprise-Faktoren eingefroren und zum Research-Suchraum gezählt?
-- [ ] Wurde zunächst die einfachste angemessene Shock-Response-Regression verwendet?
-- [ ] Beruht ein `INFORMATION_BOTTLENECK_CANDIDATE` auf einem vorab festgelegten zeitlichen M0/M1-OOS-Vergleich?
-- [ ] Wurden Informationsengpass, kausaler Hebel und Implementation Constraint sprachlich getrennt?
-- [ ] Wird `Expected − Actual` als Reaktionsinnovation und nur bei identifizierter Kette als Kausalbruch bezeichnet?
-- [ ] Ist das Nullmodell explizit?
-- [ ] Sind Effektgröße und Unsicherheit angegeben?
-- [ ] Wurde effektives N statt nur nominelles N beurteilt?
-- [ ] Wurden Cluster/Überlappung/Korrelation geprüft?
-- [ ] Wurde bei weniger als 30 unabhängigen Clustern `SMALL_CLUSTER_WARNING` ausgelöst und methodisch behandelt?
-- [ ] Sind Influence Diagnostics vorab definiert?
-- [ ] Ist Heavy-Tail-Behandlung vorab definiert?
-- [ ] Ist Multiple Testing dokumentiert?
-- [ ] Hat die vollständige Pipeline vor Freeze das Integritätsgate bestanden?
-- [ ] Sind Vorhersage-Liste und Pre-Mortem abgeschlossen?
-- [ ] Ist der Freeze vollständig?
-- [ ] War Validation wirklich unabhängig?
-- [ ] Wurden OOS-/Backtest-Erfolg und kausale Identifikation getrennt beurteilt?
-- [ ] Wurde ein unpräzises Ergebnis nicht als Anlass zur ergebnisgetriebenen Revision benutzt?
-- [ ] Wurde ein entgegengesetztes Vorzeichen als neue Hypothese behandelt?
-- [ ] Wurde bei einer Fortsetzung nach nicht positivem Q8-Ergebnis das getestete Bündel offengelegt, das alte Ergebnis unverändert gelassen und nur eine progressive Revision mit neuer Vorhersage, Falsifikator, unabhängigem Evaluationsplan und neuer Research-ID autorisiert?
-- [ ] Wurde Abschnitt `Z` während des gesamten Research-Prozesses geführt?
+- [ ] Was the raw idea with origin, scope, alternative explanations, data requirements and spent information budget recorded in the hypothesis inbox?
+- [ ] Was the intake before phase 0 `PROMOTED`, without issuing a promotion as evidence confirmation?
+- [ ] Are the venue, trading phase, calendar/DST, time base, horizon and event class unique?
+- [ ] Is the news/macro policy operationalized and are `FILTER_KNOWN_EVENTS` feeds, exclusion windows and coverage gaps documented?
+- [ ] Are `mechanism_supported`, `forward_predictive_oos` and `executable_net_edge` run separately and not automatically upgraded?
+- [ ] Was phase 0 carried out?
+- [ ] Does minimum N come from power/precision instead of from existing N?
+- [ ] Was conservative planning dispersion and a stress scenario used instead of just one Discovery point estimator?
+- [ ] Are all dataset roles correct and contaminations logged?
+- [ ] Is the claim level explicitly declared as predictive, interventional or counterfactual?
+- [ ] Do causal claims have a precise estimand, an identification strategy, documented assumptions and `E7 PASS`?
+- [ ] Were Granger/Causal Discovery results interpreted only within their assumptions and not as automatic causal proof?
+- [ ] Was the tooling router applied and `TOOLING_REQUIRED / TOOLING_NOT_REQUIRED / TOOLING_BLOCKED` justified?
+- [ ] Was executable causal analysis using a suitable specialized library instead of an untested self-implementation?
+- [ ] Are runtime, exact package versions, main APIs, seeds, splits, alerts and environment reproducible logged?
+- [ ] Was a library output not treated as a substitute for identification or as an automatic claim level upgrade?
+- [ ] If there is a versioned SCM/DAG, potential-outcomes design,
+structural econometric or other explicit identification model or `NOT_REQUIRED_PREDICTIVE`?
+- [ ] Is the observability time documented for each predictor variable?
+- [ ] Are confounders known before shock/treatment and post-treatment mediators not accidentally used as total effect controls?
+- [ ] Are Expectation Source, Vintage, Surprise Formula, Time Stamp, Event Window and Contamination Rule frozen at Event Research?
+- [ ] Are the number, construction and interpretation of the Surprise factors frozen and counted to the research search space?
+- [ ] Was the simplest adequate shock-response regression used first?
+- [ ] Is a `INFORMATION_BOTTLENECK_CANDIDATE` based on a predefined time M0/M1-OOS comparison?
+- [ ] Were the information bottleneck, causal leverage and implementation constraint linguistically separated?
+- [ ] Is `Expected − Actual` described as a reaction innovation and only in the identified chain as causal break?
+- [ ] Is the null model explicit?
+- [ ] Are the effect size and uncertainty given?
+- [ ] Was effective N assessed instead of only nominal N?
+- [ ] Have cluster/overlap/correlation been tested?
+- [ ] Was `SMALL_CLUSTER_WARNING` triggered and methodically handled in less than 30 independent clusters?
+- [ ] Are Influence Diagnostics Predefined?
+- [ ] Is heavy tail treatment predefined?
+- [ ] Is multiple testing documented?
+- [ ] Did the full pipeline pass the integrity gate before Freeze?
+- [ ] Are Prediction List and Pre-Mortem Completed?
+- [ ] Is the freeze complete?
+- [ ] Was validation really independent?
+- [ ] Were OOS/backtest success and causal identification assessed separately?
+- [ ] Was an imprecise result not used as an occasion for result-driven revision?
+- [ ] Was an opposite sign treated as a new hypothesis?
+- [ ] If continued after a non-positive Q8 result, was the tested bundle disclosed, the old result left unchanged and only a progressive revision with new prediction, falsifier, independent evaluation plan and new research ID authorized?
+- [ ] Was the `Z` section maintained throughout the research process?
 
-## Nur bei `POST-T-BLOCKSTATUS: ACTIVATED` – Strategy Engineering `U–Y`
+## `POST-T-BLOCKSTATUS: ACTIVATED` – Strategy Engineering `U–Y`
 
-- [ ] Wurde die ökonomische Umsetzbarkeit nach Phänomen-Validation detailliert geprüft?
-- [ ] Wurde die vollständige Strategie erneut OOS/Forward geprüft?
-- [ ] Sind Degradations- und Abschaltregeln vor Aktivierung definiert?
+- [ ] Was the economic feasibility checked in detail by phenomenon validation?
+- [ ] Has the full strategy been reviewed again OOS/Forward?
+- [ ] Are degradation and shutdown rules defined before activation?
 
-## Operative Agentenartefakte
+## Operational agent artifacts
 
-- [ ] Wurde vor jedem materiellen Research-Übergang ein valider Orchestration State gespeichert und eine valide Routing Decision erzeugt?
-- [ ] Wurden zwingende Fachagenten nur mit begrenztem Arbeitsauftrag aufgerufen, ihre Ergebnisse vor Übernahme geprüft und danach erneut geroutet?
-- [ ] Liegt bei jedem interventionalen oder kontrafaktischen Claim vor Schätzung und kausaler Sprache ein validiertes Causal-Identification-Assessment vor?
-- [ ] Besitzt jede persistierte Rohidee ein valides, versioniertes Hypothesen-Intake-Artefakt?
-- [ ] Besitzt jeder tatsächliche LLM-/Agentenlauf eine eindeutige Run-ID und ein valides Run-Manifest?
-- [ ] Sind Modell/Snapshot, Prompts, Parameter, Tools, Datenstände, Quellenstände und Output-Hashes je Run reproduzierbar referenziert?
-- [ ] Besitzt jede entscheidungsrelevante Aussage eine Claim-ID und eine epistemische Klasse?
-- [ ] Sind `SOURCE_FACT`-Claims mit konkreter Quelle und Fundstelle belegt?
-- [ ] Wurde bei einschlägigem Finance-Research die Coverage von Journal of Finance, Journal of Financial Economics, arXiv `q-fin` und weiteren relevanten Primärquellen dokumentiert?
-- [ ] Besitzt jede akademische Quelle eine `work_id`, eine eigene `source_id` für die konkret verwendete Fassung sowie Publikationsstatus, Studientyp, Autoren, Venue/DOI oder arXiv-ID/-Kategorie/-Version?
-- [ ] Wurden Fassungen und Indizes derselben `work_id` dedupliziert und nicht als unabhängige Bestätigungen gezählt?
-- [ ] Sind Preprints und Working Papers als vorläufig gekennzeichnet, ohne aus arXiv-Kategorie oder Journalprestige ein Qualitätsupgrade abzuleiten?
-- [ ] Wurden Correction, Expression of Concern, Retraction und Withdrawal mit Prüfmethode, Zeitpunkt und gegebenenfalls Notice-URI geprüft?
-- [ ] Sind Code-, Daten- und unabhängiger Replikationsstatus samt Referenzen protokolliert?
-- [ ] Referenzieren `CALCULATED_VALUE`, `ESTIMATE`, `INFERENCE` und `FORECAST` ihre Eingangsclaims und Methoden?
-- [ ] Sind Quellenkonflikte, fehlende Evidenz und `UNKNOWN` sichtbar, ohne sie sprachlich zu glätten?
-- [ ] Sind menschliche Reviews und Overrides append-only protokolliert und gegen stilles Überschreiben geschützt?
-- [ ] Wurde nach materiellen Agentenänderungen das versionierte Eval- und Regression Gate bestanden?
-- [ ] Stimmen alle Einträge im operativen Artefaktregister mit ihren gespeicherten Hashes und Statuswerten überein?
+- [ ] Was a valid orchestration state stored and a valid routing decision generated before each material research transition?
+- [ ] Were mandatory specialist agents only called with a limited work order, their results checked before takeover and then routed again?
+- [ ] Is there a validated causal identification assessment for each interventional or counterfactual claim before estimation and causal language?
+- [ ] Does every persistent crude idea have a valid, versioned hypothesis-intake artifact?
+- [ ] Does each actual LLM/agent run have a unique Run ID and a valid Run Manifest?
+- [ ] Are model/snapshot, prompts, parameters, tools, data statuses, source statuses and output hashes reproducibly referenced per run?
+- [ ] Does every decision-relevant statement have a claim ID and an epistemic class?
+- [ ] Are `SOURCE_FACT` claims with a specific source and reference?
+- [ ] Has relevant finance research documented the coverage of Journal of Finance, Journal of Financial Economics, arXiv `q-fin` and other relevant primary sources?
+- [ ] Does each academic source have a `work_id`, its own `source_id` for the specific version used as well as publication status, study type, authors, venue/DOI or arXiv-ID/category/version?
+- [ ] Were versions and indices of the same `work_id` deduplicated and not counted as independent confirmations?
+- [ ] Are preprints and working papers marked as preliminary without deriving a quality upgrade from arXiv category or journal prestige?
+- [ ] Have Correction, Expression of Concern, Retraction and Withdrawal been tested with Test Method, Time and, if applicable, Notice URI?
+- [ ] Are code, data and independent replication statuses and references logged?
+- [ ] Do `CALCULATED_VALUE`, `ESTIMATE`, `INFERENCE` and `FORECAST` reference their input claims and methods?
+- [ ] Are source conflicts, lack of evidence and `UNKNOWN` visible without linguistically smoothing them?
+- [ ] Are human reviews and overrides append-only logged and protected against silent overwriting?
+- [ ] Was the versioned Eval and Regression Gate passed after material agent changes?
+- [ ] Do all entries in the operational artifact register match their stored hashes and status values?
 
-## Gate-Konsistenz
+## Gate consistency
 
-- [ ] Bei einem frühen Gate-Abbruch: Wurden alle nicht mehr erreichbaren Folgeabschnitte einmalig als `NOT_REACHED_DUE_TO_FAILED_GATE` markiert und `Z` abgeschlossen?
-- [ ] Bei `BLOCKED`: Blieben Folgeabschnitte unangetastet und wurden Blocker/fehlende Information in `Z` protokolliert?
-- [ ] Wurden `U–Y` nur nach bestandenem T-Gate aktiviert?
-- [ ] Bei `DEFERRED_AFTER_VALIDATION` oder `NOT_ACTIVATED_BY_T_GATE`: Wurden `U–Y` geschlossen gelassen, statt künstlich mit Einzel-`N/A` befüllt zu werden?
+- [ ] In case of an early gate termination: Were all subsequent sections that can no longer be reached marked once as `NOT_REACHED_DUE_TO_FAILED_GATE` and `Z` completed?
+- [ ] For `BLOCKED`: Were subsequent sections untouched and were blockers/missing information logged in `Z`?
+- [ ] Were `U–Y` only activated after passing T-Gate?
+- [ ] For `DEFERRED_AFTER_VALIDATION` or `NOT_ACTIVATED_BY_T_GATE`: Were `U–Y` left closed instead of being artificially filled with single `N/A`?

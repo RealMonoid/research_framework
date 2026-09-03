@@ -17,7 +17,7 @@
       "recorded_at": "2026-08-30T09:00:00Z",
       "reviewer": {
         "reviewer_id": "reviewer-001",
-        "display_name": "Erika Beispiel",
+        "display_name": "Erika Example",
         "role": "RESEARCHER"
       },
       "target": {
@@ -28,13 +28,13 @@
       },
       "reason": {
         "reason_code": "FACTUAL_ERROR",
-        "rationale": "Der Wert wurde gegenüber der Primärquelle zu grob gerundet.",
+        "rationale": "The value was rounded too coarsely relative to the primary source.",
         "evidence_refs": [
           "evidence-link-001"
         ]
       },
-      "before": "Der veröffentlichte Messwert beträgt 8 Prozent.",
-      "after": "Der veröffentlichte Messwert beträgt 8,2 Prozent.",
+      "before": "The published measurement is 8 percent.",
+      "after": "The published measurement is 8.2 percent.",
       "before_hash": "eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
       "after_hash": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
       "supersedes_review_id": null,
@@ -50,7 +50,7 @@
             "actor_id": "reviewer-001"
           },
           "status_after": "PROPOSED",
-          "comment": "Korrektur vorgeschlagen.",
+          "comment": "Correction proposed.",
           "previous_event_hash": null,
           "event_hash": "1111111111111111111111111111111111111111111111111111111111111111"
         },
@@ -64,7 +64,7 @@
             "actor_id": "owner-001"
           },
           "status_after": "APPROVED",
-          "comment": "Korrektur anhand der Quelle freigegeben.",
+          "comment": "Correction approved against the source.",
           "previous_event_hash": "1111111111111111111111111111111111111111111111111111111111111111",
           "event_hash": "2222222222222222222222222222222222222222222222222222222222222222"
         },
@@ -78,7 +78,7 @@
             "actor_id": "review-processor"
           },
           "status_after": "APPLIED",
-          "comment": "Korrektur in das Zielartefakt übernommen.",
+          "comment": "Correction applied to the target artifact.",
           "previous_event_hash": "2222222222222222222222222222222222222222222222222222222222222222",
           "event_hash": "3333333333333333333333333333333333333333333333333333333333333333"
         }

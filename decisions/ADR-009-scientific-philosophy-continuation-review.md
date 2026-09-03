@@ -1,67 +1,63 @@
-# ADR-009: Wissenschaftsphilosophische Prüfung von Fehlerzurechnung und Fortsetzung
+# ADR-009: Scientific-philosophy review of failure attribution and continuation
 
 **Status:** Accepted; pre-operationalization scope amended by ADR-010
 **Date:** 2026-08-31
-**Deciders:** Projektverantwortlicher und Maintainer des Research-Frameworks
+**Deciders:** Research owner and research-framework maintainer
 
 ## Context
 
-Ein Test betrifft nicht nur eine Hypothese, sondern auch Hilfsannahmen,
-Operationalisierung, Messung, Datenqualität, Scope, Modell und Implementierung.
-Nach einem negativen Ergebnis ist daher logisch nicht automatisch bestimmt,
-welches Glied scheiterte. Besonders bei aus Prosa rekonstruierten Strategien
-entsteht sonst ein falsches Dilemma: entweder die Kernidee vorschnell verwerfen
-oder die Operationalisierung nach dem Ergebnis so lange ändern, bis das
-gewünschte Resultat erscheint.
+A test concerns not only a hypothesis, but also auxiliary assumptions,
+operationalization, measurement, data quality, scope, model, and implementation.
+After a negative result, logic therefore does not determine automatically which
+link failed. This is especially important for strategies reconstructed from
+prose: otherwise a false dilemma appears—either reject the core idea too early
+or keep changing the operationalization after seeing the result until the
+desired outcome appears.
 
-Die bestehende Viererentscheidung und die Regel „unerwartetes Vorzeichen erzeugt
-höchstens eine neue Hypothese“ schützen das eingefrorene Ergebnis. Es fehlte aber
-ein eigener Vertrag für die Frage, welche Anschlussänderung wissenschaftlich
-neuen Gehalt besitzt.
+The existing four-state outcome decision and the rule that an unexpected sign
+can generate at most a new hypothesis protect the frozen result. What was
+missing was a separate contract for deciding which follow-up change contains
+genuinely new scientific content.
 
 ## Decision
 
-1. `agents/scientific-philosophy-critic.md` wird als dauerhafter Agentenvertrag
-   eingeführt.
-2. `schemas/scientific_philosophy_review.schema.json` trennt Kernclaim,
-   Hilfsannahmen, Fehlerzurechnung, Forschungsprogramm, Anomaliestatus und
-   Revisionsvorschläge.
-3. Duhem-Quine wird als Zurechnungsgrenze verwendet: Ohne unterscheidende
-   Evidenz bleibt die Fehlerursache `NON_UNIQUE` oder `UNRESOLVED`.
-4. Das Q8-Ergebnis der alten Research-ID bleibt unverändert.
-5. Lakatos klassifiziert Anschlussänderungen als `PROGRESSIVE`, `DEGENERATIVE`,
-   `DIAGNOSTIC_ONLY` oder `UNRESOLVED`.
-6. `PROGRESSIVE` verlangt eine zuvor nicht implizierte Vorhersage, einen
-   Falsifikator, einen unabhängigen Evaluationsplan und eine neue Research-ID.
-7. Degenerative Änderungen und Diagnostik autorisieren keinen neuen
-   Bestätigungstest. Diagnostik kann einen Fehler lokalisieren, aber keinen
-   alten Claim retten.
-8. Kuhns Perspektive wird auf den Status des Forschungsprogramms begrenzt.
-   Isolierte oder wiederkehrende Anomalien und verfügbare Rivalen werden
-   erfasst; das Fehlen eines Rivalen zählt nicht als positive Evidenz.
+1. `agents/scientific-philosophy-critic.md` is a permanent agent contract.
+2. `schemas/scientific_philosophy_review.schema.json` separates the core claim,
+   auxiliary assumptions, error attribution, research programme, anomaly status,
+   and revision proposals.
+3. Duhem–Quine is used as an attribution limit: without discriminating evidence,
+   the cause of failure remains `NON_UNIQUE` or `UNRESOLVED`.
+4. The Q8 result of the old Research ID remains unchanged.
+5. Lakatos classifies follow-up changes as `PROGRESSIVE`, `DEGENERATIVE`,
+   `DIAGNOSTIC_ONLY`, or `UNRESOLVED`.
+6. `PROGRESSIVE` requires a previously unimplied prediction, a falsifier, an
+   independent evaluation plan, and a new Research ID.
+7. Degenerative changes and diagnostics do not authorize a new confirmatory
+   test. Diagnostics can locate an error, but cannot rescue an old claim.
+8. Kuhn's perspective is limited to the status of the research programme.
+   Isolated or recurring anomalies and available rivals are recorded; the
+   absence of a rival is not positive evidence.
 
-## Rejected Alternatives
+## Rejected alternatives
 
-- **Jeden Fehlschlag eindeutig der Hypothese zurechnen:** verworfen, weil der
-  Test das gesamte Bündel betrifft.
-- **Jede alternative Operationalisierung erneut testen:** verworfen, weil eine
-  nachträgliche Variante ohne neuen empirischen Gehalt nur den Misserfolg
-  umgeht.
-- **Neue Research-ID als alleinige Lösung:** verworfen; neue Benennung erzeugt
-  keine neue Vorhersage.
-- **Kuhn als Rechtfertigung zum Ignorieren der Anomalie:** verworfen; die
-  Programmebene ändert den Befund des Einzeltests nicht.
-- **Wissenschaftsphilosophie als Pflichtblock für jede Rohidee:** verworfen.
-  ADR-010 verlangt die frühe Begriffsprüfung gezielt bei unvollständig
-  definierten Quellenstrategien; gewöhnliche Rohideen werden damit nicht
-  belastet.
+- **Attribute every failure uniquely to the hypothesis:** rejected because the
+  test concerns the entire bundle.
+- **Retest every alternative operationalization:** rejected because a post-result
+  variant without new empirical content merely circumvents the failure.
+- **Use a new Research ID as the sole solution:** rejected; a new label creates
+  no new prediction.
+- **Use Kuhn to justify ignoring an anomaly:** rejected; programme-level status
+  does not change the finding of the individual test.
+- **Make philosophy of science a mandatory block for every raw idea:** rejected.
+  ADR-010 requires early concept testing specifically for incompletely defined
+  source strategies; ordinary raw ideas are not burdened.
 
 ## Consequences
 
-- Ein negatives Ergebnis kann ehrlich unterbestimmt bleiben, ohne beliebige
-  nachträgliche Rettung zu erlauben.
-- Quellenstrategien dürfen mit einer begründeten neuen Übersetzung weiter
-  untersucht werden, wenn diese eine eigenständige riskante Vorhersage erzeugt.
-- Das Artefakt ist kein Backtest, kein Ergebnisgenerator und kein Human Review.
-- Der synthetische VWAP-Fall demonstriert nur den Vertrag; er behauptet keinen
-  realen Test oder Edge.
+- A negative result may remain honestly underdetermined without permitting
+  arbitrary post-result rescue.
+- Source strategies may continue with a reasoned new operationalization when it
+  produces an independent risky prediction.
+- The artifact is neither a backtest, a result generator, nor a human review.
+- The synthetic VWAP case demonstrates only the contract; it claims no real test
+  or edge.

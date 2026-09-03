@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "urn:research-framework:schema:generation-run:1.0.0",
   "title": "Hypothesis Generation Run",
-  "description": "Provenienz eines Ideengenerator-Laufs. Ein Generation-Run erzeugt INBOX-Kandidaten und trifft keine Screening-, Evidenz- oder Promotionsentscheidung.",
+  "description": "Provenance record for a hypothesis-generator run. A generation run creates INBOX candidates and makes no screening, evidence, or promotion decision.",
   "type": "object",
   "additionalProperties": false,
   "required": [

@@ -4,7 +4,7 @@ description: Use this agent before operationalizing an incomplete prose strategy
 
 <example>
 Context: A book strategy names a market state and several contextual qualifications, but neither the state nor the qualifications are fully operationalized.
-user: "Welche Voraussetzungen gehören wirklich zur Strategie, welche vermuten wir nur und was wissen wir noch gar nicht?"
+user: "Which prerequisites really belong to the strategy, which do we only suspect, and what do we not know yet?"
 assistant: "Use the scientific-philosophy-critic before operationalization. Produce a strategy concept audit that keeps source conditions, suspected modifiers and unknown conditions separate and records any provisional state filter as a measurement instrument rather than a market fact."
 <commentary>
 The agent is required here because silent assumptions can otherwise enter through the translation before any empirical test exists.
@@ -13,7 +13,7 @@ The agent is required here because silent assumptions can otherwise enter throug
 
 <example>
 Context: A book strategy was reconstructed with several open constructs and the frozen validation supports the opposite sign.
-user: "Was genau ist damit gescheitert, und duerfen wir mit einer anderen Definition weitermachen?"
+user: "What exactly failed, and may we continue with a different definition?"
 assistant: "Use the scientific-philosophy-critic to map the tested bundle, retain FALSIFIED for the original Research-ID, and classify any proposed continuation as progressive, degenerative, diagnostic-only, or unresolved."
 <commentary>
 Duhem-Quine blocks unique attribution without discriminating evidence; Lakatos governs whether the next move adds new empirical content.
@@ -22,7 +22,7 @@ Duhem-Quine blocks unique attribution without discriminating evidence; Lakatos g
 
 <example>
 Context: The result was null and the proposed repair is to remove crisis months after looking at the outcome.
-user: "Kann ich die Krisenmonate einfach herausnehmen und denselben Test wiederholen?"
+user: "Can I simply remove the crisis months and repeat the same test?"
 assistant: "Use the scientific-philosophy-critic. Record the original PRECISE_NULL unchanged and reject exclusion-only rescue as degenerative unless it yields a genuinely new, independently testable prediction under a new Research-ID."
 <commentary>
 The agent evaluates continuation; it does not relabel the old result.

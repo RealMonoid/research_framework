@@ -72,18 +72,18 @@
       "audited_at": "2026-08-30T09:10:00Z"
     },
     "coverage_limitations": [
-      "FILTER_KNOWN_EVENTS entfernt nur Ereignisse in den benannten Feeds; ungeplante Nachrichten und nicht erfasste Statusmeldungen koennen die Stichprobe weiterhin kontaminieren."
+      "FILTER_KNOWN_EVENTS removes only events in the named feeds; unscheduled news and unrecorded status messages may still contaminate the sample."
     ]
   },
   "provenance": {
     "source_kind": "LLM_IDEA",
     "source_refs": [],
-    "origin_summary": "Aus einer Diskussion ueber Orderbuch-Ungleichgewicht als intraday Hypothesengenerator uebernommen; noch keine empirische Bestaetigung."
+    "origin_summary": "Taken from a discussion of order-book imbalance as an intraday hypothesis generator; no empirical confirmation yet."
   },
-  "idea_statement": "Wenn ein vorab definiertes Order-Flow-Imbalance-Mass bei normalem Spread und ausserhalb bekannter Events positiv extrem ist, verbessert es die Prognose des Midprice-Returns in den folgenden 30 Sekunden gegenueber einem zustandsangepassten Nullmodell.",
+  "idea_statement": "If a pre-defined order-flow imbalance measure is positively extreme during a normal spread and outside known events, it improves the forecast of the mid-price return over the following 30 seconds relative to a state-adjusted null model.",
   "variable_selection": {
     "mode": "PREDEFINED",
-    "rationale": "Die Konstrukte folgen der vorab formulierten Orderbuchhypothese; es fand noch keine outcome-gesteuerte Suche ueber einen groesseren Variablenraum statt.",
+    "rationale": "The constructs follow the pre-specified order-book hypothesis; no outcome-driven search across a larger variable space has taken place.",
     "candidate_universe_ref": null,
     "selection_data_refs": [],
     "selection_dataset_role": "NOT_APPLICABLE",

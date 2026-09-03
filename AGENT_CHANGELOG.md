@@ -6,6 +6,24 @@ are defined only in `AGENTS.md`. Read `AGENTS.md` in full before using this log.
 
 ## Log entries
 
+### 2026-09-03T10:39:30+02:00 | Translate the repository corpus into English
+- **Recorded author**: ChatGPT 5.6 Sol
+- **Files/areas**: `README.md`, `QUICKSTART.md`, `00_RESEARCH_AGENT_README.md`, `01_RESEARCH_STANDARD.md`, `02_RESEARCH_CASE_TEMPLATE.md`, `03_RESEARCH_METHODS.md`, `04_CAUSAL_TOOLING.md`, `05_AGENT_OPERATIONS.md`, `HARD_GATE_INVENTORY.md`, agent contracts, ADRs 001–011 and 013, evaluation documentation and fixtures, reconstruction/generation/reference documentation, affected schemas, and related validation scripts.
+- **What**:
+  - Translated the explicitly authorized legacy German repository content into English across normative documents, agent-facing instructions, decision records, examples, schema descriptions, evaluation fixtures, and user-facing validation messages.
+  - Kept translation-only work separate from substantive framework redesign. Corrected translation-only syntax and wording defects discovered during review, including malformed agent frontmatter, formula rendering, status labels, decimal rendering, obvious mistranslations, and stale README language.
+  - Translated human-readable example values while retaining controlled machine fields, enums, identifiers, paths, schema structures, routing order, examples' decision meaning, and normative requirements.
+- **Why**:
+  - **Problem description**: Mixed German/English normative and agent-facing text increases semantic ambiguity and maintenance cost when Codex, Claude, Gemini, or another LLM uses the same repository.
+  - **Decision context**: The owner explicitly requested the full English migration described in the roadmap. The migration therefore covers the repository corpus, while historical records, source identifiers, private filenames, and machine identifiers remain unchanged where changing them would alter provenance or references.
+  - **Protected invariants**: No JSON keys, value types, list lengths, controlled enums, schema contracts, research gates, routing rules, source identities, private research data, evidence claims, or strategy results were changed. No research case, backtest, data access, or trading decision was performed.
+- **Verification**:
+  - `python scripts/validate_agent_instruction_sources.py` passed.
+  - `python scripts/validate_framework.py` passed all contract, orchestration, entry-threshold, generator, and evaluation checks; the output explicitly states that the `LIVE_AGENT` release gate was not run.
+  - `python scripts/test_schemas.py` passed 29 positive and 92 negative cases.
+  - JSON structural comparison passed for 18 changed JSON files; Markdown heading/fence/table structure comparison passed for 29 changed Markdown files.
+  - `git diff --check` passed. A remaining umlaut scan found only proper names in cited academic sources; no untranslated German prose remains outside historical records, source identifiers, or private paths.
+
 ### 2026-09-03T03:21:40+02:00 | ChatGPT 5.6 Sol
 - **Agent**: ChatGPT 5.6 Sol
 - **Files**:
