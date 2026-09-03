@@ -3,10 +3,11 @@
 ## Scope and protected decision
 
 This note asks whether a failed trading strategy can produce knowledge and how
-such knowledge can be separated from retrospective storytelling. It covers
-philosophy of science and mathematical/statistical foundations only. It does not
-review quant-finance backtest-overfitting literature, inspect a strategy or its
-data, authorize a new test, or change any framework rule.
+such knowledge can be separated from retrospective storytelling. It combines
+philosophy of science, mathematical/statistical foundations, and selected
+quant-finance methods that constrain search, selection, and instability claims.
+It does not inspect a strategy or its data, authorize a new test, or change any
+framework rule.
 
 The decision at stake is whether a failure justifies (a) reducing confidence in
 a stated claim, (b) attributing the failure to a particular component, (c)
@@ -44,6 +45,11 @@ The literature supports a synthesis rather than a single solution:
    adaptation:** patterns found while explaining the failure are hypothesis
    generators unless selection is accounted for or genuinely new evidence is
    used.
+8. **Quant-finance diagnostics address characteristic distortions:** reality
+   checks, superior-predictive-ability tests, model-confidence sets,
+   backtest-overfitting measures, and local forecast comparisons can quantify
+   selection risk or instability, but they do not identify a market mechanism
+   by themselves.
 
 The synthesis can therefore be stated compactly:
 
@@ -387,7 +393,87 @@ Maintain a visible boundary between the consumed evidence that generated the
 hypothesis and the evidence assigned to test it. Freeze the prediction and its
 failure condition before the confirmatory observation.
 
-## 9. Proposed synthesis: from a binary failure to a discriminating failure map
+## 9. Quant-finance contributions and their epistemic limits
+
+Quantitative finance supplies methods for failure modes that are unusually
+important when one historical path supports a large, adaptive strategy search.
+These methods strengthen or weaken particular attributions; they do not form a
+general root-cause engine.
+
+White's Reality Check tests whether the best model found in a specification
+search has predictive superiority over a benchmark while accounting for data
+snooping. Hansen's Superior Predictive Ability test improves power and reduces
+sensitivity to poor or irrelevant alternatives. Both require the effective
+candidate family rather than only the surviving strategy. A rejection can
+support predictive superiority of at least one searched candidate; a failure to
+reject does not show that every candidate is useless or explain why a selected
+strategy later failed. ([White 2000](https://doi.org/10.1111/1468-0262.00152),
+[Hansen 2005](https://doi.org/10.1198/073500105000000063))
+
+The Model Confidence Set procedure retains a set of models that the available
+data cannot distinguish from the best under a chosen loss function. Informative
+data shrink the set; uninformative data leave many survivors. This is a useful
+analogue for failure attribution: preserve an epistemic set of live
+explanations rather than force one winner. It compares predictive objects and
+does not establish that any retained model is true or mechanistically adequate.
+([Hansen, Lunde, and Nason 2011](https://doi.org/10.3982/ECTA5771))
+
+The Probability of Backtest Overfitting estimates how often an in-sample winner
+underperforms out of sample across symmetric sample partitions. The Deflated
+Sharpe Ratio adjusts a reported Sharpe for selection across trials and
+non-normal returns. They can make "selection artifact" more or less credible
+when the searched family and trials are represented honestly. They cannot by
+themselves distinguish data mining from market adaptation, measurement failure,
+or a false mechanism, and neither validates a new explanation discovered after
+the failure. ([Bailey et al. 2017](https://doi.org/10.21314/JCF.2016.322),
+[Bailey and López de Prado 2014](https://doi.org/10.2139/ssrn.2460551))
+
+Giacomini and Rossi replace one global forecast comparison with the time path
+of local relative performance. Their fluctuation and one-time-reversal tests
+can expose a signature that an overall average hides: persistent inferiority,
+temporary breakdown, or reversal. This can discriminate some instability
+stories from a stable lack of predictive value, but a detected break does not
+name its economic cause and a condition found after inspection remains
+exploratory. ([Giacomini and Rossi 2010](https://doi.org/10.1002/jae.1177))
+
+McLean and Pontiff illustrate a more explicitly contrastive design. They
+separate original-sample, post-sample, and post-publication periods for 97
+published predictors. The different timing gives data-mining and
+publication-informed trading different empirical signatures; they report a 26%
+out-of-sample decline and a 58% post-publication decline, with the difference
+interpreted as evidence consistent with investor learning. This is a model for
+how failure analysis can become informative: rival explanations must imply
+different patterns before one is favored. It is not a universal decomposition
+for an individual strategy, and its interpretation still depends on the
+comparability and identifying assumptions of those periods.
+([McLean and Pontiff 2016](https://doi.org/10.1111/jofi.12365))
+
+Harvey and Liu make the decision loss explicit by calibrating both false and
+missed discoveries. This matters for failed strategies because conservative
+multiple-testing controls can suppress false positives while also making false
+negative conclusions more likely. A retirement rule therefore needs the cost
+of continuing a false edge and the cost of discarding a real one; a nominal
+non-rejection is not automatically evidence of absence.
+([Harvey and Liu 2020](https://doi.org/10.1111/jofi.12951))
+
+### Combined lesson from quant finance
+
+The quant methods divide into four epistemic jobs:
+
+1. **Selection accounting:** Reality Check, SPA, PBO, and DSR ask whether a
+   selected result is credible after the search that produced it.
+2. **Set-valued comparison:** Model Confidence Sets preserve several candidates
+   when the data cannot justify unique selection.
+3. **Failure-pattern localization:** local forecast comparisons ask when and
+   under which pre-specified information relative performance changed.
+4. **Decision calibration:** joint treatment of false and missed discoveries
+   ties evidential thresholds to the cost of continuation and retirement.
+
+None of these jobs substitutes for identification of a mechanism. They become
+part of the broader synthesis only when their outputs enter an explicit
+rival-explanation map and are interpreted at the claim level they actually test.
+
+## 10. Proposed synthesis: from a binary failure to a discriminating failure map
 
 The most useful synthesis is not a universal postmortem score. It is a sequence
 of epistemic gates that converts an undifferentiated failure into explicit rival
@@ -466,7 +552,7 @@ failure condition, and an independent evaluation path. Otherwise it is a
 diagnostic or retrospective accommodation, not confirmation of a repaired
 strategy.
 
-## 10. Main hazards introduced by this broader question
+## 11. Main hazards introduced by this broader question
 
 The broader epistemic inquiry is worthwhile, but it creates characteristic
 failure modes:
@@ -544,3 +630,31 @@ official journal/publisher records.
     Research" (original 1956; translated and annotated 2014), *Acta
     Psychologica* 148, 188–194.
     [Official journal DOI](https://doi.org/10.1016/j.actpsy.2014.02.001).
+15. Halbert White, "A Reality Check for Data Snooping," *Econometrica* 68(5),
+    2000, 1097–1126.
+    [Official journal DOI](https://doi.org/10.1111/1468-0262.00152).
+16. Peter R. Hansen, "A Test for Superior Predictive Ability," *Journal of
+    Business & Economic Statistics* 23(4), 2005, 365–380.
+    [Official journal DOI](https://doi.org/10.1198/073500105000000063).
+17. Peter R. Hansen, Asger Lunde, and James M. Nason, "The Model Confidence
+    Set," *Econometrica* 79(2), 2011, 453–497.
+    [Official journal DOI](https://doi.org/10.3982/ECTA5771).
+18. David H. Bailey, Jonathan M. Borwein, Marcos López de Prado, and Qiji Jim
+    Zhu, "The Probability of Backtest Overfitting," *Journal of Computational
+    Finance* 20(4), 2017, 39–69.
+    [Journal DOI](https://doi.org/10.21314/JCF.2016.322) and
+    [open repository record](https://escholarship.org/uc/item/4w1110bb).
+19. David H. Bailey and Marcos López de Prado, "The Deflated Sharpe Ratio:
+    Correcting for Selection Bias, Backtest Overfitting and Non-Normality,"
+    *Journal of Portfolio Management* 40(5), 2014, 94–107.
+    [Author manuscript record and DOI](https://doi.org/10.2139/ssrn.2460551).
+20. Raffaella Giacomini and Barbara Rossi, "Forecast Comparisons in Unstable
+    Environments," *Journal of Applied Econometrics* 25(4), 2010, 595–620.
+    [Official journal DOI](https://doi.org/10.1002/jae.1177).
+21. R. David McLean and Jeffrey Pontiff, "Does Academic Research Destroy Stock
+    Return Predictability?" *The Journal of Finance* 71(1), 2016, 5–32.
+    [Official journal DOI](https://doi.org/10.1111/jofi.12365).
+22. Campbell R. Harvey and Yan Liu, "False (and Missed) Discoveries in
+    Financial Economics," *The Journal of Finance* 75(5), 2020, 2503–2553.
+    [Official journal DOI](https://doi.org/10.1111/jofi.12951) and
+    [author-hosted manuscript](https://people.duke.edu/~charvey/Research/Published_Papers/P143_False_and_missed.pdf).
