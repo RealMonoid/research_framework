@@ -29,6 +29,7 @@ The files perform various functions:
 | `agents/scientific-philosophy-critic.md` |Concept and requirement review before operationalization, plus Duhem-Quine/Lakatos/Kuhn continuation review|Before completion of any incompletely defined source reconstruction; after a non-positive Q8 result when material revision or continuation is considered|
 | `agents/condition-inquiry-analyst.md` |Quantitative assessment of measuring instruments and generation of observable condition hypotheses|After provisional operationalization, when measurement value, definition dependence or unknown success modifiers are examined|
 | `agents/causal-identification-critic.md` |Independent examination of whether a financial-market design supports the intended causal statement|Before any interventional or counterfactual estimate and before causal language; not for purely predictive questions|
+| `agents/framework-control-reviewer.md` |Bounded review of observable workflow-control failures such as bypasses, scope changes, repeated equivalent attempts, conflicts or stale memory|Only after an explicit framework-control request or a concrete control signal; not an ordinary research gate|
 | `references/CAUSAL_IDENTIFICATION_FOR_FINANCE.md` |Versioned research basis for financial market-specific identification risks|At each causality test|
 | `reconstruction/README.md` |Source-based translation of book/article/video/course strategies|When a source strategy is not fully operationalized|
 | `00_RESEARCH_AGENT_README.md` |Routing, gate and non-skip rules|From `PROMOTED`|
@@ -90,6 +91,38 @@ The original status shall remain valid for any deviation. The change is stored v
 In particular, for an incomplete prose strategy, the source is first reconstructed, then the concept and prerequisite examination is carried out by the `scientific-philosophy-critic`, and only then is it operationalized. This procedure does not authorize a backtest.
 
 Once the strongest intended claim is `INTERVENTIONAL` or `COUNTERFACTUAL`, the `causal-identification-critic` is mandatory before estimation and causal wording. The critic examines the estimand, source of identifying variation, economic model, assumptions, financial-market-specific distortions, falsification checks, and sensitivity. DML, local projections, event-study regressions, temporal ordering, and causal discovery do not replace this review. An explicitly predictive project is not forced into this additional route as a precaution.
+
+### Permanent research-conductor controls
+
+The conductor applies five controls on every user-facing research task,
+regardless of whether a specialist or the optional AI-Psychiatry review is
+called: lock the scope to the user's request; keep delegation at depth 1 and
+with one owner; tie material conclusions to validated evidence; do not repeat
+an unchanged check; and call a step `COMPLETE`, `PASS` or `SUPPORTED` only after
+its required evidence, validation, fingerprint comparison and checkpoint are
+present. Any material change stays a visible proposal and needs the owner's
+decision. Each routing decision records these invariants in its machine-checked
+`control` object.
+
+### Conditional framework-control review
+
+The research conductor may call `framework-control-reviewer` when the owner
+explicitly requests a framework stress test or when an observable trace shows a
+possible control bypass, reset attempt, repeated equivalent strategy attempt,
+unjustified scope change, instruction conflict, stale memory or unexplained
+failure. The reviewer checks the workflow and its evidence, not the market
+hypothesis. It returns a bounded `framework_control_review` artifact and may
+recommend at most one narrow corrective action with a stated exit condition.
+
+This is a caller-enforced control diagnostic, not a universal extra research
+step. It must not run a backtest, alter the effective research state, promote a
+claim, or replace the scientific-philosophy or causal-identification review. The
+optional AI-Psychiatry plugin can supply provider-neutral red-team, loophole,
+scope, root-cause, rule-conflict and memory checks, but it never overrides this
+document. If that runtime is unavailable, the conductor must not claim that the
+review occurred. Validate the returned artifact with
+`scripts/validate_framework_control_review.py`; any material proposal follows
+the normal full-fingerprint comparison and explicit owner decision.
 
 ---
 

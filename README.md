@@ -156,6 +156,44 @@ relevant prerequisites and trigger are present. Specialists return bounded
 work to the conductor; they do not take over the user conversation or the final
 decision.
 
+The conductor also applies five permanent workflow controls on every task:
+scope is locked to the user's request, delegation has one bounded level,
+material conclusions need validated evidence, unchanged checks are not repeated,
+and completion statuses require their evidence and validation. These controls
+are recorded in every routing decision; they do not depend on AI Psychiatry and
+do not turn specialized critics into universal steps.
+
+### Conditional workflow-control review
+
+When the owner explicitly asks for a framework stress test, or a concrete trace
+shows a possible bypass, the conductor can invoke the
+[framework-control reviewer](agents/framework-control-reviewer.md). The reviewer
+uses one bounded mode—red-team, loophole, strategy identity, scope, root cause,
+rule conflict, or memory validation—to examine observable workflow evidence.
+Its machine-readable report is checked by
+[`validate_framework_control_review.py`](scripts/validate_framework_control_review.py)
+against [`framework_control_review.schema.json`](schemas/framework_control_review.schema.json).
+
+This is a conditional, caller-enforced control review, not an extra gate on
+ordinary research and not a clinical assessment. The optional AI-Psychiatry
+plugin can provide the same provider-neutral modes, but it is not a second rule
+source. The review cannot run a backtest, change the effective research state,
+or replace the scientific-philosophy or causal-identification specialist. Any
+material proposal still goes through the full fingerprint and user-decision
+process.
+
+### Technical architecture review (OpenAI Developers)
+
+The OpenAI Developers review found that the existing conductor, deterministic
+router, structured artifacts, bounded specialist work orders, and regression
+tests already provide the useful parts of a manager-led agent design. No Agents
+SDK or MCP runtime was added: this repository has no runnable agent service, and
+adding a second orchestration path would create new state and failure modes
+without a demonstrated reliability, cost, or research-quality benefit. If a
+runtime is introduced later, it should keep one conductor as owner, use typed
+tool contracts and server-side validation, make material writes explicit, and
+evaluate the actual execution path rather than only the final text.
+
 ### Protection against silent research changes
 
 Every material research step carries a complete

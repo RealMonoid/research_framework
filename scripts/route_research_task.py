@@ -154,7 +154,7 @@ def _decision(
         raise ValueError("next_decision_sequence must be a positive integer")
     if not isinstance(updated_at, str):
         raise ValueError("updated_at must be a timestamp string")
-    if conductor_version != "1.5.0":
+    if conductor_version != "1.6.0":
         raise ValueError("unsupported conductor_version")
 
     fingerprint_guard = _fingerprint_guard(state, execution_mode, route)
@@ -172,7 +172,7 @@ def _decision(
         )
 
     return {
-        "schema_version": "1.5.0",
+        "schema_version": "1.6.0",
         "decision_id": f"routing:{orchestration_id}:{sequence}",
         "created_at": updated_at,
         "orchestration_ref": orchestration_id,
@@ -190,10 +190,17 @@ def _decision(
         "control": {
             "coordinator_retains_control": True,
             "specialist_may_address_user": False,
+            "specialist_may_make_research_decision": False,
+            "specialist_may_change_research_state": False,
             "sequential_execution": True,
             "checkpoint_required": True,
             "specialist_output_requires_validation": True,
             "fingerprint_check_required_before_acceptance": True,
+            "scope_locked_to_request": True,
+            "delegation_max_depth": 1,
+            "conclusions_require_evidence": True,
+            "repeat_requires_changed_evidence": True,
+            "completion_requires_validated_evidence": True,
         },
     }
 

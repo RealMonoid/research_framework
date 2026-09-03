@@ -1,0 +1,53 @@
+{
+  "schema_version": "1.0.0",
+  "review_id": "control-review:synthetic-caller-bypass:v1",
+  "created_at": "2026-09-03T12:00:00+02:00",
+  "updated_at": "2026-09-03T12:00:00+02:00",
+  "agent_contract_version": "1.0.0",
+  "mode": "LOOPHOLE_HUNT",
+  "trigger": "OBSERVED_BYPASS_SIGNAL",
+  "objective": "Check whether a caller can report a completed gate without running the required fingerprint comparison.",
+  "mandatory_requirements": [
+    "A returned material artifact must be compared with the complete effective research fingerprint before acceptance.",
+    "A non-zero fingerprint result must remain a stop signal."
+  ],
+  "definition_of_done": [
+    "The observed bypass is either confirmed with evidence or explicitly unresolved.",
+    "One bounded correction or a clear blocker is recorded.",
+    "The affected requirement has a named regression check."
+  ],
+  "evidence_refs": [
+    "inventory:HG-03",
+    "routing:synthetic-caller-bypass:v1"
+  ],
+  "observed_signal": "The caller supplied a schema-valid COMPLETE artifact reference but no recorded fingerprint-check result or exit code.",
+  "finding": {
+    "status": "CONFIRMED",
+    "summary": "The current caller-enforced path can appear complete while the fingerprint comparison was skipped.",
+    "protected_intent": "Prevent an unreviewed research-definition or result change from becoming effective.",
+    "risk": "A valid-looking artifact could create false confidence and allow silent research drift.",
+    "semantic_identity": null,
+    "equivalent_attempt_count": 1,
+    "material_state_change": "BLOCKED"
+  },
+  "corrective_action": {
+    "summary": "Keep the affected transition blocked until the comparison result and candidate fingerprint are recorded.",
+    "scope": "The current transition only; do not redesign the broader orchestration during this review.",
+    "status": "RECOMMENDED",
+    "max_attempts": 1,
+    "exit_condition": "The exact baseline and candidate have been compared and the non-zero/unchanged result is recorded."
+  },
+  "regression": {
+    "requirement": "A missing fingerprint-check record cannot be accepted as a completed material step.",
+    "method": "Run the caller-bypass evaluation case with the comparison result omitted and require a blocked disposition.",
+    "result": "NOT_RUN",
+    "evidence_refs": []
+  },
+  "unsupported_claims": [
+    "This review does not prove that every live agent skips the comparison.",
+    "This review does not establish a market effect or trading edge."
+  ],
+  "disposition": "BLOCKED",
+  "research_state_unchanged": true,
+  "no_private_chain_of_thought": true
+}

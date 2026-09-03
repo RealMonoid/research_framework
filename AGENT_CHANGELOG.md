@@ -6,6 +6,28 @@ are defined only in `AGENTS.md`. Read `AGENTS.md` in full before using this log.
 
 ## Log entries
 
+### 2026-09-03T13:53:41+02:00 | Integrate bounded AI-Psychiatry review and permanent conductor controls
+- **Recorded author**: ChatGPT 5.6 Sol
+- **Files/areas**: `agents/framework-control-reviewer.md`, `agents/research-conductor.md`, `AGENTS.md`, `README.md`, `QUICKSTART.md`, `00_RESEARCH_AGENT_README.md`, `PLANNED_FEATURES.md`, `HARD_GATE_INVENTORY.md`, `schemas/routing_decision.schema.json`, `schemas/orchestration_state.schema.json`, `schemas/framework_control_review.schema.json`, `scripts/route_research_task.py`, `scripts/validate_framework_control_review.py`, `scripts/test_framework_control_review.py`, `scripts/test_schemas.py`, `scripts/test_schemas.ps1`, `scripts/validate_framework.py`, `scripts/validate_framework.ps1`, routing and orchestration examples, and `decisions/ADR-014-framework-control-review-and-runtime-boundary.md`.
+- **What**:
+  - Added a provider-neutral, bounded framework-control reviewer contract that AI Psychiatry can supply when an explicit trigger or observable workflow signal warrants red-team, strategy-laundering, scope, loophole, root-cause, rule-conflict, or memory review.
+  - Bound the reviewer to observable evidence, one corrective attempt, no private chain-of-thought, no backtests or claim promotion, no research-state changes, no research-goal ownership, no recursive delegation, and no commits, pushes, merges, or direct changes to `main`.
+  - Made scope lock, one-level delegation, evidence-bound conclusions, changed-evidence requirements for repeated checks, and evidence-backed completion permanent controls in the conductor documentation and the version 1.6.0 routing contract. Added negative schema regressions for each relaxation.
+  - Added the synthetic review example, validator, tests, hard-gate entry, roadmap status, and ADR so the optional AI-Psychiatry layer does not become a second authority and the existing scientific-philosophy and causal-identification routes remain distinct.
+  - Used OpenAI Developers as an architecture review aid. Documented that the current conductor/router/contracts already supply the useful manager-led boundary; did not add an Agents SDK or MCP runtime because this repository has no runnable agent service and a second orchestration path would add untested state and failure modes.
+- **Why**:
+  - **Problem description**: A flexible LLM can drift in scope, delegate recursively, repeat unchanged checks, produce fluent but unsupported conclusions, or claim completion while satisfying only a schema. Optional specialist reviews alone do not reliably prevent those failures, while making every critic a permanent gate would add unnecessary cost and duplicate authority.
+  - **Decision context**: The user requested AI Psychiatry first as a bounded review layer and OpenAI Developers second as a technical architecture aid. Existing `AGENTS.md`, conductor ownership, deterministic routing, fingerprinting, and specialist routes had to remain authoritative. The repository is a private decision-support tool, not a general agent platform.
+  - **Protected invariants**: One conductor retains the user conversation, acceptance, and research state; material changes remain visible proposals under the full fingerprint and user-decision process; mandatory scientific and causal specialists are not replaced; no plugin or reviewer can set research goals, alter results, or change `main`; no SDK/MCP dependency or parallel state machine is introduced without a demonstrated runtime need.
+- **Verification**:
+  - `python scripts/validate_framework_control_review.py` passed.
+  - `python scripts/test_framework_control_review.py` passed.
+  - `python scripts/test_schemas.py` passed 30 positive and 99 negative cases, including all permanent-control relaxations.
+  - `python scripts/test_research_orchestration.py` passed.
+  - `python scripts/validate_agent_instruction_sources.py` passed.
+  - `python scripts/validate_framework.py` passed all contract, orchestration, threshold, generator, and evaluation checks; the live-agent release gate was not run.
+  - `git diff --check` passed. No backtest, market-data access, or research case was run. OpenAI official architecture and guardrail documentation was reviewed; no runtime migration was claimed.
+
 ### 2026-09-03T10:39:30+02:00 | Translate the repository corpus into English
 - **Recorded author**: ChatGPT 5.6 Sol
 - **Files/areas**: `README.md`, `QUICKSTART.md`, `00_RESEARCH_AGENT_README.md`, `01_RESEARCH_STANDARD.md`, `02_RESEARCH_CASE_TEMPLATE.md`, `03_RESEARCH_METHODS.md`, `04_CAUSAL_TOOLING.md`, `05_AGENT_OPERATIONS.md`, `HARD_GATE_INVENTORY.md`, agent contracts, ADRs 001–011 and 013, evaluation documentation and fixtures, reconstruction/generation/reference documentation, affected schemas, and related validation scripts.

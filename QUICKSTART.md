@@ -44,6 +44,13 @@ The precise technical and scientific artifacts are fully preserved internally. T
 
 Each research task is guided by exactly one [`research-conductor`](agents/research-conductor.md). The conductor remains the user's contact, keeps the current status, and calls specialist agents only through a defined work order. Specialist agents do not take over the conversation or the overall decision.
 
+The conductor permanently applies five basic controls on every task: the scope
+stays tied to the request; delegation is one level deep; material conclusions
+need validated evidence; an unchanged check is not repeated; and `COMPLETE`,
+`PASS`, or `SUPPORTED` requires the corresponding evidence and validation. These
+controls remain active even when no specialist is needed or AI Psychiatry is
+unavailable.
+
 Before each important transition, the work status is stored as [`orchestration_state`](schemas/orchestration_state.schema.json). The executable router [`route_research_task.py`](scripts/route_research_task.py) determines the next mandatory step. In particular, these sequences apply:
 
 - incomplete prose strategy: source reconstruction → conceptual and
@@ -62,6 +69,25 @@ A simple result statement does not automatically trigger a specialist agent. A n
 Before and after each material research step, the full research fingerprint is compared. In addition to research question, source strategy, market and time horizon, it also contains measurement definitions, parameters, lookbacks, filters and exclusions, data and sample decisions, evaluation rules, cost and execution assumptions, frozen results and the checksums of all effective research documents.
 
 A contribution is accepted only if [`check_research_fingerprint.py`](scripts/check_research_fingerprint.py) reports the complete state as `UNCHANGED`. Any deviation remains a visible change proposal. The old state is never silently overwritten; only an explicit user decision may turn it into a new research version.
+
+### Conditional framework-control review
+
+If the owner asks for a framework stress test, or a concrete trace suggests a
+skipped check, reset attempt counter, repeated equivalent strategy, unjustified
+scope change, instruction conflict, stale memory, or unexplained failure, the
+conductor may use the [framework-control reviewer](agents/framework-control-reviewer.md).
+It performs one bounded review of observable evidence and returns a structured
+report. It does not diagnose people, run a backtest, alter the research state,
+or add a universal step to every case. The optional AI-Psychiatry plugin may
+provide these same provider-neutral review modes; it never overrides
+`AGENTS.md`, and its use is never claimed when it was unavailable.
+
+The report must pass
+[`validate_framework_control_review.py`](scripts/validate_framework_control_review.py).
+An applied correction needs a passing regression check. A material research
+change remains a visible proposal under the full fingerprint process and still
+requires the owner's decision. A clean review is a control diagnostic, not proof
+that every live agent will behave correctly.
 
 ## 1. What is technically enforced – and what is not
 

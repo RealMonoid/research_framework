@@ -290,6 +290,21 @@ authorization if reconsidered later.
    terminology, loading, or shortening changes are judged safe. Protocol smoke
    results are never a substitute.
 
+   The repository now includes a provider-neutral, bounded
+   `framework-control-reviewer` contract for the red-team, loophole,
+   strategy-identity, scope, root-cause, rule-conflict, and memory checks that
+   the optional AI-Psychiatry plugin can provide. Its invocation remains
+   conditional and caller-enforced; its effectiveness and bypass resistance
+   must be measured in the live-agent evaluation rather than inferred from the
+   existence of the contract or its schema tests.
+
+   The five baseline conductor controls are now part of the current routing
+   contract rather than a planned specialist feature: scope lock, one-level
+   delegation, evidence-bound conclusions, changed-evidence requirements for
+   repeated checks, and evidence-backed completion. Their machine constants
+   reject a relaxed route, but the caller-invocation and truthful-reporting
+   limits remain open until the live-agent trajectory evaluation is complete.
+
    **Execution trajectory and tool-invocation auditing:** The evaluation
    harness must not assess only the final adapter artifact or returned claims.
    An agent must not receive a passing score if it fabricates a compliant
