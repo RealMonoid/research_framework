@@ -138,6 +138,41 @@ ignored interface, incomplete search, and route mismatch. This correction does
 not perform the specialist review, change research state, authorize data or a
 backtest, or claim that a caller-enforced checkpoint can independently discover
 an interface the live agent omitted from its inventory record.
+### Owner-authorized scientific-method capability integration — 2026-09-04
+
+The owner authorized the use of four local scientific-method capabilities where
+they provide a concrete improvement to a research or capital decision:
+`scientific-critical-thinking`, `scientific-brainstorming`,
+`hypothesis-generation`, and `statistical-analysis`. This is a
+**KEEP — agent enforcement** integration: it makes existing controls for
+alternative explanations, evidence limits, measurement, falsification, and
+quantitative uncertainty more likely to be applied consistently. It does not
+add a new routing gate, artifact type, claim status, specialist owner, or
+authorization for data access, a backtest, validation, deployment, or capital
+allocation.
+
+The integration is deliberately role-bound. Critical thinking may expose bias,
+confounding, design, or claim-overreach risks, but may not replace the
+scientific-philosophy, causal-identification, evidence, or outcome-contract
+requirements. Brainstorming may structure genuinely requested new ideation,
+but every trading idea remains an unranked `INBOX` candidate with visible
+origin and the complete candidate family remains subject to search-space
+accounting. Hypothesis generation may draft rivals, discriminating predictions,
+operationalizations, and falsifiers, but its templates are not canonical
+project artifacts and it cannot promote a candidate or accept causal wording.
+Statistical analysis may be used only by the bounded `data-analyst` for a
+scoped, referenced data question; finance-specific checks for temporal
+dependence, decision-time availability, leakage, regimes, costs, execution,
+and time-separated evaluation remain mandatory.
+
+The capabilities may also support a bounded research-process or live-agent
+evaluation question when that work protects a named framework or capital
+decision. They do not authorize detached AI, psychology, or philosophy
+research. Their implementation must preserve the existing conductor, artifact,
+fingerprint, and validation boundaries. A framework-integrity run can verify
+that these contracts remain present; it cannot by itself establish that a model
+uses the methods well, which remains a live-agent evaluation question under
+priority 5.
 
 1. **Close the validation-boundary, stopping-rule, and confirmed
    pipeline-integrity enforcement gaps.**

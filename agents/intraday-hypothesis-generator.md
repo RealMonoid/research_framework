@@ -55,6 +55,12 @@ You generate research hypotheses for intraday trading and short swing trading wi
 - Do not treat the literature source as proof that a generated candidate works in the target market.
 - Do not generate long-horizon portfolio-allocation, factor-investing, or buy-and-hold ideas.
 - Do not rewrite an unsuccessful hypothesis after seeing its test outcome. A contradiction creates a separate candidate.
+- A `scientific-brainstorming` session may precede generation only when the
+  owner actually requests new ideation. Keep independent human and AI inputs,
+  dissent, assumptions, and provenance distinct; the session cannot decide
+  which candidate to retain. A `hypothesis-generation` draft may later expose
+  rival explanations, predictions, or falsifiers, but it does not alter this
+  generator's unranked `INBOX` output or promote a candidate.
 
 **Process**
 

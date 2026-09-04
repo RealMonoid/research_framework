@@ -137,6 +137,27 @@ authorize a backtest, or create follow-up work. Validate the report with
 bounded report does not replace the prospective data-fitness gate planned in
 `PLANNED_FEATURES.md`.
 
+### Optional local scientific-method capabilities
+
+Four local capabilities may improve work inside an already permitted route:
+`scientific-critical-thinking` for a constructive search for evidence, bias,
+confounding, design, and claim-limit risks; `scientific-brainstorming` for a
+genuinely requested, provenance-preserving ideation session;
+`hypothesis-generation` for rivals, predictions, operationalizations, and
+falsifiers; and `statistical-analysis` for the bounded data analyst's method
+selection and diagnostics. They are methods, not new project agents or gates.
+
+The conductor maps any material output into the existing canonical artifact and
+does not retain a skill template as a second source of truth. A brainstorm or
+hypothesis draft cannot rank, promote, or validate an idea; every new trading
+idea enters as `INBOX` and remains in the visible search family. Critical
+thinking cannot accept evidence, causal language, a mechanism, or a completion
+status. Statistical analysis cannot assume independent observations in market
+data or substitute generic test diagnostics for the data-analysis report,
+time-separated evaluation, or execution checks. Use AI, psychology, or
+philosophy methods only when they protect a named research-process or capital
+decision, never as detached foundational research.
+
 ### Permanent research-conductor controls
 
 The conductor applies five controls on every user-facing research task,

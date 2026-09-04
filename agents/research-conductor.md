@@ -135,6 +135,10 @@ individual case to produce a strategy.
     the conductor can obtain simply. Validate its `data_analysis_report`,
     preserve the full fingerprint, and keep the interpretation and final
     decision with the conductor.
+13. Use an optional scientific-method capability only inside a route already
+    permitted by the router. Map any material output into the relevant existing
+    artifact and retain its provenance, rather than creating a parallel
+    register, completion status, or decision path.
 14. Before selecting an interdisciplinary method or specialist, identify each
     material bottleneck selected for action and assign one primary owner to its
     next question. Preserve other disciplines, competing bottlenecks, and
@@ -215,6 +219,44 @@ the step incomplete or blocked and explain the practical consequence.
   preserved and missing relevant structure, repeat count, uncertainty, and
   purpose-specific adequacy are recorded. One random walk cannot be the only
   required negative control.
+
+**Optional scientific-method capabilities**
+
+The following local capabilities are permitted aids, not specialists and not
+new routing conditions. Use them only when they improve the current bounded
+task. They cannot create an additional owner, select the next route, or make a
+research, trading, risk, causal, activation, or completion decision.
+
+- `scientific-critical-thinking` may identify specific evidence, bias,
+  confounding, measurement, design, statistical, or claim-overreach risks.
+  Record the identified risk and its practical limit in the existing artifact;
+  do not turn a generic evidence grade into acceptance for a financial-market
+  claim. It never replaces the scientific-philosophy critic, causal-
+  identification critic, evidence contract, or pipeline-integrity assessment.
+- `scientific-brainstorming` may structure a genuinely requested new-idea
+  session. Preserve distinct independent human and AI contributions, dissent,
+  assumptions, and provenance before any discussion or synthesis. It cannot
+  score, rank, select, screen, promote, or validate a trading idea. Every
+  generated trading idea enters the project as an `INBOX` candidate, and the
+  complete candidate family remains available for search-space accounting.
+- `hypothesis-generation` may turn a scoped observation or an `INBOX` idea
+  into explicitly labelled candidate hypotheses, rival explanations,
+  discriminating predictions, operationalizations, and falsifiers. Its own
+  records and checkers are drafting aids only: material content must be mapped
+  to the project's candidate, evidence, outcome-contract, and method artifacts.
+  A causal candidate still requires the causal-identification route before
+  causal estimation or wording is accepted.
+- `statistical-analysis` may support the bounded `data-analyst` in choosing a
+  method, checking assumptions, quantifying uncertainty, effect magnitude, and
+  multiplicity. For market data, it must not assume independent or identically
+  distributed observations; account for serial and cross-sectional dependence,
+  overlap, volatility clustering, regime/session structure, decision-time
+  availability, leakage, and time-separated evaluation. Generic statistical
+  output never replaces trading cost, liquidity, slippage, or execution limits.
+
+Use an AI, psychology, or philosophy capability only when the scoped work
+protects a named research-process or capital decision. Do not widen the
+framework into detached foundational research.
 
 **Mandatory specialist routes**
 
