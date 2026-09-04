@@ -1,159 +1,213 @@
 # Trading Research Framework
 
-## Purpose and operating boundary
+## The goal
 
-This framework is a private decision-support tool for one research owner who
-works with AI agents. It uses scientific discipline because its conclusions may
-eventually influence decisions involving real capital. It is not being built
-for academic publication, external peer review, team onboarding, or public
-presentation of the owner's strategies and results.
+This project exists to answer one practical question:
 
-Its applied mission is to identify or develop executable trading strategies
-with a defensible positive expected net edge after realistic costs, liquidity,
-slippage, capacity, execution, and risk. It pursues that mission through two
-primary routes: rigorous reconstruction and testing of existing strategies, and
-controlled generation and development of new strategy hypotheses. Both routes
-retain positive, negative, inconclusive, blocked, and not-testable results so
-later research can learn from them without turning prior exposure or a revised
-idea into fresh evidence.
+> Does a trading idea justify risking capital as a complete, executable
+> strategy—and if not, what exactly has the investigation established?
 
-The [interdisciplinary research foundations](references/INTERDISCIPLINARY_TRADING_RESEARCH_FOUNDATIONS.md)
-define how finance, cognitive science, AI search, philosophy of science,
-statistics, machine learning, and decision theory contribute without being
-mixed into one undifferentiated theory. The binding mission decision is recorded
-in [ADR-016](decisions/ADR-016-applied-interdisciplinary-trading-research-mission.md).
-[ADR-017](decisions/ADR-017-interdisciplinary-claim-coordinates-and-production-loop.md)
-adds the operating architecture: locate ambiguous claims by explanatory level
-and target, give each bottleneck selected for action one lead question owner
-without assuming one sole cause, treat scarce resources as a vector subject to
-hard safeguards, and carry a validated phenomenon or other limited supported
-claim through the full production layer before a capital decision.
+The programme aims to identify or develop trading strategies with a defensible
+positive expected **net** edge. “Net” matters: an apparent pattern is not enough.
+The edge must remain credible after realistic costs, liquidity, slippage,
+capacity, execution, portfolio interaction, and risk. The complete strategy must
+also survive genuinely unseen data or a controlled forward test before it can
+support a capital decision.
 
-The repository therefore serves only two necessary readers:
+The project follows two routes under the same evidential standard:
 
-- the owner, who must be able to understand and revisit a decision months or
-  years later; and
-- the agents, which must receive the correct rules and apply them consistently
-  despite having limited context and no durable memory of earlier sessions.
+1. **Test an existing strategy rigorously.** Preserve what its source actually
+   said, expose missing definitions, and test the resulting research version
+   without silently improving it after seeing results.
+2. **Develop a new strategy hypothesis.** Generate candidates through bounded,
+   explicit, literature- or market-grounded search, retain the full search
+   history, and subject selected candidates to independent evidence.
 
-A rule, artifact, or planned feature belongs in the framework only when it
-protects a research or capital decision, or when it makes an existing
-decision-protecting control demonstrably more reliable for the agents. Work
-that serves only publication, external persuasion, or hypothetical human-team
-maintenance is out of scope until that need actually exists. If the value of an
-existing safeguard is uncertain, retain it until the hard-gate inventory, a
-real Research Case, or behavioural agent evaluation supplies evidence for a
-safe decision.
+Both routes must learn from positive, negative, inconclusive, blocked, and
+not-testable outcomes. That learning may improve later representations,
+measurements, candidate generation, or test design. It does not become evidence
+for a different strategy unless the transfer itself is tested.
 
-This public repository is intended to contain framework material, not the
-owner's private research. Proprietary strategies, private data, Research Cases,
-and empirical results must remain outside the tracked repository or under the
-ignored `private_research/` path. Existing tracked examples have not all been
-classified under this policy; do not treat that uncertainty as permission to
-delete them. They require a separate, explicit privacy review.
+Scientific discipline is therefore a means to the trading objective, not the
+end product. Methodological cleanliness does not create an edge; it helps the
+owner avoid risking money on artifacts and recognize a real effect if one is
+present. An individual case may correctly end without an active strategy. That
+protects capital without changing the programme-level goal.
 
-Market strategies are often described in language that sounds precise but is
-not precise enough to test. A book may say that a market is "in balance," that
-volume is "strong," or that a breakout has "failed" without defining how any
-of those statements should be measured. A researcher or an AI system must then
-fill in the missing details. Those choices can quietly become part of the
-strategy even though the source never stated them.
+The adopted mission decision is recorded in
+[ADR-016](decisions/ADR-016-applied-interdisciplinary-trading-research-mission.md).
+The [interdisciplinary foundations](references/INTERDISCIPLINARY_TRADING_RESEARCH_FOUNDATIONS.md)
+and [ADR-017](decisions/ADR-017-interdisciplinary-claim-coordinates-and-production-loop.md)
+explain how finance, cognitive science, AI search, philosophy of science,
+experimental design, statistics, machine learning, decision theory, and
+production engineering contribute without being blended into one theory.
 
-This creates several recurring problems:
+## Why this is difficult
 
-- the tested strategy may no longer be the strategy that was originally
-  described;
-- hidden assumptions and discretionary choices may determine the result;
-- definitions, time windows, filters, or targets may be changed after seeing
-  the data;
-- an observed association may be presented as a cause, a reliable forecast, or
-  a tradable edge without sufficient evidence;
-- after a failed test, the explanation may be adjusted until the original idea
-  can no longer fail.
+Trading ideas often sound more precise than they are. A source may say that a
+market is “in balance,” volume is “strong,” or a breakout has “failed” without
+defining how to measure those statements. The researcher or AI agent must fill
+in the gaps, and those choices can quietly become a different strategy.
 
-This framework is designed to make those problems visible and controllable. It
-is a research process for turning an informal market idea into a documented,
-testable question without silently changing what is being investigated.
+Other errors arise later: searching many definitions but reporting only the
+winner, reusing validation data, presenting association as causation, adding a
+new condition after a failed test, or treating a promising backtest as if data
+quality, execution, costs, capacity, portfolio effects, and operational risk
+were already solved.
 
-## What the framework does
+The framework makes those choices and transitions visible. It cannot discover
+the correct missing condition by logic alone, guarantee that a viable strategy
+exists, or turn a plausible mechanism into predictive evidence.
+
+## The research path in plain language
+
+```text
+existing strategy -> faithful source reconstruction --\
+                                                    -> explicit research version
+new hypothesis  -> bounded, recorded candidate search /
+    -> feasibility and data checks
+    -> fixed candidate pipeline and outcome evidence contract
+    -> pipeline integrity checks and freeze
+    -> independent validation and robustness assessment
+    -> separate conclusions for phenomenon, prediction, mechanism/causality, and net edge
+    -> data, execution, cost, capacity, portfolio, risk, attribution, and operations
+    -> complete-strategy unseen-data or controlled forward evidence
+    -> capital decision, monitoring, revalidation, suspension, or rejection
+```
+
+In a typical case:
+
+1. Record the idea, source, market, horizon, and intended claim.
+2. Separate explicit rules from examples, interpretations, assumptions, and
+   genuinely unknown conditions.
+3. Define measurable alternatives without selecting the one that looks best in
+   hindsight.
+4. Perform the current phase-0 feasibility and available-data checks without
+   consuming validation data. The stronger prospective data-fitness gate is a
+   separately recorded planned feature, not a completed control.
+5. Let the owner approve the complete research version before empirical work.
+6. Freeze the claim, outcomes, analysis, search family, and stopping rules.
+7. Test on the data role permitted for that stage and report uncertainty,
+   dependence, multiplicity, stability, and limitations.
+8. Preserve the result. Any material revision becomes a visible proposal for a
+   new Research-ID or version rather than a repair of the old outcome.
+9. Only after a validated phenomenon and an explicit continuation decision,
+   engineer and retest the complete strategy under realistic production
+   conditions.
+
+Reconstructing or generating an idea does not authorize a backtest. A successful
+backtest does not authorize deployment or capital allocation. The research
+owner alone makes capital decisions; no status, artifact, agent, or validator
+does so automatically.
+
+## What the framework protects
 
 The framework:
 
-- preserves what the original source actually claims;
-- separates stated rules from examples, interpretations, assumptions, and
-  unknown conditions;
-- identifies concepts that still need a measurable definition before any test
-  can be meaningful;
-- records the research question, definitions, data choices, filters, costs,
-  outcomes, and other material decisions as one protected research version;
-- requires proposed changes to be shown to the user instead of silently
-  replacing the existing version;
-- calls for specialist review when a question involves unclear concepts,
-  unknown success conditions, causal claims, or a proposed continuation after
-  a failed or undecidable result;
-- keeps descriptive evidence, prediction, causal explanation, and an
-  executable after-cost trading edge as separate claims with different
-  evidence requirements;
-- identifies each research or production bottleneck selected for action and one
-  lead owner for its next question while keeping competing and coupled
-  constraints visible; and
+- preserves the identity and provenance of the strategy being tested;
+- protects scarce independent data from undocumented search and repeated use;
+- records definitions, parameters, filters, exclusions, costs, data choices,
+  outcomes, and other material decisions as one research version;
+- keeps observation, prediction, mechanism, causality, executable net edge, and
+  capital action as separate claims with separate evidence requirements;
+- makes proposed changes visible to the owner instead of silently replacing the
+  effective version;
+- assigns one lead owner to the next question for each selected bottleneck while
+  retaining competing and coupled constraints;
+- treats independent data history, compute, elapsed time, attention, capital,
+  liquidity, and risk-bearing capacity as different scarce resources rather than
+  one score that can buy permission to ignore a hard rule;
+- invokes bounded specialist review only when the relevant question and
+  prerequisites require it; and
 - treats data quality, execution, costs, capacity, portfolio construction,
-  risk, PnL attribution, and operations as part of strategy engineering rather
-  than as details that can be assumed after a promising backtest.
+  sizing and ruin risk, profit-and-loss (PnL) attribution, monitoring, and
+  operations as part of strategy engineering.
 
-The framework cannot determine by logic alone which unknown conditions make a
-strategy work. It can, however, record what is unknown, compare alternative
-definitions without pretending they are equivalent, and prevent an unknown
-condition from being smuggled into the strategy as an established fact.
+## Legitimate outcomes and cumulative learning
 
-## What it is for
+A Research Case does not have to produce a strategy. It may support or contradict
+the frozen claim, remain inconclusive, identify a remediable data gap, be not
+testable with the available evidence, or stop because further research is not
+worth its cost. These are decision-relevant outcomes, not failed paperwork.
 
-The framework is intended for researchers who examine market hypotheses,
-including strategies taken from books, articles, videos, courses, or informal
-trading rules. It is especially useful when AI agents help with the research,
-because it gives those agents explicit boundaries and keeps the user in control
-of material decisions.
+An adverse result applies first to the tested bundle of claim, definitions,
+data, implementation, and auxiliary assumptions. It does not identify one guilty
+component by itself. A revised feature, regime, mechanism, condition, or trading
+rule is a new candidate or research version. Prior findings may guide its design,
+but they do not confer edge evidence on it.
 
-It is not itself a trading strategy, a profitability claim, or an automated
-approval to run a backtest. It does not guarantee that a hypothesis is true,
-useful, or tradable. Its operational role within the applied mission is to make
-the path from an existing or generated strategy idea to a defensible conclusion
-traceable, critical, cumulative, and resistant to hidden changes.
+## Scope, readers, and privacy
 
-## A typical case in plain language
+This is a private decision-support framework for one research owner working with
+AI agents. It is not an academic-publication workflow, an external-review
+package, a human-team onboarding system, a trading strategy, a profitability
+claim, or an automated approval to run a backtest.
 
-1. Record the original idea and the source without improving or completing it.
-2. Identify vague terms, missing rules, hidden assumptions, and conditions that
-   are genuinely unknown.
-3. List defensible ways to define the missing parts without selecting the one
-   that produces the most attractive result.
-4. Ask the user to approve a complete research version before empirical work
-   begins.
-5. Keep that version fixed while the approved analysis is performed.
-6. Report whether the result supports, contradicts, or cannot decide the stated
-   question, without silently rewriting the question.
-7. If a change is justified, present it as a visible proposal for a new research
-   version.
+The repository serves two necessary readers:
 
-## Where to start
+- the owner, who must be able to understand and revisit a decision later; and
+- the agents, which need precise rules despite limited context and no reliable
+  memory of earlier sessions.
 
-Start with the compact [QUICKSTART](QUICKSTART.md). If the starting point is a
-strategy described in prose, use the
-[strategy reconstruction path](reconstruction/README.md). If no initial idea
-exists, the [short-horizon generator](generation/README.md) can create an
-unranked set of literature-anchored candidates. Generating or reconstructing an
-idea does not authorize a backtest.
+Public repository content is limited to framework material. Proprietary
+strategies, private data, real Research Cases, and empirical results belong
+outside the tracked repository or under the ignored `private_research/` path.
+Existing examples require a separate privacy classification before removal.
 
-The normative and framework-facing documents are maintained in English. Any
-remaining German text is limited to historical records, source identifiers, or
-private project filenames. Translation-only changes remain separate from
-shortening, deduplication, or substantive editing so that any change in agent
-behaviour remains attributable.
+A rule, artifact, or planned feature belongs here only when it protects a
+research or capital decision or demonstrably improves an existing protection.
+Work solely for presentation, external persuasion, or hypothetical contributors
+is out of scope. The normative and agent-facing repository material is maintained
+in English.
+
+## Start here
+
+- Begin with the compact [QUICKSTART](QUICKSTART.md).
+- For a strategy described in prose, use the
+  [strategy reconstruction path](reconstruction/README.md).
+- If no initial idea exists, the
+  [short-horizon generator](generation/README.md) can create an unranked,
+  literature-anchored candidate set.
+- After promotion, use the [agent entry point](00_RESEARCH_AGENT_README.md) and
+  [research standard](01_RESEARCH_STANDARD.md).
 
 ## Technical reference
 
 The sections below describe the machine-readable contracts, routing rules, and
-validation tools used to enforce the research process.
+validation tools used to enforce the research process. This repository is a
+provider-neutral specification and toolkit used by a host AI agent; it is not a
+standalone research service, broker connection, or execution engine. Some rules
+are machine-checked, while others still depend on caller enforcement or expert
+judgement, or remain planned gaps. The
+[hard-gate inventory](HARD_GATE_INVENTORY.md) records that difference rather
+than claiming end-to-end enforcement.
+
+[`AGENTS.md`](AGENTS.md) is the sole authoritative policy for agents and controls
+every conflict. `QUICKSTART.md`, the research standard, ADRs, schemas, and this
+README explain or implement parts of that policy; none is a second authority.
+
+| Layer | Main implementation |
+|---|---|
+| Authority and entry | [`AGENTS.md`](AGENTS.md) is the sole agent-policy source; [`QUICKSTART.md`](QUICKSTART.md) is the compact human and agent entry path. |
+| Research state | Versioned JSON artifacts record candidates, checkpoints, evidence roles, fingerprints, reviews, and results under [`schemas/`](schemas/). |
+| Coordination | The conductor owns the conversation and state; the deterministic router returns the next hard-rule action. |
+| Change control | Complete fingerprints compare the candidate state with the effective research version before returned work is accepted. |
+| Evidence gates | Outcome contracts separate claim roles; pipeline integrity controls must pass before validation is frozen. |
+| Specialist work | Philosophy, condition inquiry, data analysis, causal identification, and workflow-control review are bounded routes with explicit triggers. |
+| Verification | Semantic validators, schema tests, generator tests, and adversarial evaluations run through `scripts/validate_framework.py`. |
+
+Key terms used below:
+
+| Term | Meaning in this repository |
+|---|---|
+| `INBOX` candidate | A recorded raw idea, not a confirmed or fully specified research case. |
+| `PROMOTED` candidate | An idea precise and basically testable enough to enter phase 0; promotion confirms no phenomenon, forecast, mechanism, or edge. |
+| Research Case | One versioned investigation with a defined question, scope, evidence roles, and protected decision history. |
+| Test freeze | The point after the outcome contract and pipeline-integrity gate when the validation design becomes fixed. |
+| Validated phenomenon | A phenomenon supported under its frozen design; not by itself a mechanism, complete strategy, or executable net edge. |
+| Effective research version | The currently accepted material state against which proposed work is compared. |
+| Material change | A change to the question, strategy identity, scope, definitions, data, rules, assumptions, inference, result, or continuation decision protected by the complete fingerprint. |
+| Complete strategy | The full signal, rules, data path, execution, costs, capacity, portfolio, risk, attribution, and operating specification that must receive its own unseen-data or forward evidence. |
 
 ### Entry points and staged document loading
 
@@ -230,11 +284,14 @@ process.
 
 ### Technical architecture review (OpenAI Developers)
 
-The OpenAI Developers review found that the existing conductor, deterministic
-router, structured artifacts, bounded specialist work orders, and regression
-tests already provide the useful parts of a manager-led agent design. No Agents
-SDK or MCP runtime was added: this repository has no runnable agent service, and
-adding a second orchestration path would create new state and failure modes
+The architecture review recorded in
+[ADR-014](decisions/ADR-014-framework-control-review-and-runtime-boundary.md)
+used OpenAI Developers as an implementation aid on 2026-09-03. It found that
+the existing conductor, deterministic router, structured artifacts, bounded
+specialist work orders, and regression tests already provide the useful parts
+of a manager-led agent design. No Agents SDK or MCP runtime was added: this
+repository has no runnable agent service. Adding a second orchestration path
+would create new state and failure modes
 without a demonstrated reliability, cost, or research-quality benefit. If a
 runtime is introduced later, it should keep one conductor as owner, use typed
 tool contracts and server-side validation, make material writes explicit, and
@@ -253,7 +310,9 @@ The deterministic
 work with the effective research version. Work can be accepted only when the
 material state is unchanged. Every difference becomes a visible change
 proposal. The existing version remains effective unless the user explicitly
-authorizes a new Research-ID or research version.
+authorizes a new Research-ID or research version. A fingerprint protects only
+the material state that was actually recorded and hashed; it cannot prove that
+an omitted or incorrectly recorded choice never occurred.
 
 The [hard-gate inventory](HARD_GATE_INVENTORY.md) distinguishes controls that
 are automatically invoked from executable checks that still depend on the
@@ -356,7 +415,11 @@ the search space, retained variables, and controls for selection bias. The
 framework separately records mechanism evidence, forward out-of-sample
 prediction, causal claim level, and executable after-cost edge.
 
-## Validation
+## Framework validation
+
+These commands validate repository contracts, generators, and regression
+behavior. They do not validate a trading strategy, market claim, empirical
+result, capital decision, or live agent.
 
 Cross-platform:
 
