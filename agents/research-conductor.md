@@ -222,6 +222,22 @@ the step incomplete or blocked and explain the practical consequence.
 
 **Optional scientific-method capabilities**
 
+Read `capabilities/scientific_skill_manifest.v1.json` before considering a
+listed local method. This manifest is the project-level discovery map, not a
+claim that the current host has the skill. Confirm the active host inventory
+and that the installed `SKILL.md` version and SHA-256 match its reviewed
+snapshot before using an `ACTIVE_OPTIONAL` entry. If a suitable optional skill
+is absent or mismatched, continue without it; do not create an availability
+blocker and do not claim its use. Never use a `DEFERRED_NO_USE` entry for market
+research.
+
+When a skill materially affects a method, candidate representation, analysis,
+or conclusion, record its ID, runtime version, and content hash in the existing
+canonical artifact. Add the runtime snapshot as a `METHOD` protected artifact
+in the complete research fingerprint, and protect the manifest when it
+materially constrained selection. The project does not vendor full external
+skill packages; their reviewed identities are versioned in the manifest.
+
 The following local capabilities are permitted aids, not specialists and not
 new routing conditions. Use them only when they improve the current bounded
 task. They cannot create an additional owner, select the next route, or make a

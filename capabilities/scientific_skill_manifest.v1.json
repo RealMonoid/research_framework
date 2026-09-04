@@ -1,0 +1,121 @@
+{
+  "schema_version": "1.0.0",
+  "manifest_id": "capabilities:scientific-method-skills:v1",
+  "recorded_at": "2026-09-04T17:21:59+02:00",
+  "purpose": "Make owner-approved local scientific-method skills discoverable to project agents without creating a second research workflow or treating a skill as evidence.",
+  "runtime_rule": "This is a reviewed capability map, not a runtime inventory. An agent may use an ACTIVE_OPTIONAL entry only after confirming that its active host exposes that skill and that the installed SKILL.md matches the recorded version and hash. A missing optional skill never blocks a route and may not be reported as used. A DEFERRED_NO_USE entry is not permitted for market research.",
+  "skills": [
+    {
+      "skill_id": "scientific-critical-thinking",
+      "status": "ACTIVE_OPTIONAL",
+      "allowed_roles": ["research-conductor"],
+      "decision_protection": "Makes concrete evidence, bias, confounding, measurement, design, statistical, and claim-limit risks visible before they are mistaken for support.",
+      "approved_scope": "Constructive critique inside an already permitted research-process or market-research route; material findings enter the existing canonical artifact.",
+      "prohibited_uses": ["Accept evidence or a financial-market claim.", "Replace scientific-philosophy, causal-identification, outcome-evidence, or pipeline-integrity requirements."],
+      "source": {"kind": "LOCAL_SKILL_PACKAGE", "publisher": "K-Dense Inc.", "license": "MIT"},
+      "reviewed_snapshot": {"document": "SKILL.md", "version": "1.3", "content_sha256": "20880f5c2c2a03b6b40f15161c4f92c1ecfc7219252c44e9af3958cebb23c683"},
+      "material_use_rule": "RECORD_EFFECTIVE_RUNTIME_SNAPSHOT_AND_PROTECT_IT_IN_EXISTING_FINGERPRINT"
+    },
+    {
+      "skill_id": "scientific-brainstorming",
+      "status": "ACTIVE_OPTIONAL",
+      "allowed_roles": ["research-conductor", "intraday-hypothesis-generator"],
+      "decision_protection": "Preserves independent inputs, dissent, assumptions, provenance, and the full candidate family during genuinely requested ideation.",
+      "approved_scope": "Early ideation only; resulting trading ideas remain visible, unranked INBOX candidates in the existing search accounting.",
+      "prohibited_uses": ["Validate, rank, promote, or reject a trading idea.", "Replace evidence assessment, a research design, or a specialist review."],
+      "source": {"kind": "LOCAL_SKILL_PACKAGE", "publisher": "K-Dense Inc.", "license": "MIT"},
+      "reviewed_snapshot": {"document": "SKILL.md", "version": "1.2", "content_sha256": "db8e7782fab72979a92b4f00ac13f208bff89f5b3705f92fb441b65efd95a080"},
+      "material_use_rule": "RECORD_EFFECTIVE_RUNTIME_SNAPSHOT_AND_PROTECT_IT_IN_EXISTING_FINGERPRINT"
+    },
+    {
+      "skill_id": "hypothesis-generation",
+      "status": "ACTIVE_OPTIONAL",
+      "allowed_roles": ["research-conductor", "intraday-hypothesis-generator"],
+      "decision_protection": "Forces rival explanations, discriminating predictions, operationalizations, and falsifiers to remain explicit rather than silently favoring one story.",
+      "approved_scope": "Drafting and challenging candidate hypotheses inside the existing generation or operationalization path.",
+      "prohibited_uses": ["Treat a hypothesis, mechanism, causal effect, or pattern as established.", "Alter the unranked generator output or promote a candidate."],
+      "source": {"kind": "LOCAL_SKILL_PACKAGE", "publisher": "K-Dense Inc.", "license": "MIT"},
+      "reviewed_snapshot": {"document": "SKILL.md", "version": "2.2", "content_sha256": "5337d35e41ed9edb8ab25ce2b07dfb4736e5bb09b279348a1dc6c013d0f6a05a"},
+      "material_use_rule": "RECORD_EFFECTIVE_RUNTIME_SNAPSHOT_AND_PROTECT_IT_IN_EXISTING_FINGERPRINT"
+    },
+    {
+      "skill_id": "statistical-analysis",
+      "status": "ACTIVE_OPTIONAL",
+      "allowed_roles": ["data-analyst"],
+      "decision_protection": "Supports explicit method selection, assumption diagnostics, uncertainty, effect magnitude, and multiplicity controls for the bounded data question.",
+      "approved_scope": "A method aid for the scoped data-analyst work order, with dependence, leakage, decision-time availability, regime, cost, and time-separation checks retained.",
+      "prohibited_uses": ["Assume independent market observations.", "Replace the data-analysis report, causal review, validation, or execution assessment."],
+      "source": {"kind": "LOCAL_SKILL_PACKAGE", "publisher": "K-Dense Inc.", "license": "MIT"},
+      "reviewed_snapshot": {"document": "SKILL.md", "version": "1.2", "content_sha256": "1b1d63fd667ef454a8e0cadf32457a511883d3308dcc79c47c48bc565d9a23f7"},
+      "material_use_rule": "RECORD_EFFECTIVE_RUNTIME_SNAPSHOT_AND_PROTECT_IT_IN_EXISTING_FINGERPRINT"
+    },
+    {
+      "skill_id": "statistical-power",
+      "status": "ACTIVE_OPTIONAL",
+      "allowed_roles": ["data-analyst"],
+      "decision_protection": "Tests whether a prospective, decision-relevant after-cost effect could be resolved before outcomes are observed.",
+      "approved_scope": "Pre-outcome sensitivity or dependence-preserving simulation tied to a predeclared market-data design.",
+      "prohibited_uses": ["Report post-hoc observed power.", "Use an independent-observation formula for dependent market data without a justified design match."],
+      "source": {"kind": "LOCAL_SKILL_PACKAGE", "publisher": "K-Dense Inc.", "license": "MIT"},
+      "reviewed_snapshot": {"document": "SKILL.md", "version": "1.1", "content_sha256": "538a5f8e138fcae1d73926cbfc3790c2a8bcd1544a22ea055654d5684cc507a0"},
+      "material_use_rule": "RECORD_EFFECTIVE_RUNTIME_SNAPSHOT_AND_PROTECT_IT_IN_EXISTING_FINGERPRINT"
+    },
+    {
+      "skill_id": "statsmodels",
+      "status": "ACTIVE_OPTIONAL",
+      "allowed_roles": ["data-analyst"],
+      "decision_protection": "Makes model specification, diagnostics, covariance treatment, transformations, exclusions, and out-of-sample separation explicit for a predeclared model.",
+      "approved_scope": "Implementation of a predeclared econometric or time-series model inside the bounded data-analysis route.",
+      "prohibited_uses": ["Select a model after inspecting results.", "Treat a coefficient, ARIMA, VAR, Granger result, or robust standard error as causal, predictive, or executable-edge proof."],
+      "source": {"kind": "LOCAL_SKILL_PACKAGE", "publisher": "K-Dense Inc.", "license": "BSD-3-Clause"},
+      "reviewed_snapshot": {"document": "SKILL.md", "version": "1.3", "content_sha256": "8128c6d03ae7b2edab4dbee2dc06f82dc5b5a6acd15bba3e9267bcb2bcf5c09c"},
+      "material_use_rule": "RECORD_EFFECTIVE_RUNTIME_SNAPSHOT_AND_PROTECT_IT_IN_EXISTING_FINGERPRINT"
+    },
+    {
+      "skill_id": "pymc",
+      "status": "ACTIVE_OPTIONAL",
+      "allowed_roles": ["data-analyst"],
+      "decision_protection": "Requires stated priors, likelihood, predictive checks, convergence diagnostics, sampler configuration, and approximation limits for a predeclared Bayesian uncertainty model.",
+      "approved_scope": "Implementation of a predeclared Bayesian model inside the bounded data-analysis route.",
+      "prohibited_uses": ["Use a posterior probability to override evidence, causal, validation, or execution gates.", "Choose priors or a model after inspecting the target results without a visible new version."],
+      "source": {"kind": "LOCAL_SKILL_PACKAGE", "publisher": "K-Dense Inc.", "license": "Apache-2.0"},
+      "reviewed_snapshot": {"document": "SKILL.md", "version": "1.4", "content_sha256": "1ab548a6099477e3446cdf3687a1740039159b2a9aefb21ff2f84b56b106e79b"},
+      "material_use_rule": "RECORD_EFFECTIVE_RUNTIME_SNAPSHOT_AND_PROTECT_IT_IN_EXISTING_FINGERPRINT"
+    },
+    {
+      "skill_id": "sympy",
+      "status": "ACTIVE_OPTIONAL",
+      "allowed_roles": ["research-conductor", "data-analyst"],
+      "decision_protection": "Checks exact formula equivalence, domains, units, and boundary conditions before a specified operationalization is treated as internally consistent.",
+      "approved_scope": "Exact verification of an already specified formula or implementation condition.",
+      "prohibited_uses": ["Choose an unresolved construct or repair a source omission.", "Establish a market effect, prediction, or executable edge."],
+      "source": {"kind": "LOCAL_SKILL_PACKAGE", "publisher": "K-Dense Inc.", "license": "SymPy License"},
+      "reviewed_snapshot": {"document": "SKILL.md", "version": "1.3", "content_sha256": "5ea352f14518ae2f1a513f87893dffd94dc4f7041c3fd500eb7d76e7fd5a98c6"},
+      "material_use_rule": "RECORD_EFFECTIVE_RUNTIME_SNAPSHOT_AND_PROTECT_IT_IN_EXISTING_FINGERPRINT"
+    },
+    {
+      "skill_id": "experimental-design",
+      "status": "DEFERRED_NO_USE",
+      "allowed_roles": ["research-conductor"],
+      "decision_protection": "Keeps randomization and treatment-assignment reasoning from being falsely transferred to naturally occurring market observations.",
+      "approved_scope": "No market-research use. It may be reconsidered only for a separately scoped simulation or live-agent evaluation with a genuine assignment or run-order problem.",
+      "prohibited_uses": ["Use randomization language as causal identification for market observations.", "Use for a market-research design without a new owner decision and applicable controls."],
+      "defer_reason": "The skill's treatment-assignment machinery does not transfer to naturally occurring market observations and does not supply causal identification.",
+      "source": {"kind": "LOCAL_SKILL_PACKAGE", "publisher": "K-Dense Inc.", "license": "MIT"},
+      "reviewed_snapshot": {"document": "SKILL.md", "version": "1.2", "content_sha256": "e3514cb91ab35a0323fbe12894593385ba4bc60ad535b981b4c38383f3c7c2cf"},
+      "material_use_rule": "RECORD_EFFECTIVE_RUNTIME_SNAPSHOT_AND_PROTECT_IT_IN_EXISTING_FINGERPRINT"
+    },
+    {
+      "skill_id": "timesfm-forecasting",
+      "status": "DEFERRED_NO_USE",
+      "allowed_roles": ["research-conductor"],
+      "decision_protection": "Prevents a foundation-model forecast from silently creating a new predictive model and uncounted search path.",
+      "approved_scope": "No market-research use until it is a named new candidate with the required validation-boundary and pipeline controls.",
+      "prohibited_uses": ["Download, run, or make a forecast claim for market research.", "Treat zero-shot output as evidence of a tradable edge."],
+      "defer_reason": "Using it would introduce a material predictive-model and search path requiring separate candidate, fingerprint, validation, and live-agent controls.",
+      "source": {"kind": "LOCAL_SKILL_PACKAGE", "publisher": "Clayton Young / Superior Byte Works, LLC", "license": "Apache-2.0"},
+      "reviewed_snapshot": {"document": "SKILL.md", "version": "1.2", "content_sha256": "5aba7fb1fb13c5f722b8f59daf5e0a06f4cde6eb4a27f66d40a0eabeb8ea4637"},
+      "material_use_rule": "RECORD_EFFECTIVE_RUNTIME_SNAPSHOT_AND_PROTECT_IT_IN_EXISTING_FINGERPRINT"
+    }
+  ]
+}

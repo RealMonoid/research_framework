@@ -119,6 +119,7 @@
       }
     },
     "protectedArtifact": {
+      "description": "A materially effective artifact. This includes the runtime version and content hash of an optional method skill when that skill influenced the work, and the reviewed capability manifest when it constrained the method choice.",
       "type": "object",
       "additionalProperties": false,
       "required": ["artifact_ref", "role", "content_sha256"],

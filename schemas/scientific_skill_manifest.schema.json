@@ -1,0 +1,113 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:research-framework:schema:scientific-skill-manifest:1.0.0",
+  "title": "Scientific Skill Capability Manifest",
+  "description": "A versioned map of optional local scientific-method skills, their approved project roles, and the installed-document snapshot reviewed by the owner.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "manifest_id",
+    "recorded_at",
+    "purpose",
+    "runtime_rule",
+    "skills"
+  ],
+  "properties": {
+    "schema_version": {"const": "1.0.0"},
+    "manifest_id": {"$ref": "#/$defs/stableId"},
+    "recorded_at": {"type": "string", "format": "date-time"},
+    "purpose": {"$ref": "#/$defs/text"},
+    "runtime_rule": {"$ref": "#/$defs/text"},
+    "skills": {
+      "type": "array",
+      "minItems": 1,
+      "items": {"$ref": "#/$defs/skill"}
+    }
+  },
+  "$defs": {
+    "stableId": {
+      "type": "string",
+      "pattern": "^[A-Za-z][A-Za-z0-9._:-]{2,199}$"
+    },
+    "text": {"type": "string", "minLength": 1, "maxLength": 4000},
+    "sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+    "role": {
+      "type": "string",
+      "enum": [
+        "research-conductor",
+        "intraday-hypothesis-generator",
+        "data-analyst"
+      ]
+    },
+    "snapshot": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["document", "version", "content_sha256"],
+      "properties": {
+        "document": {"const": "SKILL.md"},
+        "version": {"type": "string", "pattern": "^[0-9]+(?:\\.[0-9]+){0,3}$"},
+        "content_sha256": {"$ref": "#/$defs/sha256"}
+      }
+    },
+    "source": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "publisher", "license"],
+      "properties": {
+        "kind": {"const": "LOCAL_SKILL_PACKAGE"},
+        "publisher": {"$ref": "#/$defs/text"},
+        "license": {"$ref": "#/$defs/text"}
+      }
+    },
+    "skill": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "skill_id",
+        "status",
+        "allowed_roles",
+        "decision_protection",
+        "approved_scope",
+        "prohibited_uses",
+        "source",
+        "reviewed_snapshot",
+        "material_use_rule"
+      ],
+      "properties": {
+        "skill_id": {"$ref": "#/$defs/stableId"},
+        "status": {"enum": ["ACTIVE_OPTIONAL", "DEFERRED_NO_USE"]},
+        "allowed_roles": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {"$ref": "#/$defs/role"}
+        },
+        "decision_protection": {"$ref": "#/$defs/text"},
+        "approved_scope": {"$ref": "#/$defs/text"},
+        "prohibited_uses": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {"$ref": "#/$defs/text"}
+        },
+        "defer_reason": {"$ref": "#/$defs/text"},
+        "source": {"$ref": "#/$defs/source"},
+        "reviewed_snapshot": {"$ref": "#/$defs/snapshot"},
+        "material_use_rule": {
+          "const": "RECORD_EFFECTIVE_RUNTIME_SNAPSHOT_AND_PROTECT_IT_IN_EXISTING_FINGERPRINT"
+        }
+      },
+      "allOf": [
+        {
+          "if": {"properties": {"status": {"const": "DEFERRED_NO_USE"}}, "required": ["status"]},
+          "then": {"required": ["defer_reason"]}
+        },
+        {
+          "if": {"properties": {"status": {"const": "ACTIVE_OPTIONAL"}}, "required": ["status"]},
+          "then": {"not": {"required": ["defer_reason"]}}
+        }
+      ]
+    }
+  }
+}

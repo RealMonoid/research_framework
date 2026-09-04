@@ -104,6 +104,7 @@ $positivePairs = @(
     @('examples\problem_record.missing_source_pages.json', 'schemas\problem_record.schema.json'),
     @('problems\2026-09-04-specialist-capability-discovery-bypass.json', 'schemas\problem_record.schema.json'),
     @('examples\specialist_capability_check.internal_agent.json', 'schemas\specialist_capability_check.schema.json'),
+    @('capabilities\scientific_skill_manifest.v1.json', 'schemas\scientific_skill_manifest.schema.json'),
     @('examples\orchestration_state.prose_strategy.json', 'schemas\orchestration_state.schema.json'),
     @('examples\routing_decision.pre_operationalization.json', 'schemas\routing_decision.schema.json'),
     @('examples\research_fingerprint.prose_strategy.json', 'schemas\research_fingerprint.schema.json'),
