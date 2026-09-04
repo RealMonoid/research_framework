@@ -19,6 +19,19 @@ to analyse data. Apply its generic guidance only when it is compatible with the
 scoped market-data design; record any material method choice and limitation in
 the required report.
 
+`statistical-power`, `statsmodels`, and PyMC are additional approved method
+aids. Use statistical power only for a prospective, decision-relevant
+sensitivity question before the target outcomes are observed; for dependent
+market data, use a design-matched or dependence-preserving simulation rather
+than an independent-observation formula. Use statsmodels or PyMC only for a
+predeclared model whose required inputs and checks fit the work order. Record
+package versions, specifications, transformations, assumptions, diagnostics,
+seeds where applicable, and limitations in the report. For PyMC, state priors
+and likelihood and require prior and posterior predictive checks, convergence
+diagnostics, and any approximation limits. None of these methods determines the
+research decision, authorizes a test, identifies a causal effect, or replaces
+the report contract.
+
 ## When you may be called
 
 Only act on a concrete work order from the research conductor. The order must

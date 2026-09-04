@@ -174,6 +174,33 @@ that these contracts remain present; it cannot by itself establish that a model
 uses the methods well, which remains a live-agent evaluation question under
 priority 5.
 
+### Subsequent scientific-capability screen — 2026-09-04
+
+Six subsequently installed capabilities were screened against the same
+decision-protection criterion. `statistical-power`, `statsmodels`, PyMC, and
+SymPy have a direct, bounded use inside already-authorized work: respectively,
+prospective sensitivity to a decision-relevant after-cost effect; specified
+econometric/time-series estimation and diagnostics; predeclared Bayesian
+uncertainty models with prior and posterior predictive checks; and exact
+formula or boundary-condition verification before an operationalization is
+tested. They remain method aids and must write their material inputs, output,
+versions, seeds where applicable, assumptions, and limitations into the
+existing artifact and fingerprint.
+
+`experimental-design` is not activated for market research. Its randomization,
+treatment, and experimental-unit machinery does not transfer to naturally
+occurring market observations, and it would not supply causal identification.
+It may be reconsidered only for an owner-requested, separately scoped
+simulation or live-agent evaluation design with a genuine assignment or run-
+order problem. `timesfm-forecasting` is likewise not activated: zero-shot
+forecast output would create a new predictive model and a material search path.
+It may be proposed only as a named new candidate after the validation-boundary
+and live-agent controls applicable to that path are implemented; its model
+weights, configuration, context, horizon, data transformations, forecast
+availability, and baselines would then be fingerprinted and tested as part of
+the unchanged full pipeline. Neither deferred capability is an authorization to
+download a model, access data, run a backtest, or make a forecast claim.
+
 1. **Close the validation-boundary, stopping-rule, and confirmed
    pipeline-integrity enforcement gaps.**
    **Status: urgent correctness gap; documented rules exist, hard enforcement

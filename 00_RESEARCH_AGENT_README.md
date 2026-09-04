@@ -146,6 +146,9 @@ genuinely requested, provenance-preserving ideation session;
 `hypothesis-generation` for rivals, predictions, operationalizations, and
 falsifiers; and `statistical-analysis` for the bounded data analyst's method
 selection and diagnostics. They are methods, not new project agents or gates.
+The same route may use `statistical-power` for a prospective sensitivity
+analysis, `statsmodels` or PyMC for a predeclared model and diagnostics, and
+SymPy for exact formula or boundary-condition checks.
 
 The conductor maps any material output into the existing canonical artifact and
 does not retain a skill template as a second source of truth. A brainstorm or
@@ -157,6 +160,17 @@ data or substitute generic test diagnostics for the data-analysis report,
 time-separated evaluation, or execution checks. Use AI, psychology, or
 philosophy methods only when they protect a named research-process or capital
 decision, never as detached foundational research.
+
+Prospective power is based on a decision-relevant after-cost effect and a
+dependence-preserving design or simulation; it is never post-hoc observed
+power. Statsmodels and PyMC cannot select a model after inspecting results,
+turn an estimator into causal identification, or establish an executable edge.
+PyMC also requires stated priors, prior and posterior predictive checks,
+convergence diagnostics, and reproducible seeds. SymPy can verify that a
+specified formula is algebraically or boundary-condition consistent; it cannot
+select an unresolved construct or establish that a formula is useful in a
+market. `experimental-design` and `timesfm-forecasting` are not active methods
+for market research at this time.
 
 ### Permanent research-conductor controls
 

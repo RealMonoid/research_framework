@@ -253,6 +253,35 @@ research, trading, risk, causal, activation, or completion decision.
   overlap, volatility clustering, regime/session structure, decision-time
   availability, leakage, and time-separated evaluation. Generic statistical
   output never replaces trading cost, liquidity, slippage, or execution limits.
+- `statistical-power` may assess a prospective plan's sensitivity to a
+  decision-relevant after-cost effect only before the target outcomes are
+  observed. Match the calculation or dependence-preserving simulation to the
+  planned analysis, record its assumptions and uncertainty, and treat it as a
+  feasibility limit rather than evidence. Never report post-hoc observed power.
+- `statsmodels` may implement a predeclared econometric or time-series model
+  inside the bounded data-analysis route. Preserve the specification,
+  diagnostics, covariance/dependence treatment, transformations, exclusions,
+  versions, and out-of-sample separation. ARIMA, VAR, Granger, robust standard
+  errors, or a significant coefficient do not establish causality, mechanism,
+  prediction, or an executable edge.
+- PyMC may implement a predeclared Bayesian uncertainty model inside the
+  bounded data-analysis route. State and justify priors and likelihood,
+  retain seeds and sampler configuration, require prior and posterior
+  predictive checks plus convergence diagnostics, and record approximation
+  limits. A posterior probability does not override the evidence, causal,
+  validation, or execution gates.
+- SymPy may check exact formula equivalence, units or domains, and boundary
+  conditions for an already specified operationalization or implementation.
+  Preserve the checked expression and assumptions in the relevant artifact.
+  Symbolic validity cannot choose an unresolved construct, repair a source
+  omission, or establish a market effect.
+
+`experimental-design` is not an active market-research method because market
+observations are not randomly assigned treatments. `timesfm-forecasting` is
+not an active method because it would add a new predictive model and search
+path. Either requires a separately authorized and correctly routed future use;
+neither may be used to bypass the existing validation or model-fingerprint
+requirements.
 
 Use an AI, psychology, or philosophy capability only when the scoped work
 protects a named research-process or capital decision. Do not widen the
