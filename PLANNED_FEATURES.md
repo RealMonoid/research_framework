@@ -224,6 +224,64 @@ capital-allocation authority. The manifest/test verifies discoverability and
 snapshot consistency only; live-agent evaluation remains required to claim a
 behavioral improvement.
 
+### Owner-requested rule-based backtest-backend candidate register — 2026-09-04
+
+The owner requested that four external rule-based backtest engines be retained
+as evaluated candidates before implementing a genuine backtest path. This is a
+planning record, not an adopted dependency, installation, data acquisition,
+backtest authorization, or market result. The framework remains responsible for
+deciding whether a test may run and for interpreting its result; an engine is
+only a replaceable execution component behind that control layer.
+
+1. **Backtrader — primary evaluation candidate.** Its event-driven broker
+   simulation, order types, commission schemes, slippage, volume filling,
+   multiple feeds/timeframes, and future-like instrument support make it the
+   first candidate for a single frozen, bar-based rule strategy. Evaluate its
+   exact order-timing, fill, cost, and future-contract semantics against
+   synthetic fixtures before any market-data run. Its GPL-3.0 license must be
+   recorded with any later dependency decision.
+2. **VectorBT — conditional robustness candidate.** Its vectorized execution
+   and parameter broadcasting may make a predeclared sensitivity or robustness
+   family practical after the family, multiplicity rule, and evaluation budget
+   have been frozen. Its parameter sweeps, random-signal examples, data access,
+   scheduled updates, and automation are not enabled by this record; an
+   unregistered sweep is prohibited. Its Apache-2.0-with-Commons-Clause terms
+   and optional-dependency licenses require a later dependency review.
+3. **RQAlpha — conditional non-commercial candidate.** Its extensible
+   simulation, futures-account, analysis, and transaction-cost modules could
+   be relevant while the owner retains the present non-commercial scope. Its
+   license states separate terms for commercial use, and its documented data
+   ecosystem is centered on Chinese markets and Ricequant/RQData. Do not
+   introduce that data path or assume its market conventions transfer to the
+   target market without a separately approved data-fitness assessment.
+4. **Backtesting.py — local prototype-only candidate.** Its simple OHLC(V)
+   interface may help test a narrow deterministic reference fixture, but it is
+   not a canonical backend: its built-in optimizer cannot run outside a frozen
+   search family, its candle model cannot establish order-book or queue fills,
+   and its AGPL-3.0 license needs a later dependency review.
+5. **Qlib — excluded from this rule-based path.** It is not selected because
+   the owner does not want ML-driven research, model training, factor mining,
+   or model optimization in this project.
+
+Before any candidate can become an active backend, implement the priority-1
+validation-boundary and pipeline-integrity corrections and the prospective
+data-fitness gate below. Then build a backend-neutral adapter contract that
+binds the exact engine revision, environment/dependency lock, input-data
+snapshot, strategy rules, instrument/contract convention, timezone/session,
+order timing, fill model, costs, slippage, and all engine configuration to the
+complete research fingerprint. The first acceptance test uses synthetic data
+and fixed expected behavior to detect look-ahead, cheat timing, cost, fill, and
+reproducibility failures; passing it is pipeline evidence only, never market
+evidence. No candidate is allowed to download data, choose or optimize
+parameters, create a hidden candidate family, decide readiness, or bypass the
+frozen outcome and validation contracts.
+
+Source records: https://github.com/mementum/backtrader,
+https://github.com/polakowo/vectorbt,
+https://github.com/ricequant/rqalpha,
+https://github.com/kernc/backtesting.py, and
+https://github.com/microsoft/qlib.
+
 1. **Close the validation-boundary, stopping-rule, and confirmed
    pipeline-integrity enforcement gaps.**
    **Status: urgent correctness gap; documented rules exist, hard enforcement
