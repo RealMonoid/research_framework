@@ -1,10 +1,26 @@
 # 00_RESEARCH_AGENT_README.md
 
-**Version:** 2.5
-**As of:** 2026-08-31
+**Version:** 2.6
+**As of:** 2026-09-04
 **Status:** DRAFT FOR ADOPTION
 **Purpose:** Binding reading and execution instructions for AI agents handling trading research projects.
+**Authority:** Routed under `AGENTS.md`; `AGENTS.md` controls any conflict.
 ---
+
+## 0. Applied research mission
+
+The framework exists to identify or develop executable trading strategies with
+a defensible positive expected net edge after realistic costs, execution, and
+risk. It has two primary entry routes: rigorous evaluation of an existing
+strategy and controlled generation and development of new strategy hypotheses.
+Scientific method and interdisciplinary controls serve this applied objective;
+they are not a substitute objective of detached foundational research.
+
+Every route also preserves scoped learning from supported, unsupported,
+inconclusive, blocked, and not-testable outcomes. Learning may guide later
+hypothesis generation, representation, measurement, design, or decisions, but
+it does not transfer evidential support to another strategy without a separate
+test. A valid single-case stop does not change the program-level mission.
 
 ## 1. Staggered entry and document router
 
@@ -31,6 +47,7 @@ The files perform various functions:
 | `agents/data-analyst.md` |Bounded quantitative data profiling and analysis with provenance, uncertainty and trading-data checks|Only when the conductor has a concrete quantitative information need beyond a simple calculation; not a permanent gate|
 | `agents/causal-identification-critic.md` |Independent examination of whether a financial-market design supports the intended causal statement|Before any interventional or counterfactual estimate and before causal language; not for purely predictive questions|
 | `agents/framework-control-reviewer.md` |Bounded review of observable workflow-control failures such as bypasses, scope changes, repeated equivalent attempts, conflicts or stale memory|Only after an explicit framework-control request or a concrete control signal; not an ordinary research gate|
+| `references/INTERDISCIPLINARY_TRADING_RESEARCH_FOUNDATIONS.md` |Academic basis for the adopted division of disciplinary labour and limits on transferring claims between fields|When designing, reviewing, or changing the interdisciplinary research architecture; not required for every ordinary case|
 | `references/CAUSAL_IDENTIFICATION_FOR_FINANCE.md` |Versioned research basis for financial market-specific identification risks|At each causality test|
 | `reconstruction/README.md` |Source-based translation of book/article/video/course strategies|When a source strategy is not fully operationalized|
 | `00_RESEARCH_AGENT_README.md` |Routing, gate and non-skip rules|From `PROMOTED`|

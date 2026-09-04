@@ -2,6 +2,27 @@
 
 This short path is the only mandatory entry point for any new idea. The long standard documents are routed only by status and task; they no longer have to be loaded completely in advance into the context.
 
+## Project mission
+
+The project's applied goal is to identify or develop executable trading
+strategies with a defensible positive expected net edge after realistic costs,
+liquidity, slippage, capacity, execution, and risk. It accepts two primary
+inputs: an existing strategy that must be reconstructed and tested without
+changing its identity, or a request to generate and develop new strategy
+hypotheses through a recorded search.
+
+Every result also contributes bounded learning about representations,
+mechanisms, conditions, measurements, methods, or failure modes. That learning
+may guide later research but is not edge evidence for another strategy unless
+it is separately tested. An individual case may correctly end with rejection,
+inconclusive evidence, or non-testability; these outcomes protect the applied
+mission rather than replacing it.
+
+The interdisciplinary role boundaries are summarized in
+[`INTERDISCIPLINARY_TRADING_RESEARCH_FOUNDATIONS.md`](references/INTERDISCIPLINARY_TRADING_RESEARCH_FOUNDATIONS.md).
+The adopted mission and its limits are recorded in
+[`ADR-016`](decisions/ADR-016-applied-interdisciplinary-trading-research-mission.md).
+
 ## Scope and restraint
 
 This is a private decision-support framework for one research owner working

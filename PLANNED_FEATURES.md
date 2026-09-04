@@ -12,6 +12,21 @@ model-specific roadmaps or silently reorder work in their own memory. A listed
 item remains a plan, not authorization to implement it or to begin empirical
 research. `AGENTS.md` remains the sole source of binding repository rules.
 
+## Mission alignment
+
+This roadmap serves the applied project mission defined in `AGENTS.md`: test
+existing trading strategies rigorously, generate and develop new strategy
+hypotheses, and accumulate bounded reusable learning from every defensible
+outcome in order to identify or develop executable strategies with a credible
+positive expected net edge after costs, execution, and risk. Scientific and
+interdisciplinary controls are means to that objective, not a detached
+foundational-research programme.
+
+The mission clarification does not reorder the priorities below. A planned
+feature must still protect a research or capital decision, improve the reliable
+generation or evaluation of strategy candidates, or make scoped learning from
+results more trustworthy without promoting it to edge evidence.
+
 ## Authoritative implementation order
 
 **Status:** prioritized on 2026-09-02; the initial hard-gate inventory is
@@ -344,14 +359,23 @@ authorization if reconsidered later.
    tools rather than a universal hard gate, to avoid inadvertently destroying
    or preserving critical microstructure structure.
 
-6. **Cross-version search lineage with selection-adjusted reporting.** Treat
-   search-history accounting and statistical consequence as one control. Every
-   new Research-ID or version inherits prior data exposure, definitions,
-   filters, outcomes, continuation choices, and failed attempts from the same
-   research line. Final reporting must show both the ordinary result and a
-   correction or decision rule appropriate to that complete selection process,
-   not merely to the surviving latest version. This becomes urgent as soon as
-   a real research line reaches a second version.
+6. **Cross-version search lineage, selection-adjusted reporting, and scoped
+   cumulative learning.** Treat search-history accounting and statistical
+   consequence as one control. Every new Research-ID or version inherits prior
+   data exposure, definitions, filters, outcomes, continuation choices, and
+   failed attempts from the same research line. Final reporting must show both
+   the ordinary result and a correction or decision rule appropriate to that
+   complete selection process, not merely to the surviving latest version.
+   This becomes urgent as soon as a real research line reaches a second version.
+
+   After lineage is reliable, add the smallest reusable cross-case learning
+   record needed to preserve what a result bears on: its strategy or candidate
+   family, market and horizon, representation, mechanism candidate, condition,
+   measurement, method, failure mode, evidential status, and transfer limits.
+   It may inform later candidate generation, design, or decision sensitivity,
+   but it must not pool incompatible cases, hide prior data exposure, or promote
+   a result into edge evidence for another strategy. This is a decision aid and
+   search-memory control, not a general knowledge base or publication product.
 
 7. **Fail-closed rule-set loading and reference checks.** First enforce the
    rule at the current whole-document level: a material step must prove that
@@ -595,19 +619,26 @@ numbers here identify details rather than execution order:
    complete selection process. The correction must cover the relevant
    candidate family, research-version history, and data reuse rather than only
    the survivors of the latest screen.
-3. **Priority 9 — Severity-aware change control:** Separate the semantic research
+3. **Priority 6 — Scoped cumulative learning:** After cross-version lineage is
+   reliable, preserve reusable findings with their research line, market,
+   horizon, representation, mechanism or condition, measurement, method,
+   evidential status, and transfer limits. A prior result may guide search or
+   design but cannot become edge evidence for another strategy without a new
+   appropriate test. Do not build a broad knowledge platform beyond this
+   decision-protecting need.
+4. **Priority 9 — Severity-aware change control:** Separate the semantic research
    fingerprint from the artifact-integrity manifest. Distinguish material
    research changes, evidence-integrity changes, and demonstrably non-material
    editorial changes so that harmless hash changes do not train users to
    approve every warning.
-4. **Priority 2 — Hard-gate coverage accounting (initial inventory complete):** Maintain the
+5. **Priority 2 — Hard-gate coverage accounting (initial inventory complete):** Maintain the
    [`HARD_GATE_INVENTORY.md`](HARD_GATE_INVENTORY.md), showing
    which research gates are enforced by executable checks, which are enforced
    only by schemas, which depend on an agent classification, and which remain
    prose instructions. Increase executable enforcement where the required
    condition is objectively decidable and the real case or behavioural
    evaluation demonstrates that the current caller-enforced path is unreliable.
-5. **Priority 5 — Adversarial live-agent evaluation:** Extend the planned LLM stress test
+6. **Priority 5 — Adversarial live-agent evaluation:** Extend the planned LLM stress test
    with agents that actively attempt to change definitions, reset the search
    history, upgrade claim levels, skip required specialists, or satisfy schemas
    with scientifically empty content. Retain case-by-run outcomes; measure
@@ -616,24 +647,24 @@ numbers here identify details rather than execution order:
    treating contract validity or one aggregate score as evidence of agent
    reliability. A missed predeclared critical assertion fails the candidate
    regardless of its average score.
-6. **Priorities 8 and 11 — Narrow terminology control and conditional language
+7. **Priorities 8 and 11 — Narrow terminology control and conditional language
    migration:** Establish only the decision-relevant concept mappings described
    above before selective loading. Migrate the legacy German corpus only after
    a measured agent-reliability or actual maintenance need. Translation must be
    performed in translation-only commits; redundancy removal, shortening, and
    substantive rewriting must follow in separate commits with separate
    validation.
-7. **Priority 1 — Pipeline-integrity correctness:** Reject one or many required
+8. **Priority 1 — Pipeline-integrity correctness:** Reject one or many required
    random-walk controls when they are the only null-model family, structure the
    Monte Carlo and seed record, and bind every required control result to
    evidence from the exact frozen pipeline. Passing a JSON contract alone must
    not be reported as execution evidence.
-8. **Priority 2 — Conditional fail-closed conductor and baseline provenance:**
+9. **Priority 2 — Conditional fail-closed conductor and baseline provenance:**
    If the real case or live-agent runs demonstrate caller bypasses, implement
    the minimal harness and predecessor-chain requirements described above.
    Preserve the current separation between router, specialist, validator,
    fingerprint, and research stages; consolidation is not an objective.
-9. **Priority 7 — Cross-schema identifier consistency:** Audit materially linked
+10. **Priority 7 — Cross-schema identifier consistency:** Audit materially linked
    identifier grammars and establish one tested canonical rule where a shared
    identifier crosses artifact boundaries. A shared schema file is optional,
    not the goal. If external `$ref` definitions are introduced, resolution from

@@ -8,6 +8,21 @@ eventually influence decisions involving real capital. It is not being built
 for academic publication, external peer review, team onboarding, or public
 presentation of the owner's strategies and results.
 
+Its applied mission is to identify or develop executable trading strategies
+with a defensible positive expected net edge after realistic costs, liquidity,
+slippage, capacity, execution, and risk. It pursues that mission through two
+primary routes: rigorous reconstruction and testing of existing strategies, and
+controlled generation and development of new strategy hypotheses. Both routes
+retain positive, negative, inconclusive, blocked, and not-testable results so
+later research can learn from them without turning prior exposure or a revised
+idea into fresh evidence.
+
+The [interdisciplinary research foundations](references/INTERDISCIPLINARY_TRADING_RESEARCH_FOUNDATIONS.md)
+define how finance, cognitive science, AI search, philosophy of science,
+statistics, machine learning, and decision theory contribute without being
+mixed into one undifferentiated theory. The binding mission decision is recorded
+in [ADR-016](decisions/ADR-016-applied-interdisciplinary-trading-research-mission.md).
+
 The repository therefore serves only two necessary readers:
 
 - the owner, who must be able to understand and revisit a decision months or
@@ -87,10 +102,11 @@ trading rules. It is especially useful when AI agents help with the research,
 because it gives those agents explicit boundaries and keeps the user in control
 of material decisions.
 
-It is not a trading strategy, a profitability claim, or an automated approval
-to run a backtest. It does not guarantee that a hypothesis is true, useful, or
-tradable. Its purpose is narrower: to make the path from idea to conclusion
-traceable, critical, and resistant to hidden changes.
+It is not itself a trading strategy, a profitability claim, or an automated
+approval to run a backtest. It does not guarantee that a hypothesis is true,
+useful, or tradable. Its operational role within the applied mission is to make
+the path from an existing or generated strategy idea to a defensible conclusion
+traceable, critical, cumulative, and resistant to hidden changes.
 
 ## A typical case in plain language
 
