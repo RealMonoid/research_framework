@@ -69,6 +69,26 @@ def assert_route(state: dict[str, Any], expected: str) -> dict[str, Any]:
         )
     if decision["route"] != expected:
         raise AssertionError(f"Expected route {expected}, observed {decision['route']}")
+    interaction = decision["user_interaction"]
+    for field in (
+        "current_position",
+        "next_agent_action",
+        "after_agent_action",
+        "user_next_action",
+    ):
+        if not isinstance(interaction.get(field), str) or not interaction[field]:
+            raise AssertionError(f"Routing decision omitted required user progress field: {field}")
+    if expected == "BLOCKED":
+        if not interaction["problems"]:
+            raise AssertionError("A blocked route omitted its documented problem and recovery options")
+        if not all(problem.get("problem_record_ref") for problem in interaction["problems"]):
+            raise AssertionError("A blocked route omitted a separate problem-record reference")
+        for problem in interaction["problems"]:
+            options = problem.get("resolution_options", [])
+            if len(options) < 2 or not any(
+                option.get("assessment") == "RECOMMENDED" for option in options
+            ):
+                raise AssertionError("A blocked route omitted weighted recovery options")
     return decision
 
 
@@ -98,6 +118,33 @@ def neutral_state() -> dict[str, Any]:
     state["completed_steps"] = []
     state["routing_history"] = []
     return state
+
+
+def add_documented_blocker(state: dict[str, Any], statement: str) -> None:
+    state["blocking_issues"] = [
+        {
+            "issue_id": "issue:synthetic-workflow-blocker",
+            "problem_record_ref": "problem:synthetic-missing-source-pages:v1",
+            "statement": statement,
+            "affected_next_action": "The current research step cannot continue.",
+            "user_action_required": True,
+            "resolution_options": [
+                {
+                    "option_id": "resolution:repair-prerequisite",
+                    "label": "Repair the missing prerequisite.",
+                    "consequence": "The current research version can resume without changing its scope.",
+                    "assessment": "RECOMMENDED",
+                },
+                {
+                    "option_id": "resolution:close-current-version",
+                    "label": "Close the current research version.",
+                    "consequence": "The unresolved problem remains visible and any different approach needs a separate version.",
+                    "assessment": "ACCEPTABLE",
+                },
+            ],
+            "recommendation": "Repair the prerequisite without changing the current research version.",
+        }
+    ]
 
 
 def main() -> int:
@@ -158,6 +205,10 @@ def main() -> int:
         "changed_paths": [],
         "plain_language_summary": None,
     }
+    add_documented_blocker(
+        awaiting_check,
+        "Returned work is awaiting the required full fingerprint comparison.",
+    )
     assert_route(awaiting_check, "BLOCKED")
 
     change_proposed = copy.deepcopy(base)
@@ -213,6 +264,10 @@ def main() -> int:
         "status": "COMPLETE",
         "artifact_ref": "data-report:synthetic-intraday-summary:v1",
     }
+    add_documented_blocker(
+        quantitative_repeat,
+        "An equivalent quantitative analysis would repeat work without new evidence.",
+    )
     assert_route(quantitative_repeat, "BLOCKED")
 
     quantitative_causal = copy.deepcopy(quantitative_request)
@@ -264,22 +319,32 @@ def main() -> int:
         "status": "INVALID",
         "artifact_ref": "pipeline-integrity:synthetic-predictor:failed",
     }
+    add_documented_blocker(
+        pipeline_invalid,
+        "The required pipeline-integrity assessment is invalid.",
+    )
     assert_route(pipeline_invalid, "BLOCKED")
 
     frozen_without_contract = neutral_state()
     frozen_without_contract["request"]["intent"] = "START_OR_CONTINUE_RESEARCH"
     frozen_without_contract["research_context"]["stage"] = "FROZEN_TEST"
+    add_documented_blocker(
+        frozen_without_contract,
+        "A frozen test has no complete outcome evidence contract.",
+    )
     decision = assert_route(frozen_without_contract, "BLOCKED")
-    if "Do not reconstruct" not in " ".join(decision["work_order"]["excluded_actions"]):
-        raise AssertionError("Missing pre-test contract did not fail closed after freeze.")
+    if "outcome evidence contract" not in decision["user_interaction"]["problems"][0]["statement"]:
+        raise AssertionError("Missing pre-test contract was not explained to the user.")
 
     frozen_without_pipeline_controls = copy.deepcopy(predictive_ready)
     frozen_without_pipeline_controls["research_context"]["stage"] = "FROZEN_TEST"
+    add_documented_blocker(
+        frozen_without_pipeline_controls,
+        "A frozen test has not passed the required pipeline-integrity controls.",
+    )
     decision = assert_route(frozen_without_pipeline_controls, "BLOCKED")
-    if "synthetic-control success" not in " ".join(
-        decision["work_order"]["excluded_actions"]
-    ):
-        raise AssertionError("Missing pre-freeze pipeline controls did not fail closed.")
+    if "pipeline-integrity controls" not in decision["user_interaction"]["problems"][0]["statement"]:
+        raise AssertionError("Missing pipeline controls were not explained to the user.")
 
     identified_request = copy.deepcopy(causal_request)
     identified_request["artifacts"]["causal_identification_assessment"] = {
@@ -324,23 +389,73 @@ def main() -> int:
         "status": "REQUIRED",
         "question": "Should the reconstructed variant preserve the source's discretionary entry or become a simplified mechanical variant?",
         "options": [
-            "Preserve the discretionary protocol.",
-            "Create a separately labelled simplified variant.",
+            {
+                "option_id": "choice:preserve-discretionary-protocol",
+                "label": "Preserve the discretionary protocol.",
+                "consequence": "The reconstruction remains faithful to the source and retains its discretionary element.",
+                "assessment": "RECOMMENDED",
+            },
+            {
+                "option_id": "choice:create-simplified-variant",
+                "label": "Create a separately labelled simplified variant.",
+                "consequence": "The simplified rules become a different research version rather than a source reconstruction.",
+                "assessment": "ACCEPTABLE",
+            },
         ],
         "recommendation": "Preserve the source protocol unless the goal is explicitly to study a different simplified strategy.",
     }
     assert_route(material_choice, "USER_DECISION_REQUIRED")
 
+    unweighted_choice = copy.deepcopy(material_choice)
+    for option in unweighted_choice["request"]["material_user_choice"]["options"]:
+        option["assessment"] = "ACCEPTABLE"
+    try:
+        route_state(unweighted_choice)
+    except ValueError as exc:
+        if "exactly one RECOMMENDED" not in str(exc):
+            raise
+    else:
+        raise AssertionError("An unweighted user decision was routed")
+
     blocked = neutral_state()
     blocked["blocking_issues"] = [
         {
             "issue_id": "issue:missing-source-pages",
+            "problem_record_ref": "problem:synthetic-missing-source-pages:v1",
             "statement": "The source pages containing the entry definition are missing.",
             "affected_next_action": "Source reconstruction cannot be completed.",
             "user_action_required": True,
+            "resolution_options": [
+                {
+                    "option_id": "resolution:provide-source-pages",
+                    "label": "Provide the missing source pages.",
+                    "consequence": "The source reconstruction can resume without inventing an entry rule.",
+                    "assessment": "RECOMMENDED",
+                },
+                {
+                    "option_id": "resolution:close-unreconstructable-case",
+                    "label": "Close the current research version as not reconstructable.",
+                    "consequence": "The stopped case remains visible and any different approach must be a new version.",
+                    "assessment": "ACCEPTABLE",
+                },
+            ],
+            "recommendation": "Provide the missing source pages before attempting reconstruction.",
         }
     ]
     assert_route(blocked, "BLOCKED")
+
+    unrecorded_block = neutral_state()
+    unrecorded_block["artifacts"]["data_analysis"] = {
+        "status": "INVALID",
+        "artifact_ref": "data-report:synthetic-invalid:v1",
+    }
+    try:
+        route_state(unrecorded_block)
+    except ValueError as exc:
+        if "separately documented blocking issue" not in str(exc):
+            raise
+    else:
+        raise AssertionError("An undocumented blocker was routed")
 
     formal_strategy = neutral_state()
     formal_strategy["request"]["intent"] = "OPERATIONALIZE_SOURCE_STRATEGY"

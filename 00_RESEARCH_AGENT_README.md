@@ -1,6 +1,6 @@
 # 00_RESEARCH_AGENT_README.md
 
-**Version:** 2.6
+**Version:** 2.7
 **As of:** 2026-09-04
 **Status:** DRAFT FOR ADOPTION
 **Purpose:** Binding reading and execution instructions for AI agents handling trading research projects.
@@ -80,6 +80,19 @@ Every user response MUST:
 - omit technical implementation details unless they contain a result, risk, or information that changes the user's decision,
 - for a necessary decision question, explain the occasion, options, practical consequences, and a reasoned recommendation,
 - say clearly if the user does not have to decide or do anything technically.
+
+Every substantive response must also state the current position, the next
+framework action, what happens after that action, and the user's next action.
+Decision options must carry an explicit ordinal assessment (`RECOMMENDED`,
+`ACCEPTABLE`, or `NOT_RECOMMENDED`) and a practical consequence; this makes the
+trade-off visible without pretending to know a numerical probability. A problem
+must state its impact and at least two weighted recovery options. Before it is
+reported as blocking or materially disruptive, the conductor creates a separate
+validated `problem_record` file with the exact model name and version, the
+occurrence and recording timestamps, a description, impact, recovery guidance,
+and available orchestration references. Real-case records remain in the ignored
+`private_research/<research-case>/problems/` directory; the checkpoint stores
+only their stable references.
 
 The Agent SHOULD NOT output function, class, adapter, import, schema, CI or test details as a progress or final report unsolicited. File names and internal status fields are only mentioned if the user requests them or really needs them for traceability. The fact that an agent has implemented or checked something is no reason to burden the user with the technical way there.
 

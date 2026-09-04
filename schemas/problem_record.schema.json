@@ -1,0 +1,89 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:research-framework:schema:problem-record:1.0.0",
+  "title": "Research Workflow Problem Record",
+  "description": "One separately stored, decision-ready record for a problem that blocks or materially disrupts a research workflow.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "problem_record_id",
+    "occurred_at",
+    "recorded_at",
+    "model",
+    "description",
+    "practical_impact",
+    "status",
+    "resolution_options",
+    "recommended_option_id",
+    "user_action_required",
+    "orchestration_ref",
+    "routing_decision_ref"
+  ],
+  "properties": {
+    "schema_version": {"const": "1.0.0"},
+    "problem_record_id": {"$ref": "#/$defs/stableId"},
+    "occurred_at": {"$ref": "#/$defs/timestamp"},
+    "recorded_at": {"$ref": "#/$defs/timestamp"},
+    "model": {"$ref": "#/$defs/modelIdentity"},
+    "description": {"$ref": "#/$defs/longText"},
+    "practical_impact": {"$ref": "#/$defs/longText"},
+    "status": {
+      "type": "string",
+      "enum": ["OPEN", "RESOLVED", "NOT_REMEDIABLE", "SUPERSEDED"]
+    },
+    "resolution_options": {
+      "type": "array",
+      "minItems": 2,
+      "items": {"$ref": "#/$defs/decisionOption"}
+    },
+    "recommended_option_id": {"$ref": "#/$defs/stableId"},
+    "user_action_required": {"type": "boolean"},
+    "orchestration_ref": {"$ref": "#/$defs/nullableStableId"},
+    "routing_decision_ref": {"$ref": "#/$defs/nullableStableId"}
+  },
+  "$defs": {
+    "stableId": {
+      "type": "string",
+      "pattern": "^[A-Za-z][A-Za-z0-9._:-]{2,199}$"
+    },
+    "timestamp": {"type": "string", "format": "date-time"},
+    "shortText": {"type": "string", "minLength": 1, "maxLength": 2000},
+    "longText": {"type": "string", "minLength": 1, "maxLength": 8000},
+    "nullableStableId": {
+      "oneOf": [
+        {"$ref": "#/$defs/stableId"},
+        {"type": "null"}
+      ]
+    },
+    "modelIdentity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "version", "snapshot"],
+      "properties": {
+        "name": {"$ref": "#/$defs/shortText"},
+        "version": {"$ref": "#/$defs/shortText"},
+        "snapshot": {
+          "oneOf": [
+            {"$ref": "#/$defs/shortText"},
+            {"type": "null"}
+          ]
+        }
+      }
+    },
+    "decisionOption": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["option_id", "label", "consequence", "assessment"],
+      "properties": {
+        "option_id": {"$ref": "#/$defs/stableId"},
+        "label": {"$ref": "#/$defs/shortText"},
+        "consequence": {"$ref": "#/$defs/longText"},
+        "assessment": {
+          "type": "string",
+          "enum": ["RECOMMENDED", "ACCEPTABLE", "NOT_RECOMMENDED"]
+        }
+      }
+    }
+  }
+}

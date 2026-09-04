@@ -358,3 +358,18 @@ Treat the user as a research decision-maker, not a software developer. Lead
 with findings and decisions, use ordinary language, and omit implementation
 details unless requested or decision-relevant. A request to reconstruct or
 operationalize a strategy does not itself authorize a backtest.
+
+Every visible research update must make the current position, the framework's
+next action, what will happen after that action, and the user's next required
+action explicit. When no input is needed, say so plainly. A decision question
+must offer at least two plain-language options, state the practical consequence
+of each, mark one as `RECOMMENDED`, `ACCEPTABLE`, or `NOT_RECOMMENDED`, and
+give a reasoned recommendation without inventing numerical precision. A
+problem report must name the problem and its practical impact, offer at least
+two weighted recovery options, and state the recommendation. Before a problem
+can block or materially disrupt a research path, record it in its own validated
+`problem_record` file with the model name and version, occurrence and recording
+timestamps, description, impact, resolution options, and references to the
+orchestration state where available. Real Research Case records belong under
+the ignored `private_research/` path; a checkpoint contains only the problem
+record reference. Do not silently work around or discard a recorded problem.

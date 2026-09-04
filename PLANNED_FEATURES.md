@@ -99,6 +99,29 @@ project. Those changes could weaken fail-closed behaviour or add maintenance
 without protecting a decision. They require separate evidence and user
 authorization if reconsidered later.
 
+### Owner-authorized workflow transparency amendment — 2026-09-04
+
+The owner explicitly authorized a small implementation that makes the existing
+conductor workflow visible and decision-ready at every routed step. It does not
+reorder the research-control priorities below, create a new empirical gate, or
+authorize data access, backtests, deployment, or capital allocation. It protects
+the owner's continuation, change, and stop decisions by requiring every routing
+decision to state the current position, the next framework action, what follows,
+and the user's next action. Required decisions must provide at least two
+plain-language options, the practical consequence of each, an ordinal
+assessment (`RECOMMENDED`, `ACCEPTABLE`, or `NOT_RECOMMENDED`), and a reasoned
+recommendation. A blocker or material disruption must present weighted recovery
+options and be recorded beforehand in one separately stored, validated
+`problem_record` file containing the model identity, occurrence and recording
+timestamps, description, impact, and orchestration references where available.
+Real-case files remain private. The deterministic route validates the output
+shape and references, while the conductor remains responsible for creating and
+validating the separate file; this is transparent caller-enforced bookkeeping,
+not a claim that the framework can discover unreported problems. Future
+live-agent evaluation must test omissions, vague next actions, unweighted
+choices, absent problem records, and attempts to proceed around a documented
+problem.
+
 1. **Close the validation-boundary, stopping-rule, and confirmed
    pipeline-integrity enforcement gaps.**
    **Status: urgent correctness gap; documented rules exist, hard enforcement

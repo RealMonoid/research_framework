@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "urn:research-framework:schema:orchestration-state:1.7.0",
+  "$id": "urn:research-framework:schema:orchestration-state:1.8.0",
   "title": "Research Orchestration State",
   "description": "Persistent checkpoint used by the research conductor before every material research step.",
   "type": "object",
@@ -21,10 +21,10 @@
     "routing_history"
   ],
   "properties": {
-    "schema_version": {"const": "1.7.0"},
+    "schema_version": {"const": "1.8.0"},
     "orchestration_id": {"$ref": "#/$defs/stableId"},
     "updated_at": {"$ref": "#/$defs/timestamp"},
-    "conductor_version": {"const": "1.7.0"},
+    "conductor_version": {"const": "1.8.0"},
     "next_decision_sequence": {"type": "integer", "minimum": 1},
     "request": {"$ref": "#/$defs/request"},
     "research_context": {"$ref": "#/$defs/researchContext"},
@@ -243,6 +243,20 @@
         "material_user_choice": {"$ref": "#/$defs/materialUserChoice"}
       }
     },
+    "decisionOption": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["option_id", "label", "consequence", "assessment"],
+      "properties": {
+        "option_id": {"$ref": "#/$defs/stableId"},
+        "label": {"$ref": "#/$defs/shortText"},
+        "consequence": {"$ref": "#/$defs/shortText"},
+        "assessment": {
+          "type": "string",
+          "enum": ["RECOMMENDED", "ACCEPTABLE", "NOT_RECOMMENDED"]
+        }
+      }
+    },
     "materialUserChoice": {
       "type": "object",
       "additionalProperties": false,
@@ -252,7 +266,7 @@
         "question": {"$ref": "#/$defs/nullableText"},
         "options": {
           "type": "array",
-          "items": {"$ref": "#/$defs/shortText"}
+          "items": {"$ref": "#/$defs/decisionOption"}
         },
         "recommendation": {"$ref": "#/$defs/nullableText"}
       },
@@ -416,12 +430,27 @@
     "blockingIssue": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["issue_id", "statement", "affected_next_action", "user_action_required"],
+      "required": [
+        "issue_id",
+        "problem_record_ref",
+        "statement",
+        "affected_next_action",
+        "user_action_required",
+        "resolution_options",
+        "recommendation"
+      ],
       "properties": {
         "issue_id": {"$ref": "#/$defs/stableId"},
+        "problem_record_ref": {"$ref": "#/$defs/stableId"},
         "statement": {"$ref": "#/$defs/shortText"},
         "affected_next_action": {"$ref": "#/$defs/shortText"},
-        "user_action_required": {"type": "boolean"}
+        "user_action_required": {"type": "boolean"},
+        "resolution_options": {
+          "type": "array",
+          "minItems": 2,
+          "items": {"$ref": "#/$defs/decisionOption"}
+        },
+        "recommendation": {"$ref": "#/$defs/shortText"}
       }
     }
   }
