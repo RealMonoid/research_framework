@@ -65,6 +65,10 @@ def main(argv: Sequence[str] | None = None) -> int:
         [python, "scripts/test_problem_record.py"],
     )
     run(
+        "Specialist capability discovery",
+        [python, "scripts/test_specialist_capability_check.py"],
+    )
+    run(
         "Outcome evidence contract",
         [python, "scripts/test_outcome_evidence_contract.py"],
     )

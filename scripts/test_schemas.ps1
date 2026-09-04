@@ -101,6 +101,9 @@ $positivePairs = @(
     @('examples\framework_control_review.synthetic.json', 'schemas\framework_control_review.schema.json'),
     @('examples\outcome_evidence_contract.predictor_without_mechanism.json', 'schemas\outcome_evidence_contract.schema.json'),
     @('examples\pipeline_integrity_assessment.synthetic_controls.json', 'schemas\pipeline_integrity_assessment.schema.json'),
+    @('examples\problem_record.missing_source_pages.json', 'schemas\problem_record.schema.json'),
+    @('problems\2026-09-04-specialist-capability-discovery-bypass.json', 'schemas\problem_record.schema.json'),
+    @('examples\specialist_capability_check.internal_agent.json', 'schemas\specialist_capability_check.schema.json'),
     @('examples\orchestration_state.prose_strategy.json', 'schemas\orchestration_state.schema.json'),
     @('examples\routing_decision.pre_operationalization.json', 'schemas\routing_decision.schema.json'),
     @('examples\research_fingerprint.prose_strategy.json', 'schemas\research_fingerprint.schema.json'),
@@ -171,6 +174,10 @@ $philosophyFakeProgress = Read-JsonText -RelativePath 'examples\scientific_philo
 $philosophyFakeProgress.revision_proposals[1].novel_prediction.relation_to_prior = 'ALREADY_IMPLIED'
 Test-RejectedFixture -Name 'progressive revision requires a genuinely new prediction' -Value $philosophyFakeProgress -Schema 'schemas\scientific_philosophy_review.schema.json'
 
+$capabilityWithoutInventory = Read-JsonText -RelativePath 'examples\specialist_capability_check.internal_agent.json' | ConvertFrom-Json -Depth 100
+$capabilityWithoutInventory.discovery.active_tool_inventory_checked = $false
+Test-RejectedFixture -Name 'capability check requires active tool inventory inspection' -Value $capabilityWithoutInventory -Schema 'schemas\specialist_capability_check.schema.json'
+
 $orchestrationChoiceWithoutQuestion = Read-JsonText -RelativePath 'examples\orchestration_state.prose_strategy.json' | ConvertFrom-Json -Depth 100
 $orchestrationChoiceWithoutQuestion.request.material_user_choice.status = 'REQUIRED'
 Test-RejectedFixture -Name 'required user choice needs an actual question' -Value $orchestrationChoiceWithoutQuestion -Schema 'schemas\orchestration_state.schema.json'
@@ -190,6 +197,14 @@ Test-RejectedFixture -Name 'routing decision keeps research decisions with condu
 $routingSpecialistChangesState = Read-JsonText -RelativePath 'examples\routing_decision.pre_operationalization.json' | ConvertFrom-Json -Depth 100
 $routingSpecialistChangesState.control.specialist_may_change_research_state = $true
 Test-RejectedFixture -Name 'routing decision keeps research state with conductor' -Value $routingSpecialistChangesState -Schema 'schemas\routing_decision.schema.json'
+
+$routingWithoutCapabilityCheck = Read-JsonText -RelativePath 'examples\routing_decision.pre_operationalization.json' | ConvertFrom-Json -Depth 100
+$routingWithoutCapabilityCheck.control.specialist_capability_check_required_before_invocation = $false
+Test-RejectedFixture -Name 'routing decision requires specialist capability discovery' -Value $routingWithoutCapabilityCheck -Schema 'schemas\routing_decision.schema.json'
+
+$routingIncompleteUnavailability = Read-JsonText -RelativePath 'examples\routing_decision.pre_operationalization.json' | ConvertFrom-Json -Depth 100
+$routingIncompleteUnavailability.control.specialist_unavailability_requires_complete_discovery = $false
+Test-RejectedFixture -Name 'routing decision requires complete discovery before unavailable' -Value $routingIncompleteUnavailability -Schema 'schemas\routing_decision.schema.json'
 
 $routingScopeUnlocked = Read-JsonText -RelativePath 'examples\routing_decision.pre_operationalization.json' | ConvertFrom-Json -Depth 100
 $routingScopeUnlocked.control.scope_locked_to_request = $false

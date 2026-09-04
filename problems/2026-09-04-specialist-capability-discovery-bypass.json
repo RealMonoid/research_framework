@@ -1,0 +1,32 @@
+{
+  "schema_version": "1.0.0",
+  "problem_record_id": "problem:specialist-capability-discovery-bypass:2026-09-04",
+  "occurred_at": "2026-09-04T05:43:21+02:00",
+  "recorded_at": "2026-09-04T06:32:07+02:00",
+  "model": {
+    "name": "ChatGPT",
+    "version": "5.6 Sol",
+    "snapshot": null
+  },
+  "description": "The research conductor declared a mandatory specialist unavailable before inspecting all callable internal agent interfaces. A later inspection found a suitable internal bounded-agent interface, so the availability blocker was false.",
+  "practical_impact": "The research route stopped unnecessarily at a mandatory concept review even though the runtime could have invoked the required specialist without opening another user-visible window.",
+  "status": "RESOLVED",
+  "resolution_options": [
+    {
+      "option_id": "resolution:enforce-specialist-capability-preflight",
+      "label": "Enforce a capability preflight.",
+      "consequence": "Every specialist route records and validates live invocation capabilities; a suitable internal interface must be used and only proven unavailability may block.",
+      "assessment": "RECOMMENDED"
+    },
+    {
+      "option_id": "resolution:retain-prose-only-availability-rule",
+      "label": "Retain prose-only checking.",
+      "consequence": "The framework remains vulnerable to another false blocker because the availability claim has no route-bound evidence or regression guard.",
+      "assessment": "NOT_RECOMMENDED"
+    }
+  ],
+  "recommended_option_id": "resolution:enforce-specialist-capability-preflight",
+  "user_action_required": false,
+  "orchestration_ref": null,
+  "routing_decision_ref": null
+}

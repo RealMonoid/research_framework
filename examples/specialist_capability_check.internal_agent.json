@@ -1,0 +1,47 @@
+{
+  "schema_version": "1.0.0",
+  "capability_check_id": "capability-check:synthetic-concept-audit:v1",
+  "checked_at": "2026-09-04T07:00:00+02:00",
+  "model": {
+    "name": "Codex",
+    "version": "GPT-5",
+    "snapshot": null
+  },
+  "orchestration_ref": "orchestration:synthetic-prose-strategy:v1",
+  "routing_decision_ref": "routing:orchestration:synthetic-prose-strategy:v1:2",
+  "required_specialist": "scientific-philosophy-critic",
+  "required_capabilities": [
+    "SEPARATE_AGENT_RUN",
+    "BOUNDED_INPUT_CONTEXT",
+    "SAME_CONVERSATION_RETURN",
+    "NO_SPECIALIST_USER_CONTACT",
+    "DELEGATION_DEPTH_ONE"
+  ],
+  "discovery": {
+    "active_tool_inventory_checked": true,
+    "tool_search_surface": "UNAVAILABLE",
+    "tool_search_checked": false,
+    "search_complete": true,
+    "evidence": [
+      "The active runtime exposed an internal agent invocation interface to the conductor."
+    ]
+  },
+  "interfaces": [
+    {
+      "interface_id": "interface:internal-agent-spawn",
+      "kind": "INTERNAL_AGENT",
+      "availability": "AVAILABLE",
+      "capabilities": [
+        "SEPARATE_AGENT_RUN",
+        "BOUNDED_INPUT_CONTEXT",
+        "SAME_CONVERSATION_RETURN",
+        "NO_SPECIALIST_USER_CONTACT",
+        "DELEGATION_DEPTH_ONE"
+      ],
+      "evidence": "The runtime tool inventory includes a callable internal agent interface with bounded context and a result returned to the conductor."
+    }
+  ],
+  "status": "AVAILABLE",
+  "selected_interface_id": "interface:internal-agent-spawn",
+  "next_action": "INVOKE_SPECIALIST"
+}

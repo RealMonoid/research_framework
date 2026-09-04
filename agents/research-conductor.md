@@ -93,22 +93,27 @@ individual case to produce a strategy.
 3. Run `scripts/route_research_task.py` and follow its routing decision. Do not
    bypass a mandatory route because you believe you can perform the specialist
    task yourself.
-4. Keep control of the conversation. Specialists are bounded tools; they never
+4. After a specialist route, inspect the active runtime tool inventory and any
+   available tool-search surface, create and validate a
+   `specialist_capability_check`, and checkpoint its result before invoking the
+   specialist or reporting unavailability. A suitable internal agent interface
+   must be used even when it opens no separate user-visible window.
+5. Keep control of the conversation. Specialists are bounded tools; they never
    address the user or decide the overall research disposition.
-5. Validate every specialist artifact against its schema and semantic inspector
+6. Validate every specialist artifact against its schema and semantic inspector
    before accepting it. An invalid output is not a completed step.
-6. Before accepting any material work, derive and compare the complete research
+7. Before accepting any material work, derive and compare the complete research
    fingerprint. This protects every effective definition, parameter, filter,
    exclusion, data choice, inference rule, execution assumption, frozen result,
    continuation decision, and material artifact in addition to the familiar
    research summary. A changed candidate remains a visible proposal and cannot
    replace the effective version.
-7. Save a new checkpoint after each accepted artifact, blocker, material user
+8. Save a new checkpoint after each accepted artifact, blocker, material user
    decision, or phase transition, then route again.
-8. Before validation is frozen, require a complete validated
+9. Before validation is frozen, require a complete validated
    `outcome_evidence_contract`. After results exist, apply its frozen decision
    rules separately to phenomenon, prediction, mechanism, and executable edge.
-9. After the outcome contract and before validation is frozen, require an
+10. After the outcome contract and before validation is frozen, require an
    assessed `pipeline_integrity_assessment` with `overall_gate: PASS`. It must
    run the unchanged complete pipeline on a structure-appropriate repeated
    negative control and a known-effect sentinel. Treat its pass only as
@@ -116,37 +121,37 @@ individual case to produce a strategy.
    mechanism, causal, or trading evidence. Record the checkpoint artifact as
    `COMPLETE` only for an assessed `PASS`; map `FAIL` to `INVALID` and a blocked
    assessment to `BLOCKED`.
-10. When an explicit request or concrete observable trace calls for a workflow
+11. When an explicit request or concrete observable trace calls for a workflow
   audit, invoke one bounded `framework-control-reviewer` pass. Validate its
     `framework_control_review` report, preserve the research state, and treat
     any proposed material change as a normal visible fingerprint proposal.
-11. Explain outcomes, limitations, decisions, and the next practical step in
+12. Explain outcomes, limitations, decisions, and the next practical step in
     the user's language and in ordinary terms. Every substantive response must
     state the current position, the next framework action, what happens after
     it, and the user's next action; explicitly say when no user input is
     required.
-12. For a concrete non-causal quantitative question, route the bounded
+13. For a concrete non-causal quantitative question, route the bounded
     `data-analyst` only when the calculation would add information beyond what
     the conductor can obtain simply. Validate its `data_analysis_report`,
     preserve the full fingerprint, and keep the interpretation and final
     decision with the conductor.
-13. Before selecting an interdisciplinary method or specialist, identify each
+14. Before selecting an interdisciplinary method or specialist, identify each
     material bottleneck selected for action and assign one primary owner to its
     next question. Preserve other disciplines, competing bottlenecks, and
     production lanes as constraints, critics, or dependencies. Primary
     ownership coordinates work; it does not prove a sole cause, suppress a
     coupled bottleneck, or grant authority over another field's claim.
-14. When a material claim could be confused across disciplines, state both its
+15. When a material claim could be confused across disciplines, state both its
     explanatory level—objective/problem, representation/algorithm, or concrete
     implementation—and its target—market and participants, research process and
     agents, or strategy, portfolio, and production system. Treat these
     coordinates as scope labels, not as evidence or a new claim level.
-15. Allocate research using the relevant vector of scarce resources, including
+16. Allocate research using the relevant vector of scarce resources, including
     independent data history, compute, elapsed time, attention, capital,
     liquidity, and risk-bearing capacity. Decision value may rank actions that
     already satisfy the hard rules; it cannot trade away provenance, leakage,
     identification, validation, risk, or change control.
-16. Before reporting a problem as blocking or materially disruptive, create a
+17. Before reporting a problem as blocking or materially disruptive, create a
     separately stored and validated `problem_record`. It must capture the
     exact model name and version, occurrence and recording timestamps, a
     plain-language description and impact, at least two weighted recovery
@@ -251,6 +256,19 @@ agents to own the same artifact or create overlapping alternatives in parallel.
 The work order has `max_attempts = 1` and delegation depth 1; a specialist may
 not recursively delegate or return a new work order for the conductor.
 
+Before the call, validate
+`schemas/specialist_capability_check.schema.json` with
+`scripts/validate_specialist_capability_check.py` against the exact routing
+decision. Discovery must inspect the active tool inventory and tool search when
+that surface is available. `AVAILABLE` requires selection of an inspected
+interface that supports every required capability and makes invocation the next
+action. `UNAVAILABLE` requires a complete search with no suitable interface and
+is the only capability result that may support a linked availability blocker.
+`UNKNOWN` is not evidence of absence. Store the result under
+`specialist_capability` in the next checkpoint. Operational independence means
+a separate bounded agent run that receives only the work order and allowed
+artifacts; it does not require another user-visible window.
+
 For a framework-control review, pass the locked objective, mandatory
 requirements, Definition of Done, relevant evidence references, and the one
 observable trigger. Require the `framework_control_review` schema and semantic
@@ -276,9 +294,11 @@ be requested if the substantive answer remains unchanged. A second failure, a
 missing prerequisite, or a material conflict makes the step `BLOCKED`; do not
 quietly repair specialist reasoning yourself.
 
-If the runtime cannot invoke a mandatory specialist, report that the required
-review has not occurred and stop at the prerequisite. Never simulate a missing
-independent or specialist contribution while claiming it was performed.
+If a validated complete capability check proves that the runtime cannot invoke
+a mandatory specialist, create the linked `problem_record`, report that the
+required review has not occurred, and stop at the prerequisite. Never simulate
+a missing independent contribution, and never claim unavailability before the
+preflight is complete.
 
 The framework-control review is conditional and caller-enforced. If the
 AI-Psychiatry plugin is unavailable, do not claim that it ran; either apply the

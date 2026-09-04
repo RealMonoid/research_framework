@@ -101,11 +101,12 @@ in the checkpoint. Do not overwrite the original problem description or work
 around an unresolved issue silently. Use
 `scripts/validate_problem_record.py` to validate the file before accepting it.
 
-Routing and orchestration checkpoints use schema version 1.8.0 for this
-workflow. Do not overwrite a version 1.7.0 checkpoint. Before it is routed
-again, create a visible migrated checkpoint that uses weighted option objects
-for any material decision and a separate problem-record reference for every
-blocker; preserve the older checkpoint as historical evidence.
+Routing and orchestration checkpoints use schema version 1.9.0 for this
+workflow. Do not overwrite a version 1.7.0 or 1.8.0 checkpoint. Before an older
+checkpoint is routed again, create a visible migrated checkpoint that preserves
+its historical evidence, uses weighted option objects, references a separate
+problem record for every blocker, and initializes `specialist_capability` to
+`NOT_CHECKED` when no validated capability record exists.
 
 ## Binding research conductor
 
@@ -135,6 +136,26 @@ continuing scientific-philosophical examination before new empiricism;
 intake and not back to the generator.
 
 A simple result statement does not automatically trigger a specialist agent. A necessary user decision will only be requested if it materially changes the research question, the identity of the source strategy, or the permissible claim. After each accepted specialist contribution, its artifact is checked, the work status is updated, and the task is routed again.
+
+### Specialist capability preflight
+
+When the router selects a specialist, the conductor first inspects the active
+runtime's tool inventory and any available tool-search surface. It records that
+inspection in a separate
+[`specialist_capability_check`](schemas/specialist_capability_check.schema.json),
+validates the record against the exact routing decision, and stores its
+reference in the next checkpoint.
+
+An internal agent run that returns to the conductor in the same conversation is
+a valid invocation interface when it provides a separate bounded run, accepts
+only the allowed context, returns its result to the conductor, and preserves the
+one-level delegation and no-user-contact controls. A separate user-visible
+window is not required. If any inspected interface satisfies the requirements,
+the check must be `AVAILABLE` and the conductor must invoke it. `UNKNOWN` means
+discovery is incomplete and must be retried; it cannot support a blocker. Only
+a complete `UNAVAILABLE` result may lead to a linked problem record and blocked
+route. Validate the check with
+`scripts/validate_specialist_capability_check.py`.
 
 ### Conditional quantitative data analysis
 

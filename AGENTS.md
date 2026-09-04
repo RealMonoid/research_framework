@@ -195,12 +195,16 @@ material research transition it must:
    `schemas/orchestration_state.schema.json`;
 3. obtain the next hard-rule decision from
    `scripts/route_research_task.py`;
-4. invoke any mandatory specialist as a bounded tool while retaining the user
-   conversation and final responsibility;
-5. before accepting any material returned work, derive a complete candidate
+4. when that decision selects a specialist, inspect the active runtime tool
+   inventory, create and validate a `specialist_capability_check`, and store its
+   reference in the checkpoint before invoking or declaring the specialist
+   unavailable;
+5. invoke any available mandatory specialist as a bounded tool while retaining
+   the user conversation and final responsibility;
+6. before accepting any material returned work, derive a complete candidate
    research fingerprint and compare it with the effective fingerprint using
    `scripts/check_research_fingerprint.py`;
-6. accept and validate the work only when that check reports `UNCHANGED`, then
+7. accept and validate the work only when that check reports `UNCHANGED`, then
    save a new checkpoint.
 
 If the requested conclusion is `INTERVENTIONAL` or `COUNTERFACTUAL`, the router
@@ -351,8 +355,16 @@ decision, become a new Research-ID or research version. It must never overwrite
 the existing version silently.
 
 Do not substitute a prose claim that a specialist "would be useful" for the
-required specialist call. If the host cannot invoke that specialist, stop at
-the unmet prerequisite and say plainly what remains undone.
+required specialist call. Do not infer unavailability from the absence of a
+separate window, a familiar tool name, or an unchecked assumption. An internal
+agent run returned to the conductor in the same conversation satisfies the
+invocation form when it supports the bounded work order and one-level
+delegation contract. If the active tool inventory exposes such an interface,
+record `AVAILABLE` and invoke it. Record `UNAVAILABLE` only after the complete
+capability check finds no suitable interface; `UNKNOWN` requires another
+discovery attempt and cannot justify a blocker. If the host is proven unable to
+invoke the mandatory specialist, record the linked problem and stop at the
+unmet prerequisite.
 
 Treat the user as a research decision-maker, not a software developer. Lead
 with findings and decisions, use ordinary language, and omit implementation

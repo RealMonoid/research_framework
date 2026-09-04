@@ -1,0 +1,170 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:research-framework:schema:specialist-capability-check:1.0.0",
+  "title": "Specialist Capability Check",
+  "description": "A runtime capability-discovery record created after a specialist route and before invocation or an unavailability blocker.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "capability_check_id",
+    "checked_at",
+    "model",
+    "orchestration_ref",
+    "routing_decision_ref",
+    "required_specialist",
+    "required_capabilities",
+    "discovery",
+    "interfaces",
+    "status",
+    "selected_interface_id",
+    "next_action"
+  ],
+  "properties": {
+    "schema_version": {"const": "1.0.0"},
+    "capability_check_id": {"$ref": "#/$defs/stableId"},
+    "checked_at": {"$ref": "#/$defs/timestamp"},
+    "model": {"$ref": "#/$defs/modelIdentity"},
+    "orchestration_ref": {"$ref": "#/$defs/stableId"},
+    "routing_decision_ref": {"$ref": "#/$defs/stableId"},
+    "required_specialist": {"$ref": "#/$defs/specialist"},
+    "required_capabilities": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {"$ref": "#/$defs/capability"}
+    },
+    "discovery": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "active_tool_inventory_checked",
+        "tool_search_surface",
+        "tool_search_checked",
+        "search_complete",
+        "evidence"
+      ],
+      "properties": {
+        "active_tool_inventory_checked": {"const": true},
+        "tool_search_surface": {
+          "type": "string",
+          "enum": ["AVAILABLE", "UNAVAILABLE"]
+        },
+        "tool_search_checked": {"type": "boolean"},
+        "search_complete": {"type": "boolean"},
+        "evidence": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {"$ref": "#/$defs/shortText"}
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {"tool_search_surface": {"const": "AVAILABLE"}},
+            "required": ["tool_search_surface"]
+          },
+          "then": {
+            "properties": {"tool_search_checked": {"const": true}}
+          },
+          "else": {
+            "properties": {"tool_search_checked": {"const": false}}
+          }
+        }
+      ]
+    },
+    "interfaces": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {"$ref": "#/$defs/invocationInterface"}
+    },
+    "status": {
+      "type": "string",
+      "enum": ["AVAILABLE", "UNAVAILABLE", "UNKNOWN"]
+    },
+    "selected_interface_id": {"$ref": "#/$defs/nullableStableId"},
+    "next_action": {
+      "type": "string",
+      "enum": ["INVOKE_SPECIALIST", "RECORD_UNAVAILABILITY_BLOCKER", "RETRY_DISCOVERY"]
+    }
+  },
+  "$defs": {
+    "stableId": {
+      "type": "string",
+      "pattern": "^[A-Za-z][A-Za-z0-9._:-]{2,199}$"
+    },
+    "nullableStableId": {
+      "oneOf": [
+        {"$ref": "#/$defs/stableId"},
+        {"type": "null"}
+      ]
+    },
+    "timestamp": {"type": "string", "format": "date-time"},
+    "shortText": {"type": "string", "minLength": 1, "maxLength": 2000},
+    "modelIdentity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "version", "snapshot"],
+      "properties": {
+        "name": {"$ref": "#/$defs/shortText"},
+        "version": {"$ref": "#/$defs/shortText"},
+        "snapshot": {
+          "oneOf": [
+            {"$ref": "#/$defs/shortText"},
+            {"type": "null"}
+          ]
+        }
+      }
+    },
+    "specialist": {
+      "type": "string",
+      "enum": [
+        "intraday-hypothesis-generator",
+        "scientific-philosophy-critic",
+        "condition-inquiry-analyst",
+        "causal-identification-critic",
+        "data-analyst",
+        "framework-control-reviewer"
+      ]
+    },
+    "capability": {
+      "type": "string",
+      "enum": [
+        "SEPARATE_AGENT_RUN",
+        "BOUNDED_INPUT_CONTEXT",
+        "SAME_CONVERSATION_RETURN",
+        "NO_SPECIALIST_USER_CONTACT",
+        "DELEGATION_DEPTH_ONE"
+      ]
+    },
+    "invocationInterface": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "interface_id",
+        "kind",
+        "availability",
+        "capabilities",
+        "evidence"
+      ],
+      "properties": {
+        "interface_id": {"$ref": "#/$defs/stableId"},
+        "kind": {
+          "type": "string",
+          "enum": ["INTERNAL_AGENT", "APP_OR_CONNECTOR", "HOST_TOOL", "OTHER"]
+        },
+        "availability": {
+          "type": "string",
+          "enum": ["AVAILABLE", "UNAVAILABLE", "UNKNOWN"]
+        },
+        "capabilities": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {"$ref": "#/$defs/capability"}
+        },
+        "evidence": {"$ref": "#/$defs/shortText"}
+      }
+    }
+  }
+}

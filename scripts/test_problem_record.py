@@ -12,6 +12,7 @@ from validate_problem_record import validate_problem_record
 
 ROOT = Path(__file__).resolve().parents[1]
 FIXTURE = ROOT / "examples" / "problem_record.missing_source_pages.json"
+FRAMEWORK_PROBLEM = ROOT / "problems" / "2026-09-04-specialist-capability-discovery-bypass.json"
 
 
 def load_fixture() -> dict[str, object]:
@@ -35,6 +36,13 @@ def main() -> int:
     errors = validate_problem_record(example)
     if errors:
         raise AssertionError(f"Synthetic problem record is invalid: {errors}")
+    with FRAMEWORK_PROBLEM.open("r", encoding="utf-8") as handle:
+        framework_problem = json.load(handle)
+    if not isinstance(framework_problem, dict):
+        raise AssertionError("framework problem record must contain an object")
+    errors = validate_problem_record(framework_problem)
+    if errors:
+        raise AssertionError(f"Framework problem record is invalid: {errors}")
 
     earlier_record = copy.deepcopy(example)
     earlier_record["recorded_at"] = "2026-09-04T09:29:00+02:00"
