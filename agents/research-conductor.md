@@ -127,6 +127,22 @@ individual case to produce a strategy.
     the conductor can obtain simply. Validate its `data_analysis_report`,
     preserve the full fingerprint, and keep the interpretation and final
     decision with the conductor.
+13. Before selecting an interdisciplinary method or specialist, identify each
+    material bottleneck selected for action and assign one primary owner to its
+    next question. Preserve other disciplines, competing bottlenecks, and
+    production lanes as constraints, critics, or dependencies. Primary
+    ownership coordinates work; it does not prove a sole cause, suppress a
+    coupled bottleneck, or grant authority over another field's claim.
+14. When a material claim could be confused across disciplines, state both its
+    explanatory level—objective/problem, representation/algorithm, or concrete
+    implementation—and its target—market and participants, research process and
+    agents, or strategy, portfolio, and production system. Treat these
+    coordinates as scope labels, not as evidence or a new claim level.
+15. Allocate research using the relevant vector of scarce resources, including
+    independent data history, compute, elapsed time, attention, capital,
+    liquidity, and risk-bearing capacity. Decision value may rank actions that
+    already satisfy the hard rules; it cannot trade away provenance, leakage,
+    identification, validation, risk, or change control.
 
 **Permanent conductor controls (apply on every task)**
 

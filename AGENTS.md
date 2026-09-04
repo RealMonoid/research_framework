@@ -118,6 +118,24 @@ The interdisciplinary basis for this division of labour is documented in
 mission decision is recorded in
 `decisions/ADR-016-applied-interdisciplinary-trading-research-mission.md`.
 
+Interdisciplinary work is coordinated by explicit interfaces, not by blending
+disciplinary vocabularies. For each material bottleneck selected for action, the
+conductor names one primary owner of the next question while preserving other
+fields as constraints, critics, or dependencies; this does not assert one sole
+cause or permit coupled bottlenecks to be ignored. When ambiguity could cause
+one claim to substitute for another, distinguish the objective/problem,
+representation/algorithm, and concrete implementation levels, and distinguish
+whether the target is the market and participants, the research process and
+agents, or the strategy, portfolio, and production system. Treat independent
+data history, compute, elapsed time, attention, capital, liquidity, and
+risk-bearing capacity as a vector: expected decision value may rank admissible
+actions, but it may not waive evidence, provenance, validation, risk, or
+change-control requirements. A validated phenomenon or other limited supported
+claim reaches a capital decision only through explicit data, cost, execution,
+capacity, portfolio, risk, attribution, operational, and complete-strategy
+testing. This architecture decision is recorded in
+`decisions/ADR-017-interdisciplinary-claim-coordinates-and-production-loop.md`.
+
 ## Scope and restraint
 
 This framework is a private decision-support tool for one research owner using

@@ -1,6 +1,6 @@
 # Interdisciplinary foundations for bounded trading research
 
-**Version:** 1.2
+**Version:** 1.3
 
 **As of:** 2026-09-04
 
@@ -64,7 +64,9 @@ decision mandate and constraints
     -> claim and rival-explanation map
     -> discriminating evidence design
     -> statistical or ML estimation and generalization assessment
-    -> decision under risk, ambiguity, and model uncertainty
+    -> strategy engineering and production assessment
+    -> strategy-level out-of-sample or forward evidence
+    -> capital decision and monitoring under risk, ambiguity, and model uncertainty
 ```
 
 This is a synthesis developed for the project, not a result asserted by any one
@@ -84,6 +86,9 @@ source. Its central separation is:
   live alternatives**;
 - statistics and ML quantify **estimation, prediction, uncertainty, and
   generalization under a recorded search**;
+- strategy engineering determines whether a validated phenomenon or other
+  limited supported claim survives **data, cost, execution, capacity, portfolio,
+  risk, attribution, and operational constraints as a complete strategy**;
 - decision theory maps **evidence and unresolved uncertainty to action given
   explicit consequences**.
 
@@ -112,6 +117,7 @@ the claim-to-source ledger below.
 | Philosophy of science | What bundle of hypothesis, measurement, operationalization, data, and auxiliary assumptions did evidence actually confront? | Claim, auxiliaries, design, and result | Claim-scope statement, unresolved alternatives, continuation rationale | Underdetermination does not license unlimited rescue, and one anomaly does not logically identify the failed component. [C8, C9] |
 | Experimental design | Which feasible observation or test best separates the live alternatives for the decision at hand? | Rival hypotheses, predicted observations, loss/utility, admissible data path | Comparison of designs, predeclared sampling/stopping rule, expected discrimination or decision value | Generic entropy reduction is not automatically useful, and an adaptive design does not license unaccounted repeated peeking. [C10-C14] |
 | Statistics and ML | How well does a fixed or fully recorded procedure estimate, predict, and generalize, with what uncertainty? | Frozen target, data-generating assumptions, candidate/search record, sampling design | Estimate or predictive assessment with uncertainty, multiplicity, dependence, stability, and generalization limits | Prediction does not establish explanation or causation; testing the selected winner as if it were the only model understates search uncertainty. [C16-C18, C21, C23, C24] |
+| Strategy engineering and production | Can a validated phenomenon or other limited supported claim become a complete, executable strategy under the actual data, execution, cost, liquidity, capacity, portfolio, risk, attribution, and operating environment? | Exact supported claim and evidence status, full rule set, production data path, cost/execution assumptions, capital and risk constraints | Implementable strategy specification, production-fitness assessment, unresolved engineering risks, and strategy-level test candidate | Engineering can reject or defer an implementation and can improve execution, but it cannot manufacture evidence for the phenomenon, prediction, mechanism, or net edge. |
 | Decision theory | What action follows from current beliefs or probability sets, consequences, and risk/ambiguity attitude? | Action set, consequences, uncertainty representation, utility/loss, robustness criterion | Decision, sensitivity, value of further information, or justified abstention | A mathematically optimal decision is only conditional on its state space, beliefs, utilities, and model class; it does not validate them. [C14, C15] |
 
 ## Relevance filter for imported research
@@ -156,7 +162,9 @@ name the object transferred:
 | Search -> statistics | Search ledger | Every inspected family, model, parameterization, filter, outcome, stopping event, and rejection—not only survivors |
 | Philosophy -> design | Claim-evidence map | Claim type, auxiliaries, rival accounts, observations predicted under each, and conclusions a result cannot support |
 | Design -> estimation | Evidence contract | Sampling rule, target, comparison, timing, multiplicity family, stopping rule, and analysis boundary |
-| Statistics/ML -> decision theory | Evidence report | Estimates/predictions, uncertainty, dependence, generalization scope, costs represented, and unresolved model uncertainty |
+| Statistics/ML -> strategy engineering | Evidence report | Estimates/predictions, uncertainty, dependence, generalization scope, costs represented, and unresolved model uncertainty |
+| Strategy engineering -> strategy-level test | Executable specification | Data path, order and fill model, costs, capacity, portfolio interaction, risk controls, attribution, operating controls, and version identity |
+| Strategy-level test -> decision theory | Strategy evidence report | Complete-strategy results, uncertainty, dependence, implementation deviations, monitoring limits, and unresolved model or operational risk |
 | Decision theory -> owner | Decision record | Action, loss/utility assumptions, robustness or regret criterion, sensitivity, and value of further research |
 
 No interface object in this note is a proposed repository requirement. The table
@@ -241,6 +249,52 @@ blending it away:
 - predictive/algorithmic modeling and explanatory data modeling pursue different
   goals. Breiman's distinction is a warning against judging one entirely by the
   other's criterion, not a proof that explanation is dispensable. [C16]
+
+### 9. Locate claims by explanatory level and target
+
+When an interdisciplinary claim could be misread, locate it on two independent
+coordinates:
+
+1. **Explanatory level:** the objective or problem being solved; the
+   representation and algorithm used; or the concrete implementation that ran.
+2. **Target:** the market and its participants; the research process and its
+   agents; or the strategy, portfolio, and production system.
+
+For example, bounded rationality may describe a participant, prescribe a
+research-budget policy, or constrain a live decision procedure. Those are not
+the same claim. The coordinates expose that difference; they are not themselves
+evidence and do not imply that Marr's original framework is a market theory.
+[C1-C4]
+
+### 10. Give each selected bottleneck a lead owner, not a monopoly on causation
+
+For each material bottleneck selected for action, name one discipline or
+production lane as the primary owner of its next question. Other fields and
+competing bottlenecks remain explicit constraints, critics, or dependencies.
+This is a coordination rule: it does not establish that the system has one true
+bottleneck, that the named owner explains the failure, or that coupled
+bottlenecks may be ignored. If ownership is genuinely undecidable, preserve the
+competing diagnoses and choose a discriminating check rather than assigning
+certainty by fiat.
+
+### 11. Treat scarce resources as a vector subject to hard admissibility rules
+
+Independent data history, compute, elapsed time, attention, capital, liquidity,
+and risk-bearing capacity are not safely interchangeable by default. Expected
+decision value or value of computation may rank otherwise admissible research
+actions, but no scalar score may purchase permission to waive provenance,
+leakage, identification, validation, risk, or change-control requirements. A
+resource-efficient invalid inference remains invalid. [C1-C3, C14, C15]
+
+### 12. Close the loop through production reality
+
+Methodological cleanliness protects the search for an edge; it is not itself an
+edge. A research result reaches the applied mission only through data quality,
+cost and execution modeling, liquidity and capacity, portfolio construction,
+risk and ruin controls, PnL attribution, operational reliability, and a new test
+of the complete strategy. Conversely, a production improvement can improve net
+implementation without retrospectively validating the upstream phenomenon or
+mechanism.
 
 ## Source-backed findings
 
@@ -379,8 +433,10 @@ own domains. Trading consequences are developed separately in the ledger.
 These are analytical rules for reading and combining the literature in this
 sidecar. They are not proposed normative changes to the repository.
 
-1. **One claim, one primary disciplinary owner.** Other fields may constrain or
-   criticize it, but ownership of the question must be explicit.
+1. **One selected question, one primary disciplinary owner.** Other fields may
+   constrain or criticize it, and coupled or uncertain bottlenecks remain
+   visible. Primary ownership coordinates the next step; it does not identify a
+   sole cause or give one field authority over the whole research problem.
 2. **No traveling conclusions.** A conclusion retains the scope, population,
    task, assumptions, and level at which its source established it.
 3. **No metaphor-to-evidence conversion.** Terms borrowed from cognition or AI
@@ -406,6 +462,13 @@ sidecar. They are not proposed normative changes to the repository.
 12. **No forced foundational consensus.** Where Bayesian, error-statistical,
     explanationist, ecological, or ambiguity-sensitive approaches disagree,
     record which commitment is being used and test sensitivity where practical.
+13. **No scalar-resource override.** A favorable utility, information-value, or
+    compute-efficiency score cannot waive an evidential, risk, provenance, or
+    change-control requirement.
+14. **No universal trading shortcut.** A cost multiple, trade-count threshold,
+    sample-size formula, ML cutoff, capacity assumption, or preferred research
+    order is not portable unless its assumptions and target setting are stated
+    and justified.
 
 ## Trading-research implications
 
@@ -487,6 +550,27 @@ findings. None is evidence for a concrete trading edge.
   implying that the original observation was fabricated or that a new regime
   label explains the change.
 
+### Strategy engineering and production reality
+
+- Early cost and data-feasibility screens should protect scarce validation
+  evidence, but they must use a strategy-specific uncertainty range rather than
+  a universal movement-to-cost multiple.
+- A complete production assessment covers the versioned data path and quality,
+  decision-time availability, execution and microstructure, realistic costs,
+  liquidity and capacity, portfolio interaction, risk and ruin exposure, PnL
+  attribution, monitoring, and operating failure modes.
+- These layers may invalidate, defer, or reshape an implementation. Any material
+  reshaping creates a new strategy candidate or research version; it does not
+  rescue the evidence status of the prior bundle.
+- The operational profile must be declared. Discretionary retail day trading,
+  systematic intraday research, swing trading, medium-frequency statistical
+  work, macro, volatility, and high-frequency systems have different evidence
+  and engineering constraints; none is the unstated project default.
+- A supported phenomenon still requires the complete engineered strategy to be
+  tested on unseen data or in a controlled forward process. Mechanistic
+  plausibility cannot replace missing independent predictive evidence, including
+  when the effective sample is small.
+
 ### Decision and capital relevance
 
 - Evidence should reach a capital decision only through an explicit action and
@@ -567,6 +651,17 @@ behavioral and empirical evaluation.
     ML studies use different markets, horizons, targets, and sampling designs.
     They jointly motivate separate domain, stability, search, and prediction
     interfaces; they do not form one cumulative test of a single trading theory.
+15. No source in this memo establishes a universal cost multiple, minimum trade
+    count, sample-size shortcut, ML sample cutoff, or claim that capacity is
+    immaterial. Such quantities require a design-specific dependence model,
+    uncertainty target, market, horizon, execution model, and loss function.
+16. Low effective sample size does not transfer the burden of proof from
+    predictive evidence to a plausible mechanism. It may instead make the
+    predictive or executable-edge claim currently not testable or blocked.
+17. The relative importance of disciplinary and production lanes varies by
+    market, horizon, implementation style, and available evidence. This memo
+    therefore adopts no universal ranking of fields and no retail, discretionary,
+    intraday, swing, institutional, or high-frequency default.
 
 ## Claim-to-source ledger
 
