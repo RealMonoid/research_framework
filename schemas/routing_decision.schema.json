@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "urn:research-framework:schema:routing-decision:1.7.0",
+  "$id": "urn:research-framework:schema:routing-decision:1.8.0",
   "title": "Research Routing Decision",
   "description": "Deterministic routing decision and bounded work order owned by the research conductor.",
   "type": "object",
@@ -24,11 +24,11 @@
     "control"
   ],
   "properties": {
-    "schema_version": {"const": "1.7.0"},
+    "schema_version": {"const": "1.8.0"},
     "decision_id": {"$ref": "#/$defs/stableId"},
     "created_at": {"$ref": "#/$defs/timestamp"},
     "orchestration_ref": {"$ref": "#/$defs/stableId"},
-    "conductor_version": {"const": "1.7.0"},
+    "conductor_version": {"const": "1.8.0"},
     "route": {"$ref": "#/$defs/route"},
     "execution_mode": {
       "type": "string",
@@ -186,6 +186,11 @@
           "specialist_mode": {"type": "null"},
           "fingerprint_guard": {
             "properties": {"mode": {"const": "NOT_APPLICABLE"}}
+          },
+          "user_interaction": {
+            "properties": {
+              "problems": {"minItems": 1}
+            }
           }
         }
       }
@@ -359,18 +364,74 @@
         "max_attempts": {"const": 1}
       }
     },
+    "decisionOption": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["option_id", "label", "consequence", "assessment"],
+      "properties": {
+        "option_id": {"$ref": "#/$defs/stableId"},
+        "label": {"$ref": "#/$defs/shortText"},
+        "consequence": {"$ref": "#/$defs/shortText"},
+        "assessment": {
+          "type": "string",
+          "enum": ["RECOMMENDED", "ACCEPTABLE", "NOT_RECOMMENDED"]
+        }
+      }
+    },
+    "problemSummary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "issue_id",
+        "problem_record_ref",
+        "statement",
+        "impact",
+        "resolution_options",
+        "recommendation"
+      ],
+      "properties": {
+        "issue_id": {"$ref": "#/$defs/stableId"},
+        "problem_record_ref": {"$ref": "#/$defs/stableId"},
+        "statement": {"$ref": "#/$defs/shortText"},
+        "impact": {"$ref": "#/$defs/shortText"},
+        "resolution_options": {
+          "type": "array",
+          "minItems": 2,
+          "items": {"$ref": "#/$defs/decisionOption"}
+        },
+        "recommendation": {"$ref": "#/$defs/shortText"}
+      }
+    },
     "userInteraction": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["status", "question", "options", "recommendation"],
+      "required": [
+        "status",
+        "current_position",
+        "next_agent_action",
+        "after_agent_action",
+        "user_next_action",
+        "question",
+        "options",
+        "recommendation",
+        "problems"
+      ],
       "properties": {
         "status": {"type": "string", "enum": ["NOT_REQUIRED", "REQUIRED"]},
+        "current_position": {"$ref": "#/$defs/shortText"},
+        "next_agent_action": {"$ref": "#/$defs/shortText"},
+        "after_agent_action": {"$ref": "#/$defs/shortText"},
+        "user_next_action": {"$ref": "#/$defs/shortText"},
         "question": {"$ref": "#/$defs/nullableText"},
         "options": {
           "type": "array",
-          "items": {"$ref": "#/$defs/shortText"}
+          "items": {"$ref": "#/$defs/decisionOption"}
         },
-        "recommendation": {"$ref": "#/$defs/nullableText"}
+        "recommendation": {"$ref": "#/$defs/nullableText"},
+        "problems": {
+          "type": "array",
+          "items": {"$ref": "#/$defs/problemSummary"}
+        }
       },
       "allOf": [
         {

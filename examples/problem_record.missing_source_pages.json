@@ -1,0 +1,32 @@
+{
+  "schema_version": "1.0.0",
+  "problem_record_id": "problem:synthetic-missing-source-pages:v1",
+  "occurred_at": "2026-09-04T09:30:00+02:00",
+  "recorded_at": "2026-09-04T09:31:00+02:00",
+  "model": {
+    "name": "ChatGPT",
+    "version": "5.6 Sol",
+    "snapshot": null
+  },
+  "description": "The source pages that define the entry rule are not available, so the strategy cannot be reconstructed without inventing a rule.",
+  "practical_impact": "The source-reconstruction step and every later step that depends on an entry definition must remain paused.",
+  "status": "OPEN",
+  "resolution_options": [
+    {
+      "option_id": "resolution:provide-source-pages",
+      "label": "Provide the missing source pages.",
+      "consequence": "The framework can reconstruct the source rule without inventing an entry definition.",
+      "assessment": "RECOMMENDED"
+    },
+    {
+      "option_id": "resolution:close-unreconstructable-case",
+      "label": "Close this research version as not reconstructable.",
+      "consequence": "The case remains an honest stopped result; a different strategy or a new version may be considered separately later.",
+      "assessment": "ACCEPTABLE"
+    }
+  ],
+  "recommended_option_id": "resolution:provide-source-pages",
+  "user_action_required": true,
+  "orchestration_ref": "orchestration:synthetic-prose-strategy:v1",
+  "routing_decision_ref": null
+}

@@ -33,7 +33,7 @@ CONDITION_INTENTS = {
     "CHECK_DEFINITION_SENSITIVITY",
 }
 CAUSAL_CLAIM_LEVELS = {"INTERVENTIONAL", "COUNTERFACTUAL"}
-ROUTER_VERSION = "1.7.0"
+ROUTER_VERSION = "1.8.0"
 
 
 def _mapping(value: Any, label: str) -> Mapping[str, Any]:
@@ -88,13 +88,146 @@ def _work_order(
     }
 
 
-def _no_user_interaction() -> dict[str, Any]:
+def _weighted_options(value: Any, label: str) -> list[Mapping[str, Any]]:
+    """Require decision-ready alternatives rather than an unweighted list."""
+
+    if not isinstance(value, list) or len(value) < 2:
+        raise ValueError(f"{label} requires at least two options")
+    options = [_mapping(option, f"{label} option") for option in value]
+    option_ids = [option.get("option_id") for option in options]
+    if len(option_ids) != len(set(option_ids)):
+        raise ValueError(f"{label} options must have unique option_id values")
+    recommended = [
+        option for option in options if option.get("assessment") == "RECOMMENDED"
+    ]
+    if len(recommended) != 1:
+        raise ValueError(f"{label} requires exactly one RECOMMENDED option")
+    return options
+
+
+def _base_user_interaction(
+    decision_basis: list[str], execution_mode: str
+) -> dict[str, Any]:
+    """Return the user-facing progress brief required for every route."""
+
+    if execution_mode == "SPECIALIST_AS_TOOL":
+        next_agent_action = (
+            "The framework will complete the required focused review before allowing the next research step."
+        )
+        after_agent_action = (
+            "It will check the result, preserve any remaining limit, and then state the next required step."
+        )
+    elif execution_mode == "CONDUCTOR_ONLY":
+        next_agent_action = (
+            "The framework will complete the selected research step without changing the accepted research version."
+        )
+        after_agent_action = (
+            "It will check the completed work and then state the next required step."
+        )
+    elif execution_mode == "PAUSE_FOR_USER":
+        next_agent_action = (
+            "The framework will keep the current research version unchanged while it waits for your decision."
+        )
+        after_agent_action = (
+            "After your decision is recorded, it will state the next permitted step."
+        )
+    elif execution_mode == "BLOCKED":
+        next_agent_action = (
+            "The framework will not work around the problem or advance the research while the prerequisite is unresolved."
+        )
+        after_agent_action = (
+            "After a documented solution is available, it will resume from this same point and state the next step."
+        )
+    else:  # pragma: no cover - the routing schema constrains this value.
+        raise ValueError(f"unsupported execution mode: {execution_mode}")
+
     return {
         "status": "NOT_REQUIRED",
+        "current_position": decision_basis[0],
+        "next_agent_action": next_agent_action,
+        "after_agent_action": after_agent_action,
+        "user_next_action": "No decision or material is required from you now.",
         "question": None,
         "options": [],
         "recommendation": None,
+        "problems": [],
     }
+
+
+def _documented_problems(state: Mapping[str, Any]) -> dict[str, Any]:
+    """Build transparent recovery guidance from separately recorded problems."""
+
+    issues = state.get("blocking_issues")
+    if not isinstance(issues, list) or not issues:
+        raise ValueError(
+            "a BLOCKED route requires at least one separately documented blocking issue"
+        )
+
+    problems: list[dict[str, Any]] = []
+    user_options: list[dict[str, Any]] = []
+    recommendations: list[str] = []
+    for raw_issue in issues:
+        issue = _mapping(raw_issue, "blocking issue")
+        required_fields = {
+            "issue_id",
+            "problem_record_ref",
+            "statement",
+            "affected_next_action",
+            "resolution_options",
+            "recommendation",
+            "user_action_required",
+        }
+        if not required_fields.issubset(issue):
+            raise ValueError("blocking issue is missing problem-record or recovery guidance")
+        options = _weighted_options(
+            issue["resolution_options"], "blocking issue recovery guidance"
+        )
+        problem = {
+            "issue_id": issue["issue_id"],
+            "problem_record_ref": issue["problem_record_ref"],
+            "statement": issue["statement"],
+            "impact": issue["affected_next_action"],
+            "resolution_options": options,
+            "recommendation": issue["recommendation"],
+        }
+        problems.append(problem)
+        recommendations.append(issue["recommendation"])
+        if issue["user_action_required"] is True:
+            user_options.extend(options)
+
+    if user_options:
+        return {
+            "status": "REQUIRED",
+            "user_next_action": "Choose a resolution for every problem that requires your decision.",
+            "question": "Which documented resolution should be used for each open problem?",
+            "options": user_options,
+            "recommendation": " ".join(recommendations),
+            "problems": problems,
+        }
+    return {
+        "problems": problems,
+    }
+
+
+def _user_interaction(
+    state: Mapping[str, Any],
+    decision_basis: list[str],
+    execution_mode: str,
+    supplied: dict[str, Any] | None,
+) -> dict[str, Any]:
+    """Merge a route's decision prompt with its mandatory progress brief."""
+
+    interaction = _base_user_interaction(decision_basis, execution_mode)
+    if execution_mode == "BLOCKED":
+        interaction.update(_documented_problems(state))
+    elif supplied is not None:
+        interaction.update(supplied)
+
+    if interaction["status"] == "REQUIRED" and interaction[
+        "user_next_action"
+    ] == "No decision or material is required from you now.":
+        interaction["user_next_action"] = "Choose one of the weighted options below."
+    return interaction
 
 
 def _fingerprint_guard(
@@ -187,7 +320,9 @@ def _decision(
         "work_order": guarded_work_order,
         "fingerprint_guard": fingerprint_guard,
         "next_required_route": next_required_route,
-        "user_interaction": user_interaction or _no_user_interaction(),
+        "user_interaction": _user_interaction(
+            state, decision_basis, execution_mode, user_interaction
+        ),
         "control": {
             "coordinator_retains_control": True,
             "specialist_may_address_user": False,
@@ -280,8 +415,18 @@ def route_state(state: Mapping[str, Any]) -> dict[str, Any]:
                     "or should the proposal create an intentional new research version?"
                 ),
                 "options": [
-                    "Keep the existing research fingerprint and reject the proposed replacement.",
-                    "Create an explicitly new research version with the proposed change.",
+                    {
+                        "option_id": "choice:keep-current-research-version",
+                        "label": "Keep the current research version.",
+                        "consequence": "The proposed replacement is rejected and the accepted definitions and evidence remain unchanged.",
+                        "assessment": "RECOMMENDED",
+                    },
+                    {
+                        "option_id": "choice:create-new-research-version",
+                        "label": "Create a new research version.",
+                        "consequence": "The proposed change becomes a separate version and must follow the required checks for that version.",
+                        "assessment": "ACCEPTABLE",
+                    },
                 ],
                 "recommendation": (
                     "Keep the existing version unless the proposal answers a question you now explicitly want to study."
@@ -293,6 +438,9 @@ def route_state(state: Mapping[str, Any]) -> dict[str, Any]:
         request.get("material_user_choice"), "request.material_user_choice"
     )
     if material_choice.get("status") == "REQUIRED":
+        options = _weighted_options(
+            material_choice.get("options"), "material user choice"
+        )
         return _decision(
             state,
             route="USER_DECISION_REQUIRED",
@@ -313,7 +461,7 @@ def route_state(state: Mapping[str, Any]) -> dict[str, Any]:
             user_interaction={
                 "status": "REQUIRED",
                 "question": material_choice.get("question"),
-                "options": material_choice.get("options", []),
+                "options": options,
                 "recommendation": material_choice.get("recommendation"),
             },
         )

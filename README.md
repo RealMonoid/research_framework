@@ -245,6 +245,13 @@ and completion statuses require their evidence and validation. These controls
 are recorded in every routing decision; they do not depend on AI Psychiatry and
 do not turn specialized critics into universal steps.
 
+Every routing decision also carries a plain-language progress brief: the
+current position, the framework's next action, what follows, and whether the
+owner needs to act. Required choices include weighted alternatives and a
+recommendation. A blocking or materially disruptive problem is separately
+recorded with the acting model, timestamps, description, impact, and recovery
+options before it is presented to the owner; real-case records remain private.
+
 ### Bounded quantitative data analysis
 
 For a concrete quantitative question that needs more than simple arithmetic,

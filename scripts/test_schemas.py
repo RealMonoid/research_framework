@@ -118,6 +118,32 @@ def replace_noise_screen_with_invalid_waiver(document: dict[str, Any]) -> None:
     document["noise_screen_waiver"] = {"reason": "THEORY_DRIVEN"}
 
 
+def add_unreferenced_blocking_issue(document: dict[str, Any]) -> None:
+    document["blocking_issues"] = [
+        {
+            "issue_id": "issue:synthetic-unreferenced-problem",
+            "statement": "A synthetic prerequisite is missing.",
+            "affected_next_action": "The research cannot continue.",
+            "user_action_required": True,
+            "resolution_options": [
+                {
+                    "option_id": "resolution:repair-synthetic-prerequisite",
+                    "label": "Repair the prerequisite.",
+                    "consequence": "The current step can resume.",
+                    "assessment": "RECOMMENDED",
+                },
+                {
+                    "option_id": "resolution:close-synthetic-case",
+                    "label": "Close the case.",
+                    "consequence": "The unresolved issue remains visible.",
+                    "assessment": "ACCEPTABLE",
+                },
+            ],
+            "recommendation": "Repair the prerequisite.",
+        }
+    ]
+
+
 POSITIVES = [
     ("generation/mechanism_catalog.v1.json", "schemas/mechanism_catalog.schema.json"),
     ("examples/strategy_reconstruction.vwap_wave_price_discovery.json", "schemas/strategy_reconstruction.schema.json"),
@@ -129,6 +155,7 @@ POSITIVES = [
     ("examples/framework_control_review.synthetic.json", "schemas/framework_control_review.schema.json"),
     ("examples/outcome_evidence_contract.predictor_without_mechanism.json", "schemas/outcome_evidence_contract.schema.json"),
     ("examples/pipeline_integrity_assessment.synthetic_controls.json", "schemas/pipeline_integrity_assessment.schema.json"),
+    ("examples/problem_record.missing_source_pages.json", "schemas/problem_record.schema.json"),
     ("examples/orchestration_state.prose_strategy.json", "schemas/orchestration_state.schema.json"),
     ("examples/routing_decision.pre_operationalization.json", "schemas/routing_decision.schema.json"),
     ("examples/research_fingerprint.prose_strategy.json", "schemas/research_fingerprint.schema.json"),
@@ -165,9 +192,12 @@ NEGATIVES: list[tuple[str, str, str, Mutation]] = [
     ("post-treatment variables cannot be ordinary controls", "examples/causal_identification_assessment.hfi_pass.json", "schemas/causal_identification_assessment.schema.json", set_value(("post_treatment_variables", 0, "role"), "ADJUSTMENT_CONTROL")),
     ("philosophy review cannot relabel frozen result", "examples/scientific_philosophy_review.synthetic_failed_reconstruction.json", "schemas/scientific_philosophy_review.schema.json", set_value(("frozen_result", "remains_unchanged"), False)),
     ("progressive revision requires a genuinely new prediction", "examples/scientific_philosophy_review.synthetic_failed_reconstruction.json", "schemas/scientific_philosophy_review.schema.json", set_value(("revision_proposals", 1, "novel_prediction", "relation_to_prior"), "ALREADY_IMPLIED")),
+    ("problem record requires the acting model", "examples/problem_record.missing_source_pages.json", "schemas/problem_record.schema.json", delete_value(("model",))),
     ("required user choice needs an actual question", "examples/orchestration_state.prose_strategy.json", "schemas/orchestration_state.schema.json", set_value(("request", "material_user_choice", "status"), "REQUIRED")),
+    ("blocking issue requires a separate problem-record reference", "examples/orchestration_state.prose_strategy.json", "schemas/orchestration_state.schema.json", add_unreferenced_blocking_issue),
     ("complete orchestration artifact requires a reference", "examples/orchestration_state.prose_strategy.json", "schemas/orchestration_state.schema.json", set_value(("artifacts", "strategy_concept_audit", "status"), "COMPLETE")),
     ("routing decision keeps specialist away from user conversation", "examples/routing_decision.pre_operationalization.json", "schemas/routing_decision.schema.json", set_value(("control", "specialist_may_address_user"), True)),
+    ("routing decision requires the next framework action", "examples/routing_decision.pre_operationalization.json", "schemas/routing_decision.schema.json", delete_value(("user_interaction", "next_agent_action"))),
     ("routing decision keeps research decisions with conductor", "examples/routing_decision.pre_operationalization.json", "schemas/routing_decision.schema.json", set_value(("control", "specialist_may_make_research_decision"), True)),
     ("routing decision keeps research state with conductor", "examples/routing_decision.pre_operationalization.json", "schemas/routing_decision.schema.json", set_value(("control", "specialist_may_change_research_state"), True)),
     ("routing decision locks scope to user request", "examples/routing_decision.pre_operationalization.json", "schemas/routing_decision.schema.json", set_value(("control", "scope_locked_to_request"), False)),

@@ -121,7 +121,10 @@ individual case to produce a strategy.
     `framework_control_review` report, preserve the research state, and treat
     any proposed material change as a normal visible fingerprint proposal.
 11. Explain outcomes, limitations, decisions, and the next practical step in
-    the user's language and in ordinary terms.
+    the user's language and in ordinary terms. Every substantive response must
+    state the current position, the next framework action, what happens after
+    it, and the user's next action; explicitly say when no user input is
+    required.
 12. For a concrete non-causal quantitative question, route the bounded
     `data-analyst` only when the calculation would add information beyond what
     the conductor can obtain simply. Validate its `data_analysis_report`,
@@ -143,6 +146,14 @@ individual case to produce a strategy.
     liquidity, and risk-bearing capacity. Decision value may rank actions that
     already satisfy the hard rules; it cannot trade away provenance, leakage,
     identification, validation, risk, or change control.
+16. Before reporting a problem as blocking or materially disruptive, create a
+    separately stored and validated `problem_record`. It must capture the
+    exact model name and version, occurrence and recording timestamps, a
+    plain-language description and impact, at least two weighted recovery
+    options, a recommendation, and available orchestration references. Store
+    real-case records in `private_research/<research-case>/problems/`, retain
+    only the stable reference in the checkpoint, and never work around a
+    recorded problem silently.
 
 **Permanent conductor controls (apply on every task)**
 
@@ -319,6 +330,17 @@ change effective and cannot replace the full fingerprint comparison.
 **User-facing response**
 
 Lead with what changed for the research and whether the user must decide anything. Explain a required specialist review by its practical purpose, not by agent architecture. Translate specialist findings into ordinary language and state what they do not establish. If no user decision is required, say so. Do not provide a developer changelog. Follow `00_RESEARCH_AGENT_README.md` §1.2.
+
+Every response about material work must visibly answer: **Where are we now?**,
+**What will the framework do next?**, **What follows after that?**, and
+**What do you need to do next?** The routing decision's `user_interaction`
+object supplies this progress brief for every route. For a decision, present at
+least two options with their consequence and ordinal assessment
+(`RECOMMENDED`, `ACCEPTABLE`, or `NOT_RECOMMENDED`), then state a reasoned
+recommendation. For a problem, explain the impact, show its separately recorded
+and weighted recovery options, and say whether user input is needed. Do not
+manufacture probabilities, suppress an inconvenient alternative, or obscure an
+unresolved prerequisite behind internal terms.
 
 **Completion rule**
 

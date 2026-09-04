@@ -72,6 +72,41 @@ implementation details.
 
 The precise technical and scientific artifacts are fully preserved internally. This communication rule does not change a research rule; it only separates the internal documentation from the understandable response to the user.
 
+### Mandatory step-by-step owner guidance
+
+Every substantive response must make four points easy to identify in ordinary
+language: where the research currently stands, what the framework or agent will
+do next, what happens after that, and what the owner needs to do next. When no
+owner input is needed, say that explicitly instead of leaving the next action
+implicit. The routing decision carries this progress brief for every route so
+that the conductor cannot treat a user decision as the only moment worth
+explaining.
+
+When an owner decision is genuinely required, present at least two options. For
+each option, state its practical consequence and an assessment of
+`RECOMMENDED`, `ACCEPTABLE`, or `NOT_RECOMMENDED`, then give one reasoned
+recommendation. These are transparent decision weights, not invented
+probabilities or claims of precision. Do not ask the owner to choose an
+internal implementation detail that has no material research consequence.
+
+When a problem occurs, explain the problem and the research step it prevents,
+then offer at least two weighted recovery options and a recommendation. Before
+the issue is reported as blocking or materially disruptive, create and validate
+one separate `problem_record` file for that occurrence. It records the exact
+model name and version, occurrence and recording timestamps, description,
+practical impact, recovery options, and available orchestration references. For
+a real Research Case, store each file under
+`private_research/<research-case>/problems/`; retain only its stable reference
+in the checkpoint. Do not overwrite the original problem description or work
+around an unresolved issue silently. Use
+`scripts/validate_problem_record.py` to validate the file before accepting it.
+
+Routing and orchestration checkpoints use schema version 1.8.0 for this
+workflow. Do not overwrite a version 1.7.0 checkpoint. Before it is routed
+again, create a visible migrated checkpoint that uses weighted option objects
+for any material decision and a separate problem-record reference for every
+blocker; preserve the older checkpoint as historical evidence.
+
 ## Binding research conductor
 
 Each research task is guided by exactly one [`research-conductor`](agents/research-conductor.md). The conductor remains the user's contact, keeps the current status, and calls specialist agents only through a defined work order. Specialist agents do not take over the conversation or the overall decision.
