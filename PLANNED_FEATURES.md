@@ -201,6 +201,29 @@ availability, and baselines would then be fingerprinted and tested as part of
 the unchanged full pipeline. Neither deferred capability is an authorization to
 download a model, access data, run a backtest, or make a forecast claim.
 
+### Owner-authorized scientific-skill discovery and reproducibility — 2026-09-04
+
+The approved and deferred local scientific-method capabilities are recorded in
+`capabilities/scientific_skill_manifest.v1.json`, validated by
+`schemas/scientific_skill_manifest.schema.json` and its regression test. This
+is a **KEEP — agent enforcement** addition: it protects the method-selection
+and reproducibility decision by giving every project agent one versioned map of
+allowed roles, scope, prohibitions, source license, and the reviewed `SKILL.md`
+version and hash. It does not vendor third-party skill packages, because a
+copied package would create a second update and license-maintenance surface.
+
+The manifest is not evidence that a host actually exposes a skill. Before an
+active optional skill is used, the agent must inspect its current inventory and
+match the installed `SKILL.md` to the reviewed snapshot. If absent or changed,
+the optional method is simply unavailable for that task; it is not a blocker
+and cannot be claimed as used. If it materially influences a research artifact,
+the effective runtime snapshot and, where relevant, the manifest are protected
+through the existing `METHOD` artifact/fingerprint mechanism. This adds no
+new route, owner, specialist, gate, data access, backtest, deployment, or
+capital-allocation authority. The manifest/test verifies discoverability and
+snapshot consistency only; live-agent evaluation remains required to claim a
+behavioral improvement.
+
 1. **Close the validation-boundary, stopping-rule, and confirmed
    pipeline-integrity enforcement gaps.**
    **Status: urgent correctness gap; documented rules exist, hard enforcement

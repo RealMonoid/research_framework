@@ -45,6 +45,7 @@ The files perform various functions:
 | `agents/scientific-philosophy-critic.md` |Concept and requirement review before operationalization, plus Duhem-Quine/Lakatos/Kuhn continuation review|Before completion of any incompletely defined source reconstruction; after a non-positive Q8 result when material revision or continuation is considered|
 | `agents/condition-inquiry-analyst.md` |Quantitative assessment of measuring instruments and generation of observable condition hypotheses|After provisional operationalization, when measurement value, definition dependence or unknown success modifiers are examined|
 | `agents/data-analyst.md` |Bounded quantitative data profiling and analysis with provenance, uncertainty and trading-data checks|Only when the conductor has a concrete quantitative information need beyond a simple calculation; not a permanent gate|
+| `capabilities/scientific_skill_manifest.v1.json` |Reviewed map of permitted and deferred local scientific-method skills, roles, boundaries, and content snapshots|Only when considering a listed optional method skill|
 | `agents/causal-identification-critic.md` |Independent examination of whether a financial-market design supports the intended causal statement|Before any interventional or counterfactual estimate and before causal language; not for purely predictive questions|
 | `agents/framework-control-reviewer.md` |Bounded review of observable workflow-control failures such as bypasses, scope changes, repeated equivalent attempts, conflicts or stale memory|Only after an explicit framework-control request or a concrete control signal; not an ordinary research gate|
 | `references/INTERDISCIPLINARY_TRADING_RESEARCH_FOUNDATIONS.md` |Academic basis for the adopted division of disciplinary labour and limits on transferring claims between fields|When designing, reviewing, or changing the interdisciplinary research architecture; not required for every ordinary case|
@@ -149,6 +150,18 @@ selection and diagnostics. They are methods, not new project agents or gates.
 The same route may use `statistical-power` for a prospective sensitivity
 analysis, `statsmodels` or PyMC for a predeclared model and diagnostics, and
 SymPy for exact formula or boundary-condition checks.
+
+The versioned capability map at
+`capabilities/scientific_skill_manifest.v1.json` is the required discovery
+source when an agent considers one of these methods. It is not a runtime
+inventory: before use, inspect the active host's skill inventory and verify the
+installed `SKILL.md` version and hash against the map. An absent optional skill
+does not block the route and may not be reported as used. A material use records
+the effective runtime skill ID, version, and hash in the existing method/output
+artifact and protects that snapshot as a `METHOD` artifact in the existing
+research fingerprint. The checked-in map itself is also protected whenever it
+materially constrained the method choice. This preserves reproducibility
+without copying external skill packages into the repository.
 
 The conductor maps any material output into the existing canonical artifact and
 does not retain a skill template as a second source of truth. A brainstorm or
