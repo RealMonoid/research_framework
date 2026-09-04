@@ -22,6 +22,12 @@ define how finance, cognitive science, AI search, philosophy of science,
 statistics, machine learning, and decision theory contribute without being
 mixed into one undifferentiated theory. The binding mission decision is recorded
 in [ADR-016](decisions/ADR-016-applied-interdisciplinary-trading-research-mission.md).
+[ADR-017](decisions/ADR-017-interdisciplinary-claim-coordinates-and-production-loop.md)
+adds the operating architecture: locate ambiguous claims by explanatory level
+and target, give each bottleneck selected for action one lead question owner
+without assuming one sole cause, treat scarce resources as a vector subject to
+hard safeguards, and carry a validated phenomenon or other limited supported
+claim through the full production layer before a capital decision.
 
 The repository therefore serves only two necessary readers:
 
@@ -87,7 +93,13 @@ The framework:
   a failed or undecidable result;
 - keeps descriptive evidence, prediction, causal explanation, and an
   executable after-cost trading edge as separate claims with different
-  evidence requirements.
+  evidence requirements;
+- identifies each research or production bottleneck selected for action and one
+  lead owner for its next question while keeping competing and coupled
+  constraints visible; and
+- treats data quality, execution, costs, capacity, portfolio construction,
+  risk, PnL attribution, and operations as part of strategy engineering rather
+  than as details that can be assumed after a promising backtest.
 
 The framework cannot determine by logic alone which unknown conditions make a
 strategy work. It can, however, record what is unknown, compare alternative

@@ -1,6 +1,6 @@
 # 01_RESEARCH_STANDARD.md
 
-**Version:** 2.1
+**Version:** 2.2
 **As of:** 2026-09-04
 **Status:** DRAFT FOR ADOPTION
 **Purpose:** Normative standard for developing, falsifying, validating, and monitoring trading phenomena, edge hypotheses, and strategies.
@@ -59,6 +59,34 @@ Before `PROMOTED` only the staggered intake from `QUICKSTART.md` and `schemas/hy
 From `PROMOTED` the core rules of this standard apply completely. However, method and tooling details are loaded only for the activated claim and selected method. Unselected optional procedures do not require N/A series.
 
 A phase or gate status set by the executing agent is a self-declaration. It can only be tested by the named schema, the associated run/evidence reference and, if necessary, an independent review. Normative language does not replace this evidence.
+
+## 1.2 Interdisciplinary claim coordinates and bottleneck ownership
+
+Interdisciplinary methods are combined through explicit question ownership and
+typed handoffs. When a material claim could otherwise cross disciplinary
+boundaries, record two separate coordinates:
+
+- **explanatory level:** objective/problem, representation/algorithm, or
+  concrete implementation; and
+- **target:** market and participants, research process and agents, or strategy,
+  portfolio, and production system.
+
+These coordinates clarify what a statement concerns. They are not evidence,
+do not replace the predictive/interventional/counterfactual claim level, and do
+not increase the permitted conclusion.
+
+Each material bottleneck selected for action has one primary owner of its next
+question. Other disciplines, competing bottlenecks, and production lanes remain
+explicit constraints, critics, or dependencies. This ownership rule coordinates
+work; it neither proves a single cause nor permits coupled or uncertain
+bottlenecks to be hidden. If the owner cannot yet be identified defensibly,
+preserve the competing diagnoses and choose a bounded discriminating check.
+
+Research resources are evaluated as a vector that may include independent data
+history, compute, elapsed time, attention, capital, liquidity, and risk-bearing
+capacity. Expected decision value or value of computation may prioritize only
+otherwise admissible actions. No resource score may waive provenance, leakage,
+identification, validation, risk, or change-control requirements.
 
 ---
 
@@ -1098,6 +1126,25 @@ A validated phenomenon is not yet a strategy.
 
 After phenomenon validation, it is checked whether it is actually tradable.
 
+Strategy engineering is a production layer, not only the completion of entry
+and exit rules. Its assessment covers, as applicable:
+
+- the versioned data path, quality, coverage, and decision-time availability;
+- execution, market microstructure, order behavior, fills, and latency;
+- realistic costs, liquidity, and capacity;
+- portfolio construction and interaction with other positions or signals;
+- position sizing, path-dependent risk, ruin constraints, and capital limits;
+- PnL attribution capable of separating signal, execution, cost, and exposure;
+  and
+- monitoring, operational reliability, incident handling, and suspension.
+
+An engineering or operating advantage may improve implementation, and a
+production constraint may reject or defer it. Neither outcome retrospectively
+establishes the phenomenon, prediction, mechanism, or executable net edge. A
+material engineering change creates a new strategy candidate or research
+version, and the complete changed strategy requires its own OOS or controlled
+forward evidence.
+
 The following shall be developed:
 
 - Setup,
@@ -1301,6 +1348,11 @@ A falsified sign can create a new hypothesis. It does not retroactively convert 
 and causal mechanism are four different statements.
 51. A success condition found in data is a new hypothesis and not a subsequently discovered source rule.
 52. Predictive separation by a state filter does not prove a real hidden state, actor, or mechanism.
+53. A material interdisciplinary claim keeps both its explanatory level and its target when those distinctions prevent claim substitution.
+54. Each material bottleneck selected for action has one primary question owner, but primary ownership never proves one sole cause or removes competing or coupled constraints.
+55. Scarce resources form a vector; decision value may rank admissible research actions but cannot waive a hard research, risk, provenance, or change-control rule.
+56. Strategy engineering covers data, execution, costs, capacity, portfolio construction, risk, attribution, and operations; none of these layers manufactures upstream edge evidence.
+57. No universal cost multiple, trade-count threshold, sample-size shortcut, ML cutoff, capacity assumption, or market-segment workflow is adopted without design-specific justification.
 
 ---
 
