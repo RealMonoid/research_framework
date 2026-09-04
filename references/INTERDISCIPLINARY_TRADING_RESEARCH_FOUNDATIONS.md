@@ -1,14 +1,40 @@
 # Interdisciplinary foundations for bounded trading research
 
-**Version:** 1.1
+**Version:** 1.2
 
 **As of:** 2026-09-04
 
-**Status:** Literature-only framework research sidecar; non-normative
+**Status:** Academic foundation for the adopted project mission; the source
+ledger and disciplinary synthesis remain non-normative
 
-**Scope:** Foundational bridge disciplines only. This note does not define a
-strategy, authorize data access or a market test, prescribe a backtest, change a
-roadmap priority, or amend a framework rule.
+**Scope:** This note supplies the interdisciplinary basis for the mission adopted
+in `AGENTS.md` and ADR-016. It does not define a concrete strategy, authorize
+data access or a market test, prescribe a backtest, or independently amend a
+framework rule.
+
+## Applied project mission
+
+The project uses the modular interdisciplinary architecture developed below to
+pursue three connected applied functions:
+
+1. rigorously reconstruct and test existing trading strategies;
+2. generate and develop new strategy hypotheses through bounded, recorded
+   search; and
+3. accumulate scoped learning from positive, negative, inconclusive, blocked,
+   and not-testable results about markets, representations, mechanisms,
+   conditions, measurements, methods, and failure modes.
+
+The program-level objective is to identify or develop executable trading
+strategies with a defensible positive expected net edge after realistic costs,
+liquidity, slippage, capacity, execution, and risk. Scientific discipline and
+the disciplinary boundaries in this note protect that applied objective; they
+are not substitutes for it.
+
+Learning is cumulative only when its provenance, scope, and evidential status
+remain visible. It may change which candidates are generated or which tests are
+informative, but it does not confer support on another strategy without an
+appropriate test. Likewise, a valid case-level rejection or stop protects the
+program and informs later search without becoming the program's end goal.
 
 ## Direct answer
 

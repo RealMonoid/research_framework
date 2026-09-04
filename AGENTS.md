@@ -85,6 +85,39 @@ must follow in a second commit and be reviewed independently. Never combine
 translation and semantic revision in one commit, because an observed change in
 agent behaviour must remain attributable to one kind of change.
 
+## Project mission
+
+The applied goal of this project is to identify or develop executable trading
+strategies whose positive expected net edge is supported by evidence appropriate
+to the claim and remains credible after realistic costs, liquidity, slippage,
+capacity, execution, and risk. Scientific discipline is the means by which the
+project pursues that goal; academic publication or detached foundational
+research is not the goal.
+
+The framework supports two primary research routes under one standard:
+
+1. rigorously reconstruct and test existing strategies without silently
+   replacing their source identity; and
+2. generate and develop new strategy hypotheses through explicit,
+   literature- or market-grounded search whose full candidate history remains
+   visible.
+
+Both routes must accumulate bounded, reusable learning from positive, negative,
+inconclusive, blocked, and not-testable results. Such learning may improve later
+representations, candidate generation, measurement, test design, or capital
+decisions, but it does not become evidence for another strategy without an
+appropriate test. A failed result applies first to the tested bundle; any
+changed strategy, condition, mechanism, or operationalization is a visible new
+candidate or research version and never rewrites the old result.
+
+An individual Research Case may legitimately end without an active strategy.
+That protects capital and informs subsequent search; it does not change the
+program-level objective of finding or developing robust executable strategies.
+The interdisciplinary basis for this division of labour is documented in
+`references/INTERDISCIPLINARY_TRADING_RESEARCH_FOUNDATIONS.md`, and the adopted
+mission decision is recorded in
+`decisions/ADR-016-applied-interdisciplinary-trading-research-mission.md`.
+
 ## Scope and restraint
 
 This framework is a private decision-support tool for one research owner using

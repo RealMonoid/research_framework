@@ -1,12 +1,26 @@
 # 01_RESEARCH_STANDARD.md
 
-**Version:** 2.0
-**As of:** 2026-08-31
+**Version:** 2.1
+**As of:** 2026-09-04
 **Status:** DRAFT FOR ADOPTION
 **Purpose:** Normative standard for developing, falsifying, validating, and monitoring trading phenomena, edge hypotheses, and strategies.
+**Authority:** Routed under `AGENTS.md`; `AGENTS.md` controls any conflict.
 ---
 
 # 1. Research objective
+
+The applied objective is to identify or develop executable trading strategies
+whose positive expected net edge remains defensible after costs, liquidity,
+slippage, capacity, execution, and risk. Research may start from an existing
+strategy that must be reconstructed and tested rigorously, or from controlled
+generation and development of new strategy hypotheses. These routes use the
+same evidential standard.
+
+The programme must also learn from positive, negative, inconclusive, blocked,
+and not-testable results. Reusable learning records what a result bears on,
+which representation, mechanism, condition, measurement, method, or failure
+mode it concerns, and where it may travel. It may guide later research, but it
+does not confirm a different strategy without a separate appropriate test.
 
 Strategy research should not retrospectively find rules that generate a nice equity curve.
 
@@ -1207,7 +1221,11 @@ Warning, suspension and fault criteria are set before activation.
 
 # 20. Research end states
 
-A research project does not have to end in an active strategy.
+An individual research line does not have to end in an active strategy and must
+not be forced to do so. Its result still contributes bounded learning where the
+evidence permits. These legitimate case-level end states protect capital and
+the integrity of later search; they do not replace the programme-level objective
+of identifying or developing robust executable strategies.
 
 Permissible conditions:
 
@@ -1319,4 +1337,8 @@ G. OPTIONAL IDEA GENERATION FROM MECHANISM CATALOG → INBOX
 24. Revalidate / suspend / reject
 ```
 
-No AI agent must silently skip a step. Non-applicable steps must be marked as `N/A` with justification.
+Steps 19–24 are activated only by an explicit continuation decision after a
+`VALIDATED_PHENOMENON`. Without that decision, the case may stop validly and the
+downstream block remains `DEFERRED_AFTER_VALIDATION`. No AI agent may silently
+skip an activated step. Inactive conditional blocks use the status required by
+the router and must not be represented by fabricated `N/A` field values.
