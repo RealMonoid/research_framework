@@ -122,6 +122,23 @@ live-agent evaluation must test omissions, vague next actions, unweighted
 choices, absent problem records, and attempts to proceed around a documented
 problem.
 
+### Observed specialist-capability correction — 2026-09-04
+
+A real workflow trace showed that the conductor declared a mandatory specialist
+unavailable before inspecting the active internal agent tools. The route was
+therefore blocked for a host limitation that did not exist. This confirmed
+caller-enforcement failure, so the smallest corrective implementation is
+authorized without reordering the research priorities below: every specialist
+route receives a separate validated capability-discovery record bound to the
+exact routing decision and summarized in the checkpoint. A suitable inspected
+internal interface forces `AVAILABLE` and invocation; incomplete discovery is
+`UNKNOWN`; only a complete search with no suitable interface permits
+`UNAVAILABLE` and a linked blocker. Regression cases cover the false blocker,
+ignored interface, incomplete search, and route mismatch. This correction does
+not perform the specialist review, change research state, authorize data or a
+backtest, or claim that a caller-enforced checkpoint can independently discover
+an interface the live agent omitted from its inventory record.
+
 1. **Close the validation-boundary, stopping-rule, and confirmed
    pipeline-integrity enforcement gaps.**
    **Status: urgent correctness gap; documented rules exist, hard enforcement

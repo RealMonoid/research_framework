@@ -124,7 +124,10 @@ def add_documented_blocker(state: dict[str, Any], statement: str) -> None:
     state["blocking_issues"] = [
         {
             "issue_id": "issue:synthetic-workflow-blocker",
+            "category": "PREREQUISITE",
             "problem_record_ref": "problem:synthetic-missing-source-pages:v1",
+            "capability_check_ref": None,
+            "required_specialist": None,
             "statement": statement,
             "affected_next_action": "The current research step cannot continue.",
             "user_action_required": True,
@@ -421,7 +424,10 @@ def main() -> int:
     blocked["blocking_issues"] = [
         {
             "issue_id": "issue:missing-source-pages",
+            "category": "PREREQUISITE",
             "problem_record_ref": "problem:synthetic-missing-source-pages:v1",
+            "capability_check_ref": None,
+            "required_specialist": None,
             "statement": "The source pages containing the entry definition are missing.",
             "affected_next_action": "Source reconstruction cannot be completed.",
             "user_action_required": True,
@@ -443,6 +449,73 @@ def main() -> int:
         }
     ]
     assert_route(blocked, "BLOCKED")
+
+    false_specialist_block = copy.deepcopy(base)
+    false_specialist_block["specialist_capability"] = {
+        "status": "AVAILABLE",
+        "capability_check_ref": "capability-check:synthetic-concept-audit:v1",
+        "routing_decision_ref": expected_fixture["decision_id"],
+        "required_specialist": "scientific-philosophy-critic",
+        "selected_interface_id": "interface:internal-agent-spawn",
+    }
+    false_specialist_block["routing_history"].append(expected_fixture["decision_id"])
+    add_documented_blocker(
+        false_specialist_block,
+        "The required scientific-philosophy specialist cannot be invoked.",
+    )
+    false_specialist_block["blocking_issues"][0].update(
+        {
+            "category": "SPECIALIST_UNAVAILABLE",
+            "capability_check_ref": "capability-check:synthetic-concept-audit:v1",
+            "required_specialist": "scientific-philosophy-critic",
+        }
+    )
+    try:
+        route_state(false_specialist_block)
+    except ValueError as exc:
+        if "cannot be blocked as unavailable" not in str(exc):
+            raise
+    else:
+        raise AssertionError("An available internal specialist interface was ignored")
+
+    proven_unavailable = copy.deepcopy(false_specialist_block)
+    proven_unavailable["specialist_capability"]["status"] = "UNAVAILABLE"
+    proven_unavailable["specialist_capability"]["selected_interface_id"] = None
+    assert_route(proven_unavailable, "BLOCKED")
+
+    unknown_capability = copy.deepcopy(proven_unavailable)
+    unknown_capability["specialist_capability"]["status"] = "UNKNOWN"
+    try:
+        route_state(unknown_capability)
+    except ValueError as exc:
+        if "requires a completed capability check" not in str(exc):
+            raise
+    else:
+        raise AssertionError("An incomplete specialist search became an availability blocker")
+
+    stale_capability_block = copy.deepcopy(proven_unavailable)
+    stale_capability_block["routing_history"] = [
+        "routing:orchestration:synthetic-prose-strategy:v1:1"
+    ]
+    try:
+        route_state(stale_capability_block)
+    except ValueError as exc:
+        if "latest routed decision" not in str(exc):
+            raise
+    else:
+        raise AssertionError("A stale specialist capability check supported a new blocker")
+
+    mismatched_specialist_block = copy.deepcopy(proven_unavailable)
+    mismatched_specialist_block["blocking_issues"][0]["required_specialist"] = (
+        "condition-inquiry-analyst"
+    )
+    try:
+        route_state(mismatched_specialist_block)
+    except ValueError as exc:
+        if "must name the capability check's required specialist" not in str(exc):
+            raise
+    else:
+        raise AssertionError("A specialist blocker was accepted against a different capability check")
 
     unrecorded_block = neutral_state()
     unrecorded_block["artifacts"]["data_analysis"] = {
@@ -490,7 +563,7 @@ def main() -> int:
         "causal-identification routing, predictive bypass, full-fingerprint "
         "continuity, visible change proposals, outcome-contract freeze gating, "
         "pipeline-integrity freeze gating, prerequisite ordering, user pause, "
-        "and blocker behavior."
+        "specialist capability discovery, and blocker behavior."
     )
     return 0
 

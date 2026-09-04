@@ -238,6 +238,16 @@ relevant prerequisites and trigger are present. Specialists return bounded
 work to the conductor; they do not take over the user conversation or the final
 decision.
 
+Before a specialist call or an availability blocker, the conductor records a
+validated
+[specialist capability check](schemas/specialist_capability_check.schema.json)
+against the exact routing decision. It must inspect the live tool inventory and
+use a suitable internal agent interface when one exists. A same-conversation
+return does not make the specialist run non-independent: the relevant
+independence is a separate bounded run with restricted inputs and no authority
+over the user conversation or research state. Incomplete discovery is
+`UNKNOWN`, not evidence that the specialist is unavailable.
+
 The conductor also applies five permanent workflow controls on every task:
 scope is locked to the user's request, delegation has one bounded level,
 material conclusions need validated evidence, unchanged checks are not repeated,

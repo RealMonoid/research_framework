@@ -1,8 +1,8 @@
 {
-  "schema_version": "1.8.0",
+  "schema_version": "1.9.0",
   "orchestration_id": "orchestration:synthetic-prose-strategy:v1",
   "updated_at": "2026-08-31T18:00:00+02:00",
-  "conductor_version": "1.8.0",
+  "conductor_version": "1.9.0",
   "next_decision_sequence": 2,
   "request": {
     "request_id": "request:operationalize-synthetic-prose-strategy",
@@ -39,6 +39,13 @@
     "proposal_ref": null,
     "changed_paths": [],
     "plain_language_summary": null
+  },
+  "specialist_capability": {
+    "status": "NOT_CHECKED",
+    "capability_check_ref": null,
+    "routing_decision_ref": null,
+    "required_specialist": null,
+    "selected_interface_id": null
   },
   "artifacts": {
     "strategy_reconstruction": {

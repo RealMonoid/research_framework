@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "urn:research-framework:schema:orchestration-state:1.8.0",
+  "$id": "urn:research-framework:schema:orchestration-state:1.9.0",
   "title": "Research Orchestration State",
   "description": "Persistent checkpoint used by the research conductor before every material research step.",
   "type": "object",
@@ -15,21 +15,23 @@
     "research_context",
     "effective_research_fingerprint",
     "change_control",
+    "specialist_capability",
     "artifacts",
     "blocking_issues",
     "completed_steps",
     "routing_history"
   ],
   "properties": {
-    "schema_version": {"const": "1.8.0"},
+    "schema_version": {"const": "1.9.0"},
     "orchestration_id": {"$ref": "#/$defs/stableId"},
     "updated_at": {"$ref": "#/$defs/timestamp"},
-    "conductor_version": {"const": "1.8.0"},
+    "conductor_version": {"const": "1.9.0"},
     "next_decision_sequence": {"type": "integer", "minimum": 1},
     "request": {"$ref": "#/$defs/request"},
     "research_context": {"$ref": "#/$defs/researchContext"},
     "effective_research_fingerprint": {"$ref": "#/$defs/fingerprintRecord"},
     "change_control": {"$ref": "#/$defs/changeControl"},
+    "specialist_capability": {"$ref": "#/$defs/specialistCapability"},
     "artifacts": {"$ref": "#/$defs/artifacts"},
     "blocking_issues": {
       "type": "array",
@@ -68,6 +70,23 @@
     "sha256": {
       "type": "string",
       "pattern": "^[a-f0-9]{64}$"
+    },
+    "specialist": {
+      "type": "string",
+      "enum": [
+        "intraday-hypothesis-generator",
+        "scientific-philosophy-critic",
+        "condition-inquiry-analyst",
+        "causal-identification-critic",
+        "data-analyst",
+        "framework-control-reviewer"
+      ]
+    },
+    "nullableSpecialist": {
+      "oneOf": [
+        {"$ref": "#/$defs/specialist"},
+        {"type": "null"}
+      ]
     },
     "fingerprintRecord": {
       "type": "object",
@@ -184,6 +203,71 @@
               "proposal_ref": {"$ref": "#/$defs/stableId"},
               "changed_paths": {"minItems": 1},
               "plain_language_summary": {"$ref": "#/$defs/shortText"}
+            }
+          }
+        }
+      ]
+    },
+    "specialistCapability": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "status",
+        "capability_check_ref",
+        "routing_decision_ref",
+        "required_specialist",
+        "selected_interface_id"
+      ],
+      "properties": {
+        "status": {
+          "type": "string",
+          "enum": ["NOT_CHECKED", "AVAILABLE", "UNAVAILABLE", "UNKNOWN"]
+        },
+        "capability_check_ref": {"$ref": "#/$defs/nullableStableId"},
+        "routing_decision_ref": {"$ref": "#/$defs/nullableStableId"},
+        "required_specialist": {"$ref": "#/$defs/nullableSpecialist"},
+        "selected_interface_id": {"$ref": "#/$defs/nullableStableId"}
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {"status": {"const": "NOT_CHECKED"}},
+            "required": ["status"]
+          },
+          "then": {
+            "properties": {
+              "capability_check_ref": {"type": "null"},
+              "routing_decision_ref": {"type": "null"},
+              "required_specialist": {"type": "null"},
+              "selected_interface_id": {"type": "null"}
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {"status": {"const": "AVAILABLE"}},
+            "required": ["status"]
+          },
+          "then": {
+            "properties": {
+              "capability_check_ref": {"$ref": "#/$defs/stableId"},
+              "routing_decision_ref": {"$ref": "#/$defs/stableId"},
+              "required_specialist": {"$ref": "#/$defs/specialist"},
+              "selected_interface_id": {"$ref": "#/$defs/stableId"}
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {"status": {"enum": ["UNAVAILABLE", "UNKNOWN"]}},
+            "required": ["status"]
+          },
+          "then": {
+            "properties": {
+              "capability_check_ref": {"$ref": "#/$defs/stableId"},
+              "routing_decision_ref": {"$ref": "#/$defs/stableId"},
+              "required_specialist": {"$ref": "#/$defs/specialist"},
+              "selected_interface_id": {"type": "null"}
             }
           }
         }
@@ -432,7 +516,10 @@
       "additionalProperties": false,
       "required": [
         "issue_id",
+        "category",
         "problem_record_ref",
+        "capability_check_ref",
+        "required_specialist",
         "statement",
         "affected_next_action",
         "user_action_required",
@@ -441,7 +528,19 @@
       ],
       "properties": {
         "issue_id": {"$ref": "#/$defs/stableId"},
+        "category": {
+          "type": "string",
+          "enum": [
+            "PREREQUISITE",
+            "INVALID_ARTIFACT",
+            "REPEAT_GUARD",
+            "SPECIALIST_UNAVAILABLE",
+            "OTHER"
+          ]
+        },
         "problem_record_ref": {"$ref": "#/$defs/stableId"},
+        "capability_check_ref": {"$ref": "#/$defs/nullableStableId"},
+        "required_specialist": {"$ref": "#/$defs/nullableSpecialist"},
         "statement": {"$ref": "#/$defs/shortText"},
         "affected_next_action": {"$ref": "#/$defs/shortText"},
         "user_action_required": {"type": "boolean"},
@@ -451,7 +550,27 @@
           "items": {"$ref": "#/$defs/decisionOption"}
         },
         "recommendation": {"$ref": "#/$defs/shortText"}
-      }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {"category": {"const": "SPECIALIST_UNAVAILABLE"}},
+            "required": ["category"]
+          },
+          "then": {
+            "properties": {
+              "capability_check_ref": {"$ref": "#/$defs/stableId"},
+              "required_specialist": {"$ref": "#/$defs/specialist"}
+            }
+          },
+          "else": {
+            "properties": {
+              "capability_check_ref": {"type": "null"},
+              "required_specialist": {"type": "null"}
+            }
+          }
+        }
+      ]
     }
   }
 }

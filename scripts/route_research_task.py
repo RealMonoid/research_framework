@@ -33,7 +33,7 @@ CONDITION_INTENTS = {
     "CHECK_DEFINITION_SENSITIVITY",
 }
 CAUSAL_CLAIM_LEVELS = {"INTERVENTIONAL", "COUNTERFACTUAL"}
-ROUTER_VERSION = "1.8.0"
+ROUTER_VERSION = "1.9.0"
 
 
 def _mapping(value: Any, label: str) -> Mapping[str, Any]:
@@ -112,7 +112,7 @@ def _base_user_interaction(
 
     if execution_mode == "SPECIALIST_AS_TOOL":
         next_agent_action = (
-            "The framework will complete the required focused review before allowing the next research step."
+            "The framework will inspect and record the active runtime's specialist-invocation capabilities, then use a suitable internal interface to complete the required focused review."
         )
         after_agent_action = (
             "It will check the result, preserve any remaining limit, and then state the next required step."
@@ -207,6 +207,58 @@ def _documented_problems(state: Mapping[str, Any]) -> dict[str, Any]:
     return {
         "problems": problems,
     }
+
+
+def _validate_specialist_unavailability(state: Mapping[str, Any]) -> None:
+    """Reject an availability blocker unless complete discovery proved it."""
+
+    issues = state.get("blocking_issues")
+    if not isinstance(issues, list):
+        raise ValueError("blocking_issues must be an array")
+    unavailable_issues = [
+        issue
+        for issue in issues
+        if isinstance(issue, Mapping)
+        and issue.get("category") == "SPECIALIST_UNAVAILABLE"
+    ]
+    if not unavailable_issues:
+        return
+
+    capability = _mapping(
+        state.get("specialist_capability"), "specialist_capability"
+    )
+    status = capability.get("status")
+    if status == "AVAILABLE":
+        raise ValueError(
+            "a specialist cannot be blocked as unavailable when the capability check found a suitable invocation interface"
+        )
+    if status != "UNAVAILABLE":
+        raise ValueError(
+            "specialist unavailability requires a completed capability check with status UNAVAILABLE"
+        )
+    check_ref = capability.get("capability_check_ref")
+    if not isinstance(check_ref, str):
+        raise ValueError("specialist unavailability requires a capability-check reference")
+    routing_ref = capability.get("routing_decision_ref")
+    routing_history = state.get("routing_history")
+    if (
+        not isinstance(routing_ref, str)
+        or not isinstance(routing_history, list)
+        or not routing_history
+        or routing_history[-1] != routing_ref
+    ):
+        raise ValueError(
+            "specialist unavailability requires a capability check for the latest routed decision"
+        )
+    for issue in unavailable_issues:
+        if issue.get("capability_check_ref") != check_ref:
+            raise ValueError(
+                "specialist unavailability blocker must reference the checkpoint's capability check"
+            )
+        if issue.get("required_specialist") != capability.get("required_specialist"):
+            raise ValueError(
+                "specialist unavailability blocker must name the capability check's required specialist"
+            )
 
 
 def _user_interaction(
@@ -330,6 +382,8 @@ def _decision(
             "specialist_may_change_research_state": False,
             "sequential_execution": True,
             "checkpoint_required": True,
+            "specialist_capability_check_required_before_invocation": True,
+            "specialist_unavailability_requires_complete_discovery": True,
             "specialist_output_requires_validation": True,
             "fingerprint_check_required_before_acceptance": True,
             "scope_locked_to_request": True,
@@ -349,6 +403,11 @@ def route_state(state: Mapping[str, Any]) -> dict[str, Any]:
     intent = request.get("intent")
     if not isinstance(intent, str):
         raise ValueError("request.intent must be a string")
+
+    blocking_issues = state.get("blocking_issues")
+    if not isinstance(blocking_issues, list):
+        raise ValueError("blocking_issues must be an array")
+    _validate_specialist_unavailability(state)
 
     change_control = _mapping(state.get("change_control"), "change_control")
     change_status = change_control.get("status")
@@ -466,9 +525,6 @@ def route_state(state: Mapping[str, Any]) -> dict[str, Any]:
             },
         )
 
-    blocking_issues = state.get("blocking_issues")
-    if not isinstance(blocking_issues, list):
-        raise ValueError("blocking_issues must be an array")
     invalid_artifacts = [
         name
         for name in _mapping(state.get("artifacts"), "artifacts")

@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "urn:research-framework:schema:routing-decision:1.8.0",
+  "$id": "urn:research-framework:schema:routing-decision:1.9.0",
   "title": "Research Routing Decision",
   "description": "Deterministic routing decision and bounded work order owned by the research conductor.",
   "type": "object",
@@ -24,11 +24,11 @@
     "control"
   ],
   "properties": {
-    "schema_version": {"const": "1.8.0"},
+    "schema_version": {"const": "1.9.0"},
     "decision_id": {"$ref": "#/$defs/stableId"},
     "created_at": {"$ref": "#/$defs/timestamp"},
     "orchestration_ref": {"$ref": "#/$defs/stableId"},
-    "conductor_version": {"const": "1.8.0"},
+    "conductor_version": {"const": "1.9.0"},
     "route": {"$ref": "#/$defs/route"},
     "execution_mode": {
       "type": "string",
@@ -472,6 +472,8 @@
         "specialist_may_change_research_state",
         "sequential_execution",
         "checkpoint_required",
+        "specialist_capability_check_required_before_invocation",
+        "specialist_unavailability_requires_complete_discovery",
         "specialist_output_requires_validation",
         "fingerprint_check_required_before_acceptance",
         "scope_locked_to_request",
@@ -487,6 +489,8 @@
         "specialist_may_change_research_state": {"const": false},
         "sequential_execution": {"const": true},
         "checkpoint_required": {"const": true},
+        "specialist_capability_check_required_before_invocation": {"const": true},
+        "specialist_unavailability_requires_complete_discovery": {"const": true},
         "specialist_output_requires_validation": {"const": true},
         "fingerprint_check_required_before_acceptance": {"const": true},
         "scope_locked_to_request": {"const": true},
