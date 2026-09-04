@@ -418,6 +418,82 @@ authorization if reconsidered later.
    deduplication, or substantive revision so that changes in agent behaviour
    remain attributable.
 
+12. **Conditional market-structure and execution assessment.**
+    **Status: CONDITIONAL planned capability; no route, artifact, or specialist
+    exists yet.** Financial economics and market microstructure already inform
+    the mechanism catalogue, method guidance, candidate scope, and production
+    principles. They do not yet have an independent, typed assessment that can
+    test whether the proposed market representation is plausible, observable,
+    and executable for the named market, venue, instrument, horizon, and data
+    path. The resulting risk is that a candidate moves into data-driven feature
+    search, mechanism interpretation, or strategy engineering with an
+    institutionally implausible story, an inadequate feed or timestamp model,
+    or an execution assumption that cannot support the stated claim.
+
+    This capability protects three distinct decisions: whether a
+    market-structure-dependent candidate may proceed to data-driven search;
+    what a result can mean about an actor, mechanism, or market condition; and
+    whether a limited supported claim is sufficiently specified to enter
+    downstream strategy engineering. It does not make a candidate profitable,
+    identify a causal effect, validate a forecast, or authorize a trade.
+
+    Do not create a broad, universal "finance agent." First define and validate
+    a fingerprinted `market_structure_assessment` artifact with, at minimum:
+
+    - the exact market, venue, instrument or contract, horizon, trading phase,
+      calendar, and relevant rule version;
+    - the proposed participants, constraints, flow, liquidity, or linkage and
+      whether the actor is named, unknown, or not claimed;
+    - the claimed observable imprint and the feed, timestamp, venue coverage,
+      order-book, trade, or quote information required to measure it;
+    - alternative microstructure explanations, unobserved venues or liquidity,
+      asynchronous or stale prices, clock and sequence risks, and the resulting
+      claim limits; and
+    - execution-relevant limits, including spread, fees, latency, queue or fill
+      assumptions, capacity, leg risk, and the remaining unresolved risk.
+
+    The future artifact and router must use a controlled, non-empty
+    `review_triggers` list. Its initial allowed values are `ORDER_BOOK`,
+    `ORDER_FLOW`, `LIQUIDITY`, `AUCTION`, `ROLL`, `FUNDING`, `LIQUIDATION`,
+    `LINKED_INSTRUMENT`, `LEAD_LAG`, `FORCED_ACTOR`, and
+    `MECHANISM_PREMISE`. The last value means that a proposed mechanism
+    conclusion relies on an actor, flow, liquidity, or linkage premise. The
+    router must invoke one market-structure-and-execution reviewer with exactly
+    one `routing_decision.work_order` when `review_triggers` is non-empty, and
+    must not invoke the reviewer otherwise. The existing sequential,
+    one-level, single-attempt work-order limits apply. `INBOX` intake and
+    unconstrained idea generation remain cheap. A purely predictive or
+    associative candidate without a named actor remains permissible only when
+    `actor_constraint` records `actor_status = UNSPECIFIED`,
+    `mechanism_claim_status = NOT_CLAIMED`, and a reason; it cannot be
+    interpreted as mechanism evidence. The review must
+    occur before data-driven feature or parameter search for a candidate with
+    non-empty `review_triggers`, before accepting a mechanism interpretation
+    carrying `MECHANISM_PREMISE`, and before a candidate with non-empty
+    `review_triggers` enters strategy engineering. It must not become a
+    universal gate for every market or strategy type.
+
+    Implementation is conditional on priority 3 being implemented and returning
+    `ADEQUATE` or `ADEQUATE_WITH_SCOPE_LIMITS` for the candidate, and on one of
+    two observed activation signals. Either priority 4 records a named candidate
+    with one of the controlled `review_triggers` values for which the existing
+    candidate-scope, method, data-fitness, and conductor artifacts have no field
+    or route that can record the required domain constraint; or a priority-5
+    case fails a predeclared critical assertion because, after receiving an
+    input that names an existing venue, feed, timing, liquidity, or execution
+    limitation, an agent nevertheless continues to data-driven search,
+    mechanism acceptance, or strategy engineering without recording that limit.
+    Implement in this order: define the artifact and its decision consequences;
+    add semantic validation and synthetic pass, limit, and blocked cases; add
+    the routing schema and reviewer contract; then add live-agent cases that
+    reject a reviewer artifact lacking a required trigger, required assessment
+    field, stated decision consequence, or claimed-limit check. The reviewer
+    may constrain, defer, or block the affected path, but may not invent missing
+    market facts, choose a strategy, alter the research question or effective
+    fingerprint, turn an actor story into mechanism evidence, substitute for
+    causal identification, or approve a net edge, deployment, or capital
+    allocation.
+
 The synthetic pipeline-integrity control, outcome evidence contract, complete
 research fingerprint, central conductor, and specialist routing are completed
 controls rather than new roadmap items. Their actual enforcement and bypass
