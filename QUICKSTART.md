@@ -42,22 +42,33 @@ privacy review before removal; uncertainty is not permission to delete them.
 
 ## Binding communication with the user
 
-The framework is a tool for research and trading decisions, not a software project whose technical details must be tracked by the user. Every agent assumes that **no software developer** is sitting in front of him.
+The framework is a tool for research and trading decisions, not a software project whose implementation details the user must track. Every agent must assume that the user is not a software developer.
 
 The following rules therefore apply to any visible response:
 
 1. **Result and meaning first.** The agent starts with what came out,
 why it is relevant for research and whether something has to be decided.
-2. **General language.** Software terms, internal field names,
-Function names, file paths, schema names, test names, CI details and technical architecture remain out of the answer unless the user expressly requests them or they actually change their decision.
-3. **Research specialist language is also translated. *** Inevitable terms from
-Statistics, causality or market structure are explained in a simple sentence at the first occurrence. Internal status codes may also be mentioned, but never without their meaning in everyday language.
-4. **Decisions are declared ready for decision.** When the user chooses
-The agent states why the decision is needed now, explains the understandable possibilities and their practical consequences, and gives a reasoned recommendation. A list of internal options or codes is not enough.
-5. **Technical work remains in the background.** Reported after implementation
-the agent only what has changed for the user, whether it has been checked, which factual restriction remains and whether a decision is open. Implementation details are only explained on request.
-6. **No unasked developer justification. ** Statements about how
-Functions cut, imports placed, adapters set up or individual tests named do not belong in the user response. Instead, for example, it suffices: “The change is working and has been checked.” You don’t have to decide anything about it.
+2. **Use plain language.** Software terms, internal field names, function names,
+file paths, schema names, test names, CI details, and technical architecture stay
+out of the answer unless the user expressly requests them or they actually
+change the user's decision.
+3. **Translate specialist language too.** Explain unavoidable terms related to
+statistics, causality, or market structure in one simple sentence when they
+first appear. Internal status codes may be included, but never without their
+meaning in everyday language.
+4. **Make decisions ready for the user.** When the user must choose, the agent
+states the concrete question and why it arises now, explains the available
+options and their practical consequences, and gives a reasoned recommendation.
+A list of internal options or codes is not enough.
+5. **Keep technical work in the background.** After implementation, the agent
+reports only what changed for the user, whether it was checked, what factual
+limitation remains, and whether a decision is still open. Explain implementation
+details only on request.
+6. **No unsolicited implementation justification.** Do not describe how
+functions were changed, imports added, adapters configured, or individual tests
+named in the user response. For example, “The change is working and has been
+checked” is sufficient. The user should not have to make decisions about those
+implementation details.
 
 The precise technical and scientific artifacts are fully preserved internally. This communication rule does not change a research rule; it only separates the internal documentation from the understandable response to the user.
 
@@ -78,7 +89,7 @@ Before each important transition, the work status is stored as [`orchestration_s
 prerequisite review → only then operationalization;
 - question about usefulness or unknown observable conditions:
 completed concept review → preliminary operationalization → condition analysis;
-- Revision or continuation following a non-positive frozen result:
+- revision or continuation following a non-positive frozen result:
 continuing scientific-philosophical examination before new empiricism;
 - intended intervention or counterfactual statement:
   causality testing before effect estimation or causal formulation;
@@ -88,12 +99,12 @@ continuing scientific-philosophical examination before new empiricism;
 - new ideas only on an actual request for ideation; an existing idea goes into
 intake and not back to the generator.
 
-A simple result statement does not automatically trigger a specialist agent. A necessary user decision will only be requested if it materially changes the research question, the identity of the source strategy or the permissible claim. After each accepted specialist article, its artifact is checked, the work status updated and routed again.
+A simple result statement does not automatically trigger a specialist agent. A necessary user decision will only be requested if it materially changes the research question, the identity of the source strategy, or the permissible claim. After each accepted specialist contribution, its artifact is checked, the work status is updated, and the task is routed again.
 
 ### Conditional quantitative data analysis
 
-When a user asks for a specific calculation or data diagnostic that would add
-information beyond a simple calculation, the conductor may call the bounded
+When the user asks a concrete quantitative question whose answer would add
+information beyond simple arithmetic, the conductor may call the bounded
 [`data-analyst`](agents/data-analyst.md). It is not called just because a task
 contains numbers. The analyst receives only the named data and returns a
 [`data_analysis_report`](schemas/data_analysis_report.schema.json).
@@ -148,22 +159,22 @@ that every live agent will behave correctly.
 | Evidence checked | A status such as `SUPPORTED`, `PASS`, or `COMPLETE` is reliable only when the required evidence/run artifact exists and its associated machine test passes. |
 | Self-declaration | Prose, checklist markers, and a `COMPLETE` status set by the executing agent are initially claims. Without artifact testing or independent review, they do not prove correct execution. |
 
-Normative language controls behavior but does not replace technical enforcement. The framework claims automatic enforcement only where a scheme, test or CI-check is named.
+Normative language controls behavior but does not replace technical enforcement. The framework claims automatic enforcement only where a schema, test, or CI check is named.
 
 ## 2. Optional: Generate ideas
 
-If no raw idea exists yet, the short-term executable generator may be used before the intake:
+If no raw idea exists yet, the short-horizon executable generator may be used before the intake:
 
 ```bash
 python scripts/generate_hypotheses.py --output-dir artifacts/ideas-001 \
   --run-id generation:ideas-001 --markets FUTURES --max-candidates 20
 ```
 
-This is based on [`generation/mechanism_catalog.v1.json`](generation/mechanism_catalog.v1.json) and the four operators `PHASE_PATH`, `EXPECTATION_VIOLATION`, `MECHANISM_CONNECTION`, and `ASSUMPTION_RELAXATION`. The generation routes are constraint-first, microstructure state, instrument linkage, literature replication, and observation. A named compelled actor is not a universal condition.
+This is based on [`generation/mechanism_catalog.v1.json`](generation/mechanism_catalog.v1.json) and the four operators `PHASE_PATH`, `EXPECTATION_VIOLATION`, `MECHANISM_CONNECTION`, and `ASSUMPTION_RELAXATION`. The generation routes are constraint-first, microstructure state, instrument linkage, literature replication, and observation. A named forced actor is not a universal requirement.
 
 The run writes a validated generation run and minimal `INBOX` files. The generator does not perform screening, backtesting, evidence grading, ranking or promotion. Details and filter options are available in [`generation/README.md`](generation/README.md).
 
-The generation run documents the generated candidate space. If approximately all 96 candidates are screened using data, a family with `planned_screen_count = 96` is fixed in [`schemas/search_space.schema.json`](schemas/search_space.schema.json) before the first result. The threshold of each [`noise_screen`](schemas/noise_screen.schema.json) must correspond to the multiplicity correction stored there.
+The generation run documents the generated candidate space. If, for example, all 96 candidates are screened using data, a family with `planned_screen_count = 96` is fixed in [`schemas/search_space.schema.json`](schemas/search_space.schema.json) before the first result. The threshold of each [`noise_screen`](schemas/noise_screen.schema.json) must correspond to the multiplicity correction stored there.
 
 ## 2a. Optional: Reconstruct a strategy from a book, article, video, or course
 
@@ -176,7 +187,7 @@ Before the reconstruction is completed, use the [`scientific-philosophy-critic`]
 - what is only suspected as a success modifier; and
 - which conditions for success remain unknown.
 
-It also reveals common computing components and windows without treating them as causal or automatic errors. Regime and state filters remain preliminary measuring instruments: group frequency alone is not separation performance, prognostic separation is not proof of a real hidden state and no proof of mechanism.
+It also reveals shared calculation components and windows without treating them as causal evidence or automatic errors. Regime and state filters remain provisional measurement instruments: group frequency alone does not establish discrimination; predictive separation does not prove a real underlying state, an actor, or a mechanism.
 
 After a preliminary operationalization, a [`condition_inquiry`](schemas/condition_inquiry.schema.json) can be activated. The [`condition-inquiry-analyst`](agents/condition-inquiry-analyst.md) can assess measuring instruments, make definition dependence visible, and generate new observable condition hypotheses. Conditions found from data remain new hypotheses; they are not written back into the source strategy.
 
@@ -184,17 +195,17 @@ The workflow is in [`reconstruction/README.md`](reconstruction/README.md). The c
 
 ## 2b. Only on a real causality question
 
-A trading strategy can be fully studied as a forecast without claiming that a signal is causing the market. In this normal case, no additional causality expenditure arises.
+A trading strategy can be fully studied as a forecast without claiming that a signal is causing the market. In this normal case, no additional causal-identification work is required.
 
 On the other hand, as soon as an intervention, a structural shock, or a counterfactual is to be claimed, the [`causal-identification-critic`](agents/causal-identification-critic.md) must check whether the comparison carries this meaning at all. Its [`causal_identification_assessment`](schemas/causal_identification_assessment.schema.json) identifies target impact, the source of identifying variation, the economic model, assumptions, financial-market risks, negative controls, sensitivity, and the strongest allowable statement.
 
 A model or estimator does not replace this test. This applies explicitly to DML, causal forests, local projections, VARs, event-study regressions, Granger procedures, and causal discovery. Financial event studies must cover, among other things, the counterfactual return model, event timing, volatility, and other news; high-frequency designs add leakage, timestamps, surprise construction, and information shocks. The mandatory research basis is in [`references/CAUSAL_IDENTIFICATION_FOR_FINANCE.md`](references/CAUSAL_IDENTIFICATION_FOR_FINANCE.md).
 
-A passed identification gate allows only the named causal estimate under its assumptions. Mechanism, prediction and tradable net edge remain questions of their own.
+A successful identification gate permits only the specified causal estimate under its assumptions. Mechanism, prediction, and tradable net edge remain questions of their own.
 
 ## 2c. Freeze outcome meaning before validation
 
-Before validation data are opened, create a frozen
+Before opening validation data, create a frozen
 [`outcome_evidence_contract`](schemas/outcome_evidence_contract.schema.json).
 It assigns every measurement a role and records which conclusion it may change.
 It also exposes shared inputs or reference models, names the relevant
@@ -239,15 +250,28 @@ A new idea starts as `INBOX` after [`schemas/hypothesis_candidate.schema.json`](
 - the raw idea,
 - information/data references already consumed,
 - `intake_status = INBOX`,
-- An empty `transition` object.
+- an empty `transition` object.
 
 See [`examples/hypothesis_candidate.inbox.json`](examples/hypothesis_candidate.inbox.json). If the idea is discarded during screening, the short `REJECTED` record with a justification is sufficient; see [`examples/hypothesis_candidate.rejected.json`](examples/hypothesis_candidate.rejected.json).
 
-Only `PROMOTED` requires complete scope, an explicitly documented actor status, a passed noise screen or a well-founded theory-/event-/replication-based waiver, observable footprints, alternative explanations, data requirements, early feasibility, the three separate evidence levels and a record for variable selection. With `PREDEFINED` justification and retained constructs are sufficient. `DATA_DRIVEN` and `HYBRID` additionally require candidate universe, selection data and their role, outcome visibility, method, effective candidate number, search space and controls against selection bias. SHAP, impurity or other feature import procedures are possible diagnoses, but neither duty nor proof of causality. If no actor is known to be reliable for a purely predictive or associative question, `UNSPECIFIED / NOT_CLAIMED` is recorded. This is not an obstacle to this limited question, but it must not be read as a proof of mechanism. Promotion does not confirm an evidence level.
+Only `PROMOTED` requires complete scope, an explicitly documented actor status, a
+passed noise screen or a well-founded theory-, event-, or replication-based
+waiver, observable footprints, alternative explanations, data requirements,
+early feasibility, the three separate evidence levels, and a record for
+variable selection. For `PREDEFINED`, a justification and retained constructs
+are sufficient. `DATA_DRIVEN` and `HYBRID` additionally require the candidate
+universe, selection data and their role, outcome visibility, the method, the
+effective candidate count, the search space, and controls against selection
+bias. SHAP, impurity, and other feature-importance methods are possible
+diagnostics, but they are neither mandatory nor evidence of causality. If no
+actor can be identified with sufficient confidence for a purely predictive or
+associative question, record `UNSPECIFIED / NOT_CLAIMED`. That does not block
+this limited question, but it must not be read as evidence of a mechanism.
+Promotion does not confirm an evidence level.
 
 ## 4. Document router by promotion
 
-After `PROMOTED` everything is not loaded flat-rate:
+After `PROMOTED`, load documents selectively:
 
 1. [`00_RESEARCH_AGENT_README.md`](00_RESEARCH_AGENT_README.md) for gate and routing logic.
 2. [`01_RESEARCH_STANDARD.md`](01_RESEARCH_STANDARD.md) for the mandatory research path.
@@ -256,32 +280,36 @@ After `PROMOTED` everything is not loaded flat-rate:
 5. [`04_CAUSAL_TOOLING.md`](04_CAUSAL_TOOLING.md) only for an executable causal core operation; otherwise record `TOOLING_NOT_REQUIRED`.
 6. From [`05_AGENT_OPERATIONS.md`](05_AGENT_OPERATIONS.md), the sections belonging to the created artifact or system change.
 
-The non-skip protocol applies within the activated path. Unenabled optional methods do not generate series of justified `N/A` entries.
+The non-skip protocol applies within the activated path. Optional methods that
+are not activated do not require a series of justified `N/A` entries.
 
 ## 4a. After a non-positive validation result
 
-`FALSIFIED`, `PRECISE_NULL`, `INCONCLUSIVE`, and `INVALID_TEST` are not replaced by a subsequently suspected operationalization. If, however, a material revision or a new empirical test is considered, use the [`scientific-philosophy-critic`](agents/scientific-philosophy-critic.md). Its [`scientific_philosophy_review`](schemas/scientific_philosophy_review.schema.json) separates the core claim from auxiliary assumptions, keeps an inconclusive error allocation open, and classifies continuation ideas as `PROGRESSIVE`, `DEGENERATIVE`, `DIAGNOSTIC_ONLY`, or `UNRESOLVED`.
+`FALSIFIED`, `PRECISE_NULL`, `INCONCLUSIVE`, and `INVALID_TEST` are not replaced by a subsequently suspected operationalization. If, however, a material revision or a new empirical test is considered, use the [`scientific-philosophy-critic`](agents/scientific-philosophy-critic.md). Its [`scientific_philosophy_review`](schemas/scientific_philosophy_review.schema.json) separates the core claim from auxiliary assumptions, leaves error attribution open when it is inconclusive, and classifies continuation ideas as `PROGRESSIVE`, `DEGENERATIVE`, `DIAGNOSTIC_ONLY`, or `UNRESOLVED`.
 
-Only `PROGRESSIVE` authorizes empirical continuation: a new Research ID, a previously unimplied prediction, a falsifier, and an independent evaluation plan. The [`synthetic example`](examples/scientific_philosophy_review.synthetic_failed_reconstruction.json) shows the book strategy only as a thought case; it contains no backtest.
+Only `PROGRESSIVE` authorizes empirical continuation: a new Research ID, a
+prediction not implied by the earlier idea, a falsifier, and an independent
+evaluation plan. The [`synthetic example`](examples/scientific_philosophy_review.synthetic_failed_reconstruction.json) shows the book strategy only as a thought case; it contains no backtest.
 
 ## 5. Non-negotiable core rules
 
 - Observation, mechanism, forward OOS forecast and net executable edge remain separate statements.
 - Claim level (`ASSOCIATIONAL_PREDICTIVE / INTERVENTIONAL / COUNTERFACTUAL`) and validation/trading status (`mechanism_supported / forward_predictive_oos / executable_net_edge`) are independent axes. Neither axis automatically upgrades the other.
-- Causal identification may be formulated as SCM/DAG, potential outcomes design, structural econometric or other explicit identification model. The notation does not decide on the claim level.
-- Data already considered is recorded in the information budget.
+- Causal identification may be formulated as an SCM/DAG, a potential-outcomes design, a structural econometric model, or another explicit identification model. The notation does not decide the claim level.
+- Data already considered are recorded in the information budget.
 - Created and actually screened candidates are fully counted in the Search Space Register; Noise screen `PASS` is not evidence.
 - Predictors must actually be available at the decision time.
 - Material rules are frozen before independent evaluation.
 - Costs, latency, fills and, where applicable, queue/borrow are assessed before a net edge claim.
 - `IDENTIFIED_CAUSAL_LEVER` requires a passed identification gate and an Estimand artifact.
-- `IMPLEMENTATION_CONSTRAINT` requires a validated phenomenon and a pass feasibility test.
+- `IMPLEMENTATION_CONSTRAINT` requires a validated phenomenon and a passed feasibility test.
 - Unknown conditions for success remain unknown; plausible conditions are not
 silently turned into mandatory filters.
 - Design dependence, statistical dependence, prognostic benefit
 and causal mechanism remain separate statements.
-- A regime filter is a measuring instrument. Its class frequency does not
-validate it; predictive separation proves neither a real state nor an actor or mechanism.
+- A regime filter is a measurement instrument. The frequency of its classes does
+  not validate the filter; predictive separation proves neither a real state,
+  an actor, nor a mechanism.
 
 The last two rules are machine-testable in [`schemas/constraint_assessment.schema.json`](schemas/constraint_assessment.schema.json).
 
@@ -300,7 +328,8 @@ Windows/PowerShell remains as the second entry checked in CI:
 .\scripts\validate_framework.ps1
 ```
 
-Both paths check framework contracts. The included 1.000 Eval run is only `PROTOCOL_SMOKE` and not a proof of quality for a live agent.
+Both paths check framework contracts. The included 1,000-case evaluation run is
+only `PROTOCOL_SMOKE` and is not proof of quality for a live agent.
 
 ## 7. Evaluating Real Agents
 
