@@ -137,6 +137,41 @@ authorize a backtest, or create follow-up work. Validate the report with
 bounded report does not replace the prospective data-fitness gate planned in
 `PLANNED_FEATURES.md`.
 
+### Optional local scientific-method capabilities
+
+Four local capabilities may improve work inside an already permitted route:
+`scientific-critical-thinking` for a constructive search for evidence, bias,
+confounding, design, and claim-limit risks; `scientific-brainstorming` for a
+genuinely requested, provenance-preserving ideation session;
+`hypothesis-generation` for rivals, predictions, operationalizations, and
+falsifiers; and `statistical-analysis` for the bounded data analyst's method
+selection and diagnostics. They are methods, not new project agents or gates.
+The same route may use `statistical-power` for a prospective sensitivity
+analysis, `statsmodels` or PyMC for a predeclared model and diagnostics, and
+SymPy for exact formula or boundary-condition checks.
+
+The conductor maps any material output into the existing canonical artifact and
+does not retain a skill template as a second source of truth. A brainstorm or
+hypothesis draft cannot rank, promote, or validate an idea; every new trading
+idea enters as `INBOX` and remains in the visible search family. Critical
+thinking cannot accept evidence, causal language, a mechanism, or a completion
+status. Statistical analysis cannot assume independent observations in market
+data or substitute generic test diagnostics for the data-analysis report,
+time-separated evaluation, or execution checks. Use AI, psychology, or
+philosophy methods only when they protect a named research-process or capital
+decision, never as detached foundational research.
+
+Prospective power is based on a decision-relevant after-cost effect and a
+dependence-preserving design or simulation; it is never post-hoc observed
+power. Statsmodels and PyMC cannot select a model after inspecting results,
+turn an estimator into causal identification, or establish an executable edge.
+PyMC also requires stated priors, prior and posterior predictive checks,
+convergence diagnostics, and reproducible seeds. SymPy can verify that a
+specified formula is algebraically or boundary-condition consistent; it cannot
+select an unresolved construct or establish that a formula is useful in a
+market. `experimental-design` and `timesfm-forecasting` are not active methods
+for market research at this time.
+
 ### Permanent research-conductor controls
 
 The conductor applies five controls on every user-facing research task,

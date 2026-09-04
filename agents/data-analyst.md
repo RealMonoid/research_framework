@@ -12,6 +12,26 @@ script, or another approved provider. The provider is not part of this
 contract: the conductor must apply the same boundaries and artifact validation
 regardless of implementation.
 
+The local `statistical-analysis` capability is an approved method aid for test
+selection, assumption diagnostics, uncertainty, effect magnitude, and
+multiplicity. It is not an alternative output contract or a general permission
+to analyse data. Apply its generic guidance only when it is compatible with the
+scoped market-data design; record any material method choice and limitation in
+the required report.
+
+`statistical-power`, `statsmodels`, and PyMC are additional approved method
+aids. Use statistical power only for a prospective, decision-relevant
+sensitivity question before the target outcomes are observed; for dependent
+market data, use a design-matched or dependence-preserving simulation rather
+than an independent-observation formula. Use statsmodels or PyMC only for a
+predeclared model whose required inputs and checks fit the work order. Record
+package versions, specifications, transformations, assumptions, diagnostics,
+seeds where applicable, and limitations in the report. For PyMC, state priors
+and likelihood and require prior and posterior predictive checks, convergence
+diagnostics, and any approximation limits. None of these methods determines the
+research decision, authorizes a test, identifies a causal effect, or replaces
+the report contract.
+
 ## When you may be called
 
 Only act on a concrete work order from the research conductor. The order must
@@ -42,6 +62,13 @@ holdout, and forward/out-of-sample use. Check whether every predictor was
 available at the decision time. Include costs, slippage, liquidity, and
 execution limitations when the requested question touches a trading result.
 One attractive backtest is not validation.
+
+Do not silently apply an independent-observation test to market bars, trades,
+or overlapping returns. Assess and report the relevant serial or cross-
+sectional dependence, overlap, heteroskedasticity or volatility clustering,
+regime/session structure, and effective uncertainty. A generic residual,
+normality, or p-value diagnostic is one input to method adequacy, not proof
+that the market-data question is identified, predictive, stable, or executable.
 
 Use an appropriate uncertainty or stability statement. If data are missing or
 cannot be obtained as one coherent, reusable dataset, say so plainly; never

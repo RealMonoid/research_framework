@@ -138,6 +138,68 @@ ignored interface, incomplete search, and route mismatch. This correction does
 not perform the specialist review, change research state, authorize data or a
 backtest, or claim that a caller-enforced checkpoint can independently discover
 an interface the live agent omitted from its inventory record.
+### Owner-authorized scientific-method capability integration — 2026-09-04
+
+The owner authorized the use of four local scientific-method capabilities where
+they provide a concrete improvement to a research or capital decision:
+`scientific-critical-thinking`, `scientific-brainstorming`,
+`hypothesis-generation`, and `statistical-analysis`. This is a
+**KEEP — agent enforcement** integration: it makes existing controls for
+alternative explanations, evidence limits, measurement, falsification, and
+quantitative uncertainty more likely to be applied consistently. It does not
+add a new routing gate, artifact type, claim status, specialist owner, or
+authorization for data access, a backtest, validation, deployment, or capital
+allocation.
+
+The integration is deliberately role-bound. Critical thinking may expose bias,
+confounding, design, or claim-overreach risks, but may not replace the
+scientific-philosophy, causal-identification, evidence, or outcome-contract
+requirements. Brainstorming may structure genuinely requested new ideation,
+but every trading idea remains an unranked `INBOX` candidate with visible
+origin and the complete candidate family remains subject to search-space
+accounting. Hypothesis generation may draft rivals, discriminating predictions,
+operationalizations, and falsifiers, but its templates are not canonical
+project artifacts and it cannot promote a candidate or accept causal wording.
+Statistical analysis may be used only by the bounded `data-analyst` for a
+scoped, referenced data question; finance-specific checks for temporal
+dependence, decision-time availability, leakage, regimes, costs, execution,
+and time-separated evaluation remain mandatory.
+
+The capabilities may also support a bounded research-process or live-agent
+evaluation question when that work protects a named framework or capital
+decision. They do not authorize detached AI, psychology, or philosophy
+research. Their implementation must preserve the existing conductor, artifact,
+fingerprint, and validation boundaries. A framework-integrity run can verify
+that these contracts remain present; it cannot by itself establish that a model
+uses the methods well, which remains a live-agent evaluation question under
+priority 5.
+
+### Subsequent scientific-capability screen — 2026-09-04
+
+Six subsequently installed capabilities were screened against the same
+decision-protection criterion. `statistical-power`, `statsmodels`, PyMC, and
+SymPy have a direct, bounded use inside already-authorized work: respectively,
+prospective sensitivity to a decision-relevant after-cost effect; specified
+econometric/time-series estimation and diagnostics; predeclared Bayesian
+uncertainty models with prior and posterior predictive checks; and exact
+formula or boundary-condition verification before an operationalization is
+tested. They remain method aids and must write their material inputs, output,
+versions, seeds where applicable, assumptions, and limitations into the
+existing artifact and fingerprint.
+
+`experimental-design` is not activated for market research. Its randomization,
+treatment, and experimental-unit machinery does not transfer to naturally
+occurring market observations, and it would not supply causal identification.
+It may be reconsidered only for an owner-requested, separately scoped
+simulation or live-agent evaluation design with a genuine assignment or run-
+order problem. `timesfm-forecasting` is likewise not activated: zero-shot
+forecast output would create a new predictive model and a material search path.
+It may be proposed only as a named new candidate after the validation-boundary
+and live-agent controls applicable to that path are implemented; its model
+weights, configuration, context, horizon, data transformations, forecast
+availability, and baselines would then be fingerprinted and tested as part of
+the unchanged full pipeline. Neither deferred capability is an authorization to
+download a model, access data, run a backtest, or make a forecast claim.
 
 1. **Close the validation-boundary, stopping-rule, and confirmed
    pipeline-integrity enforcement gaps.**
