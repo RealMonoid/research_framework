@@ -1,0 +1,15 @@
+{
+  "entrypoint": {
+    "path": "../scripts/synthetic_reference_pipeline.py",
+    "sha256": "40b78f538b53575ce47fa002ca1b296e9dfad7a2d5cb2a4bf8519da9ec43d0d8"
+  },
+  "dependencies": [],
+  "configuration": {
+    "center": 0,
+    "threshold": 0.8
+  },
+  "runtime": {
+    "python": "3.14.2",
+    "implementation": "CPython"
+  }
+}

@@ -113,6 +113,11 @@ individual case to produce a strategy.
 9. Before validation is frozen, require a complete validated
    `outcome_evidence_contract`. After results exist, apply its frozen decision
    rules separately to phenomenon, prediction, mechanism, and executable edge.
+   Use the v2 canonical protocol and execution comparison described in
+   [ADR-018](../decisions/ADR-018-validation-execution-evidence.md). Preserve the
+   original frozen contract, observe all data consumption and inspections, and
+   record computed execution validity before interpreting any result. A failed
+   test may be recorded as `INVALID_TEST`, never cosmetically repaired.
 10. After the outcome contract and before validation is frozen, require an
    assessed `pipeline_integrity_assessment` with `overall_gate: PASS`. It must
    run the unchanged complete pipeline on a structure-appropriate repeated
@@ -121,6 +126,12 @@ individual case to produce a strategy.
    mechanism, causal, or trading evidence. Record the checkpoint artifact as
    `COMPLETE` only for an assessed `PASS`; map `FAIL` to `INVALID` and a blocked
    assessment to `BLOCKED`.
+   Provide `evidence_file` with path and SHA-256 for both completed artifacts.
+   The router opens and validates them, including execution evidence and their
+   effective fingerprint. Local receipts are not authenticated attestations;
+   adapter approval, complete dependencies and truthful observation remain the
+   conductor's responsibility. The current runner supports only its reviewed
+   synthetic reference generator; another generator needs a reviewed verifier.
 11. When an explicit request or concrete observable trace calls for a workflow
   audit, invoke one bounded `framework-control-reviewer` pass. Validate its
     `framework_control_review` report, preserve the research state, and treat

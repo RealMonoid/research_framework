@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "urn:research-framework:schema:routing-decision:1.9.0",
+  "$id": "urn:research-framework:schema:routing-decision:1.10.0",
   "title": "Research Routing Decision",
   "description": "Deterministic routing decision and bounded work order owned by the research conductor.",
   "type": "object",
@@ -24,11 +24,11 @@
     "control"
   ],
   "properties": {
-    "schema_version": {"const": "1.9.0"},
+    "schema_version": {"const": "1.10.0"},
     "decision_id": {"$ref": "#/$defs/stableId"},
     "created_at": {"$ref": "#/$defs/timestamp"},
     "orchestration_ref": {"$ref": "#/$defs/stableId"},
-    "conductor_version": {"const": "1.9.0"},
+    "conductor_version": {"const": "1.10.0"},
     "route": {"$ref": "#/$defs/route"},
     "execution_mode": {
       "type": "string",

@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "urn:research-framework:schema:orchestration-state:1.9.0",
+  "$id": "urn:research-framework:schema:orchestration-state:1.10.0",
   "title": "Research Orchestration State",
   "description": "Persistent checkpoint used by the research conductor before every material research step.",
   "type": "object",
@@ -22,30 +22,59 @@
     "routing_history"
   ],
   "properties": {
-    "schema_version": {"const": "1.9.0"},
-    "orchestration_id": {"$ref": "#/$defs/stableId"},
-    "updated_at": {"$ref": "#/$defs/timestamp"},
-    "conductor_version": {"const": "1.9.0"},
-    "next_decision_sequence": {"type": "integer", "minimum": 1},
-    "request": {"$ref": "#/$defs/request"},
-    "research_context": {"$ref": "#/$defs/researchContext"},
-    "effective_research_fingerprint": {"$ref": "#/$defs/fingerprintRecord"},
-    "change_control": {"$ref": "#/$defs/changeControl"},
-    "specialist_capability": {"$ref": "#/$defs/specialistCapability"},
-    "artifacts": {"$ref": "#/$defs/artifacts"},
+    "schema_version": {
+      "const": "1.10.0"
+    },
+    "orchestration_id": {
+      "$ref": "#/$defs/stableId"
+    },
+    "updated_at": {
+      "$ref": "#/$defs/timestamp"
+    },
+    "conductor_version": {
+      "const": "1.10.0"
+    },
+    "next_decision_sequence": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "request": {
+      "$ref": "#/$defs/request"
+    },
+    "research_context": {
+      "$ref": "#/$defs/researchContext"
+    },
+    "effective_research_fingerprint": {
+      "$ref": "#/$defs/fingerprintRecord"
+    },
+    "change_control": {
+      "$ref": "#/$defs/changeControl"
+    },
+    "specialist_capability": {
+      "$ref": "#/$defs/specialistCapability"
+    },
+    "artifacts": {
+      "$ref": "#/$defs/artifacts"
+    },
     "blocking_issues": {
       "type": "array",
-      "items": {"$ref": "#/$defs/blockingIssue"}
+      "items": {
+        "$ref": "#/$defs/blockingIssue"
+      }
     },
     "completed_steps": {
       "type": "array",
       "uniqueItems": true,
-      "items": {"$ref": "#/$defs/stableId"}
+      "items": {
+        "$ref": "#/$defs/stableId"
+      }
     },
     "routing_history": {
       "type": "array",
       "uniqueItems": true,
-      "items": {"$ref": "#/$defs/stableId"}
+      "items": {
+        "$ref": "#/$defs/stableId"
+      }
     }
   },
   "$defs": {
@@ -53,18 +82,33 @@
       "type": "string",
       "pattern": "^[A-Za-z][A-Za-z0-9._:-]{2,199}$"
     },
-    "timestamp": {"type": "string", "format": "date-time"},
-    "shortText": {"type": "string", "minLength": 1, "maxLength": 2000},
+    "timestamp": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "shortText": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 2000
+    },
     "nullableText": {
       "oneOf": [
-        {"$ref": "#/$defs/shortText"},
-        {"type": "null"}
+        {
+          "$ref": "#/$defs/shortText"
+        },
+        {
+          "type": "null"
+        }
       ]
     },
     "nullableStableId": {
       "oneOf": [
-        {"$ref": "#/$defs/stableId"},
-        {"type": "null"}
+        {
+          "$ref": "#/$defs/stableId"
+        },
+        {
+          "type": "null"
+        }
       ]
     },
     "sha256": {
@@ -84,28 +128,74 @@
     },
     "nullableSpecialist": {
       "oneOf": [
-        {"$ref": "#/$defs/specialist"},
-        {"type": "null"}
+        {
+          "$ref": "#/$defs/specialist"
+        },
+        {
+          "type": "null"
+        }
       ]
     },
     "fingerprintRecord": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["fingerprint_ref", "fingerprint_sha256"],
+      "required": [
+        "fingerprint_ref",
+        "fingerprint_sha256"
+      ],
       "properties": {
-        "fingerprint_ref": {"$ref": "#/$defs/nullableStableId"},
+        "fingerprint_ref": {
+          "$ref": "#/$defs/nullableStableId"
+        },
         "fingerprint_sha256": {
-          "oneOf": [{"$ref": "#/$defs/sha256"}, {"type": "null"}]
+          "oneOf": [
+            {
+              "$ref": "#/$defs/sha256"
+            },
+            {
+              "type": "null"
+            }
+          ]
         }
       },
       "allOf": [
         {
-          "if": {"properties": {"fingerprint_ref": {"type": "null"}}, "required": ["fingerprint_ref"]},
-          "then": {"properties": {"fingerprint_sha256": {"type": "null"}}}
+          "if": {
+            "properties": {
+              "fingerprint_ref": {
+                "type": "null"
+              }
+            },
+            "required": [
+              "fingerprint_ref"
+            ]
+          },
+          "then": {
+            "properties": {
+              "fingerprint_sha256": {
+                "type": "null"
+              }
+            }
+          }
         },
         {
-          "if": {"properties": {"fingerprint_ref": {"$ref": "#/$defs/stableId"}}, "required": ["fingerprint_ref"]},
-          "then": {"properties": {"fingerprint_sha256": {"$ref": "#/$defs/sha256"}}}
+          "if": {
+            "properties": {
+              "fingerprint_ref": {
+                "$ref": "#/$defs/stableId"
+              }
+            },
+            "required": [
+              "fingerprint_ref"
+            ]
+          },
+          "then": {
+            "properties": {
+              "fingerprint_sha256": {
+                "$ref": "#/$defs/sha256"
+              }
+            }
+          }
         }
       ]
     },
@@ -131,44 +221,56 @@
             "NOT_COMPARABLE_NEW_RESEARCH"
           ]
         },
-        "routing_decision_ref": {"$ref": "#/$defs/nullableStableId"},
-        "check_ref": {"$ref": "#/$defs/nullableStableId"},
-        "proposal_ref": {"$ref": "#/$defs/nullableStableId"},
+        "routing_decision_ref": {
+          "$ref": "#/$defs/nullableStableId"
+        },
+        "check_ref": {
+          "$ref": "#/$defs/nullableStableId"
+        },
+        "proposal_ref": {
+          "$ref": "#/$defs/nullableStableId"
+        },
         "changed_paths": {
           "type": "array",
           "uniqueItems": true,
-          "items": {"type": "string", "pattern": "^/"}
+          "items": {
+            "type": "string",
+            "pattern": "^/"
+          }
         },
-        "plain_language_summary": {"$ref": "#/$defs/nullableText"}
+        "plain_language_summary": {
+          "$ref": "#/$defs/nullableText"
+        }
       },
       "allOf": [
         {
           "if": {
-            "properties": {"status": {"const": "IDLE"}},
-            "required": ["status"]
+            "properties": {
+              "status": {
+                "const": "IDLE"
+              }
+            },
+            "required": [
+              "status"
+            ]
           },
           "then": {
             "properties": {
-              "routing_decision_ref": {"type": "null"},
-              "check_ref": {"type": "null"},
-              "proposal_ref": {"type": "null"},
-              "changed_paths": {"maxItems": 0},
-              "plain_language_summary": {"type": "null"}
-            }
-          }
-        },
-        {
-          "if": {
-            "properties": {"status": {"const": "AWAITING_COMPARISON"}},
-            "required": ["status"]
-          },
-          "then": {
-            "properties": {
-              "routing_decision_ref": {"$ref": "#/$defs/stableId"},
-              "check_ref": {"type": "null"},
-              "proposal_ref": {"type": "null"},
-              "changed_paths": {"maxItems": 0},
-              "plain_language_summary": {"type": "null"}
+              "routing_decision_ref": {
+                "type": "null"
+              },
+              "check_ref": {
+                "type": "null"
+              },
+              "proposal_ref": {
+                "type": "null"
+              },
+              "changed_paths": {
+                "maxItems": 0
+              },
+              "plain_language_summary": {
+                "type": "null"
+              }
             }
           }
         },
@@ -176,33 +278,95 @@
           "if": {
             "properties": {
               "status": {
-                "enum": ["UNCHANGED", "NOT_COMPARABLE_NEW_RESEARCH"]
+                "const": "AWAITING_COMPARISON"
               }
             },
-            "required": ["status"]
+            "required": [
+              "status"
+            ]
           },
           "then": {
             "properties": {
-              "routing_decision_ref": {"$ref": "#/$defs/stableId"},
-              "check_ref": {"$ref": "#/$defs/stableId"},
-              "proposal_ref": {"type": "null"},
-              "changed_paths": {"maxItems": 0},
-              "plain_language_summary": {"$ref": "#/$defs/shortText"}
+              "routing_decision_ref": {
+                "$ref": "#/$defs/stableId"
+              },
+              "check_ref": {
+                "type": "null"
+              },
+              "proposal_ref": {
+                "type": "null"
+              },
+              "changed_paths": {
+                "maxItems": 0
+              },
+              "plain_language_summary": {
+                "type": "null"
+              }
             }
           }
         },
         {
           "if": {
-            "properties": {"status": {"const": "CHANGE_PROPOSED"}},
-            "required": ["status"]
+            "properties": {
+              "status": {
+                "enum": [
+                  "UNCHANGED",
+                  "NOT_COMPARABLE_NEW_RESEARCH"
+                ]
+              }
+            },
+            "required": [
+              "status"
+            ]
           },
           "then": {
             "properties": {
-              "routing_decision_ref": {"$ref": "#/$defs/stableId"},
-              "check_ref": {"$ref": "#/$defs/stableId"},
-              "proposal_ref": {"$ref": "#/$defs/stableId"},
-              "changed_paths": {"minItems": 1},
-              "plain_language_summary": {"$ref": "#/$defs/shortText"}
+              "routing_decision_ref": {
+                "$ref": "#/$defs/stableId"
+              },
+              "check_ref": {
+                "$ref": "#/$defs/stableId"
+              },
+              "proposal_ref": {
+                "type": "null"
+              },
+              "changed_paths": {
+                "maxItems": 0
+              },
+              "plain_language_summary": {
+                "$ref": "#/$defs/shortText"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "status": {
+                "const": "CHANGE_PROPOSED"
+              }
+            },
+            "required": [
+              "status"
+            ]
+          },
+          "then": {
+            "properties": {
+              "routing_decision_ref": {
+                "$ref": "#/$defs/stableId"
+              },
+              "check_ref": {
+                "$ref": "#/$defs/stableId"
+              },
+              "proposal_ref": {
+                "$ref": "#/$defs/stableId"
+              },
+              "changed_paths": {
+                "minItems": 1
+              },
+              "plain_language_summary": {
+                "$ref": "#/$defs/shortText"
+              }
             }
           }
         }
@@ -221,53 +385,111 @@
       "properties": {
         "status": {
           "type": "string",
-          "enum": ["NOT_CHECKED", "AVAILABLE", "UNAVAILABLE", "UNKNOWN"]
+          "enum": [
+            "NOT_CHECKED",
+            "AVAILABLE",
+            "UNAVAILABLE",
+            "UNKNOWN"
+          ]
         },
-        "capability_check_ref": {"$ref": "#/$defs/nullableStableId"},
-        "routing_decision_ref": {"$ref": "#/$defs/nullableStableId"},
-        "required_specialist": {"$ref": "#/$defs/nullableSpecialist"},
-        "selected_interface_id": {"$ref": "#/$defs/nullableStableId"}
+        "capability_check_ref": {
+          "$ref": "#/$defs/nullableStableId"
+        },
+        "routing_decision_ref": {
+          "$ref": "#/$defs/nullableStableId"
+        },
+        "required_specialist": {
+          "$ref": "#/$defs/nullableSpecialist"
+        },
+        "selected_interface_id": {
+          "$ref": "#/$defs/nullableStableId"
+        }
       },
       "allOf": [
         {
           "if": {
-            "properties": {"status": {"const": "NOT_CHECKED"}},
-            "required": ["status"]
+            "properties": {
+              "status": {
+                "const": "NOT_CHECKED"
+              }
+            },
+            "required": [
+              "status"
+            ]
           },
           "then": {
             "properties": {
-              "capability_check_ref": {"type": "null"},
-              "routing_decision_ref": {"type": "null"},
-              "required_specialist": {"type": "null"},
-              "selected_interface_id": {"type": "null"}
+              "capability_check_ref": {
+                "type": "null"
+              },
+              "routing_decision_ref": {
+                "type": "null"
+              },
+              "required_specialist": {
+                "type": "null"
+              },
+              "selected_interface_id": {
+                "type": "null"
+              }
             }
           }
         },
         {
           "if": {
-            "properties": {"status": {"const": "AVAILABLE"}},
-            "required": ["status"]
+            "properties": {
+              "status": {
+                "const": "AVAILABLE"
+              }
+            },
+            "required": [
+              "status"
+            ]
           },
           "then": {
             "properties": {
-              "capability_check_ref": {"$ref": "#/$defs/stableId"},
-              "routing_decision_ref": {"$ref": "#/$defs/stableId"},
-              "required_specialist": {"$ref": "#/$defs/specialist"},
-              "selected_interface_id": {"$ref": "#/$defs/stableId"}
+              "capability_check_ref": {
+                "$ref": "#/$defs/stableId"
+              },
+              "routing_decision_ref": {
+                "$ref": "#/$defs/stableId"
+              },
+              "required_specialist": {
+                "$ref": "#/$defs/specialist"
+              },
+              "selected_interface_id": {
+                "$ref": "#/$defs/stableId"
+              }
             }
           }
         },
         {
           "if": {
-            "properties": {"status": {"enum": ["UNAVAILABLE", "UNKNOWN"]}},
-            "required": ["status"]
+            "properties": {
+              "status": {
+                "enum": [
+                  "UNAVAILABLE",
+                  "UNKNOWN"
+                ]
+              }
+            },
+            "required": [
+              "status"
+            ]
           },
           "then": {
             "properties": {
-              "capability_check_ref": {"$ref": "#/$defs/stableId"},
-              "routing_decision_ref": {"$ref": "#/$defs/stableId"},
-              "required_specialist": {"$ref": "#/$defs/specialist"},
-              "selected_interface_id": {"type": "null"}
+              "capability_check_ref": {
+                "$ref": "#/$defs/stableId"
+              },
+              "routing_decision_ref": {
+                "$ref": "#/$defs/stableId"
+              },
+              "required_specialist": {
+                "$ref": "#/$defs/specialist"
+              },
+              "selected_interface_id": {
+                "type": "null"
+              }
             }
           }
         }
@@ -286,8 +508,12 @@
         "material_user_choice"
       ],
       "properties": {
-        "request_id": {"$ref": "#/$defs/stableId"},
-        "summary": {"$ref": "#/$defs/shortText"},
+        "request_id": {
+          "$ref": "#/$defs/stableId"
+        },
+        "summary": {
+          "$ref": "#/$defs/shortText"
+        },
         "intent": {
           "type": "string",
           "enum": [
@@ -310,11 +536,19 @@
         },
         "intent_origin": {
           "type": "string",
-          "enum": ["USER_EXPLICIT", "CONDUCTOR_INTERPRETED", "UNKNOWN"]
+          "enum": [
+            "USER_EXPLICIT",
+            "CONDUCTOR_INTERPRETED",
+            "UNKNOWN"
+          ]
         },
         "intent_confidence": {
           "type": "string",
-          "enum": ["HIGH", "MEDIUM", "LOW"]
+          "enum": [
+            "HIGH",
+            "MEDIUM",
+            "LOW"
+          ]
         },
         "requested_claim_level": {
           "type": "string",
@@ -324,60 +558,118 @@
             "COUNTERFACTUAL"
           ]
         },
-        "material_user_choice": {"$ref": "#/$defs/materialUserChoice"}
+        "material_user_choice": {
+          "$ref": "#/$defs/materialUserChoice"
+        }
       }
     },
     "decisionOption": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["option_id", "label", "consequence", "assessment"],
+      "required": [
+        "option_id",
+        "label",
+        "consequence",
+        "assessment"
+      ],
       "properties": {
-        "option_id": {"$ref": "#/$defs/stableId"},
-        "label": {"$ref": "#/$defs/shortText"},
-        "consequence": {"$ref": "#/$defs/shortText"},
+        "option_id": {
+          "$ref": "#/$defs/stableId"
+        },
+        "label": {
+          "$ref": "#/$defs/shortText"
+        },
+        "consequence": {
+          "$ref": "#/$defs/shortText"
+        },
         "assessment": {
           "type": "string",
-          "enum": ["RECOMMENDED", "ACCEPTABLE", "NOT_RECOMMENDED"]
+          "enum": [
+            "RECOMMENDED",
+            "ACCEPTABLE",
+            "NOT_RECOMMENDED"
+          ]
         }
       }
     },
     "materialUserChoice": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["status", "question", "options", "recommendation"],
+      "required": [
+        "status",
+        "question",
+        "options",
+        "recommendation"
+      ],
       "properties": {
-        "status": {"type": "string", "enum": ["NONE", "REQUIRED"]},
-        "question": {"$ref": "#/$defs/nullableText"},
+        "status": {
+          "type": "string",
+          "enum": [
+            "NONE",
+            "REQUIRED"
+          ]
+        },
+        "question": {
+          "$ref": "#/$defs/nullableText"
+        },
         "options": {
           "type": "array",
-          "items": {"$ref": "#/$defs/decisionOption"}
+          "items": {
+            "$ref": "#/$defs/decisionOption"
+          }
         },
-        "recommendation": {"$ref": "#/$defs/nullableText"}
+        "recommendation": {
+          "$ref": "#/$defs/nullableText"
+        }
       },
       "allOf": [
         {
           "if": {
-            "properties": {"status": {"const": "REQUIRED"}},
-            "required": ["status"]
+            "properties": {
+              "status": {
+                "const": "REQUIRED"
+              }
+            },
+            "required": [
+              "status"
+            ]
           },
           "then": {
             "properties": {
-              "question": {"$ref": "#/$defs/shortText"},
-              "options": {"minItems": 2},
-              "recommendation": {"$ref": "#/$defs/shortText"}
+              "question": {
+                "$ref": "#/$defs/shortText"
+              },
+              "options": {
+                "minItems": 2
+              },
+              "recommendation": {
+                "$ref": "#/$defs/shortText"
+              }
             }
           }
         },
         {
           "if": {
-            "properties": {"status": {"const": "NONE"}},
-            "required": ["status"]
+            "properties": {
+              "status": {
+                "const": "NONE"
+              }
+            },
+            "required": [
+              "status"
+            ]
           },
           "then": {
             "properties": {
-              "question": {"type": "null"},
-              "options": {"maxItems": 0},
-              "recommendation": {"type": "null"}
+              "question": {
+                "type": "null"
+              },
+              "options": {
+                "maxItems": 0
+              },
+              "recommendation": {
+                "type": "null"
+              }
             }
           }
         }
@@ -397,11 +689,18 @@
         "frozen_result_status"
       ],
       "properties": {
-        "research_id": {"$ref": "#/$defs/nullableStableId"},
+        "research_id": {
+          "$ref": "#/$defs/nullableStableId"
+        },
         "research_version": {
           "oneOf": [
-            {"type": "integer", "minimum": 1},
-            {"type": "null"}
+            {
+              "type": "integer",
+              "minimum": 1
+            },
+            {
+              "type": "null"
+            }
           ]
         },
         "source_kind": {
@@ -417,7 +716,12 @@
         },
         "source_completeness": {
           "type": "string",
-          "enum": ["COMPLETE", "INCOMPLETE", "UNKNOWN", "NOT_APPLICABLE"]
+          "enum": [
+            "COMPLETE",
+            "INCOMPLETE",
+            "UNKNOWN",
+            "NOT_APPLICABLE"
+          ]
         },
         "stage": {
           "type": "string",
@@ -436,11 +740,21 @@
         },
         "concept_audit_required": {
           "type": "string",
-          "enum": ["YES", "NO", "UNDECIDED"]
+          "enum": [
+            "YES",
+            "NO",
+            "UNDECIDED"
+          ]
         },
         "operationalization_status": {
           "type": "string",
-          "enum": ["NONE", "DRAFT", "PROVISIONAL", "FROZEN", "NOT_APPLICABLE"]
+          "enum": [
+            "NONE",
+            "DRAFT",
+            "PROVISIONAL",
+            "FROZEN",
+            "NOT_APPLICABLE"
+          ]
         },
         "frozen_result_status": {
           "type": "string",
@@ -458,31 +772,84 @@
     "artifactStatus": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["status", "artifact_ref"],
+      "required": [
+        "status",
+        "artifact_ref"
+      ],
       "properties": {
         "status": {
           "type": "string",
-          "enum": ["MISSING", "DRAFT", "COMPLETE", "BLOCKED", "INVALID", "NOT_APPLICABLE"]
+          "enum": [
+            "MISSING",
+            "DRAFT",
+            "COMPLETE",
+            "BLOCKED",
+            "INVALID",
+            "NOT_APPLICABLE"
+          ]
         },
-        "artifact_ref": {"$ref": "#/$defs/nullableStableId"}
+        "artifact_ref": {
+          "$ref": "#/$defs/nullableStableId"
+        },
+        "evidence_file": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "path",
+            "sha256"
+          ],
+          "properties": {
+            "path": {
+              "type": "string",
+              "minLength": 1
+            },
+            "sha256": {
+              "type": "string",
+              "pattern": "^[a-f0-9]{64}$"
+            }
+          }
+        }
       },
       "allOf": [
         {
           "if": {
-            "properties": {"status": {"const": "COMPLETE"}},
-            "required": ["status"]
+            "properties": {
+              "status": {
+                "const": "COMPLETE"
+              }
+            },
+            "required": [
+              "status"
+            ]
           },
           "then": {
-            "properties": {"artifact_ref": {"$ref": "#/$defs/stableId"}}
+            "properties": {
+              "artifact_ref": {
+                "$ref": "#/$defs/stableId"
+              }
+            }
           }
         },
         {
           "if": {
-            "properties": {"status": {"enum": ["MISSING", "NOT_APPLICABLE"]}},
-            "required": ["status"]
+            "properties": {
+              "status": {
+                "enum": [
+                  "MISSING",
+                  "NOT_APPLICABLE"
+                ]
+              }
+            },
+            "required": [
+              "status"
+            ]
           },
           "then": {
-            "properties": {"artifact_ref": {"type": "null"}}
+            "properties": {
+              "artifact_ref": {
+                "type": "null"
+              }
+            }
           }
         }
       ]
@@ -501,14 +868,30 @@
         "scientific_philosophy_review"
       ],
       "properties": {
-        "strategy_reconstruction": {"$ref": "#/$defs/artifactStatus"},
-        "strategy_concept_audit": {"$ref": "#/$defs/artifactStatus"},
-        "condition_inquiry": {"$ref": "#/$defs/artifactStatus"},
-        "data_analysis": {"$ref": "#/$defs/artifactStatus"},
-        "causal_identification_assessment": {"$ref": "#/$defs/artifactStatus"},
-        "outcome_evidence_contract": {"$ref": "#/$defs/artifactStatus"},
-        "pipeline_integrity_assessment": {"$ref": "#/$defs/artifactStatus"},
-        "scientific_philosophy_review": {"$ref": "#/$defs/artifactStatus"}
+        "strategy_reconstruction": {
+          "$ref": "#/$defs/artifactStatus"
+        },
+        "strategy_concept_audit": {
+          "$ref": "#/$defs/artifactStatus"
+        },
+        "condition_inquiry": {
+          "$ref": "#/$defs/artifactStatus"
+        },
+        "data_analysis": {
+          "$ref": "#/$defs/artifactStatus"
+        },
+        "causal_identification_assessment": {
+          "$ref": "#/$defs/artifactStatus"
+        },
+        "outcome_evidence_contract": {
+          "$ref": "#/$defs/artifactStatus"
+        },
+        "pipeline_integrity_assessment": {
+          "$ref": "#/$defs/artifactStatus"
+        },
+        "scientific_philosophy_review": {
+          "$ref": "#/$defs/artifactStatus"
+        }
       }
     },
     "blockingIssue": {
@@ -527,7 +910,9 @@
         "recommendation"
       ],
       "properties": {
-        "issue_id": {"$ref": "#/$defs/stableId"},
+        "issue_id": {
+          "$ref": "#/$defs/stableId"
+        },
         "category": {
           "type": "string",
           "enum": [
@@ -538,35 +923,65 @@
             "OTHER"
           ]
         },
-        "problem_record_ref": {"$ref": "#/$defs/stableId"},
-        "capability_check_ref": {"$ref": "#/$defs/nullableStableId"},
-        "required_specialist": {"$ref": "#/$defs/nullableSpecialist"},
-        "statement": {"$ref": "#/$defs/shortText"},
-        "affected_next_action": {"$ref": "#/$defs/shortText"},
-        "user_action_required": {"type": "boolean"},
+        "problem_record_ref": {
+          "$ref": "#/$defs/stableId"
+        },
+        "capability_check_ref": {
+          "$ref": "#/$defs/nullableStableId"
+        },
+        "required_specialist": {
+          "$ref": "#/$defs/nullableSpecialist"
+        },
+        "statement": {
+          "$ref": "#/$defs/shortText"
+        },
+        "affected_next_action": {
+          "$ref": "#/$defs/shortText"
+        },
+        "user_action_required": {
+          "type": "boolean"
+        },
         "resolution_options": {
           "type": "array",
           "minItems": 2,
-          "items": {"$ref": "#/$defs/decisionOption"}
+          "items": {
+            "$ref": "#/$defs/decisionOption"
+          }
         },
-        "recommendation": {"$ref": "#/$defs/shortText"}
+        "recommendation": {
+          "$ref": "#/$defs/shortText"
+        }
       },
       "allOf": [
         {
           "if": {
-            "properties": {"category": {"const": "SPECIALIST_UNAVAILABLE"}},
-            "required": ["category"]
+            "properties": {
+              "category": {
+                "const": "SPECIALIST_UNAVAILABLE"
+              }
+            },
+            "required": [
+              "category"
+            ]
           },
           "then": {
             "properties": {
-              "capability_check_ref": {"$ref": "#/$defs/stableId"},
-              "required_specialist": {"$ref": "#/$defs/specialist"}
+              "capability_check_ref": {
+                "$ref": "#/$defs/stableId"
+              },
+              "required_specialist": {
+                "$ref": "#/$defs/specialist"
+              }
             }
           },
           "else": {
             "properties": {
-              "capability_check_ref": {"type": "null"},
-              "required_specialist": {"type": "null"}
+              "capability_check_ref": {
+                "type": "null"
+              },
+              "required_specialist": {
+                "type": "null"
+              }
             }
           }
         }

@@ -1,0 +1,20 @@
+{
+  "schema_version": "1.0.0",
+  "execution_id": "execution:synthetic-reference",
+  "frozen_contract": {
+    "path": "outcome_evidence_contract.synthetic_frozen.json",
+    "sha256": "38adca4bcdfb76cc66cca0d3ff1be3a2eb69bdd18b7b9d419c39761d1340a826"
+  },
+  "protocol_sha256": "8a1228ff8e803b7cd2c7d798f2e8a9e07145a853e4f23e575b311aa3828a3c57",
+  "research_fingerprint_sha256": "91380407e6d6628854013050640c998c50dd7560c2b2889fa40a056b31792fcc",
+  "actual_start": "2026-09-02T00:00:00Z",
+  "actual_end": "2026-09-03T00:00:00Z",
+  "actual_count": 500,
+  "termination_reason": "HORIZON_REACHED",
+  "interim_inspections": [],
+  "deviations": [],
+  "event_log": {
+    "path": "validation_execution.synthetic_log.json",
+    "sha256": "ab666c558ede0e21d54f32597adc91fa0971ec87a58eb19f676a6ed6adefc9f4"
+  }
+}

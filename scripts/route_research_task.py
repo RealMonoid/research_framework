@@ -33,7 +33,7 @@ CONDITION_INTENTS = {
     "CHECK_DEFINITION_SENSITIVITY",
 }
 CAUSAL_CLAIM_LEVELS = {"INTERVENTIONAL", "COUNTERFACTUAL"}
-ROUTER_VERSION = "1.9.0"
+ROUTER_VERSION = "1.10.0"
 
 
 def _mapping(value: Any, label: str) -> Mapping[str, Any]:
@@ -395,9 +395,11 @@ def _decision(
     }
 
 
-def route_state(state: Mapping[str, Any]) -> dict[str, Any]:
+def route_state(state: Mapping[str, Any], *, base_dir: Path = Path(__file__).resolve().parents[1]) -> dict[str, Any]:
     """Return exactly one next route from an orchestration checkpoint."""
 
+    from validation_artifact_gate import check_completed_artifacts
+    check_completed_artifacts(state, base_dir)
     request = _mapping(state.get("request"), "request")
     context = _mapping(state.get("research_context"), "research_context")
     intent = request.get("intent")
@@ -1054,7 +1056,7 @@ def build_parser() -> argparse.ArgumentParser:
 def main(argv: Sequence[str] | None = None) -> int:
     args = build_parser().parse_args(argv)
     try:
-        decision = route_state(load_object(args.state))
+        decision = route_state(load_object(args.state), base_dir=args.state.resolve().parent)
     except (OSError, ValueError, json.JSONDecodeError) as exc:
         print(f"Routing failed: {exc}", file=sys.stderr)
         return 2

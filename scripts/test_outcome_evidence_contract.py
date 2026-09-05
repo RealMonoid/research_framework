@@ -26,6 +26,8 @@ def load_fixture() -> dict[str, Any]:
 def frozen_version(assessed: dict[str, Any]) -> dict[str, Any]:
     frozen = copy.deepcopy(assessed)
     frozen["status"] = "FROZEN"
+    frozen.pop("execution_record", None)
+    frozen.pop("execution_validation", None)
     frozen["updated_at"] = "2026-09-01T09:30:00Z"
     for outcome in frozen["outcomes"]:
         outcome["assessment"] = {
@@ -54,7 +56,7 @@ def assert_contains(errors: list[str], fragment: str) -> None:
 
 def main() -> int:
     assessed = load_fixture()
-    errors = validate_contract(assessed)
+    errors = validate_contract(assessed, base_dir=FIXTURE.parent)
     if errors:
         raise AssertionError("Valid assessed contract was rejected:\n- " + "\n- ".join(errors))
 
@@ -64,7 +66,7 @@ def main() -> int:
         raise AssertionError("The positive fixture did not reject the contradicted mechanism story.")
 
     frozen = frozen_version(assessed)
-    errors = validate_contract(frozen)
+    errors = validate_contract(frozen, base_dir=FIXTURE.parent)
     if errors:
         raise AssertionError("Valid frozen contract was rejected:\n- " + "\n- ".join(errors))
 
@@ -106,49 +108,17 @@ def main() -> int:
     if not schema_errors(exploratory_promoted):
         raise AssertionError("An exploratory outcome was allowed to change a material evidence stage.")
 
-    valid_forward = copy.deepcopy(frozen)
-    valid_forward["forward_testing_protocol"] = {
-        "stopping_rule": {
-            "horizon_type": "FIXED_OBSERVATIONS",
-            "threshold_value": "500",
-            "unit": "trades",
-        },
-        "peeking_policy": "NO_INTERIM_STOPPING",
-        "early_termination_allowed": False,
-        "justification": "Fixed 500 trades horizon without optional stopping.",
-    }
-    errors = validate_contract(valid_forward)
-    if errors:
-        raise AssertionError("Valid forward testing protocol was rejected:\n- " + "\n- ".join(errors))
-
-    invalid_forward = copy.deepcopy(valid_forward)
-    invalid_forward["forward_testing_protocol"]["early_termination_allowed"] = True
-    assert_contains(
-        semantic_errors(invalid_forward),
-        "forward_testing_protocol cannot permit early_termination_allowed when peeking_policy is NO_INTERIM_STOPPING",
-    )
-
-    valid_backtest = copy.deepcopy(frozen)
-    valid_backtest["validation_protocol"] = {
-        "stopping_rule": {
-            "horizon_type": "HISTORICAL_STATIC_HOLDOUT",
-            "threshold_value": "2020-01-01_to_2024-12-31",
-            "unit": "calendar_window",
-        },
-        "peeking_policy": "NO_INTERIM_STOPPING",
-        "early_termination_allowed": False,
-        "justification": "Full historical static holdout window without selective truncation.",
-    }
-    errors = validate_contract(valid_backtest)
-    if errors:
-        raise AssertionError("Valid backtest validation protocol was rejected:\n- " + "\n- ".join(errors))
-
-    invalid_backtest = copy.deepcopy(valid_backtest)
-    invalid_backtest["validation_protocol"]["early_termination_allowed"] = True
-    assert_contains(
-        semantic_errors(invalid_backtest),
-        "validation_protocol cannot permit early_termination_allowed when peeking_policy is NO_INTERIM_STOPPING",
-    )
+    for status in ("FROZEN", "ASSESSED"):
+        missing = copy.deepcopy(assessed if status == "ASSESSED" else frozen)
+        del missing["validation_protocol"]
+        assert_contains(validate_contract(missing), "validation_protocol")
+    both = copy.deepcopy(frozen)
+    both["forward_testing_protocol"] = both["validation_protocol"]
+    assert_contains(validate_contract(both), "forward_testing_protocol")
+    from validation_execution import protocol_errors
+    invalid = copy.deepcopy(frozen["validation_protocol"])
+    invalid["early_termination_allowed"] = True
+    assert_contains(protocol_errors(invalid), "early_termination_allowed")
 
     print(
         "Outcome evidence contract tests passed: predictor/mechanism separation, "

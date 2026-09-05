@@ -353,6 +353,19 @@ prediction may remain supported when a required mechanism diagnostic fails,
 but the mechanism itself must then follow the frozen not-supported or blocked
 decision rule.
 
+Use the canonical machine-checkable validation protocol and preserve the
+original frozen contract. Before accepting a test result, compare the observed
+execution events, boundaries, stopping reason and every inspection with that
+protocol. Record computed deviations as `INVALID_TEST`; they cannot support
+prediction or executable edge. An invalid test may be documented without
+repairing its history. Missing pre-test commitments cannot be reconstructed
+after results. Provide hash-bound evidence files for completed outcome and
+pipeline artifacts so the ordinary router can validate them. The supported
+contracts, execution interface and explicit migration are described in
+`decisions/ADR-018-validation-execution-evidence.md`. Caller invocation,
+complete observation, dependency disclosure and producer authenticity remain
+distinct from schema validation and local file integrity.
+
 After the outcome evidence contract and before validation is frozen, create and
 validate a `pipeline_integrity_assessment` using
 `schemas/pipeline_integrity_assessment.schema.json` and

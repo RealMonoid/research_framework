@@ -29,7 +29,7 @@ change-control, risk, and specialist requirements also remain in force.
 
 | Rank | Work | Status and activation |
 |---|---|---|
-| 1 | Close test-validity and pipeline-control gaps | Next implementation: reject missing/conflicting protocols and repeated-random-walk bypasses, then verify executed test boundaries and control evidence. |
+| 1 | Close test-validity and pipeline-control gaps | Implementation delivered for the supported v2 contracts and synthetic execution; the item stays open until Priority 4's live-agent bypass evaluation is completed. |
 | 2 | Establish one verified rule-based backtest backend | After applicable priority-1 corrections and data fitness; choose for the first case and verify synthetic orders, fills, timing, and costs. |
 | 3 | Complete one real Research Case | Separate research authorization required; freeze the framework and research state, then record failures without repairing the framework mid-case. |
 | 4 | Measure actual agent behavior and bypass resistance | Use existing cases and failures from priority 3; no claim of live-agent reliability from protocol smoke. |
@@ -43,7 +43,7 @@ change-control, risk, and specialist requirements also remain in force.
 | 12 | Reduce context through selective loading | Only after behavioral baseline, reference checks, concept mappings, and measured costs. |
 | 13 | Migrate legacy language if justified | Only for measured reliability or actual maintenance need; translation and semantic revision stay separate. |
 
-The immediate task is priority 1, not another library evaluation. Priority 2
+Priority 1 is implemented within the documented execution boundary. Priority 2
 turns the existing candidate register into an explicit prerequisite for the
 empirical part of priority 3; it does not call for installing every engine.
 The completed hard-gate inventory is retained under priority 6. Data-fitness
@@ -101,73 +101,59 @@ checks, live-agent evaluations, or a real Research Case.
 
 ### 1. Close the validation-boundary, stopping-rule, and confirmed pipeline-integrity enforcement gaps
 
-**Status: urgent correctness gap; documented rules exist, hard enforcement
-is incomplete.** The outcome evidence documentation now prohibits optional
-stopping, selective historical truncation, and unplanned holdout peeking,
-but a `FROZEN` or `ASSESSED` contract can still validate without any
-`validation_protocol`. The schema also permits both `validation_protocol`
-and the legacy `forward_testing_protocol`; when both exist, the semantic
-validator silently prefers one. Current boundaries are stored as free text,
-and the contract records intended behaviour without proving how the test
-actually ended. A formally valid artifact can therefore promise a fixed
-test while the executed run uses a different window, stops early, or peeks.
+**Status: implementation delivered for the supported contracts and execution interface; roadmap closure remains pending the explicitly required Priority 4 live-agent bypass evaluation.**
+The missing-protocol and repeated-random-walk defects were reproduced against
+`045ae5a` before editing. The implemented completion criteria and migration are
+recorded in [ADR-018](decisions/ADR-018-validation-execution-evidence.md).
 
-Resolve the gap in this order:
+1. **Canonical protocol:** v2 frozen and assessed contracts require exactly one
+   `validation_protocol`. The legacy alias is removed; simultaneous fields are
+   rejected even if they agree. Old artifacts are not silently upgraded.
+2. **Exact boundaries:** counts are integers; calendar and historical holdouts
+   have zoned start/end timestamps. The complete fingerprint protects both the
+   protocol and outcome design. Duplicate protected IDs cannot offer alternative
+   boundaries under the same fingerprint.
+3. **Observed execution:** a separate record references the original frozen
+   contract and a per-event observer log. Actual boundaries, counts, termination,
+   inspections and deviations are derived and reconciled with that log.
+4. **Invalid-test consequence:** early/late completion, clipping, unauthorized
+   peeking, changed commitments and boundary mismatches deterministically produce
+   `INVALID_TEST`. A retained invalid assessment cannot support prediction or
+   executable edge; its history is not repaired or overwritten.
+5. **Complete interim policies:** alpha spending includes allocated alpha,
+   thresholds and total budget; fixed non-terminating audits include dates or
+   counts. Consuming further observations after an alpha crossing invalidates
+   the test, including when the events share a timestamp.
+6. **Normal entry points:** the router opens completed artifact files, runs their
+   full validators, checks identity/effective fingerprints and refuses missing
+   or contradictory evidence before freeze, assessment or result interpretation.
+   Python and PowerShell framework checks run these regressions, including the
+   router CLI. Contract versions and preservation of prior artifacts are explicit.
+7. **Null-family bypass:** distinct required families are checked; one or many
+   random walks alone cannot satisfy the structure-appropriate null requirement.
+8. **Numerical replication record:** complete frozen seed lists, planned versus
+   completed counts, numerical acceptance intervals and Bernoulli uncertainty
+   replace prose-only proof. The retained 200-run floor and tighter precision
+   budgets are justified by the prospective worst-case standard-error bound,
+   not asserted as universal Monte Carlo adequacy.
+9. **Pipeline execution evidence:** the synthetic runner invokes the exact
+   hash-bound candidate entrypoint in a new subprocess for each replication,
+   retains input/output and individual invocation receipts, and calculates gate
+   results from the frozen numerical rules. An independent verifier checks the
+   currently supported reference generator's seeded truth. Null-as-positive
+   sentinels, batch-coupled repetitions, changed versions, seeds, outputs,
+   statistics or plans cannot pass by supplying a success declaration.
 
-1. Require exactly one canonical validation protocol before a contract may
-   become `FROZEN` or `ASSESSED`. Remove the legacy alias through an explicit
-   schema migration; until removal, reject simultaneous or conflicting
-   protocol fields rather than choosing one silently.
-2. Replace free-text boundaries with machine-checkable fields appropriate to
-   the horizon: integer observation or trade counts, or explicit start and
-   end timestamps for calendar windows and historical static holdouts. Bind
-   these fields to the complete research fingerprint.
-3. Add a separate execution record containing the actual start, end, count,
-   termination reason, every interim inspection, and every deviation from
-   the frozen protocol. Do not let a declaration stand in for execution.
-4. Compare the frozen protocol with the execution record automatically.
-   Early termination, extension, selective truncation, an unplanned peek, or
-   any unexplained boundary mismatch must produce `INVALID_TEST` and must
-   block `FORWARD_PREDICTIVE_OOS` and `EXECUTABLE_NET_EDGE` support.
-5. Make each nontrivial peeking policy complete: predeclared alpha-spending
-   requires its spending schedule and decision thresholds; fixed
-   non-terminating audits require their dates or counts and must not alter
-   the stopping horizon.
-6. Version the schema and document migration whenever these contract changes
-   alter the meaning of an artifact. Add negative tests for a missing
-   protocol, both protocol fields, malformed boundaries, premature or late
-   termination, selective historical clipping, and undeclared inspection.
-
-Completion requires evidence that the normal freeze and assessment paths
-reject a missing protocol, that executed boundaries are compared with frozen
-boundaries, and that every listed deviation deterministically invalidates
-the affected test. Priority 4 must additionally verify in live-agent
-evaluation that an agent cannot bypass or cosmetically repair these checks.
-Planning this fix does not authorize a backtest or access to validation data.
-
-**Confirmed pipeline-integrity corrections from the external reviews:**
-
-1. Fix the repeated-random-walk bypass. The current semantic validator
-   rejects exactly one required `RANDOM_WALK` control, but two or more
-   required random-walk controls can evade the list-equality check even
-   though no structure-appropriate negative-control family is present.
-   Compare the distinct required null-model families instead, and add a
-   regression case with repeated random-walk controls. One or many random
-   walks must never satisfy the requirement by themselves.
-2. Replace the free-text Monte Carlo record with machine-checkable fields
-   for planned and completed replications, the uncertainty method, estimate,
-   standard error or interval bounds where applicable, and a complete seed
-   or replication-manifest reference. Preserve a plain-language summary,
-   but do not let prose stand in for the numerical record. Document and test
-   the scientific basis of any minimum-run floor rather than treating the
-   present value as self-justifying.
-3. Bind every required negative-control and positive-sentinel result to
-   evidence produced by executing the exact candidate pipeline identified by
-   the frozen pipeline fingerprint. Schema validation of an agent-written
-   `PASS` declaration is not evidence that the control ran. Until a trusted
-   runner or the conditional harness in priority 6 performs or verifies that
-   execution, describe this gate as caller-enforced and do not use it as an
-   automatic reliability claim.
+**Remaining boundaries, not completion claims:** the current truth verifier
+covers the paired-uniform synthetic reference world only. Other reference
+worlds need a reviewed verifier; a market backend remains priority 2. These
+checks do not prove market-structure adequacy, data fitness or market evidence.
+The host must invoke the entry points, disclose complete dependencies and record
+all observations/inspections. A local receipt is not an authenticated attestation
+against a hostile producer or hidden external state. Priority 4 must measure
+live-agent bypass resistance; any justified trusted harness remains priority 6.
+No automatic end-to-end reliability is claimed. Data fitness remains binding
+now, and no market-data test, training, trading or capital action was performed.
 
 ### 2. One verified rule-based backtest backend
 

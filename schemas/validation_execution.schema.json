@@ -1,0 +1,132 @@
+{
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "const": "1.0.0"
+    },
+    "execution_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "frozen_contract": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "path": {
+          "type": "string",
+          "minLength": 1
+        },
+        "sha256": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        }
+      },
+      "required": [
+        "path",
+        "sha256"
+      ]
+    },
+    "protocol_sha256": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "research_fingerprint_sha256": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "actual_start": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "actual_end": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "actual_count": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "termination_reason": {
+      "enum": [
+        "HORIZON_REACHED",
+        "ALPHA_BOUNDARY",
+        "SAFETY_ABORT",
+        "ERROR",
+        "OTHER"
+      ]
+    },
+    "interim_inspections": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "at_count": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "at_time": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "p_value": {
+            "type": [
+              "number",
+              "null"
+            ],
+            "minimum": 0,
+            "maximum": 1
+          }
+        },
+        "required": [
+          "at_count",
+          "at_time",
+          "p_value"
+        ]
+      }
+    },
+    "deviations": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "event_log": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "path": {
+          "type": "string",
+          "minLength": 1
+        },
+        "sha256": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        }
+      },
+      "required": [
+        "path",
+        "sha256"
+      ]
+    }
+  },
+  "required": [
+    "schema_version",
+    "execution_id",
+    "frozen_contract",
+    "protocol_sha256",
+    "research_fingerprint_sha256",
+    "actual_start",
+    "actual_end",
+    "actual_count",
+    "termination_reason",
+    "interim_inspections",
+    "deviations",
+    "event_log"
+  ],
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:research-framework:schema:validation-execution:1.0.0",
+  "title": "Validation Execution Record"
+}

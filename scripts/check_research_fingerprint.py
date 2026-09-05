@@ -94,6 +94,10 @@ def calculate_fingerprint_sha256(fingerprint: Mapping[str, Any]) -> str:
 
 
 def verify_fingerprint(fingerprint: Mapping[str, Any], label: str) -> None:
+    artifacts = fingerprint.get("protected_artifacts", [])
+    refs = [artifact.get("artifact_ref") for artifact in artifacts]
+    if len(refs) != len(set(refs)):
+        raise ValueError(f"{label} protected artifact_ref values must be unique; a fingerprint cannot contain alternative commitments")
     expected = fingerprint.get("fingerprint_sha256")
     if not isinstance(expected, str):
         raise ValueError(f"{label}.fingerprint_sha256 must be a string")
