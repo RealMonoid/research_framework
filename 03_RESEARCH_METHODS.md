@@ -484,6 +484,26 @@ Shows how much the final result depends on the fact that this sample just create
 
 External test windows shall not be used to optimise the internal model.
 
+## 18.1 Historical data roles under instability
+
+### Apply where:
+
+- a study uses a long history to make a current trading decision;
+- the signal, costs, execution environment or investable universe may have changed over time; or
+- historical stress periods are material to the strategy's risk or economic interpretation.
+
+### Required design distinction
+
+Before model or window selection, state separately:
+
+1. which structurally comparable period estimates current gross and net performance, including the applicable cost, capacity and execution assumptions;
+2. which older segments test historical existence, regime coverage, stress exposure or a proposed economic mechanism; and
+3. how any rolling, expanding or time-weighted window family will be selected with time-ordered development data rather than the external test window.
+
+A long history can reduce estimation uncertainty and expose rare loss states, but it does not by itself establish current profitability. A short recent sample can be more comparable to current execution, but it can leave crisis and tail estimates imprecise. If a detected or economically documented break motivates different windows or weights, record the affected claim and the remaining non-comparability; a break test is not proof of a named market regime or a sufficient reason to discard all earlier data.
+
+Do not preset a universal number of years, decay half-life, weighting scheme or post-break cutoff. Treat a choice among alternative window or weighting rules as part of the model-selection family and preserve it for the applicable multiplicity and out-of-sample assessment. See C25 in `references/INTERDISCIPLINARY_TRADING_RESEARCH_FOUNDATIONS.md` and §19 for state or regime measurement.
+
 ---
 
 # 19. State/regime analysis
