@@ -224,6 +224,59 @@ capital-allocation authority. The manifest/test verifies discoverability and
 snapshot consistency only; live-agent evaluation remains required to claim a
 behavioral improvement.
 
+### Owner-requested non-ML calculation tools — 2026-09-05
+
+**Status: CONDITIONAL planning record; no new dependency or runtime integration.**
+This extends the existing scientific-capability screen above without changing
+its approved role boundaries or the authoritative implementation priorities.
+The owner wants a research and decision framework, not an ML system. Select a
+calculation tool only when an explicitly scoped research or capital decision
+requires it; tool availability is not a reason to create a new research task.
+
+- **statsmodels — reuse the existing bounded capability when needed.** It is
+  already recorded above for predeclared econometric and time-series methods.
+  A concrete use could be testing cointegration when the source strategy
+  depends on that relationship. Preserve model assumptions, diagnostics,
+  temporal dependence, selection history, and uncertainty in the existing
+  report. A significant test does not establish a stable tradable relationship
+  or positive net edge. This record does not add a second statsmodels route.
+- **CVXPY — conditional downstream portfolio calculation candidate.** Consider
+  it only when an authorized allocation question concerns already evaluated
+  strategies and explicitly specified objectives, risk and weight limits,
+  costs, and input estimates. Verify solver status, numerical tolerances,
+  constraint satisfaction, infeasibility handling, and sensitivity to uncertain
+  inputs. An optimizer solves the stated mathematical problem; it cannot
+  validate return estimates or authorize capital allocation. This protects the
+  sizing decision from being determined by hidden defaults or unstable inputs.
+- **TA-Lib — optional source-faithful indicator calculation candidate.** Use
+  only when an existing strategy specification needs a named indicator.
+  Verify formula conventions, lookback and warm-up behavior, missing values,
+  and decision-time availability against fixed reference examples. Library
+  defaults must not silently replace source rules. This protects strategy
+  identity and timing; it does not authorize indicator mining or parameter
+  search, and a correctly calculated indicator is not evidence of edge.
+
+LSTM, temporal convolutional networks, XGBoost, LightGBM, and hmmlearn-based
+learned regime detection are excluded from this planned extension. It adds no
+model training, ML forecasting, automatic regime discovery, or feature search.
+Existing deferred-capability records remain historical context, not permission
+to activate an ML path.
+
+Before adopting CVXPY or TA-Lib, name the concrete calculation and protected
+decision, check whether existing capabilities suffice, and verify the smallest
+necessary implementation with synthetic or independently calculated reference
+cases. Record the chosen package and solver versions where relevant, license,
+configuration, input provenance, assumptions, and material outputs through the
+existing artifact and complete-fingerprint mechanisms. Apply all prerequisites
+of the actual research stage, including the planned validation-boundary and
+data-fitness controls before an empirical backtest path. Synthetic checks prove
+calculation behavior only. No new registry, specialist, universal gate, data
+access, backtest, trade, or implementation is authorized by this planning entry.
+
+Reference documentation: [statsmodels cointegration test](https://www.statsmodels.org/stable/generated/statsmodels.tsa.stattools.coint.html),
+[CVXPY portfolio example](https://www.cvxpy.org/examples/basic/quadratic_program.html),
+and [TA-Lib functions](https://ta-lib.org/functions/).
+
 ### Owner-requested rule-based backtest-backend candidate register — 2026-09-04
 
 The owner requested that four external rule-based backtest engines be retained
