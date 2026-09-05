@@ -279,8 +279,10 @@ and [TA-Lib functions](https://ta-lib.org/functions/).
 
 ### Owner-requested rule-based backtest-backend candidate register — 2026-09-04
 
-The owner requested that four external rule-based backtest engines be retained
-as evaluated candidates before implementing a genuine backtest path. This is a
+The owner requested that external rule-based backtest engines be retained
+as candidates assessed from documentation before implementing a genuine backtest
+path. LEAN was added to this same register on 2026-09-05; the existing
+Backtrader-first selection order and conditional roles remain unchanged. This is a
 planning record, not an adopted dependency, installation, data acquisition,
 backtest authorization, or market result. The framework remains responsible for
 deciding whether a test may run and for interpreting its result; an engine is
@@ -312,7 +314,25 @@ only a replaceable execution component behind that control layer.
    not a canonical backend: its built-in optimizer cannot run outside a frozen
    search family, its candle model cannot establish order-book or queue fills,
    and its AGPL-3.0 license needs a later dependency review.
-5. **Qlib — excluded from this rule-based path.** It is not selected because
+5. **LEAN — conditional multi-instrument and futures candidate.** Its
+   event-driven engine supports rule-based Python and C# strategies, local
+   backtests with own data, customizable execution models, and later brokerage
+   connections without requiring ML. Consider it when explicit futures-contract
+   handling, multiple instruments, or a separately authorized future broker
+   integration justifies its setup and configuration burden. Compare it with
+   the existing candidates using identical synthetic data and predeclared
+   expected orders, fills, and costs before changing the selection order.
+   Verify continuous-series mapping and normalization separately from tradable
+   contracts, roll behavior, fees, slippage, and order timing. In particular,
+   the documented DefaultBrokerageModel uses zero slippage; that default must
+   not silently become an accepted execution assumption. The engine's
+   Apache-2.0 license and standalone local build are distinct from the hosted
+   services, data licenses, and LEAN CLI: documentation reviewed on 2026-09-05
+   requires membership in a paid-tier organization for CLI use. Recheck these
+   terms and the exact runtime requirements before adoption. This entry
+   protects execution realism and backend feasibility; it enables no ML,
+   optimization search, data download, cloud upload, or live trading.
+6. **Qlib — excluded from this rule-based path.** It is not selected because
    the owner does not want ML-driven research, model training, factor mining,
    or model optimization in this project.
 
@@ -332,8 +352,12 @@ frozen outcome and validation contracts.
 Source records: https://github.com/mementum/backtrader,
 https://github.com/polakowo/vectorbt,
 https://github.com/ricequant/rqalpha,
-https://github.com/kernc/backtesting.py, and
-https://github.com/microsoft/qlib.
+https://github.com/kernc/backtesting.py,
+https://github.com/microsoft/qlib, and https://github.com/QuantConnect/Lean.
+LEAN-specific references: [engine overview](https://www.quantconnect.com/docs/v2/lean-engine/getting-started),
+[CLI requirements](https://www.quantconnect.com/docs/v2/lean-cli/key-concepts/getting-started),
+[slippage defaults](https://www.quantconnect.com/docs/v2/writing-algorithms/reality-modeling/slippage/key-concepts),
+and [futures contracts](https://www.quantconnect.com/docs/v2/writing-algorithms/universes/futures).
 
 1. **Close the validation-boundary, stopping-rule, and confirmed
    pipeline-integrity enforcement gaps.**
