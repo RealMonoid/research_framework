@@ -5,6 +5,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import math
 import sys
 from datetime import datetime
 from pathlib import Path
@@ -126,7 +127,7 @@ def semantic_errors(assessment: Mapping[str, Any]) -> list[str]:
         errors.append(
             "causal_tooling_required needs a required CAUSAL_TOOL_SENTINEL."
         )
-    if required_null_families == ["RANDOM_WALK"]:
+    if set(required_null_families) == {"RANDOM_WALK"}:
         errors.append(
             "A RANDOM_WALK cannot be the only required negative control; use a control that preserves the material dependency structure."
         )
@@ -166,8 +167,37 @@ def schema_errors(assessment: Mapping[str, Any]) -> list[str]:
     ]
 
 
-def validate_assessment(assessment: Mapping[str, Any]) -> list[str]:
-    return schema_errors(assessment) + semantic_errors(assessment)
+def validate_assessment(assessment: Mapping[str, Any], *, base_dir: Path = ROOT) -> list[str]:
+    errors = schema_errors(assessment)
+    if errors:
+        return errors
+    errors += semantic_errors(assessment)
+    for control in assessment["controls"]:
+        rule = control["acceptance_rule"]
+        n = control["planned_runs"]
+        floor = max(200, math.ceil(0.25 / rule["maximum_standard_error"] ** 2))
+        if rule["minimum_runs"] < floor or n < rule["minimum_runs"]:
+            errors.append("Replication budget does not meet the prospective worst-case Bernoulli precision bound.")
+        if len(control["seeds"]) != n:
+            errors.append("A complete unique seed list is required for every planned replication.")
+        if rule["pass_rate_min"] > rule["pass_rate_max"]:
+            errors.append("Numerical acceptance interval is reversed.")
+        if assessment["status"] == "ASSESSED" and control["actual_runs"] != n:
+            errors.append("Completed replications must equal the locked planned count.")
+    null_maxima = [c['acceptance_rule']['pass_rate_max'] for c in assessment['controls']
+                   if c['purpose'] == 'NULL_NEGATIVE_CONTROL' and c['required_for_gate']]
+    for control in assessment['controls']:
+        if control['purpose'] in {'POSITIVE_SENTINEL', 'CAUSAL_TOOL_SENTINEL'} and null_maxima:
+            if control['acceptance_rule']['pass_rate_min'] <= max(null_maxima):
+                errors.append('Known-effect sentinel must require a detection rate above every null acceptance interval.')
+    try:
+        from pipeline_execution import verify_plan, execution_errors
+        verify_plan(assessment, base_dir)
+        if assessment["status"] == "ASSESSED":
+            errors += execution_errors(assessment, base_dir)
+    except (OSError, ValueError, KeyError, TypeError, OverflowError) as exc:
+        errors.append(f"Missing or invalid pipeline execution evidence: {exc}")
+    return errors
 
 
 def build_parser() -> argparse.ArgumentParser:
@@ -182,7 +212,7 @@ def main(argv: Sequence[str] | None = None) -> int:
     args = build_parser().parse_args(argv)
     try:
         assessment = load_object(args.assessment)
-        errors = validate_assessment(assessment)
+        errors = validate_assessment(assessment, base_dir=args.assessment.resolve().parent)
     except (OSError, ValueError, json.JSONDecodeError, RuntimeError) as exc:
         print(f"Pipeline integrity validation failed: {exc}", file=sys.stderr)
         return 2

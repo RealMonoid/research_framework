@@ -5,6 +5,7 @@ from __future__ import annotations
 
 import copy
 import json
+import tempfile
 from pathlib import Path
 from typing import Any
 
@@ -30,6 +31,7 @@ def load_fixture() -> dict[str, Any]:
 def planned_version(assessed: dict[str, Any]) -> dict[str, Any]:
     planned = copy.deepcopy(assessed)
     planned["status"] = "PLANNED"
+    planned.pop("execution_evidence", None)
     planned["updated_at"] = "2026-09-01T10:15:00Z"
     planned["first_run_at"] = None
     planned["overall_gate"] = "NOT_ASSESSED"
@@ -40,6 +42,7 @@ def planned_version(assessed: dict[str, Any]) -> dict[str, Any]:
         control["actual_runs"] = 0
         control["result"] = {
             "status": "NOT_ASSESSED",
+            "uncertainty_record": None,
             "evidence_refs": [],
             "monte_carlo_uncertainty": "Not assessed before the first run.",
             "plain_language_interpretation": "No result exists yet.",
@@ -56,7 +59,12 @@ def assert_contains(errors: list[str], fragment: str) -> None:
 
 
 def main() -> int:
-    assessed = load_fixture()
+    from test_execution_controls import prepare_plan
+    from pipeline_execution import run
+    temporary = tempfile.TemporaryDirectory()
+    directory = Path(temporary.name)
+    prepare_plan(directory)
+    assessed = run(directory / 'plan.json', directory / 'run')
     errors = validate_assessment(assessed)
     if errors:
         raise AssertionError("Valid assessed controls were rejected:\n- " + "\n- ".join(errors))

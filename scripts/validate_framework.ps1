@@ -111,4 +111,8 @@ if ($LASTEXITCODE -ne 0) {
     throw "Eval unit tests failed (exit $LASTEXITCODE)."
 }
 
+
+Write-Output '== Executed validation and controls =='
+& $PythonExecutable (Join-Path $repoRoot 'scripts\test_execution_controls.py')
+if ($LASTEXITCODE -ne 0) { throw "Execution-control tests failed (exit $LASTEXITCODE)." }
 Write-Output 'Framework integrity passed. LIVE_AGENT release gate was NOT run; use scripts/validate_framework.py --live-results <path> for a model or prompt release claim.'

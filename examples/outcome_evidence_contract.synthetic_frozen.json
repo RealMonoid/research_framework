@@ -3,9 +3,9 @@
   "contract_id": "outcome-contract:ofi-reversion:v1",
   "research_id": "research:ofi-reversion",
   "research_version": 1,
-  "status": "ASSESSED",
+  "status": "FROZEN",
   "created_at": "2026-09-01T09:00:00Z",
-  "updated_at": "2026-09-04T00:00:00Z",
+  "updated_at": "2026-09-01T09:30:00Z",
   "outcomes": [
     {
       "outcome_id": "outcome:forward-return-30m",
@@ -37,11 +37,9 @@
         "invalid_test_effect": "TARGET_BLOCKED"
       },
       "assessment": {
-        "result": "SUPPORTED",
-        "evidence_refs": [
-          "evidence:oos-forward-return-v1"
-        ],
-        "plain_language_interpretation": "The frozen signal predicted the future return in the tested holdout period."
+        "result": "NOT_ASSESSED",
+        "evidence_refs": [],
+        "plain_language_interpretation": "No result exists because the contract is frozen before testing."
       }
     },
     {
@@ -78,11 +76,9 @@
         "invalid_test_effect": "TARGET_BLOCKED"
       },
       "assessment": {
-        "result": "CONTRADICTED",
-        "evidence_refs": [
-          "evidence:oos-spread-diagnostic-v1"
-        ],
-        "plain_language_interpretation": "The return prediction worked, but the spread behavior required by the liquidity explanation did not occur."
+        "result": "NOT_ASSESSED",
+        "evidence_refs": [],
+        "plain_language_interpretation": "No result exists because the contract is frozen before testing."
       }
     }
   ],
@@ -94,11 +90,9 @@
       ],
       "expected_stability": "The sign remains negative and the effect remains above the frozen relevance threshold in both periods.",
       "allowed_drift": "The point estimate may differ, but neither period may reverse sign or fall below the frozen relevance boundary.",
-      "status": "SUPPORTED",
-      "evidence_refs": [
-        "evidence:oos-forward-return-v1"
-      ],
-      "plain_language_scope": "Predictive support is limited to the tested market, horizon, and two holdout periods."
+      "status": "NOT_ASSESSED",
+      "evidence_refs": [],
+      "plain_language_scope": "The environments and stability rule are frozen, but no result exists yet."
     },
     {
       "target": "MECHANISM_SUPPORTED",
@@ -107,37 +101,31 @@
       ],
       "expected_stability": "Spread normalization appears in both periods if the proposed liquidity mechanism explains the prediction.",
       "allowed_drift": "The speed may differ, but the direction may not reverse.",
-      "status": "NOT_SUPPORTED",
-      "evidence_refs": [
-        "evidence:oos-spread-diagnostic-v1"
-      ],
-      "plain_language_scope": "The claimed liquidity explanation is not supported in the tested environments."
+      "status": "NOT_ASSESSED",
+      "evidence_refs": [],
+      "plain_language_scope": "The environments and stability rule are frozen, but no result exists yet."
     }
   ],
   "stage_conclusions": {
     "phenomenon": {
       "status": "UNKNOWN",
       "evidence_refs": [],
-      "rationale": "This contract evaluates the frozen forward prediction rather than a separate phenomenon claim."
+      "rationale": "No conclusion is allowed before the frozen test is assessed."
     },
     "mechanism_supported": {
-      "status": "NOT_SUPPORTED",
-      "evidence_refs": [
-        "evidence:oos-spread-diagnostic-v1"
-      ],
-      "rationale": "A required mechanism diagnostic contradicted the pre-specified liquidity explanation."
+      "status": "UNKNOWN",
+      "evidence_refs": [],
+      "rationale": "No conclusion is allowed before the frozen test is assessed."
     },
     "forward_predictive_oos": {
-      "status": "SUPPORTED",
-      "evidence_refs": [
-        "evidence:oos-forward-return-v1"
-      ],
-      "rationale": "The primary frozen prediction was supported on unseen data."
+      "status": "UNKNOWN",
+      "evidence_refs": [],
+      "rationale": "No conclusion is allowed before the frozen test is assessed."
     },
     "executable_net_edge": {
       "status": "UNKNOWN",
       "evidence_refs": [],
-      "rationale": "No executable-price, cost, fill, or capacity assessment was part of this contract."
+      "rationale": "No conclusion is allowed before the frozen test is assessed."
     }
   },
   "validation_protocol": {
@@ -154,13 +142,5 @@
   "research_fingerprint_file": {
     "path": "outcome_protocol.synthetic_fingerprint.json",
     "sha256": "d257fc81e07a5d8b96c03dfb33efb5c1bfc1a0b13cc0b8b64f0f85cde78d0516"
-  },
-  "execution_record": {
-    "path": "validation_execution.synthetic.json",
-    "sha256": "b589342157d2693d72e1d5ce4499da56b7181acaab51603b5041d04331ba99ef"
-  },
-  "execution_validation": {
-    "status": "VALID",
-    "violations": []
   }
 }

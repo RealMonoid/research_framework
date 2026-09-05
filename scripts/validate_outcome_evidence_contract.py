@@ -181,13 +181,6 @@ def semantic_errors(contract: Mapping[str, Any]) -> list[str]:
                 "A mechanism conclusion cannot remain SUPPORTED after a required mechanism diagnostic contradicts or blocks it."
             )
 
-    protocol = contract.get("validation_protocol") or contract.get("forward_testing_protocol")
-    if isinstance(protocol, Mapping):
-        protocol_field = "validation_protocol" if "validation_protocol" in contract else "forward_testing_protocol"
-        if protocol.get("peeking_policy") == "NO_INTERIM_STOPPING" and protocol.get("early_termination_allowed") is True:
-            errors.append(
-                f"{protocol_field} cannot permit early_termination_allowed when peeking_policy is NO_INTERIM_STOPPING."
-            )
 
     return errors
 
@@ -206,8 +199,32 @@ def schema_errors(contract: Mapping[str, Any]) -> list[str]:
     return [f"{error.json_path}: {error.message}" for error in validator.iter_errors(contract)]
 
 
-def validate_contract(contract: Mapping[str, Any]) -> list[str]:
-    return schema_errors(contract) + semantic_errors(contract)
+def validate_contract(contract: Mapping[str, Any], *, base_dir: Path = ROOT) -> list[str]:
+    from validation_execution import protocol_errors, fingerprint_errors, execution_errors
+    errors = schema_errors(contract)
+    if errors:
+        return errors
+    errors += semantic_errors(contract)
+    try:
+        if "validation_protocol" in contract:
+            errors += protocol_errors(contract["validation_protocol"])
+        if contract["status"] in {"FROZEN", "ASSESSED"}:
+            errors += fingerprint_errors(contract, base_dir)
+        if contract["status"] == "ASSESSED":
+            deviations = execution_errors(contract, base_dir)
+            expected = {"status": "INVALID_TEST" if deviations else "VALID", "violations": deviations}
+            if contract["execution_validation"] != expected:
+                errors.append("INVALID_TEST: execution classification must equal the computed violations: " + repr(expected))
+            if deviations:
+                for outcome in contract["outcomes"]:
+                    if outcome["assessment"]["result"] != "INVALID_TEST":
+                        errors.append("INVALID_TEST: an invalid execution cannot support or contradict an outcome.")
+                for stage in contract["stage_conclusions"].values():
+                    if stage["status"] == "SUPPORTED":
+                        errors.append("INVALID_TEST: an invalid execution cannot support any evidence stage.")
+    except (OSError, ValueError, KeyError, TypeError) as exc:
+        errors.append(f"INVALID_TEST: missing or invalid execution/protocol evidence: {exc}")
+    return errors
 
 
 def build_parser() -> argparse.ArgumentParser:
@@ -222,7 +239,7 @@ def main(argv: Sequence[str] | None = None) -> int:
     args = build_parser().parse_args(argv)
     try:
         contract = load_object(args.contract)
-        errors = validate_contract(contract)
+        errors = validate_contract(contract, base_dir=args.contract.resolve().parent)
     except (OSError, ValueError, json.JSONDecodeError, RuntimeError) as exc:
         print(f"Outcome evidence contract validation failed: {exc}", file=sys.stderr)
         return 2
@@ -230,7 +247,10 @@ def main(argv: Sequence[str] | None = None) -> int:
         for error in errors:
             print(f"ERROR: {error}", file=sys.stderr)
         return 1
-    print("Outcome evidence contract passed schema and semantic validation.")
+    if contract.get("execution_validation", {}).get("status") == "INVALID_TEST":
+        print("Outcome record is consistent: INVALID_TEST; no prediction or edge support is permitted.")
+    else:
+        print("Outcome evidence contract passed schema and semantic validation.")
     return 0
 
 

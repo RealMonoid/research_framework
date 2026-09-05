@@ -7,6 +7,7 @@ import copy
 import json
 import subprocess
 import sys
+import tempfile
 from pathlib import Path
 from typing import Any
 
@@ -299,10 +300,22 @@ def main() -> int:
     if decision["work_order"]["required_output_type"] != "outcome_evidence_contract":
         raise AssertionError("Research-case routing did not require the outcome contract.")
 
+    from test_execution_controls import prepare_plan, save
+    from pipeline_execution import run
+    temporary = tempfile.TemporaryDirectory()
+    directory = Path(temporary.name)
+    plan = prepare_plan(directory)
+    frozen = load("examples/outcome_evidence_contract.synthetic_frozen.json")
+    frozen["research_fingerprint_file"] = plan["research_fingerprint_file"]
     predictive_ready = copy.deepcopy(predictive_request)
+    predictive_ready["research_context"].update(research_id=frozen["research_id"], research_version=frozen["research_version"])
+    predictive_ready["effective_research_fingerprint"] = {
+        "fingerprint_ref": plan["pipeline_fingerprint_ref"],
+        "fingerprint_sha256": plan["pipeline_fingerprint_sha256"],
+    }
     predictive_ready["artifacts"]["outcome_evidence_contract"] = {
-        "status": "COMPLETE",
-        "artifact_ref": "outcome-contract:synthetic-predictive:v1",
+        "status": "COMPLETE", "artifact_ref": frozen["contract_id"],
+        "evidence_file": save(directory / 'frozen.json', frozen),
     }
     decision = assert_route(predictive_ready, "ASSESS_PIPELINE_INTEGRITY")
     if decision["work_order"]["required_output_type"] != "pipeline_integrity_assessment":
@@ -311,9 +324,10 @@ def main() -> int:
         raise AssertionError("The pipeline-control route did not reject unvalidated model code.")
 
     pipeline_ready = copy.deepcopy(predictive_ready)
+    executed = run(directory / 'plan.json', directory / 'run')
     pipeline_ready["artifacts"]["pipeline_integrity_assessment"] = {
-        "status": "COMPLETE",
-        "artifact_ref": "pipeline-integrity:synthetic-predictor:v1",
+        "status": "COMPLETE", "artifact_ref": executed["assessment_id"],
+        "evidence_file": save(directory / 'assessment.json', executed),
     }
     assert_route(pipeline_ready, "CONDUCT_RESEARCH")
 
@@ -360,6 +374,16 @@ def main() -> int:
     post_result["request"]["intent"] = "REVISE_AFTER_RESULT"
     post_result["research_context"]["stage"] = "POST_RESULT"
     post_result["research_context"]["frozen_result_status"] = "FALSIFIED"
+    from test_execution_controls import prepare_outcome
+    result_contract = prepare_outcome(directory)
+    result_contract['outcomes'][0]['assessment']['result'] = 'CONTRADICTED'
+    result_contract['stage_conclusions']['forward_predictive_oos']['status'] = 'NOT_SUPPORTED'
+    result_fp = json.loads(Path(result_contract['research_fingerprint_file']['path']).read_text())
+    post_result['research_context'].update(research_id=result_contract['research_id'], research_version=1)
+    post_result['effective_research_fingerprint'] = {'fingerprint_ref':result_fp['fingerprint_id'],
+        'fingerprint_sha256':result_fp['fingerprint_sha256']}
+    post_result['artifacts']['outcome_evidence_contract'] = {'status':'COMPLETE',
+        'artifact_ref':result_contract['contract_id'], 'evidence_file':save(directory / 'result.json', result_contract)}
     post_result["artifacts"]["scientific_philosophy_review"] = {
         "status": "MISSING",
         "artifact_ref": None,

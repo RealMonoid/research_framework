@@ -154,6 +154,7 @@ POSITIVES = [
     ("examples/scientific_philosophy_review.synthetic_failed_reconstruction.json", "schemas/scientific_philosophy_review.schema.json"),
     ("examples/framework_control_review.synthetic.json", "schemas/framework_control_review.schema.json"),
     ("examples/outcome_evidence_contract.predictor_without_mechanism.json", "schemas/outcome_evidence_contract.schema.json"),
+    ("examples/validation_execution.synthetic.json", "schemas/validation_execution.schema.json"),
     ("examples/pipeline_integrity_assessment.synthetic_controls.json", "schemas/pipeline_integrity_assessment.schema.json"),
     ("examples/problem_record.missing_source_pages.json", "schemas/problem_record.schema.json"),
     ("problems/2026-09-04-specialist-capability-discovery-bypass.json", "schemas/problem_record.schema.json"),

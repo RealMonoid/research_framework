@@ -80,6 +80,7 @@ def main(argv: Sequence[str] | None = None) -> int:
         "Pipeline integrity assessment",
         [python, "scripts/test_pipeline_integrity_assessment.py"],
     )
+    run("Executed validation and controls", [python, "scripts/test_execution_controls.py"])
     run(
         "Research orchestration",
         [python, "scripts/test_research_orchestration.py"],

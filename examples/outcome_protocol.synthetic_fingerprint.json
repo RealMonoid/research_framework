@@ -1,0 +1,191 @@
+{
+  "schema_version": "1.0.0",
+  "fingerprint_id": "fingerprint:synthetic-outcome-protocol:v1",
+  "created_at": "2026-08-31T18:00:00+02:00",
+  "research_id": "research:ofi-reversion",
+  "research_version": 1,
+  "material_specification": {
+    "research_question": {
+      "status": "DEFINED",
+      "content": "Synthetic contract/runner reference: reject invalid validation without promoting mechanism or market evidence.",
+      "source_refs": []
+    },
+    "source_strategy": {
+      "status": "DEFINED",
+      "content": "No implemented trading strategy. Outcome labels retain the earlier illustrative contract only.",
+      "source_refs": []
+    },
+    "market_and_instruments": {
+      "status": "DEFINED",
+      "content": "No market data or instruments: synthetic reference fixtures only.",
+      "source_refs": []
+    },
+    "time_scope": {
+      "status": "DEFINED",
+      "content": {
+        "horizon_type": "FIXED_OBSERVATIONS",
+        "start_at": "2026-09-02T00:00:00Z",
+        "target_count": 500
+      },
+      "source_refs": []
+    },
+    "constructs_and_operationalizations": {
+      "status": "DEFINED",
+      "content": "Toy execution pipeline is separately bound by its code/configuration manifest; outcome roles are illustrative test assertions.",
+      "source_refs": []
+    },
+    "trigger_entry_and_position": {
+      "status": "DEFINED",
+      "content": "No orders, positions, or trading trigger are executed.",
+      "source_refs": []
+    },
+    "outcomes_targets_and_exits": {
+      "status": "DEFINED",
+      "content": {
+        "contract_id": "outcome-contract:ofi-reversion:v1",
+        "validation_protocol": {
+          "stopping_rule": {
+            "horizon_type": "FIXED_OBSERVATIONS",
+            "start_at": "2026-09-02T00:00:00Z",
+            "target_count": 500
+          },
+          "peeking_policy": "NO_INTERIM_STOPPING",
+          "early_termination_allowed": false,
+          "inspection_schedule": [],
+          "justification": "Synthetic protocol comparison fixture, not market evidence."
+        },
+        "outcomes": [
+          {
+            "outcome_id": "outcome:forward-return-30m",
+            "role": "PRIMARY",
+            "requirement_level": "REQUIRED",
+            "target": "FORWARD_PREDICTIVE_OOS",
+            "observable": "The signed return during the 30 minutes after the frozen trigger.",
+            "measurement_rule": "Use executable timestamps and the frozen 30-minute horizon; do not measure return relative to the trigger's reference model.",
+            "reference_model_refs": [],
+            "mechanical_coupling": {
+              "status": "INDEPENDENT",
+              "related_element_refs": [],
+              "plain_language_risk": "The outcome is a direct future return, so the trigger's reference model cannot mechanically create a measured return toward itself."
+            },
+            "expected_pattern": "The state-adjusted out-of-sample return is negative by at least the frozen economically relevant threshold.",
+            "falsifier": "The frozen interval decision rule does not support a negative economically relevant return.",
+            "timing_relative_to_trigger": "Measured strictly after the trigger over the next 30 minutes.",
+            "rival_hypothesis_refs": [
+              "hypothesis:generic-short-horizon-reversal"
+            ],
+            "discriminating_assumptions": [
+              "The holdout period was not used to choose the trigger, horizon, or threshold."
+            ],
+            "multiplicity_family_ref": "family:primary-prediction",
+            "decision_rule": {
+              "support_effect": "MAY_SUPPORT_TARGET",
+              "contradiction_effect": "TARGET_NOT_SUPPORTED",
+              "non_discriminating_effect": "TARGET_BLOCKED",
+              "invalid_test_effect": "TARGET_BLOCKED"
+            }
+          },
+          {
+            "outcome_id": "outcome:spread-normalization",
+            "role": "MECHANISM_DIAGNOSTIC",
+            "requirement_level": "REQUIRED",
+            "target": "MECHANISM_SUPPORTED",
+            "observable": "Quoted spread normalization after the trigger.",
+            "measurement_rule": "Compare the median quoted spread in minutes 10 to 30 after the trigger with the median spread in the final minute before the trigger.",
+            "reference_model_refs": [
+              "measurement:quoted-spread"
+            ],
+            "mechanical_coupling": {
+              "status": "INDEPENDENT",
+              "related_element_refs": [],
+              "plain_language_risk": "The spread diagnostic does not reuse the return outcome or the price reference used to define the trigger."
+            },
+            "expected_pattern": "The spread narrows materially as temporary liquidity pressure subsides.",
+            "falsifier": "The frozen interval rule supports no narrowing or a material widening of the spread.",
+            "timing_relative_to_trigger": "Measured after the trigger and before the end of the 30-minute return horizon.",
+            "rival_hypothesis_refs": [
+              "hypothesis:information-revaluation",
+              "hypothesis:generic-short-horizon-reversal"
+            ],
+            "discriminating_assumptions": [
+              "Quoted spread is a relevant observable implication of the claimed temporary-liquidity mechanism in this market.",
+              "The feed captures the relevant best quotes without systematic event-time gaps."
+            ],
+            "multiplicity_family_ref": "family:mechanism-diagnostics",
+            "decision_rule": {
+              "support_effect": "MAY_SUPPORT_TARGET",
+              "contradiction_effect": "TARGET_NOT_SUPPORTED",
+              "non_discriminating_effect": "TARGET_BLOCKED",
+              "invalid_test_effect": "TARGET_BLOCKED"
+            }
+          }
+        ],
+        "transportability_by_target": [
+          {
+            "target": "FORWARD_PREDICTIVE_OOS",
+            "tested_environments": [
+              "Two non-overlapping holdout periods with different volatility levels"
+            ],
+            "expected_stability": "The sign remains negative and the effect remains above the frozen relevance threshold in both periods.",
+            "allowed_drift": "The point estimate may differ, but neither period may reverse sign or fall below the frozen relevance boundary."
+          },
+          {
+            "target": "MECHANISM_SUPPORTED",
+            "tested_environments": [
+              "The same two holdout periods used for the frozen spread diagnostic"
+            ],
+            "expected_stability": "Spread normalization appears in both periods if the proposed liquidity mechanism explains the prediction.",
+            "allowed_drift": "The speed may differ, but the direction may not reverse."
+          }
+        ]
+      },
+      "source_refs": []
+    },
+    "conditions_filters_and_exclusions": {
+      "status": "DEFINED",
+      "content": "No selection, trimming, or changed frozen rules is allowed.",
+      "source_refs": []
+    },
+    "data_sampling_and_observability": {
+      "status": "DEFINED",
+      "content": "Reference JSON observer records only; no empirical dataset or data-fitness claim.",
+      "source_refs": []
+    },
+    "analysis_and_inference": {
+      "status": "DEFINED",
+      "content": "Deterministic contract comparisons; synthetic results never support a market claim.",
+      "source_refs": []
+    },
+    "costs_execution_and_risk": {
+      "status": "DEFINED",
+      "content": "No executable-edge evaluation or capital action. Empirical costs/execution/data fitness remain prerequisites.",
+      "source_refs": []
+    },
+    "results_and_continuation": {
+      "status": "DEFINED",
+      "content": "No empirical results. Synthetic positive and adversarial contract fixtures only.",
+      "source_refs": []
+    }
+  },
+  "additional_material_commitments": [],
+  "protected_artifacts": [
+    {
+      "artifact_ref": "outcome-contract:ofi-reversion:v1:validation-protocol",
+      "role": "METHOD",
+      "content_sha256": "8a1228ff8e803b7cd2c7d798f2e8a9e07145a853e4f23e575b311aa3828a3c57"
+    },
+    {
+      "artifact_ref": "outcome-contract:ofi-reversion:v1:outcome-design",
+      "role": "METHOD",
+      "content_sha256": "599797865772be553775e412b4f5ff24ef62a952d696820cdf7b40f85c724010"
+    }
+  ],
+  "completeness": {
+    "all_material_commitments_recorded": true,
+    "all_effective_material_artifacts_protected": true,
+    "known_gaps": [
+      "Synthetic fixtures do not authenticate real execution or establish data fitness, market effects, or live-agent compliance."
+    ]
+  },
+  "fingerprint_sha256": "91380407e6d6628854013050640c998c50dd7560c2b2889fa40a056b31792fcc"
+}

@@ -182,6 +182,12 @@ judgement, or remain planned gaps. The
 [hard-gate inventory](HARD_GATE_INVENTORY.md) records that difference rather
 than claiming end-to-end enforcement.
 
+[Validation execution and migration](decisions/ADR-018-validation-execution-evidence.md)
+describes the v2 protocols, observer logs, isolated synthetic pipeline runs and
+evidence checks on the ordinary router path. These checks reject unsupported
+completion declarations when called; local receipts do not authenticate a
+hostile producer or prove live-agent compliance.
+
 [`AGENTS.md`](AGENTS.md) is the sole authoritative policy for agents and controls
 every conflict. `QUICKSTART.md`, the research standard, ADRs, schemas, and this
 README explain or implement parts of that policy; none is a second authority.
