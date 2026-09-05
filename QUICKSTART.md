@@ -108,6 +108,17 @@ its historical evidence, uses weighted option objects, references a separate
 problem record for every blocker, and initializes `specialist_capability` to
 `NOT_CHECKED` when no validated capability record exists.
 
+## Binding data-fitness prerequisite
+
+Apply the data-fitness rule in [`AGENTS.md`](AGENTS.md#data-acquisition-and-verification-burden)
+before detailed operationalization and every empirical test. Confirm that the
+available dataset can answer the exact hypothesis at the requested claim level;
+record the evidence and remaining limits. Inadequate or unresolved material data
+quality means the affected test must not start, even if a backtester can run.
+The hypothesis remains untested with those data, not disproved. Cheap idea
+intake may remain unassessed. This prerequisite applies now; the roadmap plans
+only additional structured enforcement, not permission to postpone the rule.
+
 ## Binding research conductor
 
 Each research task is guided by exactly one [`research-conductor`](agents/research-conductor.md). The conductor remains the user's contact, keeps the current status, and calls specialist agents only through a defined work order. Specialist agents do not take over the conversation or the overall decision.
@@ -181,8 +192,8 @@ schedule follow-up. Validate the report with
 `scripts/validate_data_analysis_report.py`; then compare the full fingerprint
 before accepting it. If data are missing or cannot be obtained as one coherent
 dataset, keep the result `NOT_TESTABLE` or `BLOCKED` rather than silently
-weakening the research question. This role does not replace the planned
-prospective data-fitness gate.
+weakening the research question. This role does not replace the binding data-fitness prerequisite or its
+planned structured enforcement.
 
 Before and after each material research step, the full research fingerprint is compared. In addition to research question, source strategy, market and time horizon, it also contains measurement definitions, parameters, lookbacks, filters and exclusions, data and sample decisions, evaluation rules, cost and execution assumptions, frozen results and the checksums of all effective research documents.
 

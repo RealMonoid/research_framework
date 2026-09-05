@@ -398,6 +398,12 @@ change effective and cannot replace the full fingerprint comparison.
 - Routing a strategy does not authorize a backtest, market-data request, or
   empirical test. Those require a separate user request and the applicable
   research gates.
+- Apply the binding data-fitness prerequisite in `AGENTS.md` before detailed
+  operationalization and every empirical test. Verify that the recorded
+  assessment still covers the exact question and dataset. Stop the affected
+  test if material data requirements are unmet or unresolved; record why the
+  question is unanswerable with those data without treating it as disproved.
+  Do not wait for the planned structured validator to apply this rule.
 - Treat the owner's time and ability to acquire data as part of feasibility.
   Prefer a complete reusable export and automated checks. Do not require
   repeated chart loading, manual extraction of TradingView history, or an

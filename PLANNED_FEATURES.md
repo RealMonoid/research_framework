@@ -337,8 +337,8 @@ only a replaceable execution component behind that control layer.
    or model optimization in this project.
 
 Before any candidate can become an active backend, implement the priority-1
-validation-boundary and pipeline-integrity corrections and the prospective
-data-fitness gate below. Then build a backend-neutral adapter contract that
+validation-boundary and pipeline-integrity corrections and satisfy the binding
+data-fitness prerequisite below. Then build a backend-neutral adapter contract that
 binds the exact engine revision, environment/dependency lock, input-data
 snapshot, strategy rules, instrument/contract convention, timezone/session,
 order timing, fill model, costs, slippage, and all engine configuration to the
@@ -474,7 +474,19 @@ and [futures contracts](https://www.quantconnect.com/docs/v2/writing-algorithms/
    anchored, say plainly that it is tamper-evident bookkeeping only to the
    extent that the storage history is trustworthy.
 
-3. **Prospective data-fitness gate.** Before detailed operationalization,
+3. **Structured enforcement of the existing data-fitness prerequisite.**
+   **Status: the prerequisite is binding now under `AGENTS.md`; only its
+   dedicated machine-readable artifact and enforcement remain planned.**
+   Owner clarification on 2026-09-05: every empirical hypothesis and test must
+   already be checked for answerability with the available data. Poor or
+   insufficient data stop the affected test; the hypothesis is not thereby
+   disproved. The conductor records the assessment through existing artifacts
+   until additional tooling exists. This entry must never be read as delaying
+   that obligation or requiring a new software feature merely to apply it.
+
+   The planned structured implementation must enforce the following existing
+   assessment rather than introduce a new optional research capability.
+   Before detailed operationalization,
    implementation, or empirical testing, translate the proposed strategy and
    intended claim into a minimum data-requirement record, then compare it with
    the metadata and observable content of the data that can actually be
@@ -519,7 +531,7 @@ and [futures contracts](https://www.quantconnect.com/docs/v2/writing-algorithms/
    reconstruction creates commitment to it, and to prevent a late discovery
    that the available data could never observe the event, mechanism, or fill
    being claimed. The real Research Case in priority 4 should supply the first
-   concrete requirements and failure examples. Planning this gate does not
+   concrete requirements and failure examples. Planning additional enforcement does not
    authorize inspection of strategy outcomes, a backtest, or market-data use.
 
    The bounded `data-analyst` role is not this gate. It may provide a scoped
