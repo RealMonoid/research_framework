@@ -456,8 +456,8 @@ the producer/scorer protocol, and the regression suite. The bundled score of
 1.000 is a protocol smoke test, not evidence of live-agent quality. A release
 claim requires a produced `LIVE_AGENT` result.
 
-Features that are not yet implemented are listed explicitly in
-[`PLANNED_FEATURES.md`](PLANNED_FEATURES.md).
+Prioritized work, conditional options, and completed foundations are listed in
+[`ROADMAP.md`](ROADMAP.md).
 
 ## Direct raw entry point for automated readers
 
