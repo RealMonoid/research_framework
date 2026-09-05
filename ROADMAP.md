@@ -252,6 +252,30 @@ that the framework is generally validated. Planning this feature does not
 authorize data access, a backtest, or empirical strategy research; those
 actions still require an explicit user request.
 
+**Candidate selection and research effort:** The first complete case must also
+show why this candidate was selected for investigation. This protects the
+owner's decision about where to spend limited research time toward credible
+net edge. Record the economic rationale, available data and unresolved fitness
+limits, plausible cost and execution hurdle, research effort, and expected
+learning in the existing private case artifacts. Preserve an owner-supplied
+candidate and its identity; this requirement does not require generating
+alternatives or replacing the deliberately unexciting first case.
+
+Distinguish prioritization based on information available before a new screen from
+selection influenced by already observed market outcomes. Cite the information
+used in either case; prior observations must not be relabelled as an unexposed
+economic prior. Every outcome-dependent selection belongs in the existing
+search history and multiplicity accounting, with cross-version continuity
+addressed by priority 5. Research priority is neither generator ranking,
+promotion, nor evidence of profitability, and requires no numerical edge score
+or automatic optimizer.
+
+After the case, assess whether the existing selection, feasibility, and search
+records supported this decision adequately. Record concrete failures against
+the relevant existing roadmap entry before proposing additional discovery
+tooling. This is a planned case-evaluation requirement, not a new universal
+gate, a change in priority order, or authorization to run research.
+
 ### 4. Behavioural baseline and adversarial live-agent evaluation
 
 Treat the
