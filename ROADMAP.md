@@ -1067,4 +1067,3 @@ new route, owner, specialist, gate, data access, backtest, deployment, or
 capital-allocation authority. The manifest/test verifies discoverability and
 snapshot consistency only; live-agent evaluation remains required to claim a
 behavioral improvement.
-
