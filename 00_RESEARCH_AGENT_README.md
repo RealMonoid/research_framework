@@ -136,7 +136,7 @@ authorize a backtest, or create follow-up work. Validate the report with
 `scripts/validate_data_analysis_report.py`; if data are inadequate, retain
 `NOT_TESTABLE` or `BLOCKED` rather than silently weakening the question. This
 bounded report does not replace the prospective data-fitness gate planned in
-`PLANNED_FEATURES.md`.
+`ROADMAP.md`.
 
 ### Optional local scientific-method capabilities
 

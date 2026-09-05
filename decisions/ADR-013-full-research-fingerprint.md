@@ -39,4 +39,4 @@ main agent.
 - The main agent must derive a complete candidate fingerprint from every
   material result.
 - Live language-model behaviour still requires separate testing. The planned
-  LLM stress test is recorded as not yet implemented in `PLANNED_FEATURES.md`.
+  LLM stress test is recorded as not yet implemented in `ROADMAP.md`.
