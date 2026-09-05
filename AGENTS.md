@@ -166,6 +166,35 @@ separate privacy review and any resulting removal.
 
 ## Data acquisition and verification burden
 
+Data fitness is a binding prerequisite for every hypothesis taken into empirical
+work and every test, including a backtest; it is not deferred until a planned
+software feature exists. It protects the decision whether the requested question
+can be answered at all with the available evidence. Idea intake may remain
+unassessed, but must not imply empirical readiness.
+
+Before detailed operationalization or empirical testing, the conductor must
+compare the concrete question and intended claim with the available data:
+source and snapshot, instrument and contract identity, coverage, resolution,
+timestamps and decision-time availability, missingness and integrity, and the
+price, volume, quote, intrabar or order-book information needed for the trigger,
+outcome and, where relevant, costs and execution. Record the requirements,
+checks, evidence, limitations and disposition in the existing private research
+artifacts and checkpoint references, under the complete fingerprint. Do not
+repeat an unchanged assessment for every run; verify that it still applies and
+reassess when the question, rules, data or relevant assumptions change.
+
+Inadequate or unresolved material data quality stops the affected test. Use
+`REMEDIABLE_GAP` when a concrete repair or better data path is available,
+`NOT_TESTABLE` when the question cannot be answered with the available data,
+and `BLOCKED` for an unresolved prerequisite, with the required problem record.
+This is not a negative result for the hypothesis. A limited-data assessment may
+permit only the unchanged claim that the data actually support; narrowing the
+question or claim requires the existing visible change and owner-decision path.
+TradingView or any other provider is neither automatically acceptable nor
+unacceptable: fitness is assessed for the exact dataset and question. A running
+backtest engine cannot repair missing evidence. A future structured validator
+may enforce this rule more reliably; until then the conductor must apply it.
+
 Protect the owner's time as part of research feasibility. Prefer one complete,
 reusable, versioned data export or snapshot that can be checked by code. Do not
 make repeated scrolling, bar-by-bar loading, or manual extraction of chart
@@ -243,8 +272,8 @@ It must not invent data or silently fill missing observations. The conductor
 validates the report with `scripts/validate_data_analysis_report.py`, performs
 the complete fingerprint comparison, and retains interpretation and final
 responsibility. If the data are unavailable or inadequate, the report must be
-`NOT_TESTABLE` or `BLOCKED`; this does not implement or replace the planned
-prospective data-fitness gate. Existing AI-Psychiatry guardrails apply to this
+`NOT_TESTABLE` or `BLOCKED`; this does not replace the binding data-fitness prerequisite or implement its
+planned structured enforcement. Existing AI-Psychiatry guardrails apply to this
 route, but no plugin runtime or second orchestration architecture is required.
 
 ## Permanent research-conductor controls
